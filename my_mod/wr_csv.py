@@ -9,7 +9,7 @@ def file_exists(file_name):
     return(os.path.exists(file_name))
 
 
-def write_csv(data, file_name='new_csv{}.csv'.format(time.strftime('%c')), delimiter=';', mode_write='DictWriter'):
+def write_csv(data, file_name='new_csv {}.csv'.format(time.strftime('%e.%m.%y, %H.%M.%S')), delimiter=';', mode_write='DictWriter'):
     '''Функция записывает контейнер data в файл формата csv. data - контейнер для записи, file_name - относительный или абсалютный путь к файлу в который нужно записать информацию, delimiter - разделители csv, mode_write - режим записи в файл, может быть DictWriter (по умолчанию) либо NoDict. Если режим DictWriter записть производится по ключам в словаре, ключ - название столбца, его значение это значение ячейки. Режим NoDict записывает без ключей и названий столбцов и порядке слева направо.'''
 
     # Открывает файл file_name для добавления информации в него. Если его нет, то создает
@@ -28,7 +28,7 @@ def write_csv(data, file_name='new_csv{}.csv'.format(time.strftime('%c')), delim
         writer.writerow(data)
 
 
-def read_csv(read_file, delimiter=';', mode_read='DicrReader'):
+def read_csv(read_file, delimiter=';', mode_read='DictReader'):
     '''Функция считывает информацию из csv файла по пути read_file. delimiter - разделители csv, mode_read - режим чтения файла. DictReader - чтение словарем. Название столбца это ключ, значение ячейки - значение. NoDict - чтение вложенными списками.'''
 
     with open(read_file, 'r', encoding='utf-8') as file:
