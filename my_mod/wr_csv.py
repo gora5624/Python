@@ -12,6 +12,7 @@ def file_exists(file_name):
 def write_csv(data, file_name='new_csv {}.csv'.format(time.strftime('%e.%m.%y, %H.%M.%S')), delimiter=';', mode_write='DictWriter'):
     '''Функция записывает контейнер data в файл формата csv. data - контейнер для записи, file_name - относительный или абсалютный путь к файлу в который нужно записать информацию, delimiter - разделители csv, mode_write - режим записи в файл, может быть DictWriter (по умолчанию) либо NoDict. Если режим DictWriter записть производится по ключам в словаре, ключ - название столбца, его значение это значение ячейки. Режим NoDict записывает без ключей и названий столбцов и порядке слева направо.'''
 
+    file_ex = file_exists(file_name)
     # Открывает файл file_name для добавления информации в него. Если его нет, то создает
     with open(file_name, 'a', encoding='utf-8', newline='') as file:
         if mode_write == 'DictWriter':  # Проверяет режим работы функции
@@ -23,7 +24,7 @@ def write_csv(data, file_name='new_csv {}.csv'.format(time.strftime('%e.%m.%y, %
             print(
                 'Error my_mod/we_csv in function write_csv. mode_write can be only DictWriter or NoDict')
         # Проверяет существует ли файл и какой режим. В зависимости от этого записывает шапку в таблицу
-        if not file_exists and mode_write == 'DictWriter':
+        if not file_ex and mode_write == 'DictWriter':
             writer.writeheader()
         writer.writerow(data)
 
