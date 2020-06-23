@@ -11,4 +11,4 @@ driver.find_element_by_xpath("//*[@itemprop='image']").click()
 soup = BeautifulSoup(driver.page_source, 'lxml')
 url_image = soup.find('div', class_='slide current').find('img')['src']
 print(url_image)
-driver.close()
+# driver.close()
