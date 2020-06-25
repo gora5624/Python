@@ -10,7 +10,7 @@ def file_exists(file_name):
     return(os.path.exists(file_name))
 
 
-def write_csv(data, file_name='new_csv {}.csv'.format(time.strftime('%e.%m.%y, %H.%M.%S')), delimiter=';', mode_write='DictWriter'):
+def write_csv(data, file_name='new_csv {}.csv'.format(time.strftime('%e.%m.%y')), delimiter=';', mode_write='DictWriter'):
     '''Функция записывает контейнер data в файл формата csv. data - контейнер для записи, file_name - относительный или абсалютный путь к файлу в который нужно записать информацию, delimiter - разделители csv, mode_write - режим записи в файл, может быть DictWriter (по умолчанию) либо NoDict. Если режим DictWriter записть производится по ключам в словаре, ключ - название столбца, его значение это значение ячейки. Режим NoDict записывает без ключей и названий столбцов и порядке слева направо.'''
 
     file_ex = file_exists(file_name)
