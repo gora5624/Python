@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,9 +11,16 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            summ summ = new summ();
-            Console.WriteLine(summ.GetSumm(10, 15));
-            Console.ReadLine();
+            SizeList sizeList = new SizeList();
+            SizeFilm sizeFilm = new SizeFilm();
+            Calculator Result = new Calculator();
+            sizeList.SetSize();
+            Console.WriteLine($"Ширина листа {sizeList.Width}, длинна листа {sizeList.Height}.");
+            sizeFilm.SetSize();
+            Console.WriteLine($"Ширина листа {sizeFilm.Width}, длинна листа {sizeFilm.Height}.");
+            string result = Result.GetResult(sizeList.Width, sizeList.Height, sizeFilm.Width, sizeFilm.Height);
+            Console.WriteLine(result);
+            Console.ReadKey();
         }
 
 
