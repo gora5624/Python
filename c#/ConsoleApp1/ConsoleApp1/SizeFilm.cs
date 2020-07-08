@@ -8,17 +8,17 @@ namespace ConsoleApp1
 {
     class SizeFilm : SizeList
     {
-       protected override string ConsolName { get; set; } = "Пленки";
+       protected override string ConsolName { get; set; } = "пленки";
        public SizeFilm() 
         {
-            ConsolName = "Пленки";
+            ConsolName = "пленки";
             Width = 104;
             Height = 179;
         }
         public SizeFilm(int width, int height)
 
         {
-            ConsolName = "Пленки";
+            ConsolName = "пленки";
             Width = width;
             Height = height;
         }

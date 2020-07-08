@@ -15,13 +15,13 @@ namespace ConsoleApp1
 
         public SizeList()
         {
-            ConsolName = "Листа";
+            ConsolName = "листа для резки";
             Width = 750;
             Height = 1040;
         }
         public SizeList(int width, int height)
         {
-            ConsolName = "Листа";
+            ConsolName = "листа для резки";
             Width = width;
             Height = height;
         }
@@ -30,30 +30,66 @@ namespace ConsoleApp1
         {
             bool result;
             do
-            {   
-                Console.WriteLine($"Введите ширину {ConsolName} для резки в миллиметрах: ");
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($"Введите ширину {ConsolName} в миллиметрах: ");
                 int Num;
                 result = int.TryParse((Console.ReadLine()), out Num);
-                if (result == true)
+                if ((result == true) && (Num > 0))
                 {
                     Width = Num;
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Принято");
                     break;
+                }
+                else if ((result == true) && (Num <= 0))
+                {
+                    result = false;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Введите число больше 0");
+                    continue;
+                }
+                else
+                {
+                    result = false;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Введите положительное число цифрами с клавиатуры.");
+                    continue;
                 }
             }
             while (result == false);
             do
             {
-                Console.WriteLine($"Введите длинну {ConsolName} для резки в миллиметрах: ");
+                result = false;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($"Введите длинну {ConsolName} в миллиметрах: ");
                 int Num;
                 result = int.TryParse((Console.ReadLine()), out Num);
-                if (result == true)
+                if ((result == true) && (Num > 0))
                 {
                     Height = Num;
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Принято");
                     break;
+                }
+                else if ((result == true) && (Num <= 0))
+                {
+                    result = false;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Введите число больше 0");
+                    continue;
+
+                }
+                else
+                {
+                    result = false;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Введите положительное число цифрами с клавиатуры.");
+                    continue;
                 }
             }
             while (result == false);
-            
+
         }
     }
 }

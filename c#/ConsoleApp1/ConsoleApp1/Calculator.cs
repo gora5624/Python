@@ -17,9 +17,17 @@ namespace ConsoleApp1
             
             int Count = (WlWf * HlHf > WlHf * HlWf ? WlWf * HlHf : WlHf * HlWf);
             string orient = (WlWf * HlHf > WlHf * HlWf ? "вдоль" : "поперёк");
+            
 
-
-            return $"Получится {Count} шт. Располагать {orient}.";
+            if (Count > 0)
+            {
+                return $"Получится {Count} шт. Располагать {orient}.";
+            }
+            else
+            {
+                return $"Получится {Count} шт. Вероятно вы ввели размер листа меньше чем размер пленки.";
+            }
+            
         }
     }
 }
