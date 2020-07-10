@@ -18,12 +18,10 @@ namespace ConsoleApp1
             Console.WriteLine($"Ширина листа {sizeList.Width}, длинна листа {sizeList.Height}.");
             sizeFilm.SetSize();
             Console.WriteLine($"Ширина листа {sizeFilm.Width}, длинна листа {sizeFilm.Height}.");
-            string result = Result.GetResult(sizeList.Width, sizeList.Height, sizeFilm.Width, sizeFilm.Height);
+            string result = Result.GetResult(sizeFilm, sizeList);
             Console.WriteLine(result);
             Console.ReadKey();
         }
-
-
     }
 }
 

@@ -1,37 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace ConsoleApp1.Entities
 {
-    class SizeList
+    public abstract class CutBase
     {
         public int Width { get; set; }
         public int Height { get; set; }
-        protected virtual string ConsolName { get; set; }
+        public string Name { get; protected set; }
 
-        public SizeList()
+        public CutBase() 
         {
-            ConsolName = "Листа";
-            Width = 750;
-            Height = 1040;
+            Name = "CutBase";
         }
-        public SizeList(int width, int height)
+
+        public CutBase(int width, int height)
         {
-            ConsolName = "Листа";
             Width = width;
             Height = height;
+            Name = "CutBase";
         }
 
-        public void SetSize()
+        //пускай так пока, мб потом переопределишь
+        public virtual void SetSize()
         {
             bool result;
             do
-            {   
-                Console.WriteLine($"Введите ширину {ConsolName} для резки в миллиметрах: ");
+            {
+                Console.WriteLine($"Введите ширину {Name} для резки в миллиметрах: ");
                 int Num;
                 result = int.TryParse((Console.ReadLine()), out Num);
                 if (result == true)
@@ -43,7 +42,7 @@ namespace ConsoleApp1
             while (result == false);
             do
             {
-                Console.WriteLine($"Введите длинну {ConsolName} для резки в миллиметрах: ");
+                Console.WriteLine($"Введите длинну {Name} для резки в миллиметрах: ");
                 int Num;
                 result = int.TryParse((Console.ReadLine()), out Num);
                 if (result == true)
@@ -53,7 +52,6 @@ namespace ConsoleApp1
                 }
             }
             while (result == false);
-            
         }
     }
 }
