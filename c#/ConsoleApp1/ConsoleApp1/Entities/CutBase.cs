@@ -1,38 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace ConsoleApp1.Entities
 {
-    class SizeList
+    public abstract class CutBase
     {
         public int Width { get; set; }
         public int Height { get; set; }
-        protected virtual string ConsolName { get; set; }
+        public string Name { get; protected set; }
 
-        public SizeList()
+        public CutBase() 
         {
-            ConsolName = "листа для резки";
-            Width = 750;
-            Height = 1040;
+            Name = "CutBase";
         }
-        public SizeList(int width, int height)
+
+        public CutBase(int width, int height)
         {
-            ConsolName = "листа для резки";
             Width = width;
             Height = height;
+            Name = "CutBase";
         }
 
-        public void SetSize()
+        //пускай так пока, мб потом переопределишь
+        public virtual void SetSize()
         {
             bool result;
             do
             {
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($"Введите ширину {ConsolName} в миллиметрах: ");
+                Console.WriteLine($"Введите ширину {Name} для резки в миллиметрах: ");
                 int Num;
                 result = int.TryParse((Console.ReadLine()), out Num);
                 if ((result == true) && (Num > 0))
@@ -60,9 +58,7 @@ namespace ConsoleApp1
             while (result == false);
             do
             {
-                result = false;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($"Введите длинну {ConsolName} в миллиметрах: ");
+                Console.WriteLine($"Введите длинну {Name} для резки в миллиметрах: ");
                 int Num;
                 result = int.TryParse((Console.ReadLine()), out Num);
                 if ((result == true) && (Num > 0))
@@ -89,7 +85,6 @@ namespace ConsoleApp1
                 }
             }
             while (result == false);
-
         }
     }
 }
