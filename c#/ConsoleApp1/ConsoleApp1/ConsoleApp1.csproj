@@ -59,10 +59,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculator.cs" />
+    <Compile Include="Entities\CutBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SizeFilm.cs" />
-    <Compile Include="SizeList.cs" />
+    <Compile Include="Entities\SizeFilm.cs" />
+    <Compile Include="Entities\SizeList.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -11,6 +11,7 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
+<<<<<<< HEAD
             bool flag = false;
             do
             {
@@ -50,9 +51,19 @@ namespace ConsoleApp1
                 
             }
             while (flag == true);
+=======
+            SizeList sizeList = new SizeList();
+            SizeFilm sizeFilm = new SizeFilm();
+            Calculator Result = new Calculator();
+            sizeList.SetSize();
+            Console.WriteLine($"Ширина листа {sizeList.Width}, длинна листа {sizeList.Height}.");
+            sizeFilm.SetSize();
+            Console.WriteLine($"Ширина листа {sizeFilm.Width}, длинна листа {sizeFilm.Height}.");
+            string result = Result.GetResult(sizeFilm, sizeList);
+            Console.WriteLine(result);
+            Console.ReadKey();
+>>>>>>> d1684c525cbb2170973f70663a0dd4cdd7f0805c
         }
-
-
     }
 }
 
