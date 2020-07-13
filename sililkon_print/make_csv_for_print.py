@@ -25,8 +25,8 @@ for Case in ListCase:
                 "PRODUCT_CODE": Cod,
                 "SERVICE_CODE": ServiceCode}
 
-        write_csv(data, os.path.join(path, 'Samsung_{}.csv'.format(num)))
+        write_csv(data, os.path.join(path, 'A_Brand_{}.csv'.format(num)))
         count += 1
-        if count > 10000:
+        if count > 9999:
             count = 0
             num += 1
