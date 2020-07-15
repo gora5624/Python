@@ -2,7 +2,7 @@ from my_lib import write_csv, read_csv, file_exists
 import os
 
 
-path = r'D:\tmp\python\python_parsing\sililkon_print'
+path = r'D:\tmp\my_prod\Python\sililkon_print'
 ListCase = read_csv(path + '\list.csv')
 ListPrint = read_csv(path + '\\name_print\print_theme.csv')
 count = 0
