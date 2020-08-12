@@ -14,7 +14,7 @@ for Case in ListCase:
         CaseName = Case['Name'] + ' ' + Print['NamePrint'][0:-4]
         DetailPic = '/upload/products_pictures/silicone/' + \
             Case['Name'].replace('/', '').replace('\\',
-                                                  '').replace('Чехол для ', '').replace(' силикон черный матовый', '') + '/mate/black/' + Print['NamePrint'][0:-4] + '.jpg'
+                                                  '').replace('Чехол для ', '').replace(' силикон прозрачный', '') + '/pr/white/' + Print['NamePrint'][0:-4] + '.jpg'
         Theme = Print['Theme']
         Cod = Case['Cod']
         ServiceCode = '00-00038357'
@@ -25,8 +25,8 @@ for Case in ListCase:
                 "PRODUCT_CODE": Cod,
                 "SERVICE_CODE": ServiceCode}
 
-        write_csv(data, os.path.join(path, 'A_Brand_{}.csv'.format(num)))
+        write_csv(data, os.path.join(path, 'Clear_{}.csv'.format(num)))
         count += 1
-        if count > 9999:
+        if count > 4999:
             count = 0
             num += 1
