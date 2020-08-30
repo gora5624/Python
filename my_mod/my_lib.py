@@ -48,6 +48,6 @@ def read_csv(read_file, delimiter=';', mode_read='DictReader'):
 
 
 def get_html(url):
-    time.sleep(5)
+    time.sleep(2)
     r = requests.get(url)
     return r.text
