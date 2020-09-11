@@ -47,7 +47,7 @@ def read_csv(read_file, delimiter=';', mode_read='DictReader'):
     return(data_file)
 
 
-def get_html(url):
-    time.sleep(2)
+def get_html(url, t=0):
+    time.sleep(t)
     r = requests.get(url)
     return r.text
