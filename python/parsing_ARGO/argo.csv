@@ -1,255 +1,264 @@
-category_name;name_stuff;url_stuff;size;color;cloth
-Одежда для торговли;Брюки женские;https://argo-ivanovo.ru/golovnye-ubory/brjuki-shtany-gabardinovye; 44  46  48  50  52  52  54  56  58 ; Василек  Темно-синий ; Габардин 
-Одежда для торговли;Головной убор Козырек;https://argo-ivanovo.ru/golovnye-ubory/kozurek-1;; Василек  Бордо  Зеленый  Темно-синий ; Нейлон  Габардин 
-Одежда для торговли;Головной убор Пилотка ;https://argo-ivanovo.ru/golovnye-ubory/golovnoj-ubor-pilotka 1; Универсальный ; Василек  Бордо  Зеленый  Красный  Темно-синий ; Габардин 
-Одежда для торговли;Головной убор Пилотка;https://argo-ivanovo.ru/golovnye-ubory/golovnoj-ubor-pilotka 2; Универсальный ; Василек  Бордо ; Нейлон 
-Одежда для торговли;Головной убор Пилотка;https://argo-ivanovo.ru/golovnye-ubory/golovnoj-ubor-pilotka; Универсальный ; Белый  Василек  Бордо  Зеленый  Красный  Темно-синий ; Габардин 
-Одежда для торговли;Головной убор Пилотка-Сетка;https://argo-ivanovo.ru/golovnye-ubory/pilotka-dlja-prodavtsa-tkan-nejlon-100-poliefir; Универсальный ; Василек  Бордо ; Габардин 
-Одежда для торговли;"Сарафан Женский ""ГОРОХ"" (44-60)";https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-gorox-44-60; 44  46  48  50  52  54  56  58  60 ; Тем.синей+красный ; Нейлон 
-Одежда для торговли;"Сарафан Женский ""ГОРОХ"" (44-60)";https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-gorox 1; 44  46  48  50  52  54  56  58  60 ; Тем.синей+лайм ; Нейлон 
-Одежда для торговли;Сарафан Женский № XХ (62-66);https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-01x; 62  64  66 ; Василек ; Габардин 
-Одежда для торговли;Сарафан Женский № XХ (62-66);https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-xx-62-66; 62  64  66 ;;
-Одежда для торговли;Сарафан Женский №01 (Лилия) 44-60;https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-01-lilija-44-60; 44  46  48  50  52  54  56  58  60 ; Василек ; Нейлон 
-Одежда для торговли;Сарафан Женский №01 (Лилия) 44-60;https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-01-lilija-44-60 2; 44  46  48  50  52  54  56  58  60 ; Бордо ; Габардин 
-Одежда для торговли;Сарафан Женский №01 (Лилия) 44-60;https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-01; 44  46  48  50  52  54  56  58  60 ; Василек ; Габардин 
-Одежда для торговли;Сарафан Женский №05 (44-60);https://argo-ivanovo.ru/golovnye-ubory/sarafan-05-gabardin; 44  46  48  50  52  54  56  58  60 ; Василек  Темно-синий ; Габардин 
-Одежда для торговли;Сарафан Женский №05 (44-60);https://argo-ivanovo.ru/golovnye-ubory/sarafan-05-nejlon; 44  46  48  50  52  54  56  58  60 ; Василек  Темно-синий ; Нейлон 
-Одежда для торговли;Сарафан Женский №08 габардин (44-60);https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-08-4-60-tkan-gabardin-100-poliester; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Зеленый  Темно-синий ; Габардин 
-Одежда для торговли;Сарафан Женский №08 нейлон (44-60);https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-08-44-60-tkan-gabardin-100-poliester; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Темно-синий ; Нейлон 
-Одежда для торговли;Сарафан Женский №09 (44-60);https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-09; 44  46  48  50  52  54  56  58  60 ; Темно-синий ; Габардин 
-Одежда для торговли;Сарафан Женский №31 (Сакура) 44-60;https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-31-sakura-44-60; 44  46  48  50  52  54  56  58  60 ; Василек ; Габардин 
-Одежда для торговли;Сарафан Женский №31 (Сакура) 44-60;https://argo-ivanovo.ru/golovnye-ubory/sarafan2; 44  46  48  50  52  54  56  58  60 ; Темно-синий ; Габардин 
-Одежда для торговли;Сарафан НОВИНКА (44-62);https://argo-ivanovo.ru/golovnye-ubory/sarafan-novinka-44-68; 44  46  60  62 ; Василек ; Габардин 
-Одежда для торговли;"Фартук со спинкой ""Обманка"" (56-80)";https://argo-ivanovo.ru/golovnye-ubory/fartuk-obmanka; XXXXXL ; Бордо  Темно-синий ; 65% полиэстер, 35 % хлопок 
-Одежда для торговли;Фартук со спинкой № 11 (44-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-44-44-56; Универсальный ; Василек  Бордо  Красный ; 65% полиэстер, 35 % хлопок 
-Одежда для торговли;Фартук со спинкой № 13 (44-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-13-44-56; Универсальный ; Василек ; Габардин 
-Одежда для торговли;Фартук со спинкой № 15 (44-54);https://argo-ivanovo.ru/golovnye-ubory/fartuk; Универсальный ; Василек  Бордо  Серый  Темно-синий ; Габардин 
-Одежда для торговли;Фартук со спинкой № 24 (56-64);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-24-56-64; Универсальный ; Василек  Бордо ; Габардин 
-Одежда для торговли;Фартук со спинкой № 4  (44-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-4; Универсальный ; Серый  Темно-синий ; 65% полиэстер, 35 % хлопок 
-Одежда для торговли;Фартук со спинкой № 43 (44-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-43; Универсальный ; Темно-синий ; Габардин 
-Одежда для торговли;Фартук со спинкой № 45/1 (44-56) гретта;https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-45-1-44-56-gretta; Универсальный ; Василек  Серый  Темно-синий ; Грета 
-Одежда для торговли;Фартук со спинкой №1 (44-54);https://argo-ivanovo.ru/golovnye-ubory/fartuk-1-nejlon; Универсальный ; Василек  Бордо  Зеленый  Темно-синий ; Нейлон 
-Одежда для торговли;Фартук со спинкой №20 (44-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-20-44-56; Универсальный ; Василек  Бордо  Зеленый  Красный  Темно-синий ; Габардин 
-Одежда для торговли;Фартук со спинкой №44 (44-54);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-44-44-54; Универсальный ; Темно-синий ; Габардин 
-Одежда для торговли;Фартук со спинкой №45 (44-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-45-44-56; Универсальный ; Василек  Бордо  Зеленый  Темно-синий  Коричневый ; Габардин 
-Одежда для торговли;Фартук Универсальный (44-60);https://argo-ivanovo.ru/golovnye-ubory/fartuk-universalnyj; Универсальный ; Бордо  Красный  Темно-синий ; смесовая ткань 
-Одежда для торговли;Халат Женский № 12 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-121; 44  46  48  50  52  54  56  58  60 ; Белый ; Нейлон 
-Одежда для торговли;Халат Женский № 15Х (62-64);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-15x-62-68; 62  64 ; Василек  Темно-синий ; Нейлон 
-Одежда для торговли;Халат Женский № 17 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-17а; 44  46  48  50  52  54  56  58  60 ; В ассортименте ; 65% полиэстер, 35 % хлопок 
-Одежда для торговли;Халат Женский № 20 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-20; 44  46  48  50  52  54  56  58  60 ; Бордо  Темно-синий ; Габардин 
-Одежда для торговли;Халат Женский № 21Х (62-68);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-21Х-62-68; 62  64  66  68 ; Василек  Бордо  Серый ; Габардин 
-Одежда для торговли;Халат Женский № 22 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-17; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Зеленый  Темно-синий ; Габардин 
-Одежда для торговли;Халат Женский № 22 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-22; 44  46  48  50  52  54  56  58  60 ; Бежевый  Бежевый  Василек  Коричневый ; Габардин 
-Одежда для торговли;Халат Женский № 22Х (62-68);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-22x-62-68; 62  64  66  68 ; Василек  Бордо  Зеленый ; Габардин 
-Одежда для торговли;Халат Женский № 5Х (62-68);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-5x-62-68; 62  64  66  68 ; Белый ; Габардин+Кружево 
-Одежда для торговли;Халат Женский №15 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-henskij-15; 44  46  48  50  52  54  56  58  60 ; Василек  Темно-синий ; Нейлон 
-Одежда для торговли;Халат Женский №16 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-274; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо ; Габардин 
-Одежда для торговли;Халат Женский №16 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-269; 44  46  48  50  52  54  56  58  60 ; Темно-синий ; Нейлон 
-Одежда для торговли;Халат Женский №2 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-2-44-60-gabardin; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Зеленый  Темно-синий ; Габардин 
-Одежда для торговли;Халат Женский №21 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-21; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Серый ; Габардин 
-Одежда для торговли;Костюм Женский  №11 (44-56);https://argo-ivanovo.ru/golovnye-ubory/kostjum-dlja-prodavtsa; 44  46  48  50  52  54  56  58 ; Василек  Бордо ; Габардин 
-Одежда для торговли;Костюм Женский  №11 большие размеры (58-62);https://argo-ivanovo.ru/golovnye-ubory/kostjum-zhenskij-11-bolshie-razmery; 58  60  62 ; Василек  Бордо  Серый ; Габардин 
-Одежда для торговли;Сарафан Женский №01 (Лилия) 44-60;https://argo-ivanovo.ru/golovnye-ubory/sarafan 01; 44  46  48  50  52  54  56  58  60 ; Бордо ; Нейлон 
-Одежда для торговли;Фартук со спинкой №31 (44-52);https://argo-ivanovo.ru/golovnye-ubory/fartuk-31-44-52-tkan-gabardin; Универсальный ; Василек  Красный  Темно-синий ; Габардин 
-Одежда для торговли;Халат Женский №2Х (62-68);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-2x-62-68-tkan-gabardin-100-poliefir; 62  64  66  68 ; Василек  Бордо  Зеленый ; Габардин 
-Одежда для торговли;Костюм Женский №15 (44-58);https://argo-ivanovo.ru/golovnye-ubory/kostjum; 44  46  48  50  52  54  56  58 ; Василек ; Габардин 
-Одежда для торговли;Халат Женский №12 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-12; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Зеленый  Темно-синий ; Нейлон 
-Одежда для торговли;Халат Женский №12Х (62-68);https://argo-ivanovo.ru/golovnye-ubory/xalat-12-x-62-68-tkan-nejlon-100-poliefir; 62  64  66  68 ; Василек  Бордо  Зеленый  Темно-синий ; Нейлон 
-Одежда для торговли; Шапочка-шарлотка;https://argo-ivanovo.ru/golovnye-ubory/shapochka-sharlotta-odnorazovaja;; Пудра  Белый  Бирюза ; спанбонд 
-Одежда для торговли;Фартук со спинкой №21 (44-52);https://argo-ivanovo.ru/golovnye-ubory/fartuk-21-44-52-tkan-gabardin-100-poliefir; Универсальный ; Серый  Коричневый ; Габардин 
-Одежда для торговли;Фартук со спинкой №18 (48-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-8-42-50-tkan-gabardin-100-poliefir; Универсальный ; Василек  Бордо  Зеленый  Темно-синий ; Габардин 
-Одежда для торговли;Фартук со спинкой  ВЕЛИКАН (56-64);https://argo-ivanovo.ru/golovnye-ubory/fartuk-velikan-56-64-tkan-gabardin-100-poliefir-logotip; Универсальный ; Пудра  Василек  Бордо  Зеленый ; Габардин 
-Одежда для торговли;Фартук со спинкой №3 (48-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-dly-prodavca; Универсальный ; Василек  Бордо  Зеленый ; Габардин 
-Одежда для торговли;Фартук со спинкой №30Х (48-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-30-x-52-60-tkan-gabardin-100-poliefir; Универсальный ; Василек  Бордо  Зеленый  Бирюза  Красный  Темно-синий ; Габардин 
-Одежда для торговли;Фартук со спинкой №Х (52-62);https://argo-ivanovo.ru/golovnye-ubory/fartuk-zhenskij(3); Универсальный ; Василек  Бордо  Зеленый  Темно-синий ; Нейлон 
-Одежда для торговли;Халат Женский №5 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-5-42-60-tkan-gabardin-xalat-iz-nejlona-prjamogo-silueta-s-tsentralnoj-zastezhkoj-na-molnii-s-dvumja-nakladnymi-karmanami-i-razrezami-po-bokovym-shvam-rukav-korotkij-v-tachnoj-vorotnik-otlozhnoj-vshityj-v-plechevye-shvy-objem-talii-reguliruetsja-poja; 44  46  48  50  52  54  56  58  60 ; Белый ; Габардин+Кружево 
-Одежда для торговли;Фартук со спинкой №30 (44-50);https://argo-ivanovo.ru/golovnye-ubory/fartuk-30-42-50-tkan-gabardin-100-poliefir; Универсальный ; Василек  Бордо  Зеленый  Бирюза  Красный  Сирень  Салатовый ; Габардин 
-Одежда для торговли;Фартук со спинкой М (42-50);https://argo-ivanovo.ru/golovnye-ubory/fartuk-zhenskij-nejlon-30; Универсальный ; В ассортименте  Василек  Бордо  Зеленый  Темно-синий ; Нейлон 
-Одежда для торговли;Фартук со спинкой №5а (44-54);https://argo-ivanovo.ru/golovnye-ubory/fartuk-zhenskij; Универсальный ; Белый ; Нейлон  Габардин+Кружево 
-Одежда для торговли;Фартук-передник №23 (44-60);https://argo-ivanovo.ru/golovnye-ubory/f; Универсальный ; Белый  Василек  Бордо  Зеленый  Серый  Темно-синий  Коричневый ; Оксфорд 
-Одежда для торговли;Фартук Домохозяйка (44-60);https://argo-ivanovo.ru/golovnye-ubory/fartuk-domohozyika; Универсальный ; В ассортименте ; Болонь 
-Одежда для торговли;Нарукавники на резинке;https://argo-ivanovo.ru/golovnye-ubory/fartuk1; Универсальный ; Белый  Василек  Серый  Темно-синий ; Оксфорд 
-Одежда для торговли;Фартук ОДНОРАЗОВЫЙ ;https://argo-ivanovo.ru/golovnye-ubory/fartuk-polietilenovyj-120x70sm-serebro; Универсальный ;; полиэтилен 
-Медицинская одежда;Бандана женская;https://argo-ivanovo.ru/xalaty/bandana-zhenskaja; Универсальный ; Белый  Черный ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Бандана мужская;https://argo-ivanovo.ru/xalaty/bandana-muzhskaja; Универсальный ; Белый  Черный ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 110 (40-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-110-40-56; 40  42  44  46  48  50  52  54  56 ; Белый+мурена ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 110 (58-64);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-110-58-64; 58  60  62  64 ; Белый+мурена ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 112 (44-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-112-44-56; 44  46  48  50  52  54  56 ; Темно-синий ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 117 (42-52) цветной;https://argo-ivanovo.ru/xalaty/kostju-sanitarnyj-117-42-52-tsvetnoj; 42  44  46  48  50  52 ; Серый +лайм ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 120 ( 40-56) цветной;https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-120-40-56-tsvetnoj; 40  42  44  46  48  50  52  54  56 ; Сирень ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 120 (40-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-120-40-56; 40  42  44  46  48  50  52  54  56 ; Белый +красный  Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 201 тиси (44-56);https://argo-ivanovo.ru/xalaty/kostjum-zhenskij; 44  46  48  50  52  54  56 ; Белый + тем.синей  Белый+голубой  Черный ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 21/1 (40-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-21-1-40-56; 40  42  44  46  48  50  56 ; Лазурный  Сирень ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 21/1 (58-62);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-21-1-58-60; 58  60  62 ; Лазурный  Сирень ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 22 (40-56) цветной;https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-22-40-56-tsvetnoj1223; 40  42  46  48  50  52  54  56 ; Черный  Сирень ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 22 (44-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-22; 44  46  48  50  52  54  56 ; Белый + зеленый  Белый + тем.синей  Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 40 (44-56) ;https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-40-44-56; 44  46  48  50  52  54  56 ; Темно-синий ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 510 (40-56);https://argo-ivanovo.ru/xalaty/Костюм санитарный № 5102; 42  44  46  48  50  52  54  56 ; Белый+голубой  Белый+серый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 510 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-510-bolshie-razmery; 58  60  62  64 ; Белый+серый  Белый+голубой ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный№ 600 (42-56) CVC;https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-600-42-56; 42  44  46  48  50  52  54  56 ; Белый + тем.синей ; 50% хлопок , 50% полиэфир 
-Медицинская одежда;Куртка № 407 ткань тиси (42-58);https://argo-ivanovo.ru/xalaty/kurtka-407-tkan-tisi; 42  44  46  48  50  52  54  56  58 ; Белый + тем.синей  Белый +красный ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Маска трикотажная;https://argo-ivanovo.ru/xalaty/maska-trikotazhnaja; Универсальный ; Черный  Серый ; хлопок 
-Медицинская одежда;Рубашка женская №700 (44-52);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-700; 44  46  48  50  52 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Феска медицинская ;https://argo-ivanovo.ru/xalaty/feska-meditsinskaja-tisi; Универсальный ; В ассортименте  Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Феска медицинская бязь;https://argo-ivanovo.ru/xalaty/feska-meditsinskaja-bjaz; Универсальный ; В ассортименте ; Бязь 
-Медицинская одежда;Халат Женский № 12 (44-60);https://argo-ivanovo.ru/xalaty/xalat-zhenskij-121; 44  46  48  50  52  54  56  58  60 ; Белый ; Нейлон 
-Медицинская одежда;Халат медицинский № 1(мужской) 44-56;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-1-muzhskoj-44-56 1; 44  46  48  50  52  54  56 ; Черный ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 1(мужской) 44-56;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-1; 44  46  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 1(мужской) большие размеры;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-1-muzhskoj-bolshie-razmery; 58  60 ; Черный ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 1(мужской) большие размеры;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-1-muzhskoj-bolshie-razmery 1; 58  60 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 117 ( 42-52) ;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-117-42-52 1; 42  44  46  48  50  52 ; Белый +красный ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 120 (44-60);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-120-44-60; 44  46  48  50  52  54  56  58  60 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 200 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-200-40-56; 40  42  44  46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 37 (42-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-37-42-56; 42  44  46  48  50  52  54  56 ; Белый +красный ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 37 (42-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-37-42-56 1; 42  44  46  48  50  52  54  56 ; Белый + тем.синей ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 510 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510-40-56 1; 40  42  44  46  48  50  52  54  56 ; Белый +красный ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 510 (58-64) цветной;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510-58-64-tsvetnoj; 58  60  62  64 ; Серо-голубой  Бирюза ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 510 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510-bolshie-razmery-58-64 12; 58  60  62  64 ; Белый + тем.синей ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 510/1(42-56) CVC;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510-1-42-56-cvc; 42  44  46  48  50  52  54  56 ; Серо-голубой ; 50% хлопок , 50% полиэфир 
-Медицинская одежда;Халат медицинский № 515 рукав 3/4 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-515-rukav-3-4-58-; 40  42  44  46  48  50  52  54 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 515 рукав 3/4 (58-62);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-515-rukav-3-4-58-62; 58  60  62 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 516 (62-68);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-516-62-68; 62  64  66  68 ; Голубой  Брусника  Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 520/1 (44-52) СVC;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-520-1-44-52-satori; 44  46  48  50  52 ; Белый ; 50% хлопок , 50% полиэфир 
-Медицинская одежда;Халат медицинский № 80 (46-56) цветной;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-80-46-56-tsvetnoj; 46  48  50  52  54  56 ; Бирюза ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 80 (58-64) цветной;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-80-58-64-tsvetnoj; 58  60  62  64 ; Бирюза ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский №512 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-512; 40  44  46  48  50  52  54  56 ; Коралл  Белый  Черный  Темно-синий ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский №518 (40-58);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-518; 40  42  44  46  48  50  52  54  56  58 ; Белый + тем.синей  Белый + зеленый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский №520 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-520; 40  42  44  46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский№ 160 (42-56) цветной;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-160-42-56-tsvetnoj; 42  44  46  48  50  52  54  56 ; Лайм  Пудра ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский№ 160 (58-64) цветной;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-160-58-64-tsvetnoj; 58  60  62  64 ; Лайм  Пудра ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Шапочка медицинская ;https://argo-ivanovo.ru/xalaty/shapka-meditsinskaja; Универсальный ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Шапочка медицинская ;https://argo-ivanovo.ru/xalaty/kolpak; Универсальный ; В ассортименте ; Бязь 
-Медицинская одежда;Костюм санитарный № 110 (40-56) цветной;https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-110; 40  42  44  46  48  50  52  54  56 ; Лазурь+серый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 110 (58-64) цветной;https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-110-bolshie-razmery; 58  60  62  64 ; Лазурь+серый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 101(40-58);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-101; 40  42  44  46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 20/2 (44-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-20-2; 44  46  48  50  52  54  56  58 ; Голубой  Василек  Салатовый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 20/2 большие размеры (58-60);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-20-2-bolshie-razmery; 58  60 ; Голубой  Василек  Салатовый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный №21 (44-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-21; 44  46  48  50  52  54  56 ; Темно-синий ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный №21 большие размеры (58-62);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-21-bolshie-razmery; 58  60  62  64 ; Темно-синий ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 101 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-101-bolshie-razmery; 58  60  62  64 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 507 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-507; 40  42  44  46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский №160 (42-56);https://argo-ivanovo.ru/xalaty/xalat-160; 42  44  46  48  50  52  54  56 ; Лазурный  Персик  Белый  Темно-синий  Салатовый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский №160 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-160-bolshie-razmery; 58  60  62  64 ; Персик  Лазурный  Белый  Темно-синий  Салатовый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный №119 (40-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-119; 40  42  44  46  48  50  52  54  56 ; Белый +красный  Голубой  Фуксия (малина)  Коралл + серый  Белый + сирень  Темно-синий ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный №119 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-119-big; 58  60  62  64 ; Коралл + серый  Голубой  Белый +красный  Фуксия (малина)  Белый + сирень  Темно-синий ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 507 (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-507-58-64; 58  60  62  64 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский №505 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-505; 40  42  44  46  48  50  52  54  56 ; Лазурь+зеленый  Белый + тем.синей  Белый +красный  Лазурь+серый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 510 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510; 40  42  44  46  48  50  52  54  56 ; Белый + тем.синей ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм медицинский №510 цветной (40-56);https://argo-ivanovo.ru/xalaty/kostjum-meditsinskij-510-tsvetnoj; 44  46  48  50  52  54  56 ; Серо-голубой  Темно-синий ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм медицинский №510 цветной большие размеры (58-64);https://argo-ivanovo.ru/xalaty/kostjum-meditsinskij-510-tsvetnoj-bolshie-razmery; 58  60  62  64 ; Серо-голубой  Темно-синий ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 510 (40-56) цветной;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510-40-56-tsvetnoj; 40  42  44  46  48  50  52  54  56 ; Серо-голубой  Бирюза ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 510 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510-bolshie-razmery; 58  60  62  64 ; Белый +красный ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный  №118 (44-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-20-1; 44  46  48  50  52  54  56 ; Белый  Зеленый  Сирень ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный  №118 большие размеры (58-60);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-118-bolshie-razmery; 58  60 ; Белый  Зеленый  Сирень ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский № 510 длинный рукав (40-50);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510-dlinnyj-rukav; 40  42  44  46  48  50 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский №117 (42-52);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-117-0; 42  44  46  48  50  52 ; Белый + тем.синей ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский №500 (42-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-500; 42  44  46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский №500 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-500-bolshie-razmery; 58  60  62  64 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 10 (44-62);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj; 44  46  48  50  52  54  56  58  60  62 ; Пест.верх+сер.брюки  Пест.верх+синие брюки ; П/Лен 
-Медицинская одежда;Халат медицинский №503 (38-52);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-503-40-52-tkan-tisi; 38  40  42  44  46  48  50  52 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный № 30 (44-56);https://argo-ivanovo.ru/xalaty/kostjum-anitarnyj; 44  46  48  50  52  54  56 ; Кошки ; Бязь 
-Медицинская одежда;Халат медицинский №80 (46-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-80; 46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский №80 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-80-bolshie-razmery; 58  60  62  64 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный женский (44-58);https://argo-ivanovo.ru/xalaty/kostjum-zhenskij-xirurga; 44  46  48  50  52  54  56  58 ; Голубой  Зеленый  Серый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Блуза санитарная (44-58);https://argo-ivanovo.ru/xalaty/bluza-sanitarnaja; 44  46  48  50  52  54  56  58 ; Бежевый  Голубой  Серый ; Бязь 
-Медицинская одежда;Халат медицинский №110 (40-56);https://argo-ivanovo.ru/xalaty/xalat-110; 40  42  44  46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Халат медицинский №110 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-110-bolshie-razmery; 58  60  62  64 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Блуза санитарная (44-58);https://argo-ivanovo.ru/xalaty/bluza-saitarnaja; 44  46  48  50  52  54  56  58 ; Оранжевый  Коричневый ; П/Лен 
-Медицинская одежда;Халат медицинский (Туника);https://argo-ivanovo.ru/xalaty/tunika-tisi; 42  44  46 ; Белый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный женский (44-62);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-tycrb; 56/58  52/54  48/50  44/46  60/62 ; Серо-голубой  Белый  Зеленый  Серый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Костюм санитарный мужской (44-62);https://argo-ivanovo.ru/xalaty/kostjum-216; 52/54  48/50  44/46  60/62  56/58 ; Серо-голубой  Белый  Зеленый  Серый ; 65% полиэстер, 35 % хлопок 
-Медицинская одежда;Брюки санитарные Модельные (цветные) (40-56);https://argo-ivanovo.ru/xalaty/brjuki-sanitarnye; 40  42  44  46  48  50  52  54  56 ; Фуксия (малина)  Пудра  Бирюза  Серый  Темно-синий ; Тиси 
-Одежда для поваров; Головной убор Кокошник высокий;https://argo-ivanovo.ru/fartuki/kokoshnik-vysokij; Универсальный ; Белый ; Габардин+Кружево 
-Одежда для поваров; Головной убор Колпак Повара;https://argo-ivanovo.ru/fartuki/kolpak-povara-blin-tkan-smesovaja-65-poliefir-35-xlopok; Универсальный ; Белый ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;Головной убор Колпак Повара;https://argo-ivanovo.ru/fartuki/kolpak-blin; Универсальный ; Белый ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;Головной убор колпак повара цветной;https://argo-ivanovo.ru/fartuki/golovnoj-ubor-kolpak-povara-tsvetnoj; Универсальный ; Черный  Красный ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;"Костюм Повара  ""Шеф"" (44-56)";https://argo-ivanovo.ru/fartuki/kostjum-zhenskij-povara-40-60-tkan-tisi; 44  46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;"Костюм Повара "" Принт"" (58-60)";https://argo-ivanovo.ru/fartuki/kostjum-povara-print-58-60; 58  60 ; Поварешки  Перцы ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;"Костюм Повара "" Шеф"" (58-60)";https://argo-ivanovo.ru/fartuki/kostjum-povara-shef-58-6025; 58  60 ; Черный  Красный ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;"Костюм Повара ""Принт"" (42-56)";https://argo-ivanovo.ru/fartuki/kostjum-povara; 44  46  48  50  52  54  56 ; Перцы  Поварешки ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;"Костюм Повара ""Шеф"" (58-62)";https://argo-ivanovo.ru/fartuki/kostjum-povara-shef-58-621; 58  60  62 ; Белый ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;"Костюм Повара""Шеф"" (42-56)";https://argo-ivanovo.ru/fartuki/kostjumpovara-shef; 44  46  48  50  52  54  56 ; Черный  Красный ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;Куртка Повара (40-62);https://argo-ivanovo.ru/fartuki/kurtka-povara; 40  42  44  46  48  50  52  54  56  58  60  62 ; Белый  Черный ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;Рубашка женская №700 (44-52);https://argo-ivanovo.ru/fartuki/xalat-meditsinskij-700; 44  46  48  50  52 ; Белый ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;"Фартук ""БАРМЕН"" (44-60)";https://argo-ivanovo.ru/fartuki/fartuk-barmen-44-60-tkan-tisi-65-35; Универсальный ; Черный  Бордо  Коричневый ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;"Фартук ""БАРМЕН"" (44-60)";https://argo-ivanovo.ru/fartuki/fartuk-barmen-44-60; Универсальный ; Перцы  Кофе  Поварешки ; твил 
-Одежда для поваров;Фартук барный короткий №25 (44-60);https://argo-ivanovo.ru/fartuki/fartuk-barnyj-korotkij-25; Универсальный ; Бордо  Коричневый ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;Фартук Универсальный (44-60);https://argo-ivanovo.ru/fartuki/fartuk-universalnyj; Универсальный ; Бордо  Красный  Темно-синий ; смесовая ткань 
-Одежда для поваров;Фартук-передник №23 (44-60);https://argo-ivanovo.ru/fartuki/fartuk-23-povar-44-60-tkan-tisi-65-35; Универсальный ; Белый  Василек  Черный  Бордо  Красный  Серый  Темно-синий  Коричневый ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров; Шапочка-шарлотка;https://argo-ivanovo.ru/fartuki/shapochka-sharlotta-odnorazovaja;; Пудра  Белый  Бирюза ; спанбонд 
-Одежда для поваров;Костюм пекаря мужской (44-62);https://argo-ivanovo.ru/fartuki/kostjum-pekarja-muzhskoj; 60/62  56/58  52/54  44/46  48/50 ; Серо-голубой  Белый  Зеленый  Серый ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;Костюм санитарный женский (44-62);https://argo-ivanovo.ru/fartuki/kostjum-sanitarnyj-tycrb; 48/50  44/46  60/62  56/58  52/54 ; Серо-голубой  Белый  Зеленый  Серый ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;Костюм санитарный мужской (44-62);https://argo-ivanovo.ru/fartuki/kostjum-216; 56/58  52/54  48/50  44/46  60/62 ; Серо-голубой  Белый  Зеленый  Серый ; 65% полиэстер, 35 % хлопок 
-Одежда для поваров;Фартук со спинкой №5а (44-54);https://argo-ivanovo.ru/fartuki/fartuk-zhenskij; Универсальный ; Белый ; Нейлон  Габардин+Кружево 
-Одежда для поваров;Фартук-передник №23 (44-60);https://argo-ivanovo.ru/fartuki/f; Универсальный ; Белый  Василек  Бордо  Зеленый  Серый  Темно-синий  Коричневый ; Оксфорд 
-Одежда для поваров;Фартук Домохозяйка (44-60);https://argo-ivanovo.ru/fartuki/fartuk-domohozyika; Универсальный ; В ассортименте ; Болонь 
-Одежда для поваров;Фартук ОДНОРАЗОВЫЙ ;https://argo-ivanovo.ru/fartuki/fartuk-polietilenovyj-120x70sm-serebro; Универсальный ;; полиэтилен 
-Одежда для горничных;Рубашка женская №700 (44-52);https://argo-ivanovo.ru/kostjumy/xalat-meditsinskij-700; 44  46  48  50  52 ; Белый ; 65% полиэстер, 35 % хлопок 
-Одежда для горничных;Фартук со спинкой № 22  (44-54);https://argo-ivanovo.ru/kostjumy/fartuk-so-spinkoj-22-tkan-tisi; Универсальный ; Серый  Темно-синий  Салатовый ; 65% полиэстер, 35 % хлопок 
-Одежда для горничных;Фартук со спинкой №20 (44-56);https://argo-ivanovo.ru/kostjumy/fartuk-so-spinkoj-20-44-56; Универсальный ; Василек  Бордо  Зеленый  Красный  Темно-синий ; Габардин 
-Одежда для горничных;Фартук со спинкой №45 (44-56);https://argo-ivanovo.ru/kostjumy/fartuk-so-spinkoj-45-44-56; Универсальный ; Василек  Бордо  Зеленый  Темно-синий  Коричневый ; Габардин 
-Одежда для горничных;Халат Женский №21 (44-60);https://argo-ivanovo.ru/kostjumy/xalat-21; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Серый ; Габардин 
-Одежда для горничных;Халат Женский №7 (тем.синий) 44-60;https://argo-ivanovo.ru/kostjumy/xalat-zhenskij-7; 44  46  48  50  52  54  56  58  60 ; Темно-синий ; Габардин+Кружево 
-Одежда для горничных;Костюм Женский  №11 (44-56);https://argo-ivanovo.ru/kostjumy/kostjum-dlja-prodavtsa; 44  46  48  50  52  54  56  58 ; Василек  Бордо ; Габардин 
-Одежда для горничных;Костюм санитарный № 111 (44-56);https://argo-ivanovo.ru/kostjumy/kostjum-sanitarnyj 111; 44  46  48  50  52  54  56 ; Коричневый ; 65% полиэстер, 35 % хлопок 
-Одежда для горничных;Костюм санитарный №111;https://argo-ivanovo.ru/kostjumy/kostjum-sanitarnyj-111; 48  50 ; Василек ; 65% полиэстер, 35 % хлопок 
-Одежда для горничных;Фартук со спинкой №18 (48-56);https://argo-ivanovo.ru/kostjumy/fartuk-8-42-50-tkan-gabardin-100-poliefir; Универсальный ; Василек  Бордо  Зеленый  Темно-синий ; Габардин 
-Одежда для горничных;Костюм санитарный № 10 (44-62);https://argo-ivanovo.ru/kostjumy/kostjum-sanitarnyj; 44  46  48  50  52  54  56  58  60  62 ; Пест.верх+сер.брюки  Пест.верх+синие брюки ; П/Лен 
-Одежда для горничных;Фартук со спинкой №30 (44-50);https://argo-ivanovo.ru/kostjumy/fartuk-30-42-50-tkan-gabardin-100-poliefir; Универсальный ; Василек  Бордо  Зеленый  Бирюза  Красный  Сирень  Салатовый ; Габардин 
-Одежда для клининга;Рубашка женская №700 (44-52);https://argo-ivanovo.ru/sarafany/xalat-meditsinskij-700; 44  46  48  50  52 ; Белый ; 65% полиэстер, 35 % хлопок 
-Одежда для клининга;"Сарафан Женский ""ГОРОХ"" (44-60)";https://argo-ivanovo.ru/sarafany/sarafan-zhenskij-gorox 1; 44  46  48  50  52  54  56  58  60 ; Тем.синей+лайм ; Нейлон 
-Одежда для клининга;Сарафан Женский №01 (Лилия) 44-60;https://argo-ivanovo.ru/sarafany/sarafan-zhenskij-01; 44  46  48  50  52  54  56  58  60 ; Василек ; Габардин 
-Одежда для клининга;Сарафан Женский №05 (44-60);https://argo-ivanovo.ru/sarafany/sarafan-05-gabardin; 44  46  48  50  52  54  56  58  60 ; Василек  Темно-синий ; Габардин 
-Одежда для клининга;Сарафан Женский №05 (44-60);https://argo-ivanovo.ru/sarafany/sarafan-05-nejlon; 44  46  48  50  52  54  56  58  60 ; Василек  Темно-синий ; Нейлон 
-Одежда для клининга;Фартук со спинкой №1 (44-54);https://argo-ivanovo.ru/sarafany/fartuk-1-nejlon; Универсальный ; Василек  Бордо  Зеленый  Темно-синий ; Нейлон 
-Одежда для клининга;Фартук со спинкой №44 (44-54);https://argo-ivanovo.ru/sarafany/fartuk-so-spinkoj-44-44-54; Универсальный ; Темно-синий ; Габардин 
-Одежда для клининга;Фартук со спинкой №45 (44-56);https://argo-ivanovo.ru/sarafany/fartuk-so-spinkoj-45-44-56; Универсальный ; Василек  Бордо  Зеленый  Темно-синий  Коричневый ; Габардин 
-Одежда для клининга;Халат Женский №2 (44-60);https://argo-ivanovo.ru/sarafany/xalat-2-44-60-gabardin; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Зеленый  Темно-синий ; Габардин 
-Одежда для клининга;Халат Женский №21 (44-60);https://argo-ivanovo.ru/sarafany/xalat-21; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Серый ; Габардин 
-Одежда для клининга;Костюм санитарный № 111 (44-56);https://argo-ivanovo.ru/sarafany/kostjum-sanitarnyj 111; 44  46  48  50  52  54  56 ; Коричневый ; 65% полиэстер, 35 % хлопок 
-Одежда для клининга;Костюм санитарный №111;https://argo-ivanovo.ru/sarafany/kostjum-sanitarnyj-111; 48  50 ; Василек ; 65% полиэстер, 35 % хлопок 
-Одежда для клининга;Фартук со спинкой №18 (48-56);https://argo-ivanovo.ru/sarafany/fartuk-8-42-50-tkan-gabardin-100-poliefir; Универсальный ; Василек  Бордо  Зеленый  Темно-синий ; Габардин 
-Одежда для клининга;Фартук со спинкой  ВЕЛИКАН (56-64);https://argo-ivanovo.ru/sarafany/fartuk-velikan-56-64-tkan-gabardin-100-poliefir-logotip; Универсальный ; Пудра  Василек  Бордо  Зеленый ; Габардин 
-Одежда для салонов красоты и SPA;Пеньюар полиэтиленовый стандарт (серебро) ;https://argo-ivanovo.ru/dlja-parikmaxerov/penjuar-polietilenovyj-standart-serebro-140x100sm;;; полиэтилен 
-Одежда для салонов красоты и SPA;Пеньюар стандарт 140х100 см;https://argo-ivanovo.ru/dlja-parikmaxerov/penjuar-polietilenovyj-ljuks-140x100sm; 100*140 ;; полиэтилен 
-Одежда для салонов красоты и SPA;Перчатки виниловые прозрачные;https://argo-ivanovo.ru/dlja-parikmaxerov/perchatki-vinilovye-neopudrennye;;; винил 
-Одежда для салонов красоты и SPA;Перчатки латексные неопудренные;https://argo-ivanovo.ru/dlja-parikmaxerov/perchatki-lateksnye; S-маленький  М - средний ; Белый ; латекс 
-Одежда для салонов красоты и SPA;Перчатки нитриловые;https://argo-ivanovo.ru/dlja-parikmaxerov/perchatki-polietilenovye; S-маленький  М - средний ; Пудра  Бирюза  Сирень ; нитрил 
-Одежда для салонов красоты и SPA;Полотенце спанлейс стандарт;https://argo-ivanovo.ru/dlja-parikmaxerov/polotentse-vafelnoe-ljuks-3570-sm; 35*70 ; Белый ; спанлейс 
-Одежда для салонов красоты и SPA;Простыни СМС стандарт(20 штук);https://argo-ivanovo.ru/dlja-parikmaxerov/prostynja-sms-standart-200160-sm;; Белый  Бирюза ; смс  
-Одежда для салонов красоты и SPA;Фартук парикмахера (44-60);https://argo-ivanovo.ru/dlja-parikmaxerov/fartuk-parikmaxera; Универсальный ; В ассортименте ; Тафта 
-Одежда для салонов красоты и SPA;Фартук Универсальный (44-60);https://argo-ivanovo.ru/dlja-parikmaxerov/fartuk-universalnyj; Универсальный ; Бордо  Красный  Темно-синий ; смесовая ткань 
-Одежда для салонов красоты и SPA;Костюм санитарный № 110 (40-56) цветной;https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-sanitarnyj-110; 40  42  44  46  48  50  52  54  56 ; Лазурь+серый ; 65% полиэстер, 35 % хлопок 
-Одежда для салонов красоты и SPA;Костюм санитарный № 110 (58-64) цветной;https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-sanitarnyj-110-bolshie-razmery; 58  60  62  64 ; Лазурь+серый ; 65% полиэстер, 35 % хлопок 
-Одежда для салонов красоты и SPA;Пеньюар парикмахера;https://argo-ivanovo.ru/dlja-parikmaxerov/penjuar-parikmaxerskij-sostav-100-poliefir; Универсальный ; Бежевый ; Тафта 
-Одежда для салонов красоты и SPA;Костюм санитарный №21 (44-56);https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-sanitarnyj-21; 44  46  48  50  52  54  56 ; Темно-синий ; 65% полиэстер, 35 % хлопок 
-Одежда для салонов красоты и SPA;Костюм санитарный №21 большие размеры (58-62);https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-sanitarnyj-21-bolshie-razmery; 58  60  62  64 ; Темно-синий ; 65% полиэстер, 35 % хлопок 
-Одежда для салонов красоты и SPA;Халат медицинский №160 (42-56);https://argo-ivanovo.ru/dlja-parikmaxerov/xalat-160; 42  44  46  48  50  52  54  56 ; Лазурный  Персик  Белый  Темно-синий  Салатовый ; 65% полиэстер, 35 % хлопок 
-Одежда для салонов красоты и SPA;Халат медицинский №160 большие размеры (58-64);https://argo-ivanovo.ru/dlja-parikmaxerov/xalat-meditsinskij-160-bolshie-razmery; 58  60  62  64 ; Персик  Лазурный  Белый  Темно-синий  Салатовый ; 65% полиэстер, 35 % хлопок 
-Одежда для салонов красоты и SPA; Шапочка-шарлотка;https://argo-ivanovo.ru/dlja-parikmaxerov/shapochka-sharlotta-odnorazovaja;; Пудра  Белый  Бирюза ; спанбонд 
-Одежда для салонов красоты и SPA;Костюм санитарный №119 (40-56);https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-sanitarnyj-119; 40  42  44  46  48  50  52  54  56 ; Голубой  Фуксия (малина)  Коралл + серый  Белый + сирень  Белый +красный  Темно-синий ; 65% полиэстер, 35 % хлопок 
-Одежда для салонов красоты и SPA;Костюм санитарный №119 большие размеры (58-64);https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-sanitarnyj-119-big; 58  60  62  64 ; Коралл + серый  Голубой  Белый +красный  Фуксия (малина)  Белый + сирень  Темно-синий ; 65% полиэстер, 35 % хлопок 
-Одежда для салонов красоты и SPA;Халат медицинский №505 (40-56);https://argo-ivanovo.ru/dlja-parikmaxerov/xalat-meditsinskij-505; 40  42  44  46  48  50  52  54  56 ; Белый + тем.синей  Белый +красный  Лазурь+серый  Лазурь+зеленый ; 65% полиэстер, 35 % хлопок 
-Одежда для салонов красоты и SPA;Костюм санитарный № 10 (44-62);https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-sanitarnyj; 44  46  48  50  52  54  56  58  60  62 ; Пест.верх+сер.брюки  Пест.верх+синие брюки ; П/Лен 
-Одежда для салонов красоты и SPA;Костюм санитарный № 30 (44-56);https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-anitarnyj; 44  46  48  50  52  54  56 ; Кошки ; Бязь 
-Одежда для салонов красоты и SPA;Костюм санитарный женский (44-58);https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-zhenskij-xirurga; 44  46  48  50  52  54  56  58 ; Голубой  Зеленый  Серый ; 65% полиэстер, 35 % хлопок 
-Одежда для салонов красоты и SPA;Блуза санитарная (44-58);https://argo-ivanovo.ru/dlja-parikmaxerov/bluza-sanitarnaja; 44  46  48  50  52  54  56  58 ; Голубой  Бежевый  Серый ; Бязь 
-Одежда для салонов красоты и SPA;Блуза санитарная (44-58);https://argo-ivanovo.ru/dlja-parikmaxerov/bluza-saitarnaja; 44  46  48  50  52  54  56  58 ; Оранжевый  Коричневый ; П/Лен 
-Одежда для салонов красоты и SPA;Халат медицинский (Туника);https://argo-ivanovo.ru/dlja-parikmaxerov/tunika-tisi; 42  44  46 ; Белый ; 65% полиэстер, 35 % хлопок 
-Одежда для салонов красоты и SPA;Фартук ОДНОРАЗОВЫЙ ;https://argo-ivanovo.ru/dlja-parikmaxerov/fartuk-polietilenovyj-120x70sm-serebro; Универсальный ;; полиэтилен 
-Рабочая одежда;"Берцы ""ОМОН""";https://argo-ivanovo.ru/rabochaja-odezhda?product_id=398; 45  39  47  41  43  40  42  44  46 ; Черный ;
-Рабочая одежда;Жилет Сигнальный;https://argo-ivanovo.ru/rabochaja-odezhda/zhilet-signalnyj; 60/62  56/58  52/54  48/50  44/46 ; Оранжевый  Желтый ;
-Рабочая одежда;Костюм Мужской  Рабочий  № 25 С СОП;https://argo-ivanovo.ru/rabochaja-odezhda/kostjum-standart-1-s-sop; 44-46/170-176  44-46/182-188   48-50/170-176  48-50/182-188  52-54/170-176   52-54/182-188  56-58/170-176   56-58/182-188  60-62/170-176  60-62/182-188  ; Темно-синий ;  (35%-хл.., 65%-п/э) с ВО пропиткой 
-Рабочая одежда;КОСТЮМ МУЖСКОЙ  РАБОЧИЙ № 24;https://argo-ivanovo.ru/rabochaja-odezhda/kostjum-rabochij-standart-1; 44-46/170-176  44-46/182-188   48-50/170-176  48-50/182-188  52-54/170-176   52-54/182-188  56-58/170-176   56-58/182-188  60-62/170-176  60-62/182-188  ; Темно-синий ;  (35%-хл.., 65%-п/э) с ВО пропиткой 
-Рабочая одежда;Костюм противоэнцефалитный с сеткой;https://argo-ivanovo.ru/rabochaja-odezhda/kostjum-oxrannik; 44-46/170-176   48-50/170-176  52-54/170-176  56-58/170-176  60-62/170-176 ; Хаки ; палаточное полотно 250г. 
-Трикотаж для униформы;Брюки женские;https://argo-ivanovo.ru/trikotazh-dlja-uniformy/brjuki-zhenskie; 46  48  50  52  54  56  58  60 ; Темно-синий ; футер 
-Трикотаж для униформы;Брюки мужские;https://argo-ivanovo.ru/trikotazh-dlja-uniformy/brjuki-muzhskie; 46  48  50  52  54  56  58 ; Темно-синий ; футер 
-Трикотаж для униформы;Футболка женская (44-60);https://argo-ivanovo.ru/trikotazh-dlja-uniformy/futbolka-zhenskaja; 44  46  50  52  54  56  58  60 ; В ассортименте ; хлопок 
-Трикотаж для униформы;Футболка мужская (44-60);https://argo-ivanovo.ru/trikotazh-dlja-uniformy/futbolka-muzhskaja; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Темно-синий ; хлопок 
-Одноразовая одежда;Пеньюар стандарт 140х100 см;https://argo-ivanovo.ru/odnorazovaja-odezhda/penjuar-polietilenovyj-ljuks-140x100sm; 100*140 ;; полиэтилен 
-Одноразовая одежда;Перчатки виниловые прозрачные;https://argo-ivanovo.ru/odnorazovaja-odezhda/perchatki-vinilovye-neopudrennye;;; винил 
-Одноразовая одежда;Перчатки латексные неопудренные;https://argo-ivanovo.ru/odnorazovaja-odezhda/perchatki-lateksnye; S-маленький  М - средний ; Белый ; латекс 
-Одноразовая одежда;Перчатки нитриловые;https://argo-ivanovo.ru/odnorazovaja-odezhda/perchatki-polietilenovye; S-маленький  М - средний ; Пудра  Бирюза  Сирень ; нитрил 
-Одноразовая одежда;Полотенце спанлейс стандарт;https://argo-ivanovo.ru/odnorazovaja-odezhda/polotentse-vafelnoe-ljuks-3570-sm; 35*70 ; Белый ; спанлейс 
-Одноразовая одежда;Простыни СМС стандарт(20 штук);https://argo-ivanovo.ru/odnorazovaja-odezhda/prostynja-sms-standart-200160-sm;; Белый  Бирюза ; смс  
-Одноразовая одежда;Фартук ОДНОРАЗОВЫЙ ;https://argo-ivanovo.ru/odnorazovaja-odezhda/fartuk-polietilenovyj-120x70sm-serebro; Универсальный ;; полиэтилен 
+category_name;name_stuff;url_stuff;size;color;cloth;price
+Одежда для торговли;Брюки женские;https://argo-ivanovo.ru/golovnye-ubory/brjuki-shtany-gabardinovye; 44  46  48  50  52  52  54  56  58 ; Василек  Темно-синий ; Габардин ;320р.
+Одежда для торговли;Головной убор Козырек;https://argo-ivanovo.ru/golovnye-ubory/kozurek-1;; Василек  Бордо  Зеленый  Темно-синий ; Нейлон  Габардин ;180р.
+Одежда для торговли;Головной убор Пилотка ;https://argo-ivanovo.ru/golovnye-ubory/golovnoj-ubor-pilotka 1; Универсальный ; Василек  Бордо  Зеленый  Красный  Темно-синий ; Габардин ;180р.
+Одежда для торговли;Головной убор Пилотка;https://argo-ivanovo.ru/golovnye-ubory/golovnoj-ubor-pilotka 2; Универсальный ; Василек  Бордо ; Нейлон ;180р.
+Одежда для торговли;Головной убор Пилотка;https://argo-ivanovo.ru/golovnye-ubory/golovnoj-ubor-pilotka; Универсальный ; Белый  Василек  Бордо  Зеленый  Красный  Темно-синий ; Габардин ;180р.
+Одежда для торговли;Головной убор Пилотка-Сетка;https://argo-ivanovo.ru/golovnye-ubory/pilotka-dlja-prodavtsa-tkan-nejlon-100-poliefir; Универсальный ; Василек  Бордо ; Габардин ;180р.
+Одежда для торговли;"Сарафан Женский ""ГОРОХ"" (44-60)";https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-gorox 1; 44  46  48  50  52  54  56  58  60 ; Тем.синей+лайм ; Нейлон ;350р.
+Одежда для торговли;"Сарафан Женский ""ГОРОХ"" (44-60)";https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-gorox-44-60; 44  46  48  50  52  54  56  58  60 ; Тем.синей+красный ; Нейлон ;350р.
+Одежда для торговли;Сарафан Женский № XХ (62-66);https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-01x; 62  64  66 ; Василек ; Габардин ;385р.
+Одежда для торговли;Сарафан Женский № XХ (62-66);https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-xx-62-66; 62  64  66 ;;;385р.
+Одежда для торговли;Сарафан Женский №01 (Лилия) 44-60;https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-01-lilija-44-60; 44  46  48  50  52  54  56  58  60 ; Василек ; Нейлон ;345р.
+Одежда для торговли;Сарафан Женский №01 (Лилия) 44-60;https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-01-lilija-44-60 2; 44  46  48  50  52  54  56  58  60 ; Бордо ; Габардин ;355р.
+Одежда для торговли;Сарафан Женский №01 (Лилия) 44-60;https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-01; 44  46  48  50  52  54  56  58  60 ; Василек ; Габардин ;355р.
+Одежда для торговли;Сарафан Женский №05 (44-60);https://argo-ivanovo.ru/golovnye-ubory/sarafan-05-gabardin; 44  46  48  50  52  54  56  58  60 ; Василек  Темно-синий ; Габардин ;355р.
+Одежда для торговли;Сарафан Женский №05 (44-60);https://argo-ivanovo.ru/golovnye-ubory/sarafan-05-nejlon; 44  46  48  50  52  54  56  58  60 ; Василек  Темно-синий ; Нейлон ;345р.
+Одежда для торговли;Сарафан Женский №08 габардин (44-60);https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-08-4-60-tkan-gabardin-100-poliester; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Зеленый  Темно-синий ; Габардин ;370р.
+Одежда для торговли;Сарафан Женский №08 нейлон (44-60);https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-08-44-60-tkan-gabardin-100-poliester; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Темно-синий ; Нейлон ;360р.
+Одежда для торговли;Сарафан Женский №09 (44-60);https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-09; 44  46  48  50  52  54  56  58  60 ; Темно-синий ; Габардин ;376р.
+Одежда для торговли;Сарафан Женский №31 (Сакура) 44-60;https://argo-ivanovo.ru/golovnye-ubory/sarafan2; 44  46  48  50  52  54  56  58  60 ; Темно-синий ; Габардин ;400р.
+Одежда для торговли;Сарафан Женский №31 (Сакура) 44-60;https://argo-ivanovo.ru/golovnye-ubory/sarafan-zhenskij-31-sakura-44-60; 44  46  48  50  52  54  56  58  60 ; Василек ; Габардин ;400р.
+Одежда для торговли;Сарафан НОВИНКА (44-62);https://argo-ivanovo.ru/golovnye-ubory/sarafan-novinka-44-68; 52  54  60  62 ; Василек ; Габардин ;300р.
+Одежда для торговли;"Фартук со спинкой ""Обманка"" (56-80)";https://argo-ivanovo.ru/golovnye-ubory/fartuk-obmanka; XXXXXL ; Бордо  Темно-синий ; 65% полиэстер, 35 % хлопок ;605р.
+Одежда для торговли;Фартук со спинкой № 11 (44-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-44-44-56; Универсальный ; Василек  Бордо  Красный ; 65% полиэстер, 35 % хлопок ;380р.
+Одежда для торговли;Фартук со спинкой № 13 (44-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-13-44-56; Универсальный ; Василек ; Габардин ;350р.
+Одежда для торговли;Фартук со спинкой № 15 (44-54);https://argo-ivanovo.ru/golovnye-ubory/fartuk; Универсальный ; Василек  Бордо  Серый  Темно-синий ; Габардин ;340р.
+Одежда для торговли;Фартук со спинкой № 24 (56-64);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-24-56-64; Универсальный ; Василек  Бордо ; Габардин ;385р.
+Одежда для торговли;Фартук со спинкой № 4  (44-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-4; Универсальный ; Серый  Темно-синий ; 65% полиэстер, 35 % хлопок ;415р.
+Одежда для торговли;Фартук со спинкой № 43 (44-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-43; Универсальный ; Темно-синий ; Габардин ;320р.
+Одежда для торговли;Фартук со спинкой № 45/1 (44-56) гретта;https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-45-1-44-56-gretta; Универсальный ; Василек  Серый  Темно-синий ; Грета ;330р.
+Одежда для торговли;Фартук со спинкой №1 (44-54);https://argo-ivanovo.ru/golovnye-ubory/fartuk-1-nejlon; Универсальный ; Василек  Бордо  Зеленый  Темно-синий ; Нейлон ;320р.
+Одежда для торговли;Фартук со спинкой №20 (44-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-20-44-56; Универсальный ; Василек  Бордо  Зеленый  Красный  Темно-синий ; Габардин ;310р.
+Одежда для торговли;Фартук со спинкой №44 (44-54);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-44-44-54; Универсальный ; Темно-синий ; Габардин ;340р.
+Одежда для торговли;Фартук со спинкой №45 (44-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-so-spinkoj-45-44-56; Универсальный ; Василек  Бордо  Зеленый  Темно-синий  Коричневый ; Габардин ;316р.
+Одежда для торговли;Фартук Универсальный (44-60);https://argo-ivanovo.ru/golovnye-ubory/fartuk-universalnyj; Универсальный ; Бордо  Красный  Темно-синий ; смесовая ткань ;360р.
+Одежда для торговли;Халат Женский № 15Х (62-64);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-15x-62-68; 62  64 ; Василек  Темно-синий ; Нейлон ;400р.
+Одежда для торговли;Халат Женский № 17 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-17а; 44  46  48  50  52  54  56  58  60 ; В ассортименте ; 65% полиэстер, 35 % хлопок ;500р.
+Одежда для торговли;Халат Женский № 20 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-20; 44  46  48  50  52  54  56  58  60 ; Бордо  Темно-синий ; Габардин ;400р.
+Одежда для торговли;Халат Женский № 21Х (62-68);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-21Х-62-68; 62  64  66  68 ; Василек  Бордо  Серый ; Габардин ;418р.
+Одежда для торговли;Халат Женский № 22 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-17; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Зеленый  Темно-синий ; Габардин ;366р.
+Одежда для торговли;Халат Женский № 22 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-22; 44  46  48  50  52  54  56  58  60 ; Бежевый  Бежевый  Василек  Коричневый ; Габардин ;366р.
+Одежда для торговли;Халат Женский № 22Х (62-68);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-22x-62-68; 62  64  66  68 ; Василек  Бордо  Зеленый ; Габардин ;406р.
+Одежда для торговли;Халат Женский № 5Х (62-68);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-5x-62-68; 62  64  66  68 ; Белый ; Габардин+Кружево ;476р.
+Одежда для торговли;Халат Женский №15 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-henskij-15; 44  46  48  50  52  54  56  58  60 ; Василек  Темно-синий ; Нейлон ;360р.
+Одежда для торговли;Халат Женский №16 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-274; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо ; Габардин ;363р.
+Одежда для торговли;Халат Женский №16 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-269; 44  46  48  50  52  54  56  58  60 ; Темно-синий ; Нейлон ;360р.
+Одежда для торговли;Халат Женский №2 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-2-44-60-gabardin; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Зеленый  Темно-синий ; Габардин ;360р.
+Одежда для торговли;Халат Женский №21 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-21; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Серый ; Габардин ;378р.
+Одежда для торговли;Костюм Женский  №11 (44-56);https://argo-ivanovo.ru/golovnye-ubory/kostjum-dlja-prodavtsa; 44  46  48  50  52  54  56  58 ; Василек  Бордо ; Габардин ;600р.
+Одежда для торговли;Костюм Женский  №11 большие размеры (58-62);https://argo-ivanovo.ru/golovnye-ubory/kostjum-zhenskij-11-bolshie-razmery; 58  60  62 ; Василек  Бордо  Серый ; Габардин ;650р.
+Одежда для торговли;Сарафан Женский №01 (Лилия) 44-60;https://argo-ivanovo.ru/golovnye-ubory/sarafan 01; 44  46  48  50  52  54  56  58  60 ; Бордо ; Нейлон ;345р.
+Одежда для торговли;Фартук со спинкой №31 (44-52);https://argo-ivanovo.ru/golovnye-ubory/fartuk-31-44-52-tkan-gabardin; Универсальный ; Василек  Красный  Темно-синий ; Габардин ;380р.
+Одежда для торговли;Халат Женский №2Х (62-68);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-2x-62-68-tkan-gabardin-100-poliefir; 62  64  66  68 ; Василек  Бордо  Зеленый ; Габардин ;420р.
+Одежда для торговли;Костюм Женский №15 (44-58);https://argo-ivanovo.ru/golovnye-ubory/kostjum; 44  46  48  50  52  54  56  58 ; Василек ; Габардин ;600р.
+Одежда для торговли;Халат Женский №12 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-zhenskij-12; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Зеленый  Темно-синий ; Нейлон ;360р.
+Одежда для торговли;Халат Женский №12Х (62-68);https://argo-ivanovo.ru/golovnye-ubory/xalat-12-x-62-68-tkan-nejlon-100-poliefir; 62  64  66  68 ; Василек  Бордо  Зеленый  Темно-синий ; Нейлон ;430р.
+Одежда для торговли; Шапочка-шарлотка;https://argo-ivanovo.ru/golovnye-ubory/shapochka-sharlotta-odnorazovaja;; Пудра  Белый  Бирюза ; спанбонд ;350р.
+Одежда для торговли;Фартук со спинкой №21 (44-52);https://argo-ivanovo.ru/golovnye-ubory/fartuk-21-44-52-tkan-gabardin-100-poliefir; Универсальный ; Серый  Коричневый ; Габардин ;345р.
+Одежда для торговли;Фартук со спинкой №18 (48-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-8-42-50-tkan-gabardin-100-poliefir; Универсальный ; Василек  Бордо  Зеленый  Темно-синий ; Габардин ;360р.
+Одежда для торговли;Фартук со спинкой  ВЕЛИКАН (56-64);https://argo-ivanovo.ru/golovnye-ubory/fartuk-velikan-56-64-tkan-gabardin-100-poliefir-logotip; Универсальный ; Пудра  Василек  Бордо  Зеленый ; Габардин ;405р.
+Одежда для торговли;Фартук со спинкой №3 (48-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-dly-prodavca; Универсальный ; Василек  Бордо  Зеленый ; Габардин ;360р.
+Одежда для торговли;Фартук со спинкой №30Х (48-56);https://argo-ivanovo.ru/golovnye-ubory/fartuk-30-x-52-60-tkan-gabardin-100-poliefir; Универсальный ; Василек  Бордо  Зеленый  Бирюза  Красный  Темно-синий ; Габардин ;355р.
+Одежда для торговли;Фартук со спинкой №Х (52-62);https://argo-ivanovo.ru/golovnye-ubory/fartuk-zhenskij(3); Универсальный ; Василек  Бордо  Зеленый  Темно-синий ; Нейлон ;320р.
+Одежда для торговли;Халат Женский №5 (44-60);https://argo-ivanovo.ru/golovnye-ubory/xalat-5-42-60-tkan-gabardin-xalat-iz-nejlona-prjamogo-silueta-s-tsentralnoj-zastezhkoj-na-molnii-s-dvumja-nakladnymi-karmanami-i-razrezami-po-bokovym-shvam-rukav-korotkij-v-tachnoj-vorotnik-otlozhnoj-vshityj-v-plechevye-shvy-objem-talii-reguliruetsja-poja; 44  46  48  50  52  54  56  58  60 ; Белый ; Габардин+Кружево ;406р.
+Одежда для торговли;Фартук со спинкой №30 (44-50);https://argo-ivanovo.ru/golovnye-ubory/fartuk-30-42-50-tkan-gabardin-100-poliefir; Универсальный ; Василек  Бордо  Зеленый  Бирюза  Красный  Сирень  Салатовый ; Габардин ;320р.
+Одежда для торговли;Фартук со спинкой М (42-50);https://argo-ivanovo.ru/golovnye-ubory/fartuk-zhenskij-nejlon-30; Универсальный ; В ассортименте  Василек  Бордо  Зеленый  Темно-синий ; Нейлон ;300р.
+Одежда для торговли;Фартук со спинкой №5а (44-54);https://argo-ivanovo.ru/golovnye-ubory/fartuk-zhenskij; Универсальный ; Белый ; Нейлон  Габардин+Кружево ;365р.
+Одежда для торговли;Фартук-передник №23 (44-60);https://argo-ivanovo.ru/golovnye-ubory/f; Универсальный ; Белый  Василек  Бордо  Зеленый  Серый  Темно-синий  Коричневый ; Оксфорд ;310р.
+Одежда для торговли;Фартук Домохозяйка (44-60);https://argo-ivanovo.ru/golovnye-ubory/fartuk-domohozyika; Универсальный ; В ассортименте ; Болонь ;160р.
+Одежда для торговли;Нарукавники на резинке;https://argo-ivanovo.ru/golovnye-ubory/fartuk1; Универсальный ; Белый  Василек  Серый  Темно-синий ; Оксфорд ;190р.
+Одежда для торговли;Фартук ОДНОРАЗОВЫЙ ;https://argo-ivanovo.ru/golovnye-ubory/fartuk-polietilenovyj-120x70sm-serebro; Универсальный ;; полиэтилен ;300р.
+Медицинская одежда;Бандана женская;https://argo-ivanovo.ru/xalaty/bandana-zhenskaja; Универсальный ; Белый  Черный ; 65% полиэстер, 35 % хлопок ;250р.
+Медицинская одежда;Бандана мужская;https://argo-ivanovo.ru/xalaty/bandana-muzhskaja; Универсальный ; Белый  Черный ; 65% полиэстер, 35 % хлопок ;250р.
+Медицинская одежда;Костюм санитарный № 110 (40-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-110-40-56; 40  42  44  46  48  50  52  54  56 ; Белый+Мурена ; 65% полиэстер, 35 % хлопок ;855р.
+Медицинская одежда;Костюм санитарный № 110 (58-64);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-110-58-64; 58  60  62  64 ; Белый+Мурена ; 65% полиэстер, 35 % хлопок ;865р.
+Медицинская одежда;Костюм санитарный № 112 (44-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-112-44-56; 44  46  48  50  52  54  56 ; Темно-синий ; 65% полиэстер, 35 % хлопок ;790р.
+Медицинская одежда;Костюм санитарный № 117 (42-52) цветной;https://argo-ivanovo.ru/xalaty/kostju-sanitarnyj-117-42-52-tsvetnoj; 42  44  46  48  50  52 ; Серый +лайм ; 65% полиэстер, 35 % хлопок ;910р.
+Медицинская одежда;Костюм санитарный № 120 ( 40-56) цветной;https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-120-40-56-tsvetnoj; 40  42  44  46  48  50  52  54  56 ; Сирень ; 65% полиэстер, 35 % хлопок ;855р.
+Медицинская одежда;Костюм санитарный № 120 (40-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-120-40-56; 40  42  44  46  48  50  52  54  56 ; Белый+ Красный  Белый ; 65% полиэстер, 35 % хлопок ;835р.
+Медицинская одежда;Костюм санитарный № 201 тиси (44-56);https://argo-ivanovo.ru/xalaty/kostjum-zhenskij; 44  46  48  50  52  54  56 ; Белый+голубой  Белый + тем.синей  Черный ; 65% полиэстер, 35 % хлопок ;837р.
+Медицинская одежда;Костюм санитарный № 21/1 (40-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-21-1-40-56; 40  42  44  46  48  50  56 ; Лазурный  Сирень ; 65% полиэстер, 35 % хлопок ;895р.
+Медицинская одежда;Костюм санитарный № 21/1 (58-62);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-21-1-58-60; 58  60  62 ; Лазурный  Сирень ; 65% полиэстер, 35 % хлопок ;945р.
+Медицинская одежда;Костюм санитарный № 22 (40-56) цветной;https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-22-40-56-tsvetnoj1223; 40  42  46  48  50  52  54  56 ; Черный  Сирень ; 65% полиэстер, 35 % хлопок ;860р.
+Медицинская одежда;Костюм санитарный № 22 (44-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-22; 44  46  48  50  52  54  56 ; Белый + тем.синей  Белый + зеленый  Белый ; 65% полиэстер, 35 % хлопок ;835р.
+Медицинская одежда;Костюм санитарный № 40 (44-56) ;https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-40-44-56; 44  46  48  50  52  54  56 ; Темно-синий ; 65% полиэстер, 35 % хлопок ;805р.
+Медицинская одежда;Костюм санитарный № 510 (40-56);https://argo-ivanovo.ru/xalaty/Костюм санитарный № 5102; 42  44  46  48  50  52  54  56 ; Белый+серый  Белый+голубой ; 65% полиэстер, 35 % хлопок ;895р.
+Медицинская одежда;Костюм санитарный № 510 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-510-bolshie-razmery; 58  60  62  64 ; Белый+серый  Белый+голубой ; 65% полиэстер, 35 % хлопок ;945р.
+Медицинская одежда;Костюм санитарный № 801 (42-54);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-801-42-54; 42  44  46  48  50  52  54 ; Серо-голубой ; 50% хлопок , 50% полиэфир ;1280р.
+Медицинская одежда;Костюм санитарный № 805 (44-50);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-805-44-50; 44  46  48  50 ; Лазурь+тем.синей ; 65% полиэстер, 35 % хлопок ;850р.
+Медицинская одежда;Костюм санитарный № 808 (42-50);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-808-42-50; 42  44  46  48  50 ; Желтый+тем.синей ; 65% полиэстер, 35 % хлопок ;850р.
+Медицинская одежда;Костюм санитарный№ 600 (42-56) CVC;https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-600-42-56; 42  44  46  48  50  52  54  56 ; Белый + тем.синей ; 50% хлопок , 50% полиэфир ;1150р.
+Медицинская одежда;Куртка № 407 ткань тиси (42-58);https://argo-ivanovo.ru/xalaty/kurtka-407-tkan-tisi; 42  44  46  48  50  52  54  56  58 ; Белый + тем.синей  Белый+ Красный ; 65% полиэстер, 35 % хлопок ;655р.
+Медицинская одежда;Маска трикотажная;https://argo-ivanovo.ru/xalaty/maska-trikotazhnaja; Универсальный ; Черный  Серый ; хлопок ;145р.
+Медицинская одежда;Рубашка женская №700 (44-52);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-700; 44  46  48  50  52 ; Белый ; 65% полиэстер, 35 % хлопок ;620р.
+Медицинская одежда;Феска медицинская ;https://argo-ivanovo.ru/xalaty/feska-meditsinskaja-tisi; Универсальный ; В ассортименте  Белый ; 65% полиэстер, 35 % хлопок ;200р.
+Медицинская одежда;Феска медицинская бязь;https://argo-ivanovo.ru/xalaty/feska-meditsinskaja-bjaz; Универсальный ; В ассортименте ; Бязь ;180р.
+Медицинская одежда;Халат медицинский № 1(мужской) 44-56;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-1; 44  46  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок ;730р.
+Медицинская одежда;Халат медицинский № 1(мужской) 44-56;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-1-muzhskoj-44-56 1; 44  46  48  50  52  54  56 ; Черный ; 65% полиэстер, 35 % хлопок ;730р.
+Медицинская одежда;Халат медицинский № 1(мужской) большие размеры;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-1-muzhskoj-bolshie-razmery; 58  60 ; Черный ; 65% полиэстер, 35 % хлопок ;750р.
+Медицинская одежда;Халат медицинский № 1(мужской) большие размеры;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-1-muzhskoj-bolshie-razmery 1; 58  60 ; Белый ; 65% полиэстер, 35 % хлопок ;750р.
+Медицинская одежда;Халат медицинский № 102 (42-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-102-; 42  44  46  48  50  52  54  56 ; Баклажановый  Голубой  Серый ; 65% полиэстер, 35 % хлопок ;760р.
+Медицинская одежда;Халат медицинский № 102 (42-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-102-; 42  44  46  48  50  52  54  56 ; Баклажановый  Голубой  Серый ; 65% полиэстер, 35 % хлопок ;760р.
+Медицинская одежда;Халат медицинский № 103 (42-52);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-103-42-52; 42  44  46  48  50  52 ; Белый ; 65% полиэстер, 35 % хлопок ;748р.
+Медицинская одежда;Халат медицинский № 104 (42-60);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-104-42-60; 42  44  46  48  50  52  54  56  58  60 ; Белый +Лазурный  Лазурный ; 65% полиэстер, 35 % хлопок ;740р.
+Медицинская одежда;Халат медицинский № 105 (42-60);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-105-42-60; 42  44  46  48  50  52  54  56  58  60 ; Белый+Бежевый ; 65% полиэстер, 35 % хлопок ;630р.
+Медицинская одежда;Халат медицинский № 106 (42-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-106-42-56; 42  44  46  48  50  52  54  56 ; Белый+серый  Белый +Лазурный ; 65% полиэстер, 35 % хлопок ;720р.
+Медицинская одежда;Халат медицинский № 108 (42-60);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-108-42-60; 42  44  46  48  50  52  54  56  58  60 ; Лазурный  Голубой ; 65% полиэстер, 35 % хлопок ;740р.
+Медицинская одежда;Халат медицинский № 117 ( 42-52) ;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-117-42-52 1; 42  44  46  48  50  52 ; Белый + тем.синей ; 65% полиэстер, 35 % хлопок ;730р.
+Медицинская одежда;Халат медицинский № 200 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-200-40-56; 40  42  44  46  48  50  52  54  56 ; Мята  Белый ; 65% полиэстер, 35 % хлопок ;730р.
+Медицинская одежда;Халат медицинский № 37 (42-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-37-42-56; 42  44  46  48  50  52  54  56 ; Белый + тем.синей  Белый+ Красный  Темно-синий ; 65% полиэстер, 35 % хлопок ;760р.
+Медицинская одежда;Халат медицинский № 37 (42-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-37-42-56 1; 42  44  46  48  50  52  54  56 ; Белый+ Красный  Белый + тем.синей  Темно-синий ; 65% полиэстер, 35 % хлопок ;760р.
+Медицинская одежда;Халат медицинский № 407 (42-58);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-407-42-58; 42  44  46  48  50  52  54  56  58 ; Белый+серый ;  (35%-хл.., 65%-п/э) с ВО пропиткой ;710р.
+Медицинская одежда;Халат медицинский № 420 (42-60);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-420-42-60; 42  44  46  48  50  52  54  56  58  60 ; Белый ; 65% полиэстер, 35 % хлопок ;780р.
+Медицинская одежда;Халат медицинский № 510 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510-40-56 1; 40  42  44  46  48  50  52  54  56 ; Белый + тем.синей  Белый+ Красный ; 65% полиэстер, 35 % хлопок ;730р.
+Медицинская одежда;Халат медицинский № 510 (58-64) цветной;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510-58-64-tsvetnoj; 58  60  62  64 ; Серо-голубой  Бирюза ; 65% полиэстер, 35 % хлопок ;780р.
+Медицинская одежда;Халат медицинский № 510 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510-bolshie-razmery-58-64 12; 58  60  62  64 ; Белый+ Красный  Белый + тем.синей ; 65% полиэстер, 35 % хлопок ;780р.
+Медицинская одежда;Халат медицинский № 510/1(42-56) CVC;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510-1-42-56-cvc; 42  44  46  48  50  52  54  56 ; Серо-голубой ; 50% хлопок , 50% полиэфир ;940р.
+Медицинская одежда;Халат медицинский № 515 рукав 3/4 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-515-rukav-3-4-58-; 40  42  44  46  48  50  52  54 ; Белый ; 65% полиэстер, 35 % хлопок ;730р.
+Медицинская одежда;Халат медицинский № 515 рукав 3/4 (58-62);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-515-rukav-3-4-58-62; 58  60  62 ; Белый ; 65% полиэстер, 35 % хлопок ;760р.
+Медицинская одежда;Халат медицинский № 516 (62-68);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-516-62-68; 62  64  66  68 ; Брусника  Лазурный  Белый ; 65% полиэстер, 35 % хлопок ;780р.
+Медицинская одежда;Халат медицинский № 517 (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-517-58-64; 58  60  62  64 ; Белый ; 65% полиэстер, 35 % хлопок ;790р.
+Медицинская одежда;Халат медицинский № 520/1 (44-52) СVC;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-520-1-44-52-satori; 44  46  48  50  52 ; Белый ; 50% хлопок , 50% полиэфир ;850р.
+Медицинская одежда;Халат медицинский № 80 (46-56) цветной;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-80-46-56-tsvetnoj; 46  48  50  52  54  56 ; Бирюза ; 65% полиэстер, 35 % хлопок ;740р.
+Медицинская одежда;Халат медицинский № 80 (58-64) цветной;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-80-58-64-tsvetnoj; 58  60  62  64 ; Бирюза ; 65% полиэстер, 35 % хлопок ;770р.
+Медицинская одежда;Халат медицинский №512 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-512; 40  44  46  48  50  52  54  56 ; Коралл  Белый  Черный  Темно-синий ; 65% полиэстер, 35 % хлопок ;730р.
+Медицинская одежда;Халат медицинский №518 (40-58);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-518; 40  42  44  46  48  50  52  54  56  58 ; Белый + зеленый  Белый + тем.синей ; 65% полиэстер, 35 % хлопок ;760р.
+Медицинская одежда;Халат медицинский №520 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-520; 40  42  44  46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок ;760р.
+Медицинская одежда;Халат медицинский№ 160 (42-56) цветной;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-160-42-56-tsvetnoj; 42  44  46  48  50  52  54  56 ; Пудра  Лайм ; 65% полиэстер, 35 % хлопок ;720р.
+Медицинская одежда;Халат медицинский№ 160 (58-64) цветной;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-160-58-64-tsvetnoj; 58  60  62  64 ; Лайм  Пудра ; 65% полиэстер, 35 % хлопок ;780р.
+Медицинская одежда;Шапочка медицинская ;https://argo-ivanovo.ru/xalaty/shapka-meditsinskaja; Универсальный ; Белый ; 65% полиэстер, 35 % хлопок ;200р.
+Медицинская одежда;Шапочка медицинская ;https://argo-ivanovo.ru/xalaty/kolpak; Универсальный ; В ассортименте ; Бязь ;180р.
+Медицинская одежда;Костюм санитарный № 110 (40-56) цветной;https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-110; 40  42  44  46  48  50  52  54  56 ; Лазурь+серый ; 65% полиэстер, 35 % хлопок ;885р.
+Медицинская одежда;Костюм санитарный № 110 (58-64) цветной;https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-110-bolshie-razmery; 58  60  62  64 ; Лазурь+серый ; 65% полиэстер, 35 % хлопок ;935р.
+Медицинская одежда;Халат медицинский № 101(40-58);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-101; 40  42  44  46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок ;720р.
+Медицинская одежда;Костюм санитарный № 20/2 (44-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-20-2; 44  46  48  50  52  54  56  58 ; Голубой  Василек  Салатовый ; 65% полиэстер, 35 % хлопок ;815р.
+Медицинская одежда;Костюм санитарный № 20/2 большие размеры (58-60);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-20-2-bolshie-razmery; 58  60 ; Голубой  Василек  Салатовый ; 65% полиэстер, 35 % хлопок ;855р.
+Медицинская одежда;Костюм санитарный №21 (44-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-21; 44  46  48  50  52  54  56 ; Темно-синий ; 65% полиэстер, 35 % хлопок ;1020р.
+Медицинская одежда;Костюм санитарный №21 большие размеры (58-62);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-21-bolshie-razmery; 58  60  62  64 ; Темно-синий ; 65% полиэстер, 35 % хлопок ;1080р.
+Медицинская одежда;Халат медицинский № 101 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-101-bolshie-razmery; 58  60  62  64 ; Белый ; 65% полиэстер, 35 % хлопок ;750р.
+Медицинская одежда;Халат медицинский № 507 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-507; 40  42  44  46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок ;700р.
+Медицинская одежда;Халат медицинский №160 (42-56);https://argo-ivanovo.ru/xalaty/xalat-160; 42  44  46  48  50  52  54  56 ; Персик  Лазурный  Белый  Темно-синий  Салатовый ; 65% полиэстер, 35 % хлопок ;700р.
+Медицинская одежда;Халат медицинский №160 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-160-bolshie-razmery; 58  60  62  64 ; Персик  Лазурный  Белый  Темно-синий  Салатовый ; 65% полиэстер, 35 % хлопок ;760р.
+Медицинская одежда;Костюм санитарный №119 (40-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-119; 40  42  44  46  48  50  52  54  56 ; Голубой  Фуксия (малина)  Коралл + серый  Белый + сирень  Белый +Лазурный  Темно-синий ; 65% полиэстер, 35 % хлопок ;835р.
+Медицинская одежда;Костюм санитарный №119 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-119-big; 58  60  62  64 ; Белый + сирень  Фуксия (малина)  Белый +Лазурный  Голубой  Коралл + серый  Темно-синий ; 65% полиэстер, 35 % хлопок ;885р.
+Медицинская одежда;Халат медицинский № 507 (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-507-58-64; 58  60  62  64 ; Белый ; 65% полиэстер, 35 % хлопок ;730р.
+Медицинская одежда;Халат медицинский №505 (40-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-505; 40  42  44  46  48  50  52  54  56 ; Белый + тем.синей  Белый + тем.синей  Лазурь+серый  Лазурь+зеленый ; 65% полиэстер, 35 % хлопок ;720р.
+Медицинская одежда;Костюм медицинский №510 цветной (40-56);https://argo-ivanovo.ru/xalaty/kostjum-meditsinskij-510-tsvetnoj; 44  46  48  50  52  54  56 ; Серо-голубой  Темно-синий ; 65% полиэстер, 35 % хлопок ;910р.
+Медицинская одежда;Костюм медицинский №510 цветной большие размеры (58-64);https://argo-ivanovo.ru/xalaty/kostjum-meditsinskij-510-tsvetnoj-bolshie-razmery; 58  60  62  64 ; Серо-голубой  Темно-синий ; 65% полиэстер, 35 % хлопок ;960р.
+Медицинская одежда;Халат медицинский № 510 (40-56) цветной;https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510-40-56-tsvetnoj; 40  42  44  46  48  50  52  54  56 ; Серо-голубой  Бирюза ; 65% полиэстер, 35 % хлопок ;750р.
+Медицинская одежда;Халат медицинский № 510 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510-bolshie-razmery; 58  60  62  64 ; Белый+ Красный  Белый + тем.синей ; 65% полиэстер, 35 % хлопок ;780р.
+Медицинская одежда;Костюм санитарный  №118 (44-60);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-20-1; 44  46  48  50  52  54  56  58  60 ; Белый  Зеленый  Сирень ; 65% полиэстер, 35 % хлопок ;815р.
+Медицинская одежда;Халат медицинский № 510 длинный рукав (40-50);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-510-dlinnyj-rukav; 40  42  44  46  48  50 ; Белый ; 65% полиэстер, 35 % хлопок ;730р.
+Медицинская одежда;Халат медицинский №117 (42-52);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-117-0; 42  44  46  48  50  52 ; Белый + тем.синей ; 65% полиэстер, 35 % хлопок ;730р.
+Медицинская одежда;Халат медицинский №500 (42-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-500; 42  44  46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок ;580р.
+Медицинская одежда;Халат медицинский №500 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-500-bolshie-razmery; 58  60  62  64 ; Белый ; 65% полиэстер, 35 % хлопок ;610р.
+Медицинская одежда;Костюм санитарный № 10 (44-56);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj; 44  46  48  50  52  54  56 ; Пест.верх+синие брюки  Пест.верх+сер.брюки ; П/Лен ;795р.
+Медицинская одежда;Халат медицинский №503 (38-52);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-503-40-52-tkan-tisi; 38  40  42  44  46  48  50  52 ; Белый ; 65% полиэстер, 35 % хлопок ;720р.
+Медицинская одежда;Костюм санитарный № 30 (44-56);https://argo-ivanovo.ru/xalaty/kostjum-anitarnyj; 44  46  48  50  52  54  56 ; Кошки ; Бязь ;677р.
+Медицинская одежда;Халат медицинский №80 (46-56);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-80; 46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок ;720р.
+Медицинская одежда;Халат медицинский №80 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-80-bolshie-razmery; 58  60  62  64 ; Белый ; 65% полиэстер, 35 % хлопок ;750р.
+Медицинская одежда;Костюм санитарный женский (44-56);https://argo-ivanovo.ru/xalaty/kostjum-zhenskij-xirurga; 44  46  48  50  52  54  56 ; Голубой  Зеленый  Серый ; 65% полиэстер, 35 % хлопок ;805р.
+Медицинская одежда;Блуза санитарная (44-56);https://argo-ivanovo.ru/xalaty/bluza-sanitarnaja; 44  46  48  50  52  54  56 ; В ассортименте  Голубой  Серый  Коричневый ; Бязь ;412р.
+Медицинская одежда;Халат медицинский №110 (40-56);https://argo-ivanovo.ru/xalaty/xalat-110; 40  42  44  46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок ;710р.
+Медицинская одежда;Халат медицинский №110 большие размеры (58-64);https://argo-ivanovo.ru/xalaty/xalat-meditsinskij-110-bolshie-razmery; 58  60  62  64 ; Белый ; 65% полиэстер, 35 % хлопок ;760р.
+Медицинская одежда;Блуза санитарная (44-58);https://argo-ivanovo.ru/xalaty/bluza-saitarnaja; 44  46  48  50  52  54  56  58 ; Оранжевый  Коричневый ; П/Лен ;510р.
+Медицинская одежда;Халат медицинский (Туника);https://argo-ivanovo.ru/xalaty/tunika-tisi; 42  44  46 ; Белый ; 65% полиэстер, 35 % хлопок ;628р.
+Медицинская одежда;Костюм санитарный женский (44-62);https://argo-ivanovo.ru/xalaty/kostjum-sanitarnyj-tycrb; 52/54  48/50  44/46  60/62  56/58 ; Серо-голубой  Зеленый  Серый ; 65% полиэстер, 35 % хлопок ;788р.
+Медицинская одежда;Костюм санитарный мужской (44-62);https://argo-ivanovo.ru/xalaty/kostjum-216; 44/46  48/50  52/54  56/58  60/62 ; Серо-голубой  Зеленый  Серый ; 65% полиэстер, 35 % хлопок ;788р.
+Медицинская одежда;Брюки санитарные Модельные (цветные) (40-56);https://argo-ivanovo.ru/xalaty/brjuki-sanitarnye; 40  42  44  46  48  50  52  54  56 ; Пудра  Фуксия (малина)  В ассортименте  Голубой  Серый  Темно-синий ; Тиси ;430р.
+Одежда для поваров; Головной убор Кокошник высокий;https://argo-ivanovo.ru/fartuki/kokoshnik-vysokij; Универсальный ; Белый ; Габардин+Кружево ;220р.
+Одежда для поваров; Головной убор Колпак Повара;https://argo-ivanovo.ru/fartuki/kolpak-povara-blin-tkan-smesovaja-65-poliefir-35-xlopok; Универсальный ; Белый ; 65% полиэстер, 35 % хлопок ;240р.
+Одежда для поваров;Головной убор Колпак Повара;https://argo-ivanovo.ru/fartuki/kolpak-blin; Универсальный ; Белый ; 65% полиэстер, 35 % хлопок ;240р.
+Одежда для поваров;Головной убор колпак повара цветной;https://argo-ivanovo.ru/fartuki/golovnoj-ubor-kolpak-povara-tsvetnoj; Универсальный ; Черный  Красный ; 65% полиэстер, 35 % хлопок ;240р.
+Одежда для поваров;"Костюм Повара  ""Шеф"" (44-56)";https://argo-ivanovo.ru/fartuki/kostjum-zhenskij-povara-40-60-tkan-tisi; 44  46  48  50  52  54  56 ; Белый ; 65% полиэстер, 35 % хлопок ;905р.
+Одежда для поваров;"Костюм Повара "" Принт"" (58-60)";https://argo-ivanovo.ru/fartuki/kostjum-povara-print-58-60; 58  60 ; Поварешки  Перцы ; 65% полиэстер, 35 % хлопок ;1040р.
+Одежда для поваров;"Костюм Повара "" Шеф"" (58-60)";https://argo-ivanovo.ru/fartuki/kostjum-povara-shef-58-6025; 58  60 ; Черный  Красный ; 65% полиэстер, 35 % хлопок ;935р.
+Одежда для поваров;"Костюм Повара ""Принт"" (42-56)";https://argo-ivanovo.ru/fartuki/kostjum-povara; 44  46  48  50  52  54  56 ; Перцы  Поварешки ; 65% полиэстер, 35 % хлопок ;1010р.
+Одежда для поваров;"Костюм Повара ""Шеф"" (58-62)";https://argo-ivanovo.ru/fartuki/kostjum-povara-shef-58-621; 58  60  62 ; Белый ; 65% полиэстер, 35 % хлопок ;935р.
+Одежда для поваров;"Костюм Повара""Шеф"" (42-56)";https://argo-ivanovo.ru/fartuki/kostjumpovara-shef; 44  46  48  50  52  54  56 ; Черный  Красный ; 65% полиэстер, 35 % хлопок ;905р.
+Одежда для поваров;Куртка Повара (40-62);https://argo-ivanovo.ru/fartuki/kurtka-povara; 40  42  44  46  48  50  52  54  56  58  60  62 ; Белый  Черный ; 65% полиэстер, 35 % хлопок ;690р.
+Одежда для поваров;Рубашка женская №700 (44-52);https://argo-ivanovo.ru/fartuki/xalat-meditsinskij-700; 44  46  48  50  52 ; Белый ; 65% полиэстер, 35 % хлопок ;620р.
+Одежда для поваров;"Фартук ""БАРМЕН"" (44-60)";https://argo-ivanovo.ru/fartuki/fartuk-barmen-44-60-tkan-tisi-65-35; Универсальный ; Черный  Бордо  Коричневый ; 65% полиэстер, 35 % хлопок ;368р.
+Одежда для поваров;"Фартук ""БАРМЕН"" (44-60)";https://argo-ivanovo.ru/fartuki/fartuk-barmen-44-60; Универсальный ; Перцы  Кофе  Поварешки ; твил ;490р.
+Одежда для поваров;Фартук барный короткий №25 (44-60);https://argo-ivanovo.ru/fartuki/fartuk-barnyj-korotkij-25; Универсальный ; Бордо  Коричневый ; 65% полиэстер, 35 % хлопок ;340р.
+Одежда для поваров;Фартук Универсальный (44-60);https://argo-ivanovo.ru/fartuki/fartuk-universalnyj; Универсальный ; Бордо  Красный  Темно-синий ; смесовая ткань ;360р.
+Одежда для поваров;Фартук-передник №23 (44-60);https://argo-ivanovo.ru/fartuki/fartuk-23-povar-44-60-tkan-tisi-65-35; Универсальный ; Белый  Василек  Черный  Бордо  Красный  Серый  Темно-синий  Коричневый ; 65% полиэстер, 35 % хлопок ;360р.
+Одежда для поваров; Шапочка-шарлотка;https://argo-ivanovo.ru/fartuki/shapochka-sharlotta-odnorazovaja;; Пудра  Белый  Бирюза ; спанбонд ;350р.
+Одежда для поваров;Костюм пекаря - хирурга (44-62);https://argo-ivanovo.ru/fartuki/kostjum-pekarja-muzhskoj; 60/62  48/50  44/46  52/54  56/58 ; Белый ; 65% полиэстер, 35 % хлопок ;750р.
+Одежда для поваров;Костюм санитарный женский (44-62);https://argo-ivanovo.ru/fartuki/kostjum-sanitarnyj-tycrb; 52/54  48/50  44/46  60/62  56/58 ; Серо-голубой  Зеленый  Серый ; 65% полиэстер, 35 % хлопок ;788р.
+Одежда для поваров;Костюм санитарный мужской (44-62);https://argo-ivanovo.ru/fartuki/kostjum-216; 52/54  56/58  60/62  44/46  48/50 ; Серо-голубой  Зеленый  Серый ; 65% полиэстер, 35 % хлопок ;788р.
+Одежда для поваров;Фартук со спинкой №5а (44-54);https://argo-ivanovo.ru/fartuki/fartuk-zhenskij; Универсальный ; Белый ; Нейлон  Габардин+Кружево ;365р.
+Одежда для поваров;Фартук-передник №23 (44-60);https://argo-ivanovo.ru/fartuki/f; Универсальный ; Белый  Василек  Бордо  Зеленый  Серый  Темно-синий  Коричневый ; Оксфорд ;310р.
+Одежда для поваров;Фартук Домохозяйка (44-60);https://argo-ivanovo.ru/fartuki/fartuk-domohozyika; Универсальный ; В ассортименте ; Болонь ;160р.
+Одежда для поваров;Фартук ОДНОРАЗОВЫЙ ;https://argo-ivanovo.ru/fartuki/fartuk-polietilenovyj-120x70sm-serebro; Универсальный ;; полиэтилен ;300р.
+Одежда для горничных;Рубашка женская №700 (44-52);https://argo-ivanovo.ru/kostjumy/xalat-meditsinskij-700; 44  46  48  50  52 ; Белый ; 65% полиэстер, 35 % хлопок ;620р.
+Одежда для горничных;Фартук со спинкой № 22  (44-54);https://argo-ivanovo.ru/kostjumy/fartuk-so-spinkoj-22-tkan-tisi; Универсальный ; Серый  Темно-синий  Салатовый ; 65% полиэстер, 35 % хлопок ;415р.
+Одежда для горничных;Фартук со спинкой №20 (44-56);https://argo-ivanovo.ru/kostjumy/fartuk-so-spinkoj-20-44-56; Универсальный ; Василек  Бордо  Зеленый  Красный  Темно-синий ; Габардин ;310р.
+Одежда для горничных;Фартук со спинкой №45 (44-56);https://argo-ivanovo.ru/kostjumy/fartuk-so-spinkoj-45-44-56; Универсальный ; Василек  Бордо  Зеленый  Темно-синий  Коричневый ; Габардин ;316р.
+Одежда для горничных;Халат Женский №21 (44-60);https://argo-ivanovo.ru/kostjumy/xalat-21; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Серый ; Габардин ;378р.
+Одежда для горничных;Халат Женский №7 (тем.синий) 44-60;https://argo-ivanovo.ru/kostjumy/xalat-zhenskij-7; 44  46  48  50  52  54  56  58  60 ; Темно-синий ; Габардин+Кружево ;385р.
+Одежда для горничных;Костюм Женский  №11 (44-56);https://argo-ivanovo.ru/kostjumy/kostjum-dlja-prodavtsa; 44  46  48  50  52  54  56  58 ; Василек  Бордо ; Габардин ;600р.
+Одежда для горничных;Костюм санитарный № 111 (44-56);https://argo-ivanovo.ru/kostjumy/kostjum-sanitarnyj 111; 44  46  48  50  52  54  56 ; Коричневый ; 65% полиэстер, 35 % хлопок ;810р.
+Одежда для горничных;Костюм санитарный №111;https://argo-ivanovo.ru/kostjumy/kostjum-sanitarnyj-111; 48  50 ; Василек ; 65% полиэстер, 35 % хлопок ;740р.
+Одежда для горничных;Фартук со спинкой №18 (48-56);https://argo-ivanovo.ru/kostjumy/fartuk-8-42-50-tkan-gabardin-100-poliefir; Универсальный ; Василек  Бордо  Зеленый  Темно-синий ; Габардин ;360р.
+Одежда для горничных;Костюм санитарный № 10 (44-56);https://argo-ivanovo.ru/kostjumy/kostjum-sanitarnyj; 44  46  48  50  52  54  56 ; Пест.верх+синие брюки  Пест.верх+сер.брюки ; П/Лен ;795р.
+Одежда для горничных;Фартук со спинкой №30 (44-50);https://argo-ivanovo.ru/kostjumy/fartuk-30-42-50-tkan-gabardin-100-poliefir; Универсальный ; Василек  Бордо  Зеленый  Бирюза  Красный  Сирень  Салатовый ; Габардин ;320р.
+Одежда для клининга;Рубашка женская №700 (44-52);https://argo-ivanovo.ru/sarafany/xalat-meditsinskij-700; 44  46  48  50  52 ; Белый ; 65% полиэстер, 35 % хлопок ;620р.
+Одежда для клининга;"Сарафан Женский ""ГОРОХ"" (44-60)";https://argo-ivanovo.ru/sarafany/sarafan-zhenskij-gorox 1; 44  46  48  50  52  54  56  58  60 ; Тем.синей+лайм ; Нейлон ;350р.
+Одежда для клининга;Сарафан Женский №01 (Лилия) 44-60;https://argo-ivanovo.ru/sarafany/sarafan-zhenskij-01; 44  46  48  50  52  54  56  58  60 ; Василек ; Габардин ;355р.
+Одежда для клининга;Сарафан Женский №05 (44-60);https://argo-ivanovo.ru/sarafany/sarafan-05-gabardin; 44  46  48  50  52  54  56  58  60 ; Василек  Темно-синий ; Габардин ;355р.
+Одежда для клининга;Сарафан Женский №05 (44-60);https://argo-ivanovo.ru/sarafany/sarafan-05-nejlon; 44  46  48  50  52  54  56  58  60 ; Василек  Темно-синий ; Нейлон ;345р.
+Одежда для клининга;Фартук со спинкой №1 (44-54);https://argo-ivanovo.ru/sarafany/fartuk-1-nejlon; Универсальный ; Василек  Бордо  Зеленый  Темно-синий ; Нейлон ;320р.
+Одежда для клининга;Фартук со спинкой №44 (44-54);https://argo-ivanovo.ru/sarafany/fartuk-so-spinkoj-44-44-54; Универсальный ; Темно-синий ; Габардин ;340р.
+Одежда для клининга;Фартук со спинкой №45 (44-56);https://argo-ivanovo.ru/sarafany/fartuk-so-spinkoj-45-44-56; Универсальный ; Василек  Бордо  Зеленый  Темно-синий  Коричневый ; Габардин ;316р.
+Одежда для клининга;Халат Женский №2 (44-60);https://argo-ivanovo.ru/sarafany/xalat-2-44-60-gabardin; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Зеленый  Темно-синий ; Габардин ;360р.
+Одежда для клининга;Халат Женский №21 (44-60);https://argo-ivanovo.ru/sarafany/xalat-21; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Серый ; Габардин ;378р.
+Одежда для клининга;Костюм санитарный № 111 (44-56);https://argo-ivanovo.ru/sarafany/kostjum-sanitarnyj 111; 44  46  48  50  52  54  56 ; Коричневый ; 65% полиэстер, 35 % хлопок ;810р.
+Одежда для клининга;Костюм санитарный №111;https://argo-ivanovo.ru/sarafany/kostjum-sanitarnyj-111; 48  50 ; Василек ; 65% полиэстер, 35 % хлопок ;740р.
+Одежда для клининга;Фартук со спинкой №18 (48-56);https://argo-ivanovo.ru/sarafany/fartuk-8-42-50-tkan-gabardin-100-poliefir; Универсальный ; Василек  Бордо  Зеленый  Темно-синий ; Габардин ;360р.
+Одежда для клининга;Фартук со спинкой  ВЕЛИКАН (56-64);https://argo-ivanovo.ru/sarafany/fartuk-velikan-56-64-tkan-gabardin-100-poliefir-logotip; Универсальный ; Пудра  Василек  Бордо  Зеленый ; Габардин ;405р.
+Одежда для салонов красоты и SPA;Пеньюар полиэтиленовый стандарт (серебро) ;https://argo-ivanovo.ru/dlja-parikmaxerov/penjuar-polietilenovyj-standart-serebro-140x100sm;;; полиэтилен ;375р.
+Одежда для салонов красоты и SPA;Пеньюар стандарт 140х100 см;https://argo-ivanovo.ru/dlja-parikmaxerov/penjuar-polietilenovyj-ljuks-140x100sm; 100*140 ;; полиэтилен ;330р.
+Одежда для салонов красоты и SPA;Перчатки виниловые прозрачные;https://argo-ivanovo.ru/dlja-parikmaxerov/perchatki-vinilovye-neopudrennye;;; винил ;385р.
+Одежда для салонов красоты и SPA;Перчатки латексные неопудренные;https://argo-ivanovo.ru/dlja-parikmaxerov/perchatki-lateksnye; S-маленький  М - средний ; Белый ; латекс ;500р.
+Одежда для салонов красоты и SPA;Перчатки нитриловые;https://argo-ivanovo.ru/dlja-parikmaxerov/perchatki-polietilenovye; S-маленький  М - средний ; Пудра  Бирюза  Сирень ; нитрил ;500р.
+Одежда для салонов красоты и SPA;Полотенце спанлейс стандарт;https://argo-ivanovo.ru/dlja-parikmaxerov/polotentse-vafelnoe-ljuks-3570-sm; 35*70 ; Белый ; спанлейс ;425р.
+Одежда для салонов красоты и SPA;Простыни СМС стандарт(20 штук);https://argo-ivanovo.ru/dlja-parikmaxerov/prostynja-sms-standart-200160-sm;; Белый  Бирюза ; смс  ;488р.
+Одежда для салонов красоты и SPA;Фартук парикмахера (44-60);https://argo-ivanovo.ru/dlja-parikmaxerov/fartuk-parikmaxera; Универсальный ; В ассортименте ; Тафта ;350р.
+Одежда для салонов красоты и SPA;Фартук Универсальный (44-60);https://argo-ivanovo.ru/dlja-parikmaxerov/fartuk-universalnyj; Универсальный ; Бордо  Красный  Темно-синий ; смесовая ткань ;360р.
+Одежда для салонов красоты и SPA;Костюм санитарный № 110 (40-56) цветной;https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-sanitarnyj-110; 40  42  44  46  48  50  52  54  56 ; Лазурь+серый ; 65% полиэстер, 35 % хлопок ;885р.
+Одежда для салонов красоты и SPA;Костюм санитарный № 110 (58-64) цветной;https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-sanitarnyj-110-bolshie-razmery; 58  60  62  64 ; Лазурь+серый ; 65% полиэстер, 35 % хлопок ;935р.
+Одежда для салонов красоты и SPA;Пеньюар парикмахера;https://argo-ivanovo.ru/dlja-parikmaxerov/penjuar-parikmaxerskij-sostav-100-poliefir; Универсальный ; Бежевый ; Тафта ;470р.
+Одежда для салонов красоты и SPA;Костюм санитарный №21 (44-56);https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-sanitarnyj-21; 44  46  48  50  52  54  56 ; Темно-синий ; 65% полиэстер, 35 % хлопок ;1020р.
+Одежда для салонов красоты и SPA;Костюм санитарный №21 большие размеры (58-62);https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-sanitarnyj-21-bolshie-razmery; 58  60  62  64 ; Темно-синий ; 65% полиэстер, 35 % хлопок ;1080р.
+Одежда для салонов красоты и SPA;Халат медицинский №160 (42-56);https://argo-ivanovo.ru/dlja-parikmaxerov/xalat-160; 42  44  46  48  50  52  54  56 ; Лазурный  Персик  Белый  Темно-синий  Салатовый ; 65% полиэстер, 35 % хлопок ;700р.
+Одежда для салонов красоты и SPA;Халат медицинский №160 большие размеры (58-64);https://argo-ivanovo.ru/dlja-parikmaxerov/xalat-meditsinskij-160-bolshie-razmery; 58  60  62  64 ; Персик  Лазурный  Белый  Темно-синий  Салатовый ; 65% полиэстер, 35 % хлопок ;760р.
+Одежда для салонов красоты и SPA; Шапочка-шарлотка;https://argo-ivanovo.ru/dlja-parikmaxerov/shapochka-sharlotta-odnorazovaja;; Пудра  Белый  Бирюза ; спанбонд ;350р.
+Одежда для салонов красоты и SPA;Костюм санитарный №119 (40-56);https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-sanitarnyj-119; 40  42  44  46  48  50  52  54  56 ; Коралл + серый  Белый + сирень  Белый +Лазурный  Голубой  Фуксия (малина)  Темно-синий ; 65% полиэстер, 35 % хлопок ;835р.
+Одежда для салонов красоты и SPA;Костюм санитарный №119 большие размеры (58-64);https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-sanitarnyj-119-big; 58  60  62  64 ; Коралл + серый  Белый + сирень  Фуксия (малина)  Белый +Лазурный  Голубой  Темно-синий ; 65% полиэстер, 35 % хлопок ;885р.
+Одежда для салонов красоты и SPA;Халат медицинский №505 (40-56);https://argo-ivanovo.ru/dlja-parikmaxerov/xalat-meditsinskij-505; 40  42  44  46  48  50  52  54  56 ; Лазурь+зеленый  Белый + тем.синей  Белый + тем.синей  Лазурь+серый ; 65% полиэстер, 35 % хлопок ;720р.
+Одежда для салонов красоты и SPA;Костюм санитарный № 10 (44-56);https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-sanitarnyj; 44  46  48  50  52  54  56 ; Пест.верх+синие брюки  Пест.верх+сер.брюки ; П/Лен ;795р.
+Одежда для салонов красоты и SPA;Костюм санитарный № 30 (44-56);https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-anitarnyj; 44  46  48  50  52  54  56 ; Кошки ; Бязь ;677р.
+Одежда для салонов красоты и SPA;Костюм санитарный женский (44-56);https://argo-ivanovo.ru/dlja-parikmaxerov/kostjum-zhenskij-xirurga; 44  46  48  50  52  54  56 ; Голубой  Зеленый  Серый ; 65% полиэстер, 35 % хлопок ;805р.
+Одежда для салонов красоты и SPA;Блуза санитарная (44-56);https://argo-ivanovo.ru/dlja-parikmaxerov/bluza-sanitarnaja; 44  46  48  50  52  54  56 ; Голубой  В ассортименте  Серый  Коричневый ; Бязь ;412р.
+Одежда для салонов красоты и SPA;Блуза санитарная (44-58);https://argo-ivanovo.ru/dlja-parikmaxerov/bluza-saitarnaja; 44  46  48  50  52  54  56  58 ; Оранжевый  Коричневый ; П/Лен ;510р.
+Одежда для салонов красоты и SPA;Халат медицинский (Туника);https://argo-ivanovo.ru/dlja-parikmaxerov/tunika-tisi; 42  44  46 ; Белый ; 65% полиэстер, 35 % хлопок ;628р.
+Одежда для салонов красоты и SPA;Фартук ОДНОРАЗОВЫЙ ;https://argo-ivanovo.ru/dlja-parikmaxerov/fartuk-polietilenovyj-120x70sm-serebro; Универсальный ;; полиэтилен ;300р.
+Рабочая одежда;"Берцы ""ОМОН""";https://argo-ivanovo.ru/rabochaja-odezhda?product_id=398; 43  45  39  47  41  40  42  44  46 ; Черный ;;1650р.
+Рабочая одежда;Жилет Сигнальный;https://argo-ivanovo.ru/rabochaja-odezhda/zhilet-signalnyj; 60/62  56/58  52/54  48/50  44/46 ; Оранжевый  Желтый ;;290р.
+Рабочая одежда;Костюм Мужской  Рабочий  № 25 С СОП;https://argo-ivanovo.ru/rabochaja-odezhda/kostjum-standart-1-s-sop; 44-46/170-176  44-46/182-188   48-50/170-176  48-50/182-188  52-54/170-176   52-54/182-188  56-58/170-176   56-58/182-188  60-62/170-176  60-62/182-188  ; Темно-синий ;  (35%-хл.., 65%-п/э) с ВО пропиткой ;750р.
+Рабочая одежда;КОСТЮМ МУЖСКОЙ  РАБОЧИЙ № 24;https://argo-ivanovo.ru/rabochaja-odezhda/kostjum-rabochij-standart-1; 44-46/170-176  44-46/182-188   48-50/170-176  48-50/182-188  52-54/170-176   52-54/182-188  56-58/170-176   56-58/182-188  60-62/170-176  60-62/182-188  ; Темно-синий ;  (35%-хл.., 65%-п/э) с ВО пропиткой ;600р.
+Рабочая одежда;Костюм противоэнцефалитный с сеткой;https://argo-ivanovo.ru/rabochaja-odezhda/kostjum-oxrannik; 44-46/170-176   48-50/170-176  52-54/170-176  56-58/170-176  60-62/170-176 ; Хаки ; палаточное полотно 250г. ;900р.
+Трикотаж для униформы;Брюки женские;https://argo-ivanovo.ru/trikotazh-dlja-uniformy/brjuki-zhenskie; 46  48  50  52  54  56  58  60 ; Темно-синий ; футер ;580р.
+Трикотаж для униформы;Брюки мужские;https://argo-ivanovo.ru/trikotazh-dlja-uniformy/brjuki-muzhskie; 46  48  50  52  54  56  58 ; Темно-синий ; футер ;680р.
+Трикотаж для униформы;Футболка женская (44-60);https://argo-ivanovo.ru/trikotazh-dlja-uniformy/futbolka-zhenskaja; 44  46  50  52  54  56  58  60 ; В ассортименте ; хлопок ;330р.
+Трикотаж для униформы;Футболка мужская (44-60);https://argo-ivanovo.ru/trikotazh-dlja-uniformy/futbolka-muzhskaja; 44  46  48  50  52  54  56  58  60 ; Василек  Бордо  Темно-синий ; хлопок ;330р.
+Одноразовая одежда;Бахилы;https://argo-ivanovo.ru/odnorazovaja-odezhda/baxily; Универсальный ; В ассортименте ; спанбонд ;238р.
+Одноразовая одежда;Пеньюар стандарт 140х100 см;https://argo-ivanovo.ru/odnorazovaja-odezhda/penjuar-polietilenovyj-ljuks-140x100sm; 100*140 ;; полиэтилен ;330р.
+Одноразовая одежда;Перчатки виниловые прозрачные;https://argo-ivanovo.ru/odnorazovaja-odezhda/perchatki-vinilovye-neopudrennye;;; винил ;385р.
+Одноразовая одежда;Перчатки латексные неопудренные;https://argo-ivanovo.ru/odnorazovaja-odezhda/perchatki-lateksnye; S-маленький  М - средний ; Белый ; латекс ;500р.
+Одноразовая одежда;Перчатки нитриловые;https://argo-ivanovo.ru/odnorazovaja-odezhda/perchatki-polietilenovye; S-маленький  М - средний ; Пудра  Бирюза  Сирень ; нитрил ;500р.
+Одноразовая одежда;Полотенце спанлейс стандарт;https://argo-ivanovo.ru/odnorazovaja-odezhda/polotentse-vafelnoe-ljuks-3570-sm; 35*70 ; Белый ; спанлейс ;425р.
+Одноразовая одежда;Простыни СМС стандарт(20 штук);https://argo-ivanovo.ru/odnorazovaja-odezhda/prostynja-sms-standart-200160-sm;; Белый  Бирюза ; смс  ;488р.
+Одноразовая одежда;Фартук ОДНОРАЗОВЫЙ ;https://argo-ivanovo.ru/odnorazovaja-odezhda/fartuk-polietilenovyj-120x70sm-serebro; Универсальный ;; полиэтилен ;300р.

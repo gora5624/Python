@@ -16,7 +16,7 @@ class GetInfo(Thread):
 
 
 # точка входа на сайт
-mainUrl = r'https://mobi711.ru/catalog/planshety'
+mainUrl = r'https://mobi711.ru/catalog/knigi/'
 # Количество потоков
 num = 10
 
@@ -51,7 +51,7 @@ def GetListBrandAndModels(mainUrl):
 
 
 def GetFilmCatalog(ListData, num):
-    NameFile = r'D:\tmp\my_prod\Python\python\ParsingMobi711\MobiParsTab_mp.csv'
+    NameFile = r'D:\tmp\my_prod\Python\python\ParsingMobi711\MobiParsBk_mp.csv'
     for Data in ListData:
         html = get_html('https://mobi711.ru'+Data['Url'])
         soup = BeautifulSoup(html, 'lxml')
@@ -70,6 +70,8 @@ def GetFilmCatalog(ListData, num):
                 else:
                     UrlFilmCatalog = ''
                     Name = ''
+        else:
+            UrlFilmCatalog = ''
         data = {'Brand': Data['Brand'],
                 'Model': Data['Model'],
                 'UrlModel': Data['Url'],

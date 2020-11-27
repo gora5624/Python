@@ -67,12 +67,15 @@ def GetData(brand, model, img, mainUrl):
                'Img Directory': brand['nameBrand']+'\\'+model['nameModel']+'\\'+img['nameImg']+'.jpg' if img['nameImg'] != None else 'None'}
     if img['nameImg'] != None:
         pathImg = os.path.join(
-            'books', brand['nameBrand'], model['nameModel'])
+            'smart', brand['nameBrand'], model['nameModel'])
         if os.path.exists(pathImg):
             return
         os.makedirs(pathImg)
         with open(os.path.join(pathImg, img['nameImg']+'.jpg'), 'wb') as imageFile:
-            imageFile.write(requests.get(mainUrl+img['urlImg']).content)
+            try:
+                imageFile.write(requests.get(mainUrl+img['urlImg']).content)
+            except:
+                imageFile.write(requests.get(mainUrl+img['urlImg']).content)
             imageFile.close()
     write_csv(dataCsv, 'Phones.csv')
 
