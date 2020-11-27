@@ -61,6 +61,11 @@ def get_stuff_info(list_stuff):
         soup = BeautifulSoup(html_stuff, 'lxml')
         text_info = soup.find('div', id='test').find_all('li')
         size, color, cloth = '', '', ''
+        price = ''
+        try:
+            price = soup.find('div', class_='retail-price price-prod').text
+        except:
+            price = ''
         for text_ in text_info:
             cur_line_name = text_.find('span', class_='opts-lab').text
             cur_line_val = text_.find('span', class_='opts-val').text
@@ -75,9 +80,10 @@ def get_stuff_info(list_stuff):
                       'url_stuff': stuff['url_stuff'],
                       'size': size,
                       'color': color,
-                      'cloth': cloth}
+                      'cloth': cloth,
+                      'price': price}
         print(data_stuff)
-        write_csv(data_stuff, r'D:\tmp\python\python_parsing\parsing_ARGO\argo.csv')
+        write_csv(data_stuff, r'D:\tmp\my_prod\Python\python\parsing_ARGO\argo.csv')
 
 
 def get_information():
@@ -89,7 +95,7 @@ def get_information():
     driver_new.quit()
     print(data)
     write_csv(
-        data, r'D:\tmp\python\python_parsing\parsing_ARGO\ARGO.csv')
+        data, r'D:\tmp\my_prod\Python\python\parsing_ARGO\argo.csv')
 
 
 url_in = 'https://argo-ivanovo.ru/'
