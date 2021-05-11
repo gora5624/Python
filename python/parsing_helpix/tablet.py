@@ -50,6 +50,8 @@ def GetImg(urlModel):
     try:
         urlImg = soup.find('img', class_='b-devPic__picNew').get('src')
         nameImg = soup.find('img', class_='b-devPic__picNew').get('alt')
+        size = soup.find(
+            'tb', class_='b-specTabShort__td b-specTabShort__td_value').text().split("\"")[0]
         char = ['\"', '\\', '/']
         for c in char:
             nameImg = nameImg.replace(c, '')

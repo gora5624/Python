@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import requests
 from bs4 import BeautifulSoup
-from wr_csv import write_csv, read_csv
+from my_lib import write_csv, read_csv
 import os
 import time
 

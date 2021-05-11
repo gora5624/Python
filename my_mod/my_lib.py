@@ -2,6 +2,7 @@ import csv
 import os
 import time
 import requests
+import xlrd
 
 
 def file_exists(file_name):
@@ -11,7 +12,7 @@ def file_exists(file_name):
 
 
 def write_csv(data, file_name='new_csv {}.csv'.format(time.strftime('%e.%m.%y')), delimiter=';', mode_write='DictWriter'):
-    '''Функция записывает контейнер data в файл формата csv. data - контейнер для записи, file_name - относительный или абсалютный путь к файлу в который нужно записать информацию, delimiter - разделители csv, mode_write - режим записи в файл, может быть DictWriter (по умолчанию) либо NoDict. Если режим DictWriter записть производится по ключам в словаре, ключ - название столбца, его значение это значение ячейки. Режим NoDict записывает без ключей и названий столбцов и порядке слева направо.'''
+    '''Функция записывает контейнер data в файл формата csv. data - контейнер для записи, file_name - относительный или абсолютный путь к файлу в который нужно записать информацию, delimiter - разделители csv, mode_write - режим записи в файл, может быть DictWriter (по умолчанию) либо NoDict. Если режим DictWriter записть производится по ключам в словаре, ключ - название столбца, его значение это значение ячейки. Режим NoDict записывает без ключей и названий столбцов и порядке слева направо.'''
 
     file_ex = file_exists(file_name)
     # Открывает файл file_name для добавления информации в него. Если его нет, то создает
@@ -51,3 +52,41 @@ def get_html(url, t=0):
     time.sleep(t)
     r = requests.get(url)
     return r.text
+
+
+def read_xlsx(file_path, title='Yes'):
+    '''Считывает построчно xlsx файл и возращает список словарей - если title = 'Yes', список списков - если title = 'No'
+    '''
+    rd = xlrd.open_workbook(file_path)
+    sheet = rd.sheet_by_index(0)
+    if title == 'Yes':
+        Name_row = sheet.row_values(0)
+        start = 1
+    elif title == 'No':
+        Name_row = None
+        start = 0
+    data = []
+    for rownum in range(start, sheet.nrows):
+        row = sheet.row_values(rownum)
+        if title == 'Yes':
+            dct = {}
+            for i, cel in enumerate(row):
+                tmp = {Name_row[i]: cel}
+                dct.update(tmp)
+            data.append(dct)
+        elif title == 'No':
+            data.append(row)
+    return data
+
+
+def scan_dir(path):
+    '''Возращает список файлов в директории и всех её поддерикториях'''
+
+    list_file = []
+    list_tmp = os.listdir(path)
+    for tmp in list_tmp:
+        if os.path.isfile(os.path.join(path, tmp)):
+            list_file.append(os.path.join(path, tmp))
+        else:
+            list_file.extend(scan_dir(os.path.join(path, tmp)))
+    return list_file
