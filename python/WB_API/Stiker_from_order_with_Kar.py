@@ -40,7 +40,11 @@ def read_xlsx(file_path, num=0, title='Yes'):
     '''Считывает построчно xlsx файл и возращает список словарей - если title = 'Yes', список списков - если title = 'No'
     '''
     rd = xlrd.open_workbook(file_path)
-    sheet = rd.sheet_by_index(num)
+    try:
+        sheet = rd.sheet_by_index(num)
+    except:
+        print("Введено некорректное число листов, читаю лист 1")
+        sheet = rd.sheet_by_index(0)
     if title == 'Yes':
         Name_row = sheet.row_values(0)
         start = 1
@@ -215,6 +219,12 @@ if resp == 0:
     print("Заказы успешно получены, идём дальше")
     OrderFileName = input(
         'Название файла (Если он в папке Oreders) или полный путь до файла (Если он в другой папке): ')
+    Sheet_num = input('Введите номер листа, на котором нужные данные: ')
+    try:
+        Sheet_num = int(Sheet_num)
+    except:
+        print('Введён некорректный номер листа, установлен лист 1 по умолчанию.')
+        Sheet_num = 0
     if OrderFileName[-5:len(OrderFileName)] != '.xlsx':
         OrderFileName = OrderFileName + '.xlsx'
     if file_exists(OrderFileName) and isfile(joinpath(OrdersDir, OrderFileName)):
@@ -229,7 +239,7 @@ if resp == 0:
         Flag = False
     if Flag:
         data_from_order = read_xlsx(joinpath(
-            OrdersDir, OrderFileName), 3)
+            OrdersDir, OrderFileName), Sheet_num - 1)
         data_about_order = recreate_data(
             read_xlsx(joinpath(WBOrdersData, WBOrdersDataFileName)))
         data_for_print = {}
