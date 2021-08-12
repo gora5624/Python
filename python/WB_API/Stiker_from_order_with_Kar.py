@@ -181,17 +181,35 @@ else:
     resp = 0
 
 # Режим печати
-'''
-print('1 - режим печати по столам')
-print('2 - режим печати с разбивкой на модели')
-mode = int(input('Введите режим печати: '))
-print('1 или Enter - режим по умолчанию (Название модели или стола, ценник 1С, этикетка ВБ)')
+
+print('1 - режим печати с разбивкой на модели (По умолчанию)')
+print('2 - режим печати с разбивкой на столы')
+mode = 1
+mode_tmp = input('Введите режим печати: ')
+if mode_tmp == '':
+    pass
+else:
+    try:
+        mode = int(mode_tmp)
+    except:
+        print('Введён неверный режим, установлен режим по умолчанию')
+        mode = 1
+print('1 или Enter - название модели или стола, ценник 1С, этикетка ВБ (По умолчанию)')
 print('2 - название модели или стола, этикетка ВБ')
 print('3 - этикетка ВБ')
 print('4 - название модели или стола, ценник 1С')
 print('5 - ценник 1С')
-mode2 = int(input('Введите 2й режим печати: '))
-'''
+mode2 = 1
+mode2_tmp = input('Введите режим печати: ')
+if mode2_tmp == '':
+    pass
+else:
+    try:
+        mode2 = int(mode2_tmp)
+    except:
+        print('Введён неверный режим, установлен режим по умолчанию')
+        mode2 = 1
+
 
 if resp == 0:
     print("Заказы успешно получены, идём дальше")
@@ -211,9 +229,9 @@ if resp == 0:
         Flag = False
     if Flag:
         data_from_order = read_xlsx(joinpath(
-            OrdersDir, OrderFileName))
+            OrdersDir, OrderFileName), 3)
         data_about_order = recreate_data(
-            read_xlsx(joinpath(WBOrdersData, r'Data_order.xlsx')))
+            read_xlsx(joinpath(WBOrdersData, WBOrdersDataFileName)))
         data_for_print = {}
         for order in data_from_order:
             if order['Название'].replace('\xa0', ' ') not in data_for_print:
@@ -239,16 +257,25 @@ if resp == 0:
                    'Стикер64': data_about_order[num_ord]['Стикер64']}
             data_for_print[order['Название'].replace('\xa0', ' ')].append(tmp)
         writer = PdfWriter()
-        for name in data_for_print:
-            path1 = PdfReader(create_1C_name(name), decompress=False).pages
-            # writer.addpages(path1)
-            for data in data_for_print[name]:
-                path2 = PdfReader(create_1C_barcod(data['Название'],
-                                                   data['Артикул поставщика'], data['ШК']), decompress=False).pages
-                writer.addpages(path2)
-                path3 = PdfReader(create_WB_barcod(
-                    data['Стикер64']), decompress=False).pages
-                # writer.addpages(path3)
+        if mode == 1:
+            for name in data_for_print:
+                if mode2 == 1 or mode2 == 2 or mode2 == 4:
+                    path1 = PdfReader(create_1C_name(
+                        name), decompress=False).pages
+                    writer.addpages(path1)
+                for data in data_for_print[name]:
+                    if mode2 == 1 or mode2 == 5 or mode2 == 4:
+                        path2 = PdfReader(create_1C_barcod(data['Название'],
+                                                           data['Артикул поставщика'], data['ШК']), decompress=False).pages
+                        writer.addpages(path2)
+                    if mode2 == 1 or mode2 == 3 or mode2 == 2:
+                        path3 = PdfReader(create_WB_barcod(
+                            data['Стикер64']), decompress=False).pages
+                        writer.addpages(path3)
+        elif mode == 2:
+            pass
+        else:
+            print('Введён несуществуюший режим работы')
 else:
     print("Не удалось получить заказы")
 
