@@ -82,11 +82,11 @@ def GetData(url, File_name):
     driver.close()
 
 
-Find = ['чехол samsung s20']
+Find = ['чехол samsung s20FE', 'чехол samsung s20 FE', 'чехол samsung s 20 FE']
 
-for wodrs in Find:
-    File_name = KeyWord = wodrs
+for word in Find:
+    File_name = KeyWord = word
     UrlIn = "https://www.wildberries.ru/catalog/0/search.aspx?search=" + \
         KeyWord.strip().replace(' ', '%20') + "&xsearch=true"
     Slow(UrlIn, File_name)
-    print(File_name + '' + 'Done')
+    print(File_name + ' Done')
