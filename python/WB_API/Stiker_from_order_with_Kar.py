@@ -169,7 +169,7 @@ def create_WB_barcod(Base64):
     return joinpath(TMPDir, r'WB_barcod.PDF')
 
 
-def create_1C_name(name):
+def create_1C_name(name, file_order_name):
     size = (370, 280)
     pdf = FPDF(format=size)
     pdf.add_page()
@@ -178,6 +178,9 @@ def create_1C_name(name):
     pdf.set_font('DejaVu', '', 70)
     pdf.multi_cell(350, 35, txt="{}".format(
         name))
+    pdf.set_font('DejaVu', '', 40)
+    pdf.multi_cell(350, 35, txt="{}".format(
+        file_order_name), align="C")
     pdf.output(joinpath(TMPDir, 'name.pdf'))
     return joinpath(TMPDir, 'name.pdf')
 
@@ -195,7 +198,7 @@ def getOrdersOrNot():
     return resp
 
 
-def makeTableStiker(table_num):
+def makeTableStiker(table_num, file_order_name):
     size = (370, 280)
     pdf = FPDF(format=size)
     pdf.add_page()
@@ -204,6 +207,8 @@ def makeTableStiker(table_num):
     pdf.set_font('DejaVu', '', 200)
     pdf.multi_cell(350, 190, txt="Стол {}".format(
         str(table_num)), align='C')
+    pdf.set_font('DejaVu', '', 40)
+    pdf.multi_cell(350, 30, txt='{}'.format(file_order_name), align="C")
     pdf.output(joinpath(TMPDir, 'table_num.pdf'))
     return joinpath(TMPDir, 'table_num.pdf')
 
@@ -298,7 +303,7 @@ def make_with_name(resp, mode2):
             for name in data_for_print:
                 if mode2 == 1 or mode2 == 2 or mode2 == 4:
                     path1 = PdfReader(create_1C_name(
-                        name), decompress=False).pages
+                        name, OrderFileName), decompress=False).pages
                     writer.addpages(path1)
                 for data in data_for_print[name]:
                     if mode2 == 1 or mode2 == 5 or mode2 == 4:
@@ -314,6 +319,7 @@ def make_with_name(resp, mode2):
         print("Не удалось получить заказы")
 
     writer.write(joinpath(main_path, OrderFileName.replace('.xlsx', '.pdf')))
+    OrderFileName.replace('.xlsx', '.pdf')
 
 
 def make_with_table(resp, mode2):
@@ -381,7 +387,7 @@ def make_with_table(resp, mode2):
             table_num = 1
             if mode2 == 1 or mode2 == 2 or mode2 == 4:
                 path1 = PdfReader(makeTableStiker(
-                    table_num), decompress=False).pages
+                    table_num, OrderFileName), decompress=False).pages
                 writer.addpages(path1)
             for order_line in data_about_tale:
                 if type(order_line['Номер задания']) == float:
@@ -392,7 +398,7 @@ def make_with_table(resp, mode2):
                     if order_line_num == '':
                         table_num = table_num + 1
                         path1 = PdfReader(makeTableStiker(
-                            table_num), decompress=False).pages
+                            table_num, OrderFileName), decompress=False).pages
                         writer.addpages(path1)
                         continue
                 for data in data_for_print[order_line_num]:
@@ -409,6 +415,7 @@ def make_with_table(resp, mode2):
         print("Не удалось получить заказы")
 
     writer.write(joinpath(main_path, OrderFileName.replace('.xlsx', '.pdf')))
+    OrderFileName.replace('.xlsx', '.pdf')
 
     # Тело
 
