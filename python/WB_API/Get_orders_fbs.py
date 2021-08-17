@@ -1,73 +1,82 @@
-import requests
-import datetime
-import json
+from os.path import join as joinpath
+from datetime import datetime, timedelta
 import pandas
+import requests
+import json
 from my_lib import file_exists
+from os import makedirs
 
-path_to_file = 'D:\end_data.txt'
-Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}T{}&take=1000&skip=0'
-
-
-def read_data(path_to_file):
-    if not file_exists:
-        with open(path_to_file, 'w') as file_data:
-            file_data.close()
-
-    with open(path_to_file, 'r') as file_data:
-        end_data_file = file_data.read()
-        file_data.close()
-    if end_data_file == '':
-        end_data_file = "2021-08-01T00:00:00+03:00"
-    end_data = end_data_file.split('T')[0]
-    end_time = end_data_file.split('T')[1].replace(
-        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
-    return end_data, end_time, end_data_file
+main_path = r'C:\Users\Public\Documents\WBGetOrder'
+Token_path = joinpath(main_path, r'Token.txt')
+WBOrdersDataFileName = r'Data_orders.xlsx'
+WBOrdersJsonDataFileName = r'Order.json'
+WBOrdersData = joinpath(
+    main_path, r'WBOrdersData')
+TMPDir = joinpath(
+    main_path, r'TMPDir')
 
 
-def write_data(path_to_file, end_data_file):
-    with open(path_to_file, 'w') as file_data:
-        file_data.write(end_data_file)
-        file_data.close()
+def startChek():
+    dirList = [main_path, WBOrdersData, TMPDir]
+    for dir_ in dirList:
+        if not file_exists(dir_):
+            makedirs(dir_)
+    if not file_exists(Token_path):
+        print('Токен авторизации по адресу {} не обнаружен, получение заказов невозможно.'.format(
+            Token_path))
+        with open(Token_path, 'w', encoding='UTF-8') as file:
+            file.close()
 
 
-def get_orders(Url, end_data, end_time, all_data):
-    response = requests.get(Url.format(end_data, end_time), headers={
-                            'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgyYTU2OGZlLTgyNTctNGQ2Yi05ZTg1LTJkYTgxMTgxYWI3MSJ9.ROCdF7eOfTZA-atpsLGTAi15yDzHk2UMes05vwjZwn4'})
-
-    data = response.json()['orders']
-
-    for line in data:
-        line.update(wbStickerEncoded=line['sticker']['wbStickerEncoded'])
-        line.update(wbStickerSvgBase64=line['sticker']['wbStickerSvgBase64'])
-
-    with open(r'D:\order.json', 'w') as file:
-        json.dump(data, file)
+def get_orders(days):
+    with open(Token_path, 'r', encoding='UTF-8') as file:
+        Token = file.read()
         file.close()
-    tmp = pandas.read_json(r'D:\order.json')
-    all_data = all_data.append(tmp)
-    return data, all_data
+    print("Идёт получение свежих заказов, ожидайте...")
+    Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
 
-
-all_data = pandas.DataFrame()
-try:
-    tmp = pandas.read_excel(r'D:\Data_order.xlsx')
-    all_data = all_data.append(tmp)
-    end_data, end_time, end_data_file = read_data(path_to_file)
-except:
-    print("Предыдущие заказы не обнаружены, делаю с начала.")
-    end_data_file = "2021-08-01T00:00:00+03:00"
-    end_data = end_data_file.split('T')[0]
-    end_time = end_data_file.split('T')[1].replace(
+    start_data = (datetime.today() - timedelta(days=int(days))).isoformat('T', 'seconds').replace(
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+    count_skip = 0
+    data = '123'
+    all_data = pandas.DataFrame()
+    while len(data) > 0:
+        response = requests.get(Url.format(start_data, count_skip), headers={
+            'Authorization': '{}'.format(Token)})
+        if response.status_code != 200:
+            print('Не удалось получить заказы, ошибка на стороне ВБ.')
+            return 1
+        count_skip = count_skip+1000
+        data = response.json()['orders']
+        for line in data:
+            line.update(wbStickerEncoded=line['sticker']['wbStickerEncoded'])
+            line.update(
+                wbStickerSvgBase64=line['sticker']['wbStickerSvgBase64'])
+        with open(joinpath(WBOrdersData, WBOrdersJsonDataFileName), 'w') as file:
+            json.dump(data, file)
+        file.close()
+        tmp = pandas.read_json(
+            joinpath(WBOrdersData, WBOrdersJsonDataFileName))
+        all_data = all_data.append(tmp)
+    all_data.to_excel(joinpath(WBOrdersData,
+                               WBOrdersDataFileName), index=False)
+    return 0
 
-data, all_data = get_orders(Url, end_data, end_time, all_data)
-while len(data) > 1:
-    data, all_data = get_orders(Url, end_data, end_time, all_data)
-    end_data = data[-1]['dateCreated'].split('T')[0]
-    end_time = data[-1]['dateCreated'].split('T')[1].replace(
-        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
 
-all_data.to_excel(r'D:\Data_order.xlsx', index=False)
-all_data.to_excel(
-    r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Архив\Data_order.xlsx', index=False)
-write_data(path_to_file, end_data_file)
+def getOrdersOrNot():
+
+    if str(input('Получить новые заказы? 1 - Да, 2 - Нет: ')) == str(1):
+        days = input(
+            "Ведите количество дней, за которое нужно получить заказы или нажмите Enter: ")
+        if days == '':
+            print("Вы не ввели кличество дней, получаю за последние 10 дней.")
+            days = 10
+        resp = get_orders(days)
+    else:
+        resp = 0
+    return resp
+
+
+startChek()
+getOrdersOrNot()
+a = input("Заказы получены, нажмите любую клавишу")
