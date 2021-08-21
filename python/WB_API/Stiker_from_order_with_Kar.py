@@ -104,6 +104,7 @@ def get_orders(days):
         all_data = all_data.append(tmp)
     all_data.to_excel(joinpath(WBOrdersData,
                                WBOrdersDataFileName), index=False)
+
     copyfile(joinpath(WBOrdersData, WBOrdersDataFileName),
              joinpath(r"D:\\", WBOrdersDataFileName))
     return 0
