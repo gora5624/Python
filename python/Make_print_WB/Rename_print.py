@@ -2,8 +2,8 @@ import os
 import sys
 from my_lib import read_xlsx
 
-pathToPrint = sys.argv[1].replace("_", " ")
-pathToPrint = r'D:\prints'
+#pathToPrint = sys.argv[1].replace("_", " ")
+pathToPrint = r'D:\printsPy'
 
 
 def Rename_print(pathToPrint):
@@ -19,5 +19,5 @@ def Rename_print(pathToPrint):
                           os.path.join(pathToPrint, name+'.jpg'))
 
 
-for dir in os.listdir(r'D:\prints'):
+for dir in os.listdir(pathToPrint):
     Rename_print(os.path.join(pathToPrint, dir))

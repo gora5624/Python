@@ -17,7 +17,7 @@ def make_bar(photo_path_tmp):
             kod_1C = None
     tmp_list2 = []
     write_data = []
-    photo_path = os.path.join('D:\prints', photo_path_tmp)
+    photo_path = os.path.join('D:\printsPy', photo_path_tmp)
     list_photo = os.listdir(photo_path)
 
     wb = xlwt.Workbook()
@@ -36,11 +36,11 @@ def make_bar(photo_path_tmp):
     for row_index, row in enumerate(write_data):
         for col_index, el in enumerate(row):
             ws.write(row_index, col_index, el)
-    wb.save(r'D:\prints\{}.xls'.format(photo_path_tmp))
+    wb.save(r'D:\printsPy\{}.xls'.format(photo_path_tmp))
 
 
 # make_bar(r'Чехол_для_Samsung_Galaxy_M32_силикон_прозрачный')
 
 
-for photo_path_tmp in os.listdir(r'D:\prints'):
+for photo_path_tmp in os.listdir(r'D:\printsPy'):
     make_bar(photo_path_tmp)
