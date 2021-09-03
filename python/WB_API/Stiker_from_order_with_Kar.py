@@ -41,8 +41,6 @@ def startChek():
             Token_path))
         with open(Token_path, 'w', encoding='UTF-8') as file:
             file.close()
-        return 1
-    return 0
 
 
 def read_xlsx(file_path, num=0, title='Yes'):
@@ -106,6 +104,9 @@ def get_orders(days):
         all_data = all_data.append(tmp)
     all_data.to_excel(joinpath(WBOrdersData,
                                WBOrdersDataFileName), index=False)
+
+    copyfile(joinpath(WBOrdersData, WBOrdersDataFileName),
+             joinpath(r"D:\\", WBOrdersDataFileName))
     return 0
 
 
@@ -420,15 +421,9 @@ def make_with_table(resp, mode2):
     # Тело
 
 
-a = 1
-while a != 0:
-    if startChek() == 0:
-        mode, mode2 = menu()
-        if mode == 1:
-            make_with_name(getOrdersOrNot(), mode2)
-        elif mode == 2:
-            make_with_table(getOrdersOrNot(), mode2)
-    try:
-        a = int(input("Чтобы завершить программу введите 0: "))
-    except:
-        a = 1
+startChek()
+mode, mode2 = menu()
+if mode == 1:
+    make_with_name(getOrdersOrNot(), mode2)
+elif mode == 2:
+    make_with_table(getOrdersOrNot(), mode2)

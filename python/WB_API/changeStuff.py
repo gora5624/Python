@@ -10,7 +10,7 @@ from my_lib import read_xlsx
 import json
 
 
-pathToListStuff = r'D:\M32.xlsx'
+pathToListStuff = r'D:\Список номенклатуры.XLSX'
 main_path = r'C:\Users\Public\Documents\WBGetStuff'
 Token_path = joinpath(main_path, r'Token.txt')
 
@@ -91,14 +91,18 @@ def getCardBody(imtID):
     return json.loads(response.text)['result']['card']
 
 
-def changeCard(cardBody):
+def changeCard(cardBody, name):
     with open(Token_path, 'r', encoding='UTF-8') as file:
         Token = file.read()
         file.close()
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
 
-    cardBody['addin'][6]['params'] = [
-        {'value': 'Redmi Note 10 pro'}, {'value': 'Xiaomi Redmi Note 10 pro'}, {'value': 'Xiaomi Note 10 pro'}, {'value': 'Note 10 pro'}, {'value': 'Сиаоми Редми Нот 10 про'}, {'value': 'Редми Нот 10 про'}, {'value': 'Сиаоми Нот 10 про'}, {'value': 'Нот 10 про'}]
+    for i, addin in enumerate(cardBody['addin']):
+        if addin['type'] == 'Наименование' and addin['params'][0]['value'] == 'Чехол для телефона':
+            cardBody['addin'][i]['params'][0]['value'] = name
+            print(name)
+            break
+
     cardBodyNew = {
         "id": '1',
         "jsonrpc": "2.0",
@@ -122,15 +126,17 @@ def changeCard(cardBody):
 def cangeCardFromListStuff(pathToListStuff):
     dataFromLIstStuff = read_xlsx(pathToListStuff)
     for stuffLine in dataFromLIstStuff:
+        name = stuffLine['Название на WB']
         barcod = stuffLine['Баркод'] if type(
             stuffLine['Баркод']) == str else str(stuffLine['Баркод'])[0:-2]
         idStuff = getIdWithBarcod(barcod)
         cardBody = getCardBody(idStuff)
-        changeCard(cardBody)
+        changeCard(cardBody, name)
+        print("Готово")
 
 
-# cangeCardFromListStuff(pathToListStuff)
+cangeCardFromListStuff(pathToListStuff)
 
-imtID = getIdWithBarcod('2007346811008')
+'''imtID = getIdWithBarcod('2007346811008')
 cardBody = getCardBody(imtID)
-changeCard(cardBody)
+changeCard(cardBody)'''
