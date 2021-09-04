@@ -13,7 +13,7 @@ WBOrdersData = joinpath(
     main_path, r'WBOrdersData')
 WBErrorsFileName = r'ErrorsBarcod.xlsx'
 WBOrdersDataFileName = 'orders.xlsx'
-listStuffPath = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список номенклатуры.XLSX'
+listStuffPath = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список номенклатуры — копия.XLSX'
 FilePath = joinpath(WBOrdersData, WBOrdersFileName)
 
 
@@ -267,7 +267,7 @@ def changeStatus(listOrderForChangeStatus, Token):
         orderId = orderForChange['Номер задания']
         Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
         datajson = [{"orderId": orderId,
-                     "status": 1}]
+                     "status": 0}]
         while True:
             try:
                 response = requests.put(Url, headers={
@@ -282,9 +282,10 @@ if startChek() == 0:
     Token = getToken()
     data = get_orders(Token)
     mode = choiseMode()
-    #orderFilter(data, mode)
     changeStatus(orderFilter(data, mode), Token)
-    a = input("Заказы получены, нажмите Enter")
+    while input("Введите 0 чтобы выйти. Enter продожить получение заказов: ") != '0':
+        mode = choiseMode()
+        changeStatus(orderFilter(data, mode), Token)
 
 #Token = getToken()
 #changeStatus(read_xlsx(r"C:\Users\Public\Documents\WBGetOrder\WBOrdersData\ФБС принты 31.08.2021 ч3.xlsx"),Token)
