@@ -98,7 +98,7 @@ def changeCard(cardBody, name):
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
 
     for i, addin in enumerate(cardBody['addin']):
-        if addin['type'] == 'Наименование' and addin['params'][0]['value'] == 'Чехол для телефона':
+        if addin['type'] == 'Наименование':
             cardBody['addin'][i]['params'][0]['value'] = name
             print(name)
             break

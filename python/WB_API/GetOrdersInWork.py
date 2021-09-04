@@ -13,7 +13,7 @@ WBOrdersData = joinpath(
     main_path, r'WBOrdersData')
 WBErrorsFileName = r'ErrorsBarcod.xlsx'
 WBOrdersDataFileName = 'orders.xlsx'
-listStuffPath = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список номенклатуры.XLSX'
+listStuffPath = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список номенклатуры — копия.XLSX'
 FilePath = joinpath(WBOrdersData, WBOrdersFileName)
 
 
