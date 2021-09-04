@@ -6,6 +6,10 @@ from os import makedirs
 import pandas
 
 
+# Режим отладки 1 - да, 0 - боевой режим
+Debug = 1
+
+
 main_path = r'C:\Users\Public\Documents\WBGetOrder'
 Token_path = joinpath(main_path, r'Token.txt')
 WBOrdersFileName = 'ФБС {} {} {}.xlsx'
@@ -123,13 +127,24 @@ def getStuffType(barcodForGetType, caseData):
     return stuffType
 
 
+'''def consOrder(orderList):
+    for order in orderList:
+        
+'''
+
+
 def createExcel(listOrderForChangeStatus, listErrorBarcods, mode):
     if mode != 'glass':
         listErrorBarcods = pandas.DataFrame(listErrorBarcods)
         listOrderForChangeStatus = pandas.DataFrame(listOrderForChangeStatus)
+        listOrderForOrder = pandas.DataFrame(listOrderForChangeStatus)
         listErrorBarcods.to_excel(FilePath, index=False)
         fileName = createFileName(FilePath, mode)
-        listOrderForChangeStatus.to_excel(fileName, index=False)
+        with pandas.ExcelWriter(fileName) as writerOreder:
+            listOrderForChangeStatus.to_excel(
+                writerOreder, sheet_name='Заказ', index=False)
+        listOrderForChangeStatus.sort_values(
+            'Название').to_excel(fileName, index=False)
     elif mode == 'glass':
         listErrorBarcods = pandas.DataFrame(listErrorBarcods)
         listErrorBarcods.to_excel(FilePath, index=False)
@@ -152,13 +167,17 @@ def createExcel(listOrderForChangeStatus, listErrorBarcods, mode):
         listMateNanoglass = pandas.DataFrame(listMateNanoglass)
         listCameraNanoglass = pandas.DataFrame(listCameraNanoglass)
         with pandas.ExcelWriter(createFileName(FilePath, mode)) as writerglass:
-            list3DGlass.to_excel(
+            list3DGlass.sort_values(
+                'Название').to_excel(
                 writerglass, sheet_name='3D_стекла', index=False)
-            listClearNanoglass.to_excel(
+            listClearNanoglass.sort_values(
+                'Название').to_excel(
                 writerglass, sheet_name='глянец', index=False)
-            listMateNanoglass.to_excel(
+            listMateNanoglass.sort_values(
+                'Название').to_excel(
                 writerglass, sheet_name='матовые', index=False)
-            listCameraNanoglass.to_excel(
+            listCameraNanoglass.sort_values(
+                'Название').to_excel(
                 writerglass, sheet_name='камеры', index=False)
 
 
@@ -266,8 +285,12 @@ def changeStatus(listOrderForChangeStatus, Token):
     for orderForChange in listOrderForChangeStatus:
         orderId = orderForChange['Номер задания']
         Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
+        if Debug == 1:
+            status = 0
+        else:
+            status = 1
         datajson = [{"orderId": orderId,
-                     "status": 0}]
+                     "status": status}]
         while True:
             try:
                 response = requests.put(Url, headers={
