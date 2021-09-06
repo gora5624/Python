@@ -12,7 +12,7 @@ def main(path_list_stuff, model_name):
 
     list_stuff = read_xlsx(path_list_stuff)
     list_barcod = read_xlsx(
-        r'D:\prints\{}.xls'.format(model_name), title='No')
+        r'D:\printsPy\{}.xls'.format(model_name), title='No')
     for stuff in list_stuff:
         for barcod in list_barcod:
             if stuff['Баркод'] == str(barcod[0]):
@@ -26,7 +26,7 @@ def main(path_list_stuff, model_name):
                 if not file_exists(dest_folder):
                     os.mkdir(dest_folder)
                 orig_folder = os.path.join(
-                    'D:\prints', model_name, barcod[3] + '.jpg')
+                    'D:\printsPy', model_name, barcod[3] + '.jpg')
                 new_name = os.path.join(
                     'D:\Done', str(stuff['Артикул WB'])[0:-2], 'photo', '1.jpg')
                 new_folder = os.path.join(dest_folder, barcod[3]+'.jpg')
@@ -36,12 +36,12 @@ def main(path_list_stuff, model_name):
                         'Баркод': str(stuff['Баркод'])[0:-2],
                         'Код размера (chrt_id)': str(stuff['Код размера (chrt_id)'])[0:-2]}
 
-                write_csv(data, 'D:\prints\done.csv',)
+                write_csv(data, 'D:\printsPy\done.csv',)
     print("Done")
 
 
-for fold in os.listdir(r'D:\prints'):
-    if os.path.isdir(os.path.join('D:\prints', fold)) == True:
+for fold in os.listdir(r'D:\printsPy'):
+    if os.path.isdir(os.path.join('D:\printsPy', fold)) == True:
         main(path_list_stuff, fold)
 
 i = j = 0
