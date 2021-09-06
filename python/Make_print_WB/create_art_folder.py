@@ -25,12 +25,12 @@ def main():
 
     list_stuff = recreate_data(xlsx)
     list_barcod = read_xlsx(
-        r'D:\A22.xlsx', title='No')
+        r'D:\Список номенклатуры.XLSX', title='No')
     for dirorig in os.listdir(r'D:\printsPy'):
         dir = dirorig.replace("_", ' ').lower()
         for print_ in os.listdir(os.path.join(r'D:\printsPy', dirorig)):
             for line in list_barcod:
-                strName = line[2].replace('_', ' ').lower()
+                strName = line[11].replace('_', ' ').lower()
                 if dir in strName:
                     printName = (
                         '('+print_.replace('print', 'принт').replace("_", ' ').lower()[0:-4]+')')
@@ -51,7 +51,7 @@ def main():
                             dest_folder, '1.jpg'))
 
 
-# main()
+main()
 
 i = j = 0
 path_arh = r'D:\Done'
