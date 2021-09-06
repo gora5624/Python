@@ -12,7 +12,7 @@ def Rename_print(pathToPrint):
     listPrint = os.listdir(pathToPrint)
     for Print in listPrint:
         for name in list_print_name:
-            PrintN = Print.replace('printsPy', 'Принт')[0:-4]
+            PrintN = Print.replace('print', 'Принт')[0:-4]
             nameN = name[name.find('(')+1:name.find(')')]
             if PrintN == nameN:
                 os.rename(os.path.join(pathToPrint, Print),
