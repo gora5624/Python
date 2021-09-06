@@ -7,7 +7,7 @@ import pandas
 
 
 # Режим отладки 1 - да, 0 - боевой режим
-Debug = 1
+Debug = 0
 
 
 main_path = r'C:\Users\Public\Documents\WBGetOrder'
@@ -127,12 +127,6 @@ def getStuffType(barcodForGetType, caseData):
     return stuffType
 
 
-'''def consOrder(orderList):
-    for order in orderList:
-        
-'''
-
-
 def createExcel(listOrderForChangeStatus, listErrorBarcods, mode):
     if mode != 'glass':
         listErrorBarcods = pandas.DataFrame(listErrorBarcods)
@@ -140,11 +134,8 @@ def createExcel(listOrderForChangeStatus, listErrorBarcods, mode):
         listOrderForOrder = pandas.DataFrame(listOrderForChangeStatus)
         listErrorBarcods.to_excel(FilePath, index=False)
         fileName = createFileName(FilePath, mode)
-        with pandas.ExcelWriter(fileName) as writerOreder:
-            listOrderForChangeStatus.to_excel(
-                writerOreder, sheet_name='Заказ', index=False)
-        listOrderForChangeStatus.sort_values(
-            'Название').to_excel(fileName, index=False)
+        listOrderForChangeStatus.to_excel(fileName, index=False)
+
     elif mode == 'glass':
         listErrorBarcods = pandas.DataFrame(listErrorBarcods)
         listErrorBarcods.to_excel(FilePath, index=False)
