@@ -1,9 +1,11 @@
 from os.path import join as joinpath
 from datetime import datetime, timedelta
+import re
 import requests
 from my_lib import file_exists, read_xlsx
 from os import makedirs
 import pandas
+from shutil import copyfile
 
 
 # Режим отладки 1 - да, 0 - боевой режим
@@ -19,6 +21,8 @@ WBErrorsFileName = r'ErrorsBarcod.xlsx'
 WBOrdersDataFileName = 'orders.xlsx'
 listStuffPath = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список номенклатуры — копия.XLSX'
 FilePath = joinpath(WBOrdersData, WBOrdersFileName)
+sizeListPath = r'\\192.168.0.33\shared\Отдел производство\Wildberries\список печати.xlsx'
+OrderDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
 
 
 def startChek():
@@ -45,8 +49,8 @@ def recreate_data(CaseList):
             Barcod = str(line['Баркод'])[0:-2]
         else:
             Barcod = line['Баркод']
-        data_new[Barcod] = {'Название 1С': line['Название 1С'],
-                            'Код': line['Код'],
+        data_new[Barcod] = {'Название 1С': line['Название 1С'].replace('\xa0', ' '),
+                            'Код': line['Код'].replace('\xa0', ''),
                             'Артикул WB':  str(line['Артикул WB'])[0:-2] if type(line['Артикул WB']) == float else line['Артикул WB'],
                             'Артикул поставщика': line['Артикул поставщика'],
                             'Код размера (chrt_id)': str(line['Код размера (chrt_id)'])[0:-2] if type(line['Код размера (chrt_id)']) == float else line['Код размера (chrt_id)'],
@@ -127,14 +131,93 @@ def getStuffType(barcodForGetType, caseData):
     return stuffType
 
 
+def getSize(model):
+    sizeList = read_xlsx(sizeListPath)
+    for modelLine in sizeList:
+        if modelLine['Название модели в 1С'].lower().replace('\\', '').replace('/', '') == model.lower().replace('\\', '').replace('/', ''):
+            return modelLine['Типоразмер']
+    return 'Нет в списке размеров'
+
+
+def createNormalFromPrint(listOrderForChangeStatus):
+    dataForOrder = []
+    for orderLine in listOrderForChangeStatus:
+        if 'прозрачный' in orderLine['Название'].lower():
+            normalCase1pt = orderLine['Название'].split('прозрачный')[
+                0]
+            normalCase = normalCase1pt + 'прозрачный'
+            dataForOrdertmp = {'Название': normalCase}
+        elif 'матовый' in orderLine['Название'].lower():
+            normalCase1pt = orderLine['Название'].split('матовый')[0]
+            normalCase = normalCase1pt + 'матовый'
+            dataForOrdertmp = {'Название': normalCase}
+        elif 'блестки' in orderLine['Название'].lower():
+            normalCase1pt = orderLine['Название'].split('блестки')[0]
+            normalCase = normalCase1pt + 'блестки'
+            dataForOrdertmp = {'Название': normalCase}
+        elif 'skinshell' in orderLine['Название'].lower():
+            normalCase1pt = orderLine['Название'].split('SkinShell')[0]
+            normalCase = normalCase1pt + 'skinshell'
+            dataForOrdertmp = {'Название': normalCase}
+        elif 'fashion' in orderLine['Название'].lower():
+            normalCase1pt = orderLine['Название'].split('Fashion')[0]
+            normalCase = normalCase1pt + 'Fashion'
+            dataForOrdertmp = {'Название': normalCase}
+        elif 'df' in orderLine['Название'].lower():
+            normalCase1pt = orderLine['Название'].split('DF')[0]
+            normalCase = normalCase1pt + 'DF'
+            dataForOrdertmp = {'Название': normalCase}
+        dataForOrder.append(dataForOrdertmp)
+    return dataForOrder
+
+
+def createPrintExcel(listOrderForChangeStatus, fileName):
+    listOrderForChangeStatuspd = pandas.DataFrame(listOrderForChangeStatus)
+    listOrderForChangeOrders = createNormalFromPrint(
+        listOrderForChangeStatus)
+    listOrderForChangeOrderspd = pandas.DataFrame(listOrderForChangeOrders)
+    listOrderForTable = []
+    for orderLine in listOrderForChangeStatus:
+        if 'книга' not in orderLine['Название']:
+            model = orderLine['Название'].split('для ')[1].split(' сил')[0]
+            size = getSize(model)
+        elif 'книга' in orderLine['Название']:
+            size = 'Книга'
+        OrderLineData = {
+            'Номер задания': orderLine['Номер задания'],
+            'Название': orderLine['Название'],
+            'Размер': size,
+            'Этикетка': orderLine['Этикетка']}
+        listOrderForTable.append(OrderLineData)
+    listOrderForTablepd = pandas.DataFrame(listOrderForTable)
+    with pandas.ExcelWriter(createFileName(fileName, mode)) as writerCase:
+        listOrderForChangeStatuspd.sort_values(
+            'Название').to_excel(writerCase, sheet_name='основной', index=False)
+        listOrderForTablepd.sort_values(
+            'Название').to_excel(writerCase, sheet_name='Столы', index=False)
+        listOrderForChangeOrderspd.groupby(['Название']).size().reset_index(name='Количество').to_excel(
+            writerCase, sheet_name='Заказать', index=False)
+
+
 def createExcel(listOrderForChangeStatus, listErrorBarcods, mode):
     if mode != 'glass':
         listErrorBarcods = pandas.DataFrame(listErrorBarcods)
-        listOrderForChangeStatus = pandas.DataFrame(listOrderForChangeStatus)
+        listOrderForChangeStatuspd = pandas.DataFrame(listOrderForChangeStatus)
         listOrderForOrder = pandas.DataFrame(listOrderForChangeStatus)
         listErrorBarcods.to_excel(FilePath, index=False)
         fileName = createFileName(FilePath, mode)
-        listOrderForChangeStatus.to_excel(fileName, index=False)
+        if mode == 'case_without_print':
+            with pandas.ExcelWriter(fileName) as writerCase:
+                listOrderForChangeStatuspd.sort_values(
+                    'Название').to_excel(writerCase, sheet_name='основной', index=False)
+                listOrderForOrder.groupby(['Название', 'ШК']).size().reset_index(name='Количество').to_excel(
+                    writerCase, sheet_name='Заказать', index=False)
+        elif mode == 'case_print':
+            createPrintExcel(listOrderForChangeStatus, fileName)
+        elif mode == 'plankWithPrint':
+            with pandas.ExcelWriter(fileName) as writerCase:
+                listOrderForChangeStatuspd.sort_values(
+                    'Название').to_excel(writerCase, sheet_name='основной', index=False)
 
     elif mode == 'glass':
         listErrorBarcods = pandas.DataFrame(listErrorBarcods)
@@ -157,19 +240,38 @@ def createExcel(listOrderForChangeStatus, listErrorBarcods, mode):
         listClearNanoglass = pandas.DataFrame(listClearNanoglass)
         listMateNanoglass = pandas.DataFrame(listMateNanoglass)
         listCameraNanoglass = pandas.DataFrame(listCameraNanoglass)
-        with pandas.ExcelWriter(createFileName(FilePath, mode)) as writerglass:
-            list3DGlass.sort_values(
-                'Название').to_excel(
-                writerglass, sheet_name='3D_стекла', index=False)
-            listClearNanoglass.sort_values(
-                'Название').to_excel(
-                writerglass, sheet_name='глянец', index=False)
-            listMateNanoglass.sort_values(
-                'Название').to_excel(
-                writerglass, sheet_name='матовые', index=False)
-            listCameraNanoglass.sort_values(
-                'Название').to_excel(
-                writerglass, sheet_name='камеры', index=False)
+        fileName = createFileName(FilePath, mode)
+        with pandas.ExcelWriter(fileName) as writerglass:
+            try:
+                list3DGlass.sort_values(
+                    'Название').to_excel(
+                    writerglass, sheet_name='3D_стекла', index=False)
+            except KeyError:
+                list3DGlass.to_excel(
+                    writerglass, sheet_name='3D_стекла', index=False)
+            try:
+                listClearNanoglass.sort_values(
+                    'Название').to_excel(
+                    writerglass, sheet_name='глянец', index=False)
+            except KeyError:
+                listClearNanoglass.to_excel(
+                    writerglass, sheet_name='глянец', index=False)
+            try:
+                listMateNanoglass.sort_values(
+                    'Название').to_excel(
+                    writerglass, sheet_name='матовые', index=False)
+            except KeyError:
+                listMateNanoglass.to_excel(
+                    writerglass, sheet_name='матовые', index=False)
+            try:
+                listCameraNanoglass.sort_values(
+                    'Название').to_excel(
+                    writerglass, sheet_name='камеры', index=False)
+            except KeyError:
+                listCameraNanoglass.to_excel(
+                    writerglass, sheet_name='камеры', index=False)
+    if Debug != 1:
+        copyfile(fileName, fileName.replace(WBOrdersData, OrderDir))
 
 
 def orderFilter(ordersForFilter, mode):
@@ -301,5 +403,5 @@ if startChek() == 0:
         mode = choiseMode()
         changeStatus(orderFilter(data, mode), Token)
 
-#Token = getToken()
-#changeStatus(read_xlsx(r"C:\Users\Public\Documents\WBGetOrder\WBOrdersData\ФБС принты 31.08.2021 ч3.xlsx"),Token)
+# Token = getToken()
+# changeStatus(read_xlsx(r"C:\Users\Public\Documents\WBGetOrder\WBOrdersData\ФБС принты 31.08.2021 ч3.xlsx"),Token)

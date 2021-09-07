@@ -420,15 +420,14 @@ def make_with_table(resp, mode2):
     # Тело
 
 
-a = 1
-while a != 0:
-    if startChek() == 0:
-        mode, mode2 = menu()
-        if mode == 1:
-            make_with_name(getOrdersOrNot(), mode2)
-        elif mode == 2:
-            make_with_table(getOrdersOrNot(), mode2)
-    try:
-        a = int(input("Чтобы завершить программу введите 0: "))
-    except:
-        a = 1
+def mainStikerFromOrder():
+    while input("Чтобы завершить программу введите 0: ") != '0':
+        if startChek() == 0:
+            mode, mode2 = menu()
+            if mode == 1:
+                make_with_name(getOrdersOrNot(), mode2)
+            elif mode == 2:
+                make_with_table(getOrdersOrNot(), mode2)
+
+
+mainStikerFromOrder()
