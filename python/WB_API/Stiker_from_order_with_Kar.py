@@ -45,12 +45,12 @@ def startChek():
     return 0
 
 
-def read_xlsx(file_path, num=0, title='Yes'):
+def read_xlsx(file_path, nameList, title='Yes'):
     '''Считывает построчно xlsx файл и возращает список словарей - если title = 'Yes', список списков - если title = 'No'
     '''
     rd = xlrd.open_workbook(file_path)
     try:
-        sheet = rd.sheet_by_index(num)
+        sheet = rd.sheet_names('основной')
     except:
         print("Введено некорректное число листов, читаю лист 1")
         sheet = rd.sheet_by_index(0)
