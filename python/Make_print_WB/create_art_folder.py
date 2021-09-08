@@ -25,7 +25,7 @@ def main():
 
     list_stuff = recreate_data(xlsx)
     list_barcod = read_xlsx(
-        r'D:\Список номенклатуры.XLSX', title='No')
+        r'D:\report_2021_9_8.XLSX', title='No')
     for dirorig in os.listdir(r'D:\printsPy'):
         dir = dirorig.replace("_", ' ').lower()
         for print_ in os.listdir(os.path.join(r'D:\printsPy', dirorig)):
