@@ -10,7 +10,7 @@ from my_lib import read_xlsx
 import json
 
 
-pathToListStuff = r'D:\M32.xlsx'
+pathToListStuff = r'D:\A03s.xlsx'
 main_path = r'C:\Users\Public\Documents\WBGetStuff'
 Token_path = joinpath(main_path, r'Token.txt')
 
@@ -97,8 +97,8 @@ def changeCard(cardBody):
         file.close()
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
 
-    cardBody['addin'][6]['params'] = [
-        {'value': 'Redmi Note 10 pro'}, {'value': 'Xiaomi Redmi Note 10 pro'}, {'value': 'Xiaomi Note 10 pro'}, {'value': 'Note 10 pro'}, {'value': 'Сиаоми Редми Нот 10 про'}, {'value': 'Редми Нот 10 про'}, {'value': 'Сиаоми Нот 10 про'}, {'value': 'Нот 10 про'}]
+    cardBody['addin'][2]['params'][0][
+        'value'] = 'Чехол для Samsung Galaxy A03s (A 03 s)/Самсунг Галакси А03с (А 03 с) силикон с картинкой (принт)'
     cardBodyNew = {
         "id": '1',
         "jsonrpc": "2.0",
@@ -129,8 +129,8 @@ def cangeCardFromListStuff(pathToListStuff):
         changeCard(cardBody)
 
 
-# cangeCardFromListStuff(pathToListStuff)
+cangeCardFromListStuff(pathToListStuff)
 
-imtID = getIdWithBarcod('2007346811008')
+'''imtID = getIdWithBarcod('2007346811008')
 cardBody = getCardBody(imtID)
-changeCard(cardBody)
+changeCard(cardBody)'''

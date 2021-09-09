@@ -9,7 +9,7 @@ from shutil import copyfile
 
 
 # Режим отладки 1 - да, 0 - боевой режим
-Debug = 0
+Debug = 1
 
 
 main_path = r'C:\Users\Public\Documents\WBGetOrder'
