@@ -10,9 +10,10 @@ from my_lib import read_xlsx
 import json
 
 
-pathToListStuff = r'D:\A03s.xlsx'
+pathToListStuff = r'C:\Users\user\Downloads\Остатки ФБС\РЕалми с21у.xlsx'
 main_path = r'C:\Users\Public\Documents\WBGetStuff'
 Token_path = joinpath(main_path, r'Token.txt')
+TmpLIst = []
 
 
 def getIdWithBarcod(barcod):
@@ -92,13 +93,14 @@ def getCardBody(imtID):
 
 
 def changeCard(cardBody):
+    data = {}
     with open(Token_path, 'r', encoding='UTF-8') as file:
         Token = file.read()
         file.close()
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
 
     cardBody['addin'][2]['params'][0][
-        'value'] = 'Чехол для Samsung Galaxy A03s (A 03 s)/Самсунг Галакси А03с (А 03 с) силикон с картинкой (принт)'
+        'value'] = 'Чехол для Realme C21y (C21 y)/Реалми С21у (Реалме С 21 у).(не стекло) силикон с картинкой (принт)'
     cardBodyNew = {
         "id": '1',
         "jsonrpc": "2.0",
@@ -106,7 +108,11 @@ def changeCard(cardBody):
             "card": cardBody
         }
     }
+    data = {'Баркод': cardBody['nomenclatures']
+            [0]['variations'][0]['barcodes'][0],
+            'Артикул WB': cardBody['nomenclatures'][0]['nmId']}
 
+    TmpLIst.append(data)
     while True:
         try:
             response = requests.post(changeCardUrl, headers={
@@ -120,10 +126,10 @@ def changeCard(cardBody):
 
 
 def cangeCardFromListStuff(pathToListStuff):
-    dataFromLIstStuff = read_xlsx(pathToListStuff)
+    dataFromLIstStuff = read_xlsx(pathToListStuff, title='No')
     for stuffLine in dataFromLIstStuff:
-        barcod = stuffLine['Баркод'] if type(
-            stuffLine['Баркод']) == str else str(stuffLine['Баркод'])[0:-2]
+        barcod = stuffLine[0] if type(
+            stuffLine[0]) == str else str(stuffLine['Баркод'])[0:-2]
         idStuff = getIdWithBarcod(barcod)
         cardBody = getCardBody(idStuff)
         changeCard(cardBody)
@@ -134,3 +140,5 @@ cangeCardFromListStuff(pathToListStuff)
 '''imtID = getIdWithBarcod('2007346811008')
 cardBody = getCardBody(imtID)
 changeCard(cardBody)'''
+TmpLIstpd = pandas.DataFrame(TmpLIst)
+TmpLIstpd.to_excel(r'D:\c21y.xlsx', index=False)
