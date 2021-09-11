@@ -11,12 +11,13 @@ pathToDonePrints = r'D:\printsPy'
 
 def getBarcodForPrint(pathToDonePrints):
     listCase = read_xlsx(r'D:\Список чехлов под печать.xlsx')
-
-    for donePrint in pathToDonePrints:
+    excelWithPrintAll = []
+    for donePrint in os.listdir(pathToDonePrints):
         excelWithPrint = []
         for case in listCase:
-            if case['Наименование'] == donePrint:
+            if case['Наименование'].replace('\xa0', ' ') == donePrint:
                 code1C = case['Код 1С']
+                break
             else:
                 code1C = None
         pathToPrint = os.path.join('D:\printsPy', donePrint)
@@ -24,14 +25,18 @@ def getBarcodForPrint(pathToDonePrints):
         for Print in listPrint:
             data = {
                 'Баркод': generate_bar_WB(),
-                'Название 1С': donePrint + ' ' + Print,
+                'Название 1С': donePrint + ' ' + Print[0:-4],
                 'Код 1С': code1C,
-                'Название принта': Print['0:-4']
+                'Название принта': Print[0:-4]
             }
             excelWithPrint.append(data)
+            excelWithPrintAll.append(data)
         excelWithPrintpd = pandas.DataFrame(excelWithPrint)
         excelWithPrintpd.to_excel(os.path.join(
             pathToDonePrints, donePrint + '.xlsx'), index=False, header=False)
+    excelWithPrintAllpd = pandas.DataFrame(excelWithPrintAll)
+    excelWithPrintAllpd.to_excel(os.path.join(
+        pathToDonePrints, 'AllCasePrint.xlsx'), index=False, header=False)
 
 
 def getSizeAndPos(pathToMask):
@@ -89,6 +94,7 @@ def makePrint():
     maskFoldersList = os.listdir(pathToMaskFolder)
     printList = os.listdir(pathToPrintFolder)
     for maskFolder in maskFoldersList:
+        print(maskFolder)
         pathToBackground = os.path.join(
             pathToMaskFolder, maskFolder, r'fon.png')
         BackgroundImageOld = Image.open(pathToBackground)
@@ -123,7 +129,7 @@ def makePrint():
                                  quality=70)
 
 
-makePrint()
+# makePrint()
 for dirModel in os.listdir(pathToDonePrints):
     Rename_print(os.path.join(pathToDonePrints, dirModel))
 getBarcodForPrint(pathToDonePrints)
