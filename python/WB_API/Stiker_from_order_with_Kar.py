@@ -45,12 +45,12 @@ def startChek():
     return 0
 
 
-def read_xlsx(file_path, nameList, title='Yes'):
+def read_xlsx(file_path, num=0, title='Yes'):
     '''Считывает построчно xlsx файл и возращает список словарей - если title = 'Yes', список списков - если title = 'No'
     '''
     rd = xlrd.open_workbook(file_path)
     try:
-        sheet = rd.sheet_names('основной')
+        sheet = rd.sheet_by_index(num)
     except:
         print("Введено некорректное число листов, читаю лист 1")
         sheet = rd.sheet_by_index(0)
@@ -71,6 +71,24 @@ def read_xlsx(file_path, nameList, title='Yes'):
             data.append(dct)
         elif title == 'No':
             data.append(row)
+    return data
+
+
+def read_xlsx_by_name(file_path, nameList):
+    '''Считывает построчно xlsx файл и возращает список словарей - если title = 'Yes', список списков - если title = 'No'
+    '''
+    rd = xlrd.open_workbook(file_path)
+    sheet = rd.sheet_by_name(nameList)
+    Name_row = sheet.row_values(0)
+    start = 1
+    data = []
+    for rownum in range(start, sheet.nrows):
+        row = sheet.row_values(rownum)
+        dct = {}
+        for i, cel in enumerate(row):
+            tmp = {Name_row[i]: cel}
+            dct.update(tmp)
+        data.append(dct)
     return data
 
 
@@ -193,8 +211,10 @@ def getOrdersOrNot():
         if days == '':
             days = 10
         resp = get_orders(days)
+        print("Заказы успешно получены, идём дальше")
     else:
         resp = 0
+    print("Вы не получили новые заказы")
     return resp
 
 
@@ -246,173 +266,190 @@ def menu():
     return mode, mode2
 
 
-def make_with_name(resp, mode2):
-    if resp == 0:
-        print("Заказы успешно получены, идём дальше")
-        OrderFileName = input(
-            'Название файла (Если он в папке Oreders) или полный путь до файла (Если он в другой папке): ')
-        Sheet_num = input('Введите номер листа, на котором нужные данные: ')
-        try:
-            Sheet_num = int(Sheet_num)
-        except:
-            print('Введён некорректный номер листа, установлен лист 1 по умолчанию.')
-            Sheet_num = 1
-        if OrderFileName[-5:len(OrderFileName)] != '.xlsx':
-            OrderFileName = OrderFileName + '.xlsx'
-        if file_exists(OrderFileName) and isfile(joinpath(OrdersDir, OrderFileName)):
-            print('Файл найден.')
-            Flag = True
-        elif file_exists(joinpath(OrdersDir, OrderFileName)) and isfile(joinpath(OrdersDir, OrderFileName)):
-            OrderFileName = joinpath(OrdersDir, OrderFileName)
-            print('Файл найден.')
-            Flag = True
-        else:
-            print('Файл Не найден.')
-            Flag = False
-        if Flag:
-            data_from_order = read_xlsx(joinpath(
-                OrdersDir, OrderFileName), Sheet_num - 1)
-            data_about_order = recreate_data(
-                read_xlsx(joinpath(WBOrdersData, WBOrdersDataFileName)))
-            data_for_print = {}
-            for order in data_from_order:
-                if order['Название'].replace('\xa0', ' ') not in data_for_print:
-                    data_for_print[order['Название'].replace('\xa0', ' ')] = []
-                else:
-                    continue
-            for order in data_from_order:
-                if type(order['ШК']) == float:
-                    bar = str(order['ШК'])[0:-2]
-                else:
-                    bar = order['ШК']
-                if type(order['Номер задания']) == float:
-                    num_ord = str(order['Номер задания'])[0:-2]
-                else:
-                    num_ord = order['Номер задания']
-
-                tmp = {'Название': order['Название'].replace('\xa0', ' '),
-                       'Этикетка': order['Этикетка'],
-                       'ШК': bar,
-                       'Артикул поставщика': order['Артикул поставщика'],
-                       'Номер задания': num_ord,
-                       'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
-                       'Стикер64': data_about_order[num_ord]['Стикер64']}
-                data_for_print[order['Название'].replace(
-                    '\xa0', ' ')].append(tmp)
-            writer = PdfWriter()
-            for name in data_for_print:
-                if mode2 == 1 or mode2 == 2 or mode2 == 4:
-                    path1 = PdfReader(create_1C_name(
-                        name, OrderFileName), decompress=False).pages
-                    writer.addpages(path1)
-                for data in data_for_print[name]:
-                    if mode2 == 1 or mode2 == 5 or mode2 == 4:
-                        path2 = PdfReader(create_1C_barcod(data['Название'],
-                                                           data['Артикул поставщика'], data['ШК']), decompress=False).pages
-                        writer.addpages(path2)
-                    if mode2 == 1 or mode2 == 3 or mode2 == 2:
-                        path3 = PdfReader(create_WB_barcod(
-                            data['Стикер64']), decompress=False).pages
-                        writer.addpages(path3)
-
+def getOrderFileName():
+    OrderFileName = input(
+        'Название файла (Если он в папке Oreders) или полный путь до файла (Если он в другой папке): ')
+    if OrderFileName[-5:len(OrderFileName)] != '.xlsx':
+        OrderFileName = OrderFileName + '.xlsx'
+    if file_exists(OrderFileName) and isfile(joinpath(OrdersDir, OrderFileName)):
+        print('Файл найден.')
+    elif file_exists(joinpath(OrdersDir, OrderFileName)) and isfile(joinpath(OrdersDir, OrderFileName)):
+        OrderFileName = joinpath(OrdersDir, OrderFileName)
+        print('Файл найден.')
     else:
-        print("Не удалось получить заказы")
+        print('Файл Не найден.')
+    return OrderFileName
+
+
+def make_with_name(OrderFileName, resp, mode2):
+    if resp == 0:
+
+        data_from_order = read_xlsx_by_name(joinpath(
+            OrdersDir, OrderFileName), 'основной')
+        data_about_order = recreate_data(
+            read_xlsx(joinpath(WBOrdersData, WBOrdersDataFileName)))
+        data_for_print = {}
+        for order in data_from_order:
+            if order['Название'].replace('\xa0', ' ') not in data_for_print:
+                data_for_print[order['Название'].replace('\xa0', ' ')] = []
+            else:
+                continue
+        for order in data_from_order:
+            if type(order['ШК']) == float:
+                bar = str(order['ШК'])[0:-2]
+            else:
+                bar = order['ШК']
+            if type(order['Номер задания']) == float:
+                num_ord = str(order['Номер задания'])[0:-2]
+            else:
+                num_ord = order['Номер задания']
+
+            tmp = {'Название': order['Название'].replace('\xa0', ' '),
+                   'Этикетка': order['Этикетка'],
+                   'ШК': bar,
+                   'Артикул поставщика': order['Артикул поставщика'],
+                   'Номер задания': num_ord,
+                   'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
+                   'Стикер64': data_about_order[num_ord]['Стикер64']}
+            data_for_print[order['Название'].replace(
+                '\xa0', ' ')].append(tmp)
+        writer = PdfWriter()
+        for name in data_for_print:
+            if mode2 == 1 or mode2 == 2 or mode2 == 4:
+                path1 = PdfReader(create_1C_name(
+                    name, OrderFileName), decompress=False).pages
+                writer.addpages(path1)
+            for data in data_for_print[name]:
+                if mode2 == 1 or mode2 == 5 or mode2 == 4:
+                    path2 = PdfReader(create_1C_barcod(data['Название'],
+                                                       data['Артикул поставщика'], data['ШК']), decompress=False).pages
+                    writer.addpages(path2)
+                if mode2 == 1 or mode2 == 3 or mode2 == 2:
+                    path3 = PdfReader(create_WB_barcod(
+                        data['Стикер64']), decompress=False).pages
+                    writer.addpages(path3)
 
     writer.write(joinpath(main_path, OrderFileName.replace('.xlsx', '.pdf')))
     OrderFileName.replace('.xlsx', '.pdf')
 
 
-def make_with_table(resp, mode2):
-    if resp == 0:
-        print("Заказы успешно получены, идём дальше")
-        OrderFileName = input(
-            'Название файла (Если он в папке Oreders) или полный путь до файла (Если он в другой папке): ')
-        Sheet_order_num = input(
-            'Введите номер листа, на котором весь заказ: ')
-        Sheet_table_num = input(
-            'Введите номер листа, на котором раскладка по столам: ')
-        try:
-            Sheet_order_num = int(Sheet_order_num)
-            Sheet_table_num = int(Sheet_table_num)
-        except:
-            print('Введён некорректный номер листа, установлен лист 1 и 2 по умолчанию.')
-            Sheet_order_num = 1
-            Sheet_table_num = 2
-        if OrderFileName[-5:len(OrderFileName)] != '.xlsx':
-            OrderFileName = OrderFileName + '.xlsx'
-        if file_exists(OrderFileName) and isfile(joinpath(OrdersDir, OrderFileName)):
-            print('Файл найден.')
-            Flag = True
-        elif file_exists(joinpath(OrdersDir, OrderFileName)) and isfile(joinpath(OrdersDir, OrderFileName)):
-            OrderFileName = joinpath(OrdersDir, OrderFileName)
-            print('Файл найден.')
-            Flag = True
+def make_glass_body(OrderFileName, mode2):
+    data_from_order = read_xlsx(joinpath(
+        OrdersDir, OrderFileName), 0)
+    data_about_order = recreate_data(
+        read_xlsx(joinpath(WBOrdersData, WBOrdersDataFileName)))
+    data_for_print = {}
+    for order in data_from_order:
+        if order['Название'].replace('\xa0', ' ') not in data_for_print:
+            data_for_print[order['Название'].replace('\xa0', ' ')] = []
         else:
-            print('Файл Не найден.')
-            Flag = False
-        if Flag:
-            data_from_order = read_xlsx(joinpath(
-                OrdersDir, OrderFileName), Sheet_order_num - 1)
-            data_about_tale = read_xlsx(joinpath(
-                OrdersDir, OrderFileName), Sheet_table_num - 1)
-            data_about_order = recreate_data(
-                read_xlsx(joinpath(WBOrdersData, WBOrdersDataFileName)))
-            data_for_print = {}
-            for order in data_from_order:
-                if type(order['Номер задания']) == float:
-                    ord_num = str(order['Номер задания'])[0:-2]
-                else:
-                    ord_num = order['Номер задания']
-                data_for_print[ord_num] = []
+            continue
+    for order in data_from_order:
+        if type(order['ШК']) == float:
+            bar = str(order['ШК'])[0:-2]
+        else:
+            bar = order['ШК']
+        if type(order['Номер задания']) == float:
+            num_ord = str(order['Номер задания'])[0:-2]
+        else:
+            num_ord = order['Номер задания']
 
-            for order in data_from_order:
-                if type(order['ШК']) == float:
-                    bar = str(order['ШК'])[0:-2]
-                else:
-                    bar = order['ШК']
-                if type(order['Номер задания']) == float:
-                    num_ord = str(order['Номер задания'])[0:-2]
-                else:
-                    num_ord = order['Номер задания']
+        tmp = {'Название': order['Название'].replace('\xa0', ' '),
+               'Этикетка': order['Этикетка'],
+               'ШК': bar,
+               'Артикул поставщика': order['Артикул поставщика'],
+               'Номер задания': num_ord,
+               'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
+               'Стикер64': data_about_order[num_ord]['Стикер64']}
+        data_for_print[order['Название'].replace(
+            '\xa0', ' ')].append(tmp)
+    writer = PdfWriter()
+    for name in data_for_print:
+        if mode2 == 1 or mode2 == 2 or mode2 == 4:
+            path1 = PdfReader(create_1C_name(
+                name, OrderFileName), decompress=False).pages
+            writer.addpages(path1)
+        for data in data_for_print[name]:
+            if mode2 == 1 or mode2 == 5 or mode2 == 4:
+                path2 = PdfReader(create_1C_barcod(data['Название'],
+                                                   data['Артикул поставщика'], data['ШК']), decompress=False).pages
+                writer.addpages(path2)
+            if mode2 == 1 or mode2 == 3 or mode2 == 2:
+                path3 = PdfReader(create_WB_barcod(
+                    data['Стикер64']), decompress=False).pages
+                writer.addpages(path3)
+    return writer
 
-                tmp = {'Название': order['Название'].replace('\xa0', ' '),
-                       'Этикетка': order['Этикетка'],
-                       'ШК': bar,
-                       'Артикул поставщика': order['Артикул поставщика'],
-                       'Номер задания': num_ord,
-                       'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
-                       'Стикер64': data_about_order[num_ord]['Стикер64']}
-                data_for_print[num_ord].append(tmp)
-            writer = PdfWriter()
-            table_num = 1
+
+def make_glass(OrderFileName, resp, mode2):
+    if resp == 0:
+        writer = make_glass_body(OrderFileName, mode2)
+        writer.write(
+            joinpath(main_path, OrderFileName.replace('.xlsx', '.pdf')))
+        OrderFileName.replace('.xlsx', '.pdf')
+
+
+def make_with_table(OrderFileName, resp, mode2):
+    if resp == 0:
+        data_from_order = read_xlsx_by_name(joinpath(
+            OrdersDir, OrderFileName), 'основной')
+        data_about_tale = read_xlsx_by_name(joinpath(
+            OrdersDir, OrderFileName), 'Столы')
+        data_about_order = recreate_data(
+            read_xlsx(joinpath(WBOrdersData, WBOrdersDataFileName)))
+        data_for_print = {}
+        for order in data_from_order:
+            if type(order['Номер задания']) == float:
+                ord_num = str(order['Номер задания'])[0:-2]
+            else:
+                ord_num = order['Номер задания']
+            data_for_print[ord_num] = []
+
+        for order in data_from_order:
+            if type(order['ШК']) == float:
+                bar = str(order['ШК'])[0:-2]
+            else:
+                bar = order['ШК']
+            if type(order['Номер задания']) == float:
+                num_ord = str(order['Номер задания'])[0:-2]
+            else:
+                num_ord = order['Номер задания']
+
+            tmp = {'Название': order['Название'].replace('\xa0', ' '),
+                   'Этикетка': order['Этикетка'],
+                   'ШК': bar,
+                   'Артикул поставщика': order['Артикул поставщика'],
+                   'Номер задания': num_ord,
+                   'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
+                   'Стикер64': data_about_order[num_ord]['Стикер64']}
+            data_for_print[num_ord].append(tmp)
+        writer = PdfWriter()
+        table_num = 1
+        if mode2 == 1 or mode2 == 2 or mode2 == 4:
+            path1 = PdfReader(makeTableStiker(
+                table_num, OrderFileName), decompress=False).pages
+            writer.addpages(path1)
+        for order_line in data_about_tale:
+            if type(order_line['Номер задания']) == float:
+                order_line_num = str(order_line['Номер задания'])[0:-2]
+            else:
+                order_line_num = order_line['Номер задания']
             if mode2 == 1 or mode2 == 2 or mode2 == 4:
-                path1 = PdfReader(makeTableStiker(
-                    table_num, OrderFileName), decompress=False).pages
-                writer.addpages(path1)
-            for order_line in data_about_tale:
-                if type(order_line['Номер задания']) == float:
-                    order_line_num = str(order_line['Номер задания'])[0:-2]
-                else:
-                    order_line_num = order_line['Номер задания']
-                if mode2 == 1 or mode2 == 2 or mode2 == 4:
-                    if order_line_num == '':
-                        table_num = table_num + 1
-                        path1 = PdfReader(makeTableStiker(
-                            table_num, OrderFileName), decompress=False).pages
-                        writer.addpages(path1)
-                        continue
-                for data in data_for_print[order_line_num]:
-                    if mode2 == 1 or mode2 == 5 or mode2 == 4:
-                        path2 = PdfReader(create_1C_barcod(data['Название'],
-                                                           data['Артикул поставщика'], data['ШК']), decompress=False).pages
-                        writer.addpages(path2)
-                    if mode2 == 1 or mode2 == 3 or mode2 == 2:
-                        path3 = PdfReader(create_WB_barcod(
-                            data['Стикер64']), decompress=False).pages
-                        writer.addpages(path3)
-
-    else:
-        print("Не удалось получить заказы")
+                if order_line_num == '':
+                    table_num = table_num + 1
+                    path1 = PdfReader(makeTableStiker(
+                        table_num, OrderFileName), decompress=False).pages
+                    writer.addpages(path1)
+                    continue
+            for data in data_for_print[order_line_num]:
+                if mode2 == 1 or mode2 == 5 or mode2 == 4:
+                    path2 = PdfReader(create_1C_barcod(data['Название'],
+                                                       data['Артикул поставщика'], data['ШК']), decompress=False).pages
+                    writer.addpages(path2)
+                if mode2 == 1 or mode2 == 3 or mode2 == 2:
+                    path3 = PdfReader(create_WB_barcod(
+                        data['Стикер64']), decompress=False).pages
+                    writer.addpages(path3)
 
     writer.write(joinpath(main_path, OrderFileName.replace('.xlsx', '.pdf')))
     OrderFileName.replace('.xlsx', '.pdf')
@@ -423,11 +460,14 @@ def make_with_table(resp, mode2):
 def mainStikerFromOrder():
     while input("Чтобы завершить программу введите 0: ") != '0':
         if startChek() == 0:
+            OrderFileName = getOrderFileName()
             mode, mode2 = menu()
-            if mode == 1:
-                make_with_name(getOrdersOrNot(), mode2)
+            if 'стекла' in OrderFileName:
+                make_glass(OrderFileName, getOrdersOrNot(), mode2)
+            elif mode == 1:
+                make_with_name(OrderFileName, getOrdersOrNot(), mode2)
             elif mode == 2:
-                make_with_table(getOrdersOrNot(), mode2)
+                make_with_table(OrderFileName, getOrdersOrNot(), mode2)
 
 
 mainStikerFromOrder()
