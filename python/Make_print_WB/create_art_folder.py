@@ -4,15 +4,15 @@ from my_lib import read_xlsx, write_csv, file_exists
 import zipfile
 
 
-path_list_stuff = r'D:\Список номенклатуры.XLSX'
-Count_Arh = 50
+path_list_stuff = r'D:\c21y.xlsx'
+Count_Arh = 200
 
 
 def main(path_list_stuff, model_name):
 
     list_stuff = read_xlsx(path_list_stuff)
     list_barcod = read_xlsx(
-        r'D:\printsPy\{}.xls'.format(model_name), title='No')
+        r'D:\printsPy\{}.xlsx'.format(model_name), title='No')
     for stuff in list_stuff:
         for barcod in list_barcod:
             if stuff['Баркод'] == str(barcod[0]):
@@ -32,12 +32,7 @@ def main(path_list_stuff, model_name):
                 new_folder = os.path.join(dest_folder, barcod[3]+'.jpg')
                 copyfile(os.path.join(orig_folder), new_folder)
                 os.rename(new_folder, new_name)
-                data = {'Артикул WB': str(stuff['Артикул WB'])[0:-2],
-                        'Баркод': str(stuff['Баркод'])[0:-2],
-                        'Код размера (chrt_id)': str(stuff['Код размера (chrt_id)'])[0:-2]}
-
-                write_csv(data, 'D:\printsPy\done.csv',)
-    print("Done")
+                print("Done")
 
 
 for fold in os.listdir(r'D:\printsPy'):
