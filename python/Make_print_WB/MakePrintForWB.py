@@ -42,23 +42,23 @@ def getBarcodForPrint(pathToDonePrints):
 def getSizeAndPos(pathToMask):
     image = Image.open(pathToMask).convert("RGBA")
     size = image.size
-    for xLeft in range(0, size[0]):
+    for xLeft in range(20, size[0]):
 
         rgba = image.getpixel((xLeft, 1700))
         if rgba[3] != 255:
             break
         xLeft += 1
-    for xRight in reversed(range(size[0])):
+    for xRight in reversed(range(size[0]-20)):
         rgba = image.getpixel((xRight, 1700))
         if rgba[3] != 255:
             break
         xRight += 1
-    for yTop in range(0, size[1]):
+    for yTop in range(20, size[1]):
         rgba = image.getpixel((1900, yTop))
         if rgba[3] != 255:
             break
         yTop += 1
-    for yBott in reversed(range(size[1])):
+    for yBott in reversed(range(size[1]-20)):
         rgba = image.getpixel((1900, yBott))
         if rgba[3] != 255:
             break
@@ -105,16 +105,16 @@ def makePrint():
             pathToPrint = os.path.join(pathToPrintFolder, printPath)
             if isPrintWithoutBack(pathToPrint):
                 pathToMask = os.path.join(
-                    pathToMaskFolder, maskFolder, r'Mask_gloss.png')
+                    pathToMaskFolder, maskFolder, r'mask.png')
             else:
                 pathToMask = os.path.join(
-                    pathToMaskFolder, maskFolder, r'Mask_no_gloss.png')
+                    pathToMaskFolder, maskFolder, r'mask.png')
             maskImageOld = Image.open(pathToMask).convert("RGBA")
             maskImage = copy.copy(maskImageOld)
             maskImageOld.close()
             BackgroundImage = copy.copy(BackgroundImageOld)
             xLeft, xRight, yTop, yBott, size = getSizeAndPos(pathToMask)
-            printsize = (xRight-xLeft, yBott-yTop)
+            printsize = (xRight-xLeft+10, yBott-yTop+10)
             printPaste = (xLeft, yTop)
             printImage = Image.open(pathToPrint).resize(printsize)
             BackgroundImage.paste(printImage, (printPaste), printImage)
@@ -129,7 +129,7 @@ def makePrint():
                                  quality=70)
 
 
-# makePrint()
+makePrint()
 for dirModel in os.listdir(pathToDonePrints):
     Rename_print(os.path.join(pathToDonePrints, dirModel))
 getBarcodForPrint(pathToDonePrints)

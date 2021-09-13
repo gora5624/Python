@@ -100,7 +100,7 @@ def changeCard(cardBody):
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
 
     cardBody['addin'][2]['params'][0][
-        'value'] = 'Чехол для Realme C21y (C21 y)/Реалми С21у (Реалме С 21 у).(не стекло) силикон с картинкой (принт)'
+        'value'] = 'Чехол для Samsung Galaxy S21 FE (S 21 FE/S21FE)/Самсунг Гадакси С21 ФЕ (С 21 ФЕ/С21ФЕ).накладка (не стекло)'
     cardBodyNew = {
         "id": '1',
         "jsonrpc": "2.0",
@@ -135,10 +135,10 @@ def cangeCardFromListStuff(pathToListStuff):
         changeCard(cardBody)
 
 
-cangeCardFromListStuff(pathToListStuff)
+# cangeCardFromListStuff(pathToListStuff)
 
-'''imtID = getIdWithBarcod('2007346811008')
+imtID = getIdWithBarcod('2001201758194')
 cardBody = getCardBody(imtID)
-changeCard(cardBody)'''
+changeCard(cardBody)
 TmpLIstpd = pandas.DataFrame(TmpLIst)
 TmpLIstpd.to_excel(r'D:\c21y.xlsx', index=False)
