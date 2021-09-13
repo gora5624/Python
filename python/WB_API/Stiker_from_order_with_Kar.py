@@ -16,6 +16,7 @@ from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPDF
 from pdfrw import PdfReader, PdfWriter
 import xlrd
+import os
 
 WBOrdersDataFileName = r'Data_orders.xlsx'
 WBOrdersJsonDataFileName = r'Order.json'
@@ -198,7 +199,7 @@ def create_1C_name(name, file_order_name):
         name))
     pdf.set_font('DejaVu', '', 40)
     pdf.multi_cell(350, 35, txt="{}".format(
-        file_order_name), align="C")
+        os.path.basename(file_order_name)), align="C")
     pdf.output(joinpath(TMPDir, 'name.pdf'))
     return joinpath(TMPDir, 'name.pdf')
 
@@ -214,7 +215,7 @@ def getOrdersOrNot():
         print("Заказы успешно получены, идём дальше")
     else:
         resp = 0
-    print("Вы не получили новые заказы")
+        print("Вы не получили новые заказы")
     return resp
 
 
@@ -228,7 +229,8 @@ def makeTableStiker(table_num, file_order_name):
     pdf.multi_cell(350, 190, txt="Стол {}".format(
         str(table_num)), align='C')
     pdf.set_font('DejaVu', '', 40)
-    pdf.multi_cell(350, 30, txt='{}'.format(file_order_name), align="C")
+    pdf.multi_cell(350, 30, txt='{}'.format(
+        os.path.basename(file_order_name)), align="C")
     pdf.output(joinpath(TMPDir, 'table_num.pdf'))
     return joinpath(TMPDir, 'table_num.pdf')
 
@@ -329,13 +331,13 @@ def make_with_name(OrderFileName, resp, mode2):
                         data['Стикер64']), decompress=False).pages
                     writer.addpages(path3)
 
-    writer.write(joinpath(main_path, OrderFileName.replace('.xlsx', '.pdf')))
-    OrderFileName.replace('.xlsx', '.pdf')
+    writer.write(joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники',
+                          os.path.basename(OrderFileName.replace('.xlsx', '.pdf'))))
 
 
-def make_glass_body(OrderFileName, mode2):
-    data_from_order = read_xlsx(joinpath(
-        OrdersDir, OrderFileName), 0)
+def make_glass_body(OrderFileName, mode2, name_sheet):
+    data_from_order = read_xlsx_by_name(joinpath(
+        OrdersDir, OrderFileName), name_sheet)
     data_about_order = recreate_data(
         read_xlsx(joinpath(WBOrdersData, WBOrdersDataFileName)))
     data_for_print = {}
@@ -381,12 +383,29 @@ def make_glass_body(OrderFileName, mode2):
     return writer
 
 
-def make_glass(OrderFileName, resp, mode2):
+def make_glass(OrderFileName, resp, name_sheet):
     if resp == 0:
-        writer = make_glass_body(OrderFileName, mode2)
+        writer = make_glass_body(OrderFileName, 1, '3D_стекла')
         writer.write(
-            joinpath(main_path, OrderFileName.replace('.xlsx', '.pdf')))
-        OrderFileName.replace('.xlsx', '.pdf')
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D1.pdf'))
+        writer = make_glass_body(OrderFileName, 4, '3D_стекла')
+        writer.write(
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D2.pdf'))
+        writer = make_glass_body(OrderFileName, 1, 'глянец')
+        writer.write(
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL1.pdf'))
+        writer = make_glass_body(OrderFileName, 4, 'глянец')
+        writer.write(
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL2.pdf'))
+        writer = make_glass_body(OrderFileName, 1, 'матовые')
+        writer.write(
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT1.pdf'))
+        writer = make_glass_body(OrderFileName, 4, 'матовые')
+        writer.write(
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT2.pdf'))
+        writer = make_glass_body(OrderFileName, 4, 'камеры')
+        writer.write(
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'Cam.pdf'))
 
 
 def make_with_table(OrderFileName, resp, mode2):
@@ -451,8 +470,8 @@ def make_with_table(OrderFileName, resp, mode2):
                         data['Стикер64']), decompress=False).pages
                     writer.addpages(path3)
 
-    writer.write(joinpath(main_path, OrderFileName.replace('.xlsx', '.pdf')))
-    OrderFileName.replace('.xlsx', '.pdf')
+    writer.write(joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники',
+                          os.path.basename(OrderFileName.replace('.xlsx', '.pdf'))))
 
     # Тело
 
