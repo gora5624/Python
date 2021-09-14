@@ -278,7 +278,8 @@ def getOrderFileName():
         OrderFileName = joinpath(OrdersDir, OrderFileName)
         print('Файл найден.')
     else:
-        print('Файл Не найден.')
+        print('Файл Не найден. Введите корректный путь к файлу: ')
+        OrderFileName = getOrderFileName()
     return OrderFileName
 
 
@@ -403,7 +404,7 @@ def make_glass(OrderFileName, resp, name_sheet):
         writer = make_glass_body(OrderFileName, 4, 'матовые')
         writer.write(
             joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT2_{}.pdf'.format(day)))
-        writer = make_glass_body(OrderFileName, 4, 'камеры')
+        writer = make_glass_body(OrderFileName, 1, 'камеры')
         writer.write(
             joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'Cam_{}.pdf'.format(day)))
 
@@ -476,17 +477,26 @@ def make_with_table(OrderFileName, resp, mode2):
     # Тело
 
 
-def mainStikerFromOrder():
-    while input("Чтобы завершить программу введите 0: ") != '0':
-        if startChek() == 0:
-            OrderFileName = getOrderFileName()
+def main():
+    if startChek() == 0:
+        OrderFileName = getOrderFileName()
+        if 'ФБС стекла' in OrderFileName:
+            make_glass(OrderFileName, getOrdersOrNot(), 1)
+            return 0
+        elif 'ФБС без принтов' in OrderFileName or 'ФБС планки принты' in OrderFileName:
+            make_with_name(OrderFileName, getOrdersOrNot(), 1)
+            return 0
+        elif 'ФБС принты' in OrderFileName:
+            make_with_table(OrderFileName, getOrdersOrNot(), 1)
+            return 0
+        else:
             mode, mode2 = menu()
-            if 'стекла' in OrderFileName:
-                make_glass(OrderFileName, getOrdersOrNot(), mode2)
-            elif mode == 1:
-                make_with_name(OrderFileName, getOrdersOrNot(), mode2)
-            elif mode == 2:
-                make_with_table(OrderFileName, getOrdersOrNot(), mode2)
+
+
+def mainStikerFromOrder():
+    main()
+    while input("Чтобы завершить программу введите 0: ") != '0':
+        main()
 
 
 mainStikerFromOrder()
