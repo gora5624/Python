@@ -129,7 +129,7 @@ def makePrint():
                                  quality=70)
 
 
-makePrint()
+# makePrint()
 for dirModel in os.listdir(pathToDonePrints):
     Rename_print(os.path.join(pathToDonePrints, dirModel))
-getBarcodForPrint(pathToDonePrints)
+# getBarcodForPrint(pathToDonePrints)

@@ -5,7 +5,7 @@ from my_lib import read_xlsx, write_csv, file_exists
 import zipfile
 
 
-xlsx = r'D:\Список номенклатуры.XLSX'
+xlsx = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список номенклатуры — копия.XLSX'
 Count_Arh = 300
 
 

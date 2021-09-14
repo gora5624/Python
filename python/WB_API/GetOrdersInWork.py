@@ -388,7 +388,10 @@ def changeStatus(listOrderForChangeStatus, Token):
             try:
                 response = requests.put(Url, headers={
                     'Authorization': '{}'.format(Token)}, json=datajson)
-                break
+                if response.status_code != 200:
+                    continue
+                elif response.status_code == 200:
+                    break
             except:
                 continue
         print(response)
