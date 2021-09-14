@@ -100,7 +100,7 @@ def changeCard(cardBody):
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
 
     cardBody['addin'][2]['params'][0][
-        'value'] = 'Чехол для Samsung Galaxy S21 FE (S 21 FE/S21FE)/Самсунг Гадакси С21 ФЕ (С 21 ФЕ/С21ФЕ).накладка (не стекло)'
+        'value'] = 'Чехол для Samsung Galaxy S21 FE (S 21 FE/S21FE)/Самсунг Гадакси С21 ФЕ (С 21 ФЕ/С21ФЕ).(Не стекло)'
     cardBodyNew = {
         "id": '1',
         "jsonrpc": "2.0",
