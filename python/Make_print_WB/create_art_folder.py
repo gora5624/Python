@@ -1,57 +1,43 @@
-from enum import Flag
 import os
 from shutil import copyfile
-from my_lib import read_xlsx, write_csv, file_exists
+from my_lib import read_xlsx, file_exists
 import zipfile
 
 
-xlsx = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список номенклатуры — копия.XLSX'
-Count_Arh = 300
+path_list_stuff = r'C:\Users\user\Downloads\report_2021_9_14 (1).XLSX'
+Count_Arh = 200
 
 
-def recreate_data(xlsx):
-    data = read_xlsx(xlsx)
-    data_new = {}
-    for line in data:
-        barcod = line['Баркод'] if type(
-            line['Баркод']) == str else str(line['Баркод'])[0:-2]
-        Art = line['Артикул WB'] if type(
-            line['Артикул WB']) == str else str(line['Артикул WB'])[0:-2]
-        data_new[barcod] = {'Артикул WB': Art}
-    return data_new
+def main(path_list_stuff, model_name):
 
-
-def main():
-
-    list_stuff = recreate_data(xlsx)
+    list_stuff = read_xlsx(path_list_stuff)
     list_barcod = read_xlsx(
-        r'D:\report_2021_9_8.XLSX', title='No')
-    for dirorig in os.listdir(r'D:\printsPy'):
-        dir = dirorig.replace("_", ' ').lower()
-        for print_ in os.listdir(os.path.join(r'D:\printsPy', dirorig)):
-            for line in list_barcod:
-                strName = line[11].replace('_', ' ').lower()
-                if dir in strName:
-                    printName = (
-                        '('+print_.replace('print', 'принт').replace("_", ' ').lower()[0:-4]+')')
-                    if printName in strName:
-                        barcod = line[1] if type(
-                            line[1]) == str else str(line[1])[0:-2]
-                        dest_folder = os.path.join(
-                            r'D:\Done', list_stuff[barcod]['Артикул WB'], 'photo')
-                        pathToFile = os.path.join(
-                            r'D:\printsPy', dirorig, print_)
-                        Artn = list_stuff[barcod]['Артикул WB'] if type(
-                            list_stuff[barcod]['Артикул WB']) == str else str(list_stuff[barcod]['Артикул WB'])[0: -2]
-                        if not file_exists(dest_folder):
-                            os.makedirs(dest_folder)
-                        copyfile(pathToFile, os.path.join(dest_folder, print_))
-                        os.rename(os.path.join(
-                            r'D:\Done', Artn, 'photo', print_), os.path.join(
-                            dest_folder, '1.jpg'))
+        r'D:\printsPy\{}.xlsx'.format(model_name), title='No')
+    for stuff in list_stuff:
+        for barcod in list_barcod:
+            if stuff['Баркод'] == str(barcod[0]):
+                dest_folder = os.path.join(
+                    'D:\Done', str(stuff['Артикул WB'])[0:-2], 'photo')
+                if not file_exists(os.path.join(
+                        'D:\Done', str(stuff['Артикул WB'])[0:-2])):
+
+                    os.mkdir(os.path.join(
+                        'D:\Done', str(stuff['Артикул WB'])[0:-2]))
+                if not file_exists(dest_folder):
+                    os.mkdir(dest_folder)
+                orig_folder = os.path.join(
+                    'D:\printsPy', model_name, barcod[3] + '.jpg')
+                new_name = os.path.join(
+                    'D:\Done', str(stuff['Артикул WB'])[0:-2], 'photo', '1.jpg')
+                new_folder = os.path.join(dest_folder, barcod[3]+'.jpg')
+                copyfile(os.path.join(orig_folder), new_folder)
+                os.rename(new_folder, new_name)
+                print("Done")
 
 
-main()
+for fold in os.listdir(r'D:\printsPy'):
+    if os.path.isdir(os.path.join('D:\printsPy', fold)) == True:
+        main(path_list_stuff, fold)
 
 i = j = 0
 path_arh = r'D:\Done'
@@ -62,4 +48,4 @@ for dir_ in os.listdir(path_arh):
     with zipfile.ZipFile(path_arh + '\Done{}.zip'.format(j), 'a') as myzip:
         myzip.write(os.path.join(path_arh, dir_, 'photo', '1.jpg'),
                     arcname=os.path.join('D:\\', dir_, 'photo', '1.jpg'))
-    i += 1
+    i = i+1
