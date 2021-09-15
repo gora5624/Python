@@ -9,7 +9,7 @@ from shutil import copyfile
 
 
 # Режим отладки 1 - да, 0 - боевой режим
-Debug = 1
+Debug = 0
 
 
 main_path = r'C:\Users\Public\Documents\WBGetOrder'
@@ -28,6 +28,8 @@ OrderDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы 
 def startChek():
     """Начальная проверка на наличие нужных каталогов"""
     dirList = [main_path, WBOrdersData]
+    if Debug == 1:
+        print('ВНИМАНИЕ, ВКЛЮЧЁН РЕЖИМ ОТЛАДКИ')
     for dir_ in dirList:
         if not file_exists(dir_):
             makedirs(dir_)
@@ -49,7 +51,8 @@ def recreate_data(CaseList):
             Barcod = str(line['Баркод'])[0:-2]
         else:
             Barcod = line['Баркод']
-        data_new[Barcod] = {'Название 1С': line['Название 1С'].replace('\xa0', ' '),
+
+        data_new[Barcod] = {'Название 1С': line['Название 1С'].replace('\xa0', ' ') if type(line['Название 1С']) == str else None,
                             'Код': line['Код'].replace('\xa0', ''),
                             'Артикул WB':  str(line['Артикул WB'])[0:-2] if type(line['Артикул WB']) == float else line['Артикул WB'],
                             'Артикул поставщика': line['Артикул поставщика'],
@@ -354,12 +357,21 @@ def get_orders(Token, days=4):
     dataorders = []
     flag = True
     while len(tmp) > 0 or flag:
+        CountTry = 0
         flag = False
-        response = requests.get(Url.format(start_data, count_skip), headers={
-            'Authorization': '{}'.format(Token)})
-        if response.status_code != 200:
-            print('Не удалось получить заказы, ошибка на стороне ВБ.')
-            return 1
+        while True:
+            CountTry += 1
+            try:
+                response = requests.get(Url.format(start_data, count_skip), headers={
+                    'Authorization': '{}'.format(Token)})
+                if response.status_code == 200:
+                    break
+                elif CountTry > 500:
+                    print("Не удалось достучасться до ВБ")
+                else:
+                    continue
+            except:
+                continue
         count_skip = count_skip+1000
         tmp = response.json()['orders']
         dataorders.extend(tmp)

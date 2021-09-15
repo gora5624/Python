@@ -99,8 +99,8 @@ def changeCard(cardBody):
         file.close()
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
 
-    cardBody['addin'][2]['params'][0][
-        'value'] = 'Чехол для Samsung Galaxy S21 FE (S 21 FE/S21FE)/Самсунг Гадакси С21 ФЕ (С 21 ФЕ/С21ФЕ).(Не стекло)'
+    cardBody['addin'][1]['params'][0][
+        'value'] = 'Стекло Samsung Galaxy A22/M32/A32/A50/A30 (A 22/32/50)(M 32).Самсунг А22/М32/А32 (А 22/32)(М 32)'
     cardBodyNew = {
         "id": '1',
         "jsonrpc": "2.0",
@@ -122,7 +122,7 @@ def changeCard(cardBody):
         except:
             print('error changeCard')
             continue
-    response
+    print(response.text)
 
 
 def cangeCardFromListStuff(pathToListStuff):
@@ -137,7 +137,7 @@ def cangeCardFromListStuff(pathToListStuff):
 
 # cangeCardFromListStuff(pathToListStuff)
 
-imtID = getIdWithBarcod('2001201758194')
+imtID = getIdWithBarcod('2007322516002')
 cardBody = getCardBody(imtID)
 changeCard(cardBody)
 TmpLIstpd = pandas.DataFrame(TmpLIst)

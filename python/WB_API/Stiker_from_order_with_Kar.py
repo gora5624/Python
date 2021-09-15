@@ -1,6 +1,7 @@
 import base64
 import barcode
 from barcode.writer import ImageWriter
+import fpdf
 from fpdf import FPDF
 import requests
 import json
@@ -16,6 +17,7 @@ from reportlab.graphics import renderPDF
 from pdfrw import PdfReader, PdfWriter
 import xlrd
 import os
+import PIL
 
 WBOrdersDataFileName = r'Data_orders.xlsx'
 WBOrdersJsonDataFileName = r'Order.json'
@@ -28,8 +30,10 @@ TMPDir = joinpath(
     main_path, r'TMPDir')
 Token_path = joinpath(
     main_path, r'Token.txt')
-FontPath = r'C:\Users\Public\Documents\WBHelpTools\MakeWBStikersWithName\font\DejaVuSans.ttf'
+FontPath = r'C:\Users\Public\Documents\WBHelpTools\MakeWBStikersWithName\font\ArialSans.ttf'
 orders = ''
+fpdf.set_global("SYSTEM_TTFONTS", os.path.join(
+    os.path.dirname(__file__), r'C:\Windows\Fonts'))
 
 
 def startChek():
@@ -106,11 +110,21 @@ def get_orders(days):
     data = '123'
     all_data = pandas.DataFrame()
     while len(data) > 0:
-        response = requests.get(Url.format(start_data, count_skip), headers={
-            'Authorization': '{}'.format(Token)})
-        if response.status_code != 200:
-            print('Не удалось получить заказы, ошибка на стороне ВБ.')
-            return 1
+        trying = 0
+        while True:
+            trying += 1
+            try:
+                response = requests.get(Url.format(start_data, count_skip), headers={
+                    'Authorization': '{}'.format(Token)})
+                if response.status_code == 200:
+                    break
+                elif trying > 500:
+                    print("Не удолось достучаться до сервера ВБ")
+                    return 1
+                else:
+                    continue
+            except:
+                continue
         count_skip = count_skip+1000
         data = response.json()['orders']
         for line in data:
@@ -151,13 +165,11 @@ def create_1C_barcod(case_name, case_art, bar):
     pdf.add_page()
     pdf.image(image_path, x=-45, y=180, w=450)
     pdf.add_font(
-        'DejaVu', '', FontPath, uni=True)
-    pdf.set_font('DejaVu', '', 60)
+        'Arial', '', fname="Arial.ttf", uni=True)
+    pdf.set_font('Arial', '', 60)
     pdf.multi_cell(350, 25, txt="{}".format(
         case_name))
-    pdf.add_font(
-        'DejaVu', '', FontPath, uni=True)
-    pdf.set_font('DejaVu', '', 40)
+    pdf.set_font('Arial', '', 40)
     pdf.multi_cell(350, 24, txt="{}".format(
         case_art))
     pdf.multi_cell(350, 24, txt="{}".format(
@@ -193,11 +205,11 @@ def create_1C_name(name, file_order_name):
     pdf = FPDF(format=size)
     pdf.add_page()
     pdf.add_font(
-        'DejaVu', '', FontPath, uni=True)
-    pdf.set_font('DejaVu', '', 70)
+        'Arial', '', fname="Arial.ttf", uni=True)
+    pdf.set_font('Arial', '', 70)
     pdf.multi_cell(350, 35, txt="{}".format(
         name))
-    pdf.set_font('DejaVu', '', 40)
+    pdf.set_font('Arial', '', 40)
     pdf.multi_cell(350, 35, txt="{}".format(
         os.path.basename(file_order_name)), align="C")
     pdf.output(joinpath(TMPDir, 'name.pdf'))
@@ -209,11 +221,11 @@ def makeTableStiker(table_num, file_order_name):
     pdf = FPDF(format=size)
     pdf.add_page()
     pdf.add_font(
-        'DejaVu', '', FontPath, uni=True)
-    pdf.set_font('DejaVu', '', 200)
+        'Arial', '', fname="Arial.ttf", uni=True)
+    pdf.set_font('Arial', '', 200)
     pdf.multi_cell(350, 190, txt="Стол {}".format(
         str(table_num)), align='C')
-    pdf.set_font('DejaVu', '', 40)
+    pdf.set_font('Arial', '', 40)
     pdf.multi_cell(350, 30, txt='{}'.format(
         os.path.basename(file_order_name)), align="C")
     pdf.output(joinpath(TMPDir, 'table_num.pdf'))
@@ -269,7 +281,7 @@ def getOrderFileName():
     return OrderFileName
 
 
-def make_with_name(OrderFileName, mode2):
+def make_with_name(OrderFileName, mode2, days):
 
     data_from_order = read_xlsx_by_name(joinpath(
         OrdersDir, OrderFileName), 'основной')
@@ -299,8 +311,8 @@ def make_with_name(OrderFileName, mode2):
                    'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
                    'Стикер64': data_about_order[num_ord]['Стикер64']}
         except KeyError:
-            get_orders(3)
-            return make_with_name(OrderFileName, mode2)
+            get_orders(days)
+            return make_with_name(OrderFileName, mode2, days)
         data_for_print[order['Название'].replace(
             '\xa0', ' ')].append(tmp)
     writer = PdfWriter()
@@ -323,7 +335,7 @@ def make_with_name(OrderFileName, mode2):
                           os.path.basename(OrderFileName.replace('.xlsx', '.pdf'))))
 
 
-def make_glass_body(OrderFileName, mode2, name_sheet):
+def make_glass_body(OrderFileName, mode2, name_sheet, days):
     data_from_order = read_xlsx_by_name(joinpath(
         OrdersDir, OrderFileName), name_sheet)
     data_about_order = recreate_data(
@@ -352,8 +364,8 @@ def make_glass_body(OrderFileName, mode2, name_sheet):
                    'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
                    'Стикер64': data_about_order[num_ord]['Стикер64']}
         except KeyError:
-            get_orders(3)
-            return make_glass_body(OrderFileName, mode2, name_sheet)
+            get_orders(days)
+            return make_glass_body(OrderFileName, mode2, name_sheet, days)
         data_for_print[order['Название'].replace(
             '\xa0', ' ')].append(tmp)
     writer = PdfWriter()
@@ -374,32 +386,32 @@ def make_glass_body(OrderFileName, mode2, name_sheet):
     return writer
 
 
-def make_glass(OrderFileName, resp, name_sheet):
+def make_glass(OrderFileName, days):
     day = datetime.today().date().strftime(r"%d.%m.%Y")
-    writer = make_glass_body(OrderFileName, 1, '3D_стекла')
+    writer = make_glass_body(OrderFileName, 1, '3D_стекла', days)
     writer.write(
         joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D1_{}.pdf'.format(day)))
-    writer = make_glass_body(OrderFileName, 4, '3D_стекла')
+    writer = make_glass_body(OrderFileName, 4, '3D_стекла', days)
     writer.write(
         joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D2_{}.pdf'.format(day)))
-    writer = make_glass_body(OrderFileName, 1, 'глянец')
+    writer = make_glass_body(OrderFileName, 1, 'глянец', days)
     writer.write(
         joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL1_{}.pdf'.format(day)))
-    writer = make_glass_body(OrderFileName, 4, 'глянец')
+    writer = make_glass_body(OrderFileName, 4, 'глянец', days)
     writer.write(
         joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL2_{}.pdf'.format(day)))
-    writer = make_glass_body(OrderFileName, 1, 'матовые')
+    writer = make_glass_body(OrderFileName, 1, 'матовые', days)
     writer.write(
         joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT1_{}.pdf'.format(day)))
-    writer = make_glass_body(OrderFileName, 4, 'матовые')
+    writer = make_glass_body(OrderFileName, 4, 'матовые', days)
     writer.write(
         joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT2_{}.pdf'.format(day)))
-    writer = make_glass_body(OrderFileName, 1, 'камеры')
+    writer = make_glass_body(OrderFileName, 1, 'камеры', days)
     writer.write(
         joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'Cam_{}.pdf'.format(day)))
 
 
-def make_with_table(OrderFileName, mode2):
+def make_with_table(OrderFileName, mode2, days):
 
     data_from_order = read_xlsx_by_name(joinpath(
         OrdersDir, OrderFileName), 'основной')
@@ -434,7 +446,7 @@ def make_with_table(OrderFileName, mode2):
                    'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
                    'Стикер64': data_about_order[num_ord]['Стикер64']}
         except KeyError:
-            get_orders(3)
+            get_orders(days)
             return make_with_table(OrderFileName, mode2)
         data_for_print[num_ord].append(tmp)
     writer = PdfWriter()
@@ -474,21 +486,25 @@ def make_with_table(OrderFileName, mode2):
 def main():
     if startChek() == 0:
         OrderFileName = getOrderFileName()
+        if 'ч1' in OrderFileName:
+            days = 3
+        else:
+            days = 1
         if 'ФБС стекла' in OrderFileName:
-            make_glass(OrderFileName, 1)
+            make_glass(OrderFileName, days)
             return 0
         elif 'ФБС без принтов' in OrderFileName or 'ФБС планки принты' in OrderFileName:
-            make_with_name(OrderFileName, 1)
+            make_with_name(OrderFileName, 1, days)
             return 0
         elif 'ФБС принты' in OrderFileName:
-            make_with_table(OrderFileName, 1)
+            make_with_table(OrderFileName, 1, days)
             return 0
         else:
             mode, mode2 = menu()
             if mode == 1:
-                make_with_name(OrderFileName, mode2)
+                make_with_name(OrderFileName, mode2, days)
             elif mode == 2:
-                make_with_table(OrderFileName, mode2)
+                make_with_table(OrderFileName, mode2, days)
 
 
 def mainStikerFromOrder():
