@@ -4,7 +4,7 @@ from my_lib import read_xlsx, file_exists
 import zipfile
 
 
-path_list_stuff = r'C:\Users\user\Downloads\report_2021_9_14 (1).XLSX'
+path_list_stuff = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список номенклатуры — копия.XLSX'
 Count_Arh = 200
 
 
@@ -12,7 +12,7 @@ def main(path_list_stuff, model_name):
 
     list_stuff = read_xlsx(path_list_stuff)
     list_barcod = read_xlsx(
-        r'D:\printsPy\{}.xlsx'.format(model_name), title='No')
+        r'D:\printsPy\{}.xls'.format(model_name), title='No')
     for stuff in list_stuff:
         for barcod in list_barcod:
             if stuff['Баркод'] == str(barcod[0]):
