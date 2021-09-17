@@ -10,7 +10,7 @@ from my_lib import read_xlsx
 import json
 
 
-pathToListStuff = r'C:\Users\user\Downloads\Остатки ФБС\РЕалми с21у.xlsx'
+pathToListStuff = r'D:\barcodes.xlsx'
 main_path = r'C:\Users\Public\Documents\WBGetStuff'
 Token_path = joinpath(main_path, r'Token.txt')
 TmpLIst = []
@@ -99,8 +99,19 @@ def changeCard(cardBody):
         file.close()
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
 
-    cardBody['addin'][1]['params'][0][
-        'value'] = 'Стекло Samsung Galaxy A22/M32/A32/A50/A30 (A 22/32/50)(M 32).Самсунг А22/М32/А32 (А 22/32)(М 32)'
+    for i, addin in enumerate(cardBody['addin']):
+        if addin['type'] == 'Бренд':
+            addin['params'] = [{'value': 'Чехол OnePlus Nord N-100'}]
+        if addin['type'] == 'Наименование':
+            addin['params'] = [
+                {'value': 'Чехол OnePlus Nord N-100 с рисунком (принт)'}]
+        if addin['type'] == 'Тип чехлов':
+            addin['params'] = [
+                {'value': ''}]
+        if addin['type'] == 'Материал изделия':
+            addin['params'] = [
+                {'value': ''}]
+
     cardBodyNew = {
         "id": '1',
         "jsonrpc": "2.0",
@@ -126,19 +137,19 @@ def changeCard(cardBody):
 
 
 def cangeCardFromListStuff(pathToListStuff):
-    dataFromLIstStuff = read_xlsx(pathToListStuff, title='No')
+    dataFromLIstStuff = read_xlsx(pathToListStuff)
     for stuffLine in dataFromLIstStuff:
-        barcod = stuffLine[0] if type(
-            stuffLine[0]) == str else str(stuffLine['Баркод'])[0:-2]
+        barcod = stuffLine['Баркод'] if type(
+            stuffLine['Баркод']) == str else str(stuffLine['Баркод'])[0:-2]
         idStuff = getIdWithBarcod(barcod)
         cardBody = getCardBody(idStuff)
         changeCard(cardBody)
 
 
-# cangeCardFromListStuff(pathToListStuff)
+cangeCardFromListStuff(pathToListStuff)
 
-imtID = getIdWithBarcod('2007322516002')
+'''imtID = getIdWithBarcod('2001988340698')
 cardBody = getCardBody(imtID)
 changeCard(cardBody)
 TmpLIstpd = pandas.DataFrame(TmpLIst)
-TmpLIstpd.to_excel(r'D:\c21y.xlsx', index=False)
+TmpLIstpd.to_excel(r'D:\c21y.xlsx', index=False)'''

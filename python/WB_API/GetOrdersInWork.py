@@ -111,7 +111,7 @@ def getGlassType(stuffNameIn1C):
             GlassType = "nanoglassCamera"
         else:
             GlassType = 0
-    elif "Fullscreen" in stuffNameIn1C:
+    elif ("Fullscreen" in stuffNameIn1C) or ('3D' in stuffNameIn1C):
         GlassType = "glass3D"
     return GlassType
 

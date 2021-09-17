@@ -84,7 +84,10 @@ def read_xlsx_by_name(file_path, nameList):
     '''
     rd = xlrd.open_workbook(file_path)
     sheet = rd.sheet_by_name(nameList)
-    Name_row = sheet.row_values(0)
+    try:
+        Name_row = sheet.row_values(0)
+    except IndexError:
+        return None
     start = 1
     data = []
     for rownum in range(start, sheet.nrows):
@@ -338,6 +341,8 @@ def make_with_name(OrderFileName, mode2, days):
 def make_glass_body(OrderFileName, mode2, name_sheet, days):
     data_from_order = read_xlsx_by_name(joinpath(
         OrdersDir, OrderFileName), name_sheet)
+    if data_from_order == None:
+        return 0
     data_about_order = recreate_data(
         read_xlsx(joinpath(WBOrdersData, WBOrdersDataFileName)))
     data_for_print = {}
@@ -389,26 +394,33 @@ def make_glass_body(OrderFileName, mode2, name_sheet, days):
 def make_glass(OrderFileName, days):
     day = datetime.today().date().strftime(r"%d.%m.%Y")
     writer = make_glass_body(OrderFileName, 1, '3D_стекла', days)
-    writer.write(
-        joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D1_{}.pdf'.format(day)))
+    if writer != 0:
+        writer.write(
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D1_{}.pdf'.format(day)))
     writer = make_glass_body(OrderFileName, 4, '3D_стекла', days)
-    writer.write(
-        joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D2_{}.pdf'.format(day)))
+    if writer != 0:
+        writer.write(
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D2_{}.pdf'.format(day)))
     writer = make_glass_body(OrderFileName, 1, 'глянец', days)
-    writer.write(
-        joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL1_{}.pdf'.format(day)))
+    if writer != 0:
+        writer.write(
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL1_{}.pdf'.format(day)))
     writer = make_glass_body(OrderFileName, 4, 'глянец', days)
-    writer.write(
-        joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL2_{}.pdf'.format(day)))
+    if writer != 0:
+        writer.write(
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL2_{}.pdf'.format(day)))
     writer = make_glass_body(OrderFileName, 1, 'матовые', days)
-    writer.write(
-        joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT1_{}.pdf'.format(day)))
+    if writer != 0:
+        writer.write(
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT1_{}.pdf'.format(day)))
     writer = make_glass_body(OrderFileName, 4, 'матовые', days)
-    writer.write(
-        joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT2_{}.pdf'.format(day)))
+    if writer != 0:
+        writer.write(
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT2_{}.pdf'.format(day)))
     writer = make_glass_body(OrderFileName, 1, 'камеры', days)
-    writer.write(
-        joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'Cam_{}.pdf'.format(day)))
+    if writer != 0:
+        writer.write(
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'Cam_{}.pdf'.format(day)))
 
 
 def make_with_table(OrderFileName, mode2, days):
