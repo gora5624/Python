@@ -10,7 +10,7 @@ from my_lib import read_xlsx
 import json
 
 
-pathToListStuff = r'D:\barcodes.xlsx'
+pathToListStuff = r'D:\Остатки стекла.XLSX'
 main_path = r'C:\Users\Public\Documents\WBGetStuff'
 Token_path = joinpath(main_path, r'Token.txt')
 TmpLIst = []
@@ -98,19 +98,11 @@ def changeCard(cardBody):
         Token = file.read()
         file.close()
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
-
-    for i, addin in enumerate(cardBody['addin']):
-        if addin['type'] == 'Бренд':
-            addin['params'] = [{'value': 'Чехол OnePlus Nord N-100'}]
+    cardBody['countryProduction'] = 'Китай'
+    for addin in cardBody['addin']:
         if addin['type'] == 'Наименование':
             addin['params'] = [
-                {'value': 'Чехол OnePlus Nord N-100 с рисунком (принт)'}]
-        if addin['type'] == 'Тип чехлов':
-            addin['params'] = [
-                {'value': ''}]
-        if addin['type'] == 'Материал изделия':
-            addin['params'] = [
-                {'value': ''}]
+                {'value': 'Чехол Samsung Z Flip3 (Z Flip 3). Пластиковый чехол Самсунг З Флип3 (Флип 3)'}]
 
     cardBodyNew = {
         "id": '1',
@@ -122,8 +114,6 @@ def changeCard(cardBody):
     data = {'Баркод': cardBody['nomenclatures']
             [0]['variations'][0]['barcodes'][0],
             'Артикул WB': cardBody['nomenclatures'][0]['nmId']}
-
-    TmpLIst.append(data)
     while True:
         try:
             response = requests.post(changeCardUrl, headers={
@@ -133,7 +123,8 @@ def changeCard(cardBody):
         except:
             print('error changeCard')
             continue
-    print(response.text)
+    TmpLIst.append({'Артикул': cardBody['nomenclatures'][0]['nmId']
+                    }) if 'err' in response.text else print(response.text)
 
 
 def cangeCardFromListStuff(pathToListStuff):
@@ -143,13 +134,19 @@ def cangeCardFromListStuff(pathToListStuff):
             stuffLine['Баркод']) == str else str(stuffLine['Баркод'])[0:-2]
         idStuff = getIdWithBarcod(barcod)
         cardBody = getCardBody(idStuff)
-        changeCard(cardBody)
+        brand = stuffLine['Бренд']
+        name = stuffLine['Название']
+        kolabtmp = stuffLine['Совместимость'].split('/')
+        kolab = []
+        for model in kolabtmp:
+            kolab.append({'value': model})
+        changeCard(cardBody, brand, name, kolab)
 
 
-cangeCardFromListStuff(pathToListStuff)
-
-'''imtID = getIdWithBarcod('2001988340698')
-cardBody = getCardBody(imtID)
-changeCard(cardBody)
+'''cangeCardFromListStuff(pathToListStuff)
 TmpLIstpd = pandas.DataFrame(TmpLIst)
 TmpLIstpd.to_excel(r'D:\c21y.xlsx', index=False)'''
+
+imtID = getIdWithBarcod('2007450513058')
+cardBody = getCardBody(imtID)
+changeCard(cardBody)

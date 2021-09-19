@@ -6,6 +6,7 @@ from my_lib import file_exists, read_xlsx
 from os import makedirs
 import pandas
 from shutil import copyfile
+import json
 
 
 # Режим отладки 1 - да, 0 - боевой режим
@@ -14,7 +15,7 @@ Debug = 0
 
 main_path = r'C:\Users\Public\Documents\WBGetOrder'
 Token_path = joinpath(main_path, r'Token.txt')
-WBOrdersFileName = 'ФБС {} {} {}.xlsx'
+WBOrdersFileName = 'ФБС {} {} {}.xlsx' if Debug == 0 else 'DEBUG_ФБС {} {} {}.xlsx'
 WBOrdersData = joinpath(
     main_path, r'WBOrdersData')
 WBErrorsFileName = r'ErrorsBarcod.xlsx'
@@ -282,6 +283,7 @@ def orderFilter(ordersForFilter, mode):
     caseData = recreate_data(read_xlsx(listStuffPath))
     listOrderForChangeStatus = []
     listErrorBarcods = []
+
     for lineOrdersForFilter in ordersForFilter:
         if lineOrdersForFilter['status'] == 0:
 
@@ -291,29 +293,82 @@ def orderFilter(ordersForFilter, mode):
             except KeyError:
                 listErrorBarcods.append(lineOrdersForFilter['barcode'])
                 continue
+
             if stuffType == 'caseWithPrint' and mode == 'case_print':
 
                 lineExcel = createLineForExcel(lineOrdersForFilter, caseData)
                 listOrderForChangeStatus.append(lineExcel)
+                continue
 
             elif stuffType == 'caseWithoutPrint' and mode == 'case_without_print':
 
                 lineExcel = createLineForExcel(lineOrdersForFilter, caseData)
                 listOrderForChangeStatus.append(lineExcel)
+                continue
 
             elif stuffType == 'glass' and mode == 'glass':
 
                 lineExcel = createLineForExcel(lineOrdersForFilter, caseData)
                 listOrderForChangeStatus.append(lineExcel)
+                continue
 
             elif stuffType == 'plankWithPrint' and mode == 'plankWithPrint':
 
                 lineExcel = createLineForExcel(lineOrdersForFilter, caseData)
                 listOrderForChangeStatus.append(lineExcel)
+                continue
 
-    createExcel(listOrderForChangeStatus, listErrorBarcods, mode)
+    if mode != 'glass':
+        splitOrders(listOrderForChangeStatus, listErrorBarcods)
+    else:
+        createExcel(listOrderForChangeStatus, listErrorBarcods, mode)
 
     return listOrderForChangeStatus
+
+
+def normalNameForSplit(order):
+    if 'прозрачный' in order['Название'].lower():
+        normalCase1pt = order['Название'].split('прозрачный')[
+            0]
+        normalCase = normalCase1pt + 'прозрачный'
+    elif 'матовый' in order['Название'].lower():
+        normalCase1pt = order['Название'].split('матовый')[0]
+        normalCase = normalCase1pt + 'матовый'
+    elif 'блестки' in order['Название'].lower():
+        normalCase1pt = order['Название'].split('блестки')[0]
+        normalCase = normalCase1pt + 'блестки'
+    elif 'skinshell' in order['Название'].lower():
+        normalCase1pt = order['Название'].split('SkinShell')[0]
+        normalCase = normalCase1pt + 'skinshell'
+    elif 'fashion' in order['Название'].lower():
+        normalCase1pt = order['Название'].split('Fashion')[0]
+        normalCase = normalCase1pt + 'Fashion'
+    elif 'df' in order['Название'].lower():
+        normalCase1pt = order['Название'].split('DF')[0]
+        normalCase = normalCase1pt + 'DF'
+    else:
+        normalCase = order['Название']
+    return normalCase
+
+
+def splitOrders(listOrderForChangeStatus, listErrorBarcods):
+    countOrder = len(listOrderForChangeStatus)
+    print(countOrder)
+    countOrdersFiles = 1
+    while 140 <= countOrder // countOrdersFiles >= 160:
+        countOrdersFiles += 1
+    orders = []
+    i = 0
+    pdtmp = pandas.DataFrame(listOrderForChangeStatus).sort_values('Название')
+    listOrderForChangeStatus = pdtmp.to_dict(orient='records')
+    for order in listOrderForChangeStatus:
+        if (i + 1 > int(float(countOrder) // countOrdersFiles)) and (normalNameForSplit(order) != normalNameForSplit(orders[-1])):
+            createExcel(orders, listErrorBarcods, mode)
+            i = 0
+            orders = []
+        orders.append(order)
+        i += 1
+    createExcel(orders, listErrorBarcods, mode)
 
 
 def getToken():
