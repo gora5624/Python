@@ -1,5 +1,8 @@
+from ntpath import join
 import sys
 import os
+
+import PyQt5
 from mydesign import Ui_MainWindow  # импорт нашего сгенерированного файла
 from PyQt5 import QtCore, QtGui, QtWidgets
 import base64
@@ -13,13 +16,14 @@ import pandas
 from datetime import datetime, timedelta
 from my_lib import file_exists
 from os.path import join as joinpath
-from os import makedirs
+from os import makedirs, remove
 from os.path import isfile
 import PyPDF2
 from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPDF
 from pdfrw import PdfReader, PdfWriter
 import xlrd
+import multiprocessing
 
 pathToOrders = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
 
@@ -30,17 +34,27 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.btnClicked)
+        self.ui.pushButton_2.clicked.connect(self.updateComboBox)
         for excel in os.listdir(pathToOrders):
             if '~' not in excel:
                 self.ui.comboBox.addItem(
                     excel) if '~' not in excel else self.ui.comboBox
 
+    def updateComboBox(self):
+        self.ui.comboBox.clear()
+        for excel in os.listdir(pathToOrders):
+            if '~' not in excel:
+                self.ui.comboBox.addItem(
+                    excel) if '~' not in excel else self.ui.comboBox
+        self.ui.textEdit.setText('Обновление списка заказов выполненно')
+
     def btnClicked(self, a):
-        self.ui.label.setText('Ожидайте')
+        # self.ui.textEdit.setText('Ожидайте, идёт формирование ценников')
         text = self.ui.comboBox.currentText()
-        main(os.path.join(pathToOrders, text))
-        self.ui.label.setText('{} Готово'.format(text))
-        self.ui.label.adjustSize()
+        t1 = multiprocessing.Process(
+            target=main, args=(os.path.join(pathToOrders, text),))
+        t1.start()
+        # main(os.path.join(pathToOrders, text))
 
 
 WBOrdersDataFileName = r'Data_orders.xlsx'
@@ -482,7 +496,7 @@ def make_with_table(OrderFileName, mode2, days):
                    'Стикер64': data_about_order[num_ord]['Стикер64']}
         except KeyError:
             get_orders(days)
-            return make_with_table(OrderFileName, mode2)
+            return make_with_table(OrderFileName, mode2, days)
         data_for_print[num_ord].append(tmp)
     writer = PdfWriter()
     table_num = 1
@@ -540,10 +554,14 @@ def main(text):
                 make_with_name(OrderFileName, mode2, days)
             elif mode == 2:
                 make_with_table(OrderFileName, mode2, days)
+    for tmpFile in os.listdir(TMPDir):
+        os.remove(os.path.join(TMPDir, tmpFile))
 
 
-app = QtWidgets.QApplication([])
-application = mywindow()
-application.show()
+if __name__ == '__main__':
 
-sys.exit(app.exec())
+    app = QtWidgets.QApplication([])
+    application = mywindow()
+    application.show()
+
+    sys.exit(app.exec())
