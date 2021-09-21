@@ -10,7 +10,7 @@ from my_lib import read_xlsx
 import json
 
 
-pathToListStuff = r'D:\Остатки стекла.XLSX'
+pathToListStuff = r'D:\barcods.xlsx'
 main_path = r'C:\Users\Public\Documents\WBGetStuff'
 Token_path = joinpath(main_path, r'Token.txt')
 TmpLIst = []
@@ -102,7 +102,7 @@ def changeCard(cardBody):
     for addin in cardBody['addin']:
         if addin['type'] == 'Наименование':
             addin['params'] = [
-                {'value': 'Чехол Samsung Z Flip3 (Z Flip 3). Пластиковый чехол Самсунг З Флип3 (Флип 3)'}]
+                {'value': 'Защитное стекло iPhone 13 Pro Max (Apple iPhone XIII Pro Max). стекло Айфон 13 про макс'}]
 
     cardBodyNew = {
         "id": '1',
@@ -111,9 +111,6 @@ def changeCard(cardBody):
             "card": cardBody
         }
     }
-    data = {'Баркод': cardBody['nomenclatures']
-            [0]['variations'][0]['barcodes'][0],
-            'Артикул WB': cardBody['nomenclatures'][0]['nmId']}
     while True:
         try:
             response = requests.post(changeCardUrl, headers={
@@ -123,8 +120,9 @@ def changeCard(cardBody):
         except:
             print('error changeCard')
             continue
-    TmpLIst.append({'Артикул': cardBody['nomenclatures'][0]['nmId']
-                    }) if 'err' in response.text else print(response.text)
+    TmpLIst.append({'Артикул': cardBody['nomenclatures'][0]['nmId'],
+                    'Баркод': cardBody['nomenclatures'][0]['variations'][0]['barcodes'][0]})
+    print(response.text)
 
 
 def cangeCardFromListStuff(pathToListStuff):
@@ -134,19 +132,14 @@ def cangeCardFromListStuff(pathToListStuff):
             stuffLine['Баркод']) == str else str(stuffLine['Баркод'])[0:-2]
         idStuff = getIdWithBarcod(barcod)
         cardBody = getCardBody(idStuff)
-        brand = stuffLine['Бренд']
         name = stuffLine['Название']
-        kolabtmp = stuffLine['Совместимость'].split('/')
-        kolab = []
-        for model in kolabtmp:
-            kolab.append({'value': model})
-        changeCard(cardBody, brand, name, kolab)
+        changeCard(cardBody, name)
 
 
 '''cangeCardFromListStuff(pathToListStuff)
 TmpLIstpd = pandas.DataFrame(TmpLIst)
-TmpLIstpd.to_excel(r'D:\c21y.xlsx', index=False)'''
+TmpLIstpd.to_excel(r'D:\barcodes and art1.xlsx', index=False)'''
 
-imtID = getIdWithBarcod('2007450513058')
+imtID = getIdWithBarcod('2007918291115')
 cardBody = getCardBody(imtID)
 changeCard(cardBody)
