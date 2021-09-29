@@ -1,24 +1,37 @@
 import requests
-from my_lib import write_csv
-import datetime
-import os
+from os.path import join as joinpath
 
-delta = datetime.timedelta(hours=0, minutes=0)
-now = datetime.datetime.now(datetime.timezone.utc) + delta
-url = 'https://suppliers-stats.wildberries.ru/api/v1/supplier/stocks?dateFrom={}6:00:00.000Z&key=MThlZmZjODAtZGU0Yi00NGEwLWIwN2EtZWUzNjVlNGRjY2Uz'.format(now.isoformat()[0:-14][
-    0:-7])
-print(url)
-responce = requests.get(url)
+main_path = r'C:\Users\Public\Documents\WBGetOrder'
+Token_path = joinpath(main_path, r'Token.txt')
+status = 0
 
-print(responce)
 
-if responce.status_code == 429:
-    print('Слишком много запросов, повторите через пару минут.')
-    input('Нажмите Enter')
-else:
-    a = os.getcwd() + '\\' + 'остатки.csv'
-    for line in responce.json():
-        write_csv(line, os.getcwd() + '\\' + 'остатки.csv')
+def getToken():
+    """Получаем токен для авторизации"""
+    with open(Token_path, 'r', encoding='UTF-8') as file:
+        Token = file.read()
+        file.close()
+    return Token
 
-    print("Файл сохранён в {}".format(a))
-    input('Нажмите Enter')
+
+def changeStatus(orderId, Token):
+    """Изменяет статус заказа на заданный, в данном случае "1" - на сборке"""
+    Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
+    datajson = [{"orderId": orderId,
+                 "status": status}]
+    while True:
+        try:
+            response = requests.put(Url, headers={
+                'Authorization': '{}'.format(Token)}, json=datajson)
+            print(response.text)
+            if response.status_code != 200:
+                continue
+            elif response.status_code == 200:
+                break
+        except:
+            continue
+    print(response)
+
+
+Token = getToken()
+changeStatus('89253869', Token)

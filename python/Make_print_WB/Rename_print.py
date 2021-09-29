@@ -3,7 +3,7 @@ import sys
 from my_lib import read_xlsx
 
 #pathToPrint = sys.argv[1].replace("_", " ")
-pathToPrint = r'D:\printsPy'
+pathToPrint = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Каталог принтов'
 
 
 def Rename_print(pathToPrint):
@@ -16,8 +16,9 @@ def Rename_print(pathToPrint):
             nameN = name[name.find('(')+1:name.find(')')]
             if PrintN == nameN:
                 os.rename(os.path.join(pathToPrint, Print),
-                          os.path.join(pathToPrint, name+'.jpg'))
+                          os.path.join(pathToPrint, name+'.png'))
 
 
-for dir in os.listdir(pathToPrint):
-    Rename_print(os.path.join(pathToPrint, dir))
+'''for dir in os.listdir(pathToPrint):
+    Rename_print(os.path.join(pathToPrint, dir))'''
+Rename_print(pathToPrint)

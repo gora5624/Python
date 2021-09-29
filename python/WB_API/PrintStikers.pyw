@@ -2,8 +2,7 @@ from ntpath import join
 import sys
 import os
 
-import PyQt5
-from mydesign import Ui_MainWindow  # импорт нашего сгенерированного файла
+from mydesign import Ui_MainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 import base64
 import barcode
@@ -17,15 +16,13 @@ from datetime import datetime, timedelta
 from my_lib import file_exists
 from os.path import join as joinpath
 from os import makedirs, remove
-from os.path import isfile
+from os.path import join
 import PyPDF2
 from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPDF
 from pdfrw import PdfReader, PdfWriter
 import xlrd
 import multiprocessing
-
-pathToOrders = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
 
 
 class mywindow(QtWidgets.QMainWindow):
@@ -49,33 +46,52 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.textEdit.setText('Обновление списка заказов выполненно')
 
     def btnClicked(self, a):
-        # self.ui.textEdit.setText('Ожидайте, идёт формирование ценников')
+        self.ui.textEdit.setText('Ожидайте, идёт формирование ценников')
         text = self.ui.comboBox.currentText()
         t1 = multiprocessing.Process(
-            target=main, args=(os.path.join(pathToOrders, text),))
+            target=main, args=(os.path.join(pathToOrders, text), str(datetime.today()).replace(":", '.'),))
+
         t1.start()
-        # main(os.path.join(pathToOrders, text))
+
+    def closeEvent(self, event):
+        close = QtWidgets.QMessageBox.question(self,
+                                               "Выход",
+                                               "Вы уверенны что хотите закрыть программу?",
+                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        if close == QtWidgets.QMessageBox.Yes:
+            try:
+                for tmpFile in os.listdir(TMPDir):
+                    remove(join(TMPDir, tmpFile))
+            except:
+                pass
+            event.accept()
+        else:
+            event.ignore()
 
 
+pathToOrders = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
 WBOrdersDataFileName = r'Data_orders.xlsx'
 WBOrdersJsonDataFileName = r'Order.json'
 main_path = r'C:\Users\Public\Documents\WBHelpTools\MakeWBStikersWithName'
 WBOrdersData = joinpath(
     main_path, r'WBOrdersData')
-OrdersDir = joinpath(
-    main_path, r'Orders')
 TMPDir = joinpath(
     main_path, r'TMPDir')
 Token_path = joinpath(
     main_path, r'Token.txt')
-FontPath = r'C:\Users\Public\Documents\WBHelpTools\MakeWBStikersWithName\font\ArialSans.ttf'
-orders = ''
 fpdf.set_global("SYSTEM_TTFONTS", os.path.join(
     os.path.dirname(__file__), r'C:\Windows\Fonts'))
+Name1CStiker = '1c_{}.pdf'
+NameWBStikerTMP = 'WBTMP_{}.pdf'
+NameWBStiker = 'WB_{}.pdf'
+NameSVG = 'WB_{}.svg'
+NameTitle1CStiker = 'Name{}.pdf'
+NameEAN13PNG = 'ean13_{}.png'
+NameTable = 'TBL_{}.pdf'
 
 
 def startChek():
-    dirList = [main_path, WBOrdersData, OrdersDir, TMPDir]
+    dirList = [main_path, WBOrdersData, TMPDir]
     for dir_ in dirList:
         if not file_exists(dir_):
             makedirs(dir_)
@@ -195,12 +211,12 @@ def recreate_data(order_xlsx):
     return data_new
 
 
-def create_1C_barcod(case_name, case_art, bar):
+def create_1C_barcod(case_name, case_art, bar, procNum):
     options = dict(module_height=5.0, text_distance=1.0, format='PNG')
 
     barcode.get('ean13', bar,
-                ImageWriter()).save(joinpath(TMPDir, 'ean13'), options)
-    image_path = joinpath(TMPDir, 'ean13.png')
+                ImageWriter()).save(joinpath(TMPDir, NameEAN13PNG.format(procNum)[0:-4]), options)
+    image_path = joinpath(TMPDir, NameEAN13PNG.format(procNum))
     size = (370, 280)
     pdf = FPDF(format=size)
     pdf.add_page()
@@ -215,33 +231,34 @@ def create_1C_barcod(case_name, case_art, bar):
         case_art))
     pdf.multi_cell(350, 24, txt="{}".format(
         'Продавец: ИП Караханян Э.С'))
-    pdf.output(joinpath(TMPDir, r'1C_barcod.pdf'))
-    return joinpath(TMPDir, r'1C_barcod.pdf')
+    pdf.output(joinpath(TMPDir, Name1CStiker.format(procNum)))
+    return joinpath(TMPDir, Name1CStiker.format(procNum))
 
 
-def create_WB_barcod(Base64):
+def create_WB_barcod(Base64, procNum):
     Base64 = bytes(Base64, 'utf-8')
     pdf_writer = PyPDF2.PdfFileWriter()
     png_recovered = base64.decodestring(Base64)
-    f = open(joinpath(TMPDir, r'WB_barcod.PDF.SVG'), "wb")
+    f = open(joinpath(TMPDir, NameSVG.format(procNum)), "wb")
     f.write(png_recovered)
     f.close()
-    drawing = svg2rlg(joinpath(TMPDir, r'WB_barcod.PDF.SVG'))
-    renderPDF.drawToFile(drawing, joinpath(TMPDir, r'WB_barcod_tmp.PDF'))
+    drawing = svg2rlg(joinpath(TMPDir, NameSVG.format(procNum)))
+    renderPDF.drawToFile(drawing, joinpath(
+        TMPDir, NameWBStikerTMP.format(procNum)))
     pdf_file = PyPDF2.PdfFileReader(
-        open(joinpath(TMPDir, r'WB_barcod_tmp.PDF'), 'rb'))
+        open(joinpath(TMPDir, NameWBStikerTMP.format(procNum)), 'rb'))
     page = pdf_file.getPage(0)
     page.mediaBox.upperRight = (370, 280)
     page.mediaBox.upperLeft = (20, 280)
     page.mediaBox.lowerRight = (370, 15)
     page.scaleBy(3)
     pdf_writer.addPage(page)
-    with open(joinpath(TMPDir, r'WB_barcod.PDF'), 'wb') as out_file:
+    with open(joinpath(TMPDir, NameWBStiker.format(procNum)), 'wb') as out_file:
         pdf_writer.write(out_file)
-    return joinpath(TMPDir, r'WB_barcod.PDF')
+    return joinpath(TMPDir, NameWBStiker.format(procNum))
 
 
-def create_1C_name(name, file_order_name):
+def create_1C_name(name, file_order_name, procNum):
     size = (370, 280)
     pdf = FPDF(format=size)
     pdf.add_page()
@@ -250,14 +267,14 @@ def create_1C_name(name, file_order_name):
     pdf.set_font('Arial', '', 70)
     pdf.multi_cell(350, 35, txt="{}".format(
         name))
-    pdf.set_font('Arial', '', 40)
+    pdf.set_font('Arial', '', 50)
     pdf.multi_cell(350, 35, txt="{}".format(
         os.path.basename(file_order_name)), align="C")
-    pdf.output(joinpath(TMPDir, 'name.pdf'))
-    return joinpath(TMPDir, 'name.pdf')
+    pdf.output(joinpath(TMPDir, NameTitle1CStiker.format(procNum)))
+    return joinpath(TMPDir, NameTitle1CStiker.format(procNum))
 
 
-def makeTableStiker(table_num, file_order_name):
+def makeTableStiker(table_num, file_order_name, procNum):
     size = (370, 280)
     pdf = FPDF(format=size)
     pdf.add_page()
@@ -266,11 +283,11 @@ def makeTableStiker(table_num, file_order_name):
     pdf.set_font('Arial', '', 200)
     pdf.multi_cell(350, 190, txt="Стол {}".format(
         str(table_num)), align='C')
-    pdf.set_font('Arial', '', 40)
+    pdf.set_font('Arial', '', 50)
     pdf.multi_cell(350, 30, txt='{}'.format(
         os.path.basename(file_order_name)), align="C")
-    pdf.output(joinpath(TMPDir, 'table_num.pdf'))
-    return joinpath(TMPDir, 'table_num.pdf')
+    pdf.output(joinpath(TMPDir, NameTable.format(procNum)))
+    return joinpath(TMPDir, NameTable.format(procNum))
 
 
 def menu():
@@ -306,25 +323,9 @@ def menu():
     return mode, mode2
 
 
-def getOrderFileName(text):
-    OrderFileName = text
-    if OrderFileName[-5:len(OrderFileName)] != '.xlsx':
-        OrderFileName = OrderFileName + '.xlsx'
-    if file_exists(OrderFileName) and isfile(joinpath(OrdersDir, OrderFileName)):
-        print('Файл найден.')
-    elif file_exists(joinpath(OrdersDir, OrderFileName)) and isfile(joinpath(OrdersDir, OrderFileName)):
-        OrderFileName = joinpath(OrdersDir, OrderFileName)
-        print('Файл найден.')
-    else:
-        print('Файл Не найден. Введите корректный путь к файлу: ')
-        OrderFileName = getOrderFileName(text)
-    return OrderFileName
+def make_with_name(OrderFileName, mode2, days, procNum):
 
-
-def make_with_name(OrderFileName, mode2, days):
-
-    data_from_order = read_xlsx_by_name(joinpath(
-        OrdersDir, OrderFileName), 'основной')
+    data_from_order = read_xlsx_by_name(joinpath(OrderFileName), 'основной')
     data_about_order = recreate_data(
         read_xlsx(joinpath(WBOrdersData, WBOrdersDataFileName)))
     data_for_print = {}
@@ -352,32 +353,31 @@ def make_with_name(OrderFileName, mode2, days):
                    'Стикер64': data_about_order[num_ord]['Стикер64']}
         except KeyError:
             get_orders(days)
-            return make_with_name(OrderFileName, mode2, days)
+            return make_with_name(OrderFileName, mode2, days, procNum)
         data_for_print[order['Название'].replace(
             '\xa0', ' ')].append(tmp)
     writer = PdfWriter()
     for name in data_for_print:
         if mode2 == 1 or mode2 == 2 or mode2 == 4:
             path1 = PdfReader(create_1C_name(
-                name, OrderFileName), decompress=False).pages
+                name, OrderFileName, procNum), decompress=False).pages
             writer.addpages(path1)
         for data in data_for_print[name]:
             if mode2 == 1 or mode2 == 5 or mode2 == 4:
                 path2 = PdfReader(create_1C_barcod(data['Название'],
-                                                   data['Артикул поставщика'], data['ШК']), decompress=False).pages
+                                                   data['Артикул поставщика'], data['ШК'], procNum), decompress=False).pages
                 writer.addpages(path2)
             if mode2 == 1 or mode2 == 3 or mode2 == 2:
                 path3 = PdfReader(create_WB_barcod(
-                    data['Стикер64']), decompress=False).pages
+                    data['Стикер64'], procNum), decompress=False).pages
                 writer.addpages(path3)
 
     writer.write(joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники',
                           os.path.basename(OrderFileName.replace('.xlsx', '.pdf'))))
 
 
-def make_glass_body(OrderFileName, mode2, name_sheet, days):
-    data_from_order = read_xlsx_by_name(joinpath(
-        OrdersDir, OrderFileName), name_sheet)
+def make_glass_body(OrderFileName, mode2, name_sheet, days, procNum):
+    data_from_order = read_xlsx_by_name(OrderFileName, name_sheet)
     if data_from_order == None:
         return 0
     data_about_order = recreate_data(
@@ -407,65 +407,63 @@ def make_glass_body(OrderFileName, mode2, name_sheet, days):
                    'Стикер64': data_about_order[num_ord]['Стикер64']}
         except KeyError:
             get_orders(days)
-            return make_glass_body(OrderFileName, mode2, name_sheet, days)
+            return make_glass_body(OrderFileName, mode2, name_sheet, days, procNum)
         data_for_print[order['Название'].replace(
             '\xa0', ' ')].append(tmp)
     writer = PdfWriter()
     for name in data_for_print:
         if mode2 == 1 or mode2 == 2 or mode2 == 4:
             path1 = PdfReader(create_1C_name(
-                name, OrderFileName), decompress=False).pages
+                name, OrderFileName, procNum), decompress=False).pages
             writer.addpages(path1)
         for data in data_for_print[name]:
             if mode2 == 1 or mode2 == 5 or mode2 == 4:
                 path2 = PdfReader(create_1C_barcod(data['Название'],
-                                                   data['Артикул поставщика'], data['ШК']), decompress=False).pages
+                                                   data['Артикул поставщика'], data['ШК'], procNum), decompress=False).pages
                 writer.addpages(path2)
             if mode2 == 1 or mode2 == 3 or mode2 == 2:
                 path3 = PdfReader(create_WB_barcod(
-                    data['Стикер64']), decompress=False).pages
+                    data['Стикер64'], procNum), decompress=False).pages
                 writer.addpages(path3)
     return writer
 
 
-def make_glass(OrderFileName, days):
+def make_glass(OrderFileName, days, procNum):
     day = datetime.today().date().strftime(r"%d.%m.%Y")
-    writer = make_glass_body(OrderFileName, 1, '3D_стекла', days)
+    writer = make_glass_body(OrderFileName, 1, '3D_стекла', days, procNum)
     if writer != 0:
         writer.write(
             joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D1_{}.pdf'.format(day)))
-    writer = make_glass_body(OrderFileName, 4, '3D_стекла', days)
+    writer = make_glass_body(OrderFileName, 4, '3D_стекла', days, procNum)
     if writer != 0:
         writer.write(
             joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D2_{}.pdf'.format(day)))
-    writer = make_glass_body(OrderFileName, 1, 'глянец', days)
+    writer = make_glass_body(OrderFileName, 1, 'глянец', days, procNum)
     if writer != 0:
         writer.write(
             joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL1_{}.pdf'.format(day)))
-    writer = make_glass_body(OrderFileName, 4, 'глянец', days)
+    writer = make_glass_body(OrderFileName, 4, 'глянец', days, procNum)
     if writer != 0:
         writer.write(
             joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL2_{}.pdf'.format(day)))
-    writer = make_glass_body(OrderFileName, 1, 'матовые', days)
+    writer = make_glass_body(OrderFileName, 1, 'матовые', days, procNum)
     if writer != 0:
         writer.write(
             joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT1_{}.pdf'.format(day)))
-    writer = make_glass_body(OrderFileName, 4, 'матовые', days)
+    writer = make_glass_body(OrderFileName, 4, 'матовые', days, procNum)
     if writer != 0:
         writer.write(
             joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT2_{}.pdf'.format(day)))
-    writer = make_glass_body(OrderFileName, 1, 'камеры', days)
+    writer = make_glass_body(OrderFileName, 1, 'камеры', days, procNum)
     if writer != 0:
         writer.write(
             joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'Cam_{}.pdf'.format(day)))
 
 
-def make_with_table(OrderFileName, mode2, days):
+def make_with_table(OrderFileName, mode2, days, procNum):
 
-    data_from_order = read_xlsx_by_name(joinpath(
-        OrdersDir, OrderFileName), 'основной')
-    data_about_tale = read_xlsx_by_name(joinpath(
-        OrdersDir, OrderFileName), 'Столы')
+    data_from_order = read_xlsx_by_name(OrderFileName, 'основной')
+    data_about_tale = read_xlsx_by_name(OrderFileName, 'Столы')
     data_about_order = recreate_data(
         read_xlsx(joinpath(WBOrdersData, WBOrdersDataFileName)))
     data_for_print = {}
@@ -496,13 +494,13 @@ def make_with_table(OrderFileName, mode2, days):
                    'Стикер64': data_about_order[num_ord]['Стикер64']}
         except KeyError:
             get_orders(days)
-            return make_with_table(OrderFileName, mode2, days)
+            return make_with_table(OrderFileName, mode2, days, procNum)
         data_for_print[num_ord].append(tmp)
     writer = PdfWriter()
     table_num = 1
     if mode2 == 1 or mode2 == 2 or mode2 == 4:
         path1 = PdfReader(makeTableStiker(
-            table_num, OrderFileName), decompress=False).pages
+            table_num, OrderFileName, procNum), decompress=False).pages
         writer.addpages(path1)
     for order_line in data_about_tale:
         if type(order_line['Номер задания']) == float:
@@ -513,17 +511,17 @@ def make_with_table(OrderFileName, mode2, days):
             if order_line_num == '':
                 table_num = table_num + 1
                 path1 = PdfReader(makeTableStiker(
-                    table_num, OrderFileName), decompress=False).pages
+                    table_num, OrderFileName, procNum), decompress=False).pages
                 writer.addpages(path1)
                 continue
         for data in data_for_print[order_line_num]:
             if mode2 == 1 or mode2 == 5 or mode2 == 4:
                 path2 = PdfReader(create_1C_barcod(data['Название'],
-                                                   data['Артикул поставщика'], data['ШК']), decompress=False).pages
+                                                   data['Артикул поставщика'], data['ШК'], procNum), decompress=False).pages
                 writer.addpages(path2)
             if mode2 == 1 or mode2 == 3 or mode2 == 2:
                 path3 = PdfReader(create_WB_barcod(
-                    data['Стикер64']), decompress=False).pages
+                    data['Стикер64'], procNum), decompress=False).pages
                 writer.addpages(path3)
 
     writer.write(joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники',
@@ -532,30 +530,27 @@ def make_with_table(OrderFileName, mode2, days):
     # Тело
 
 
-def main(text):
+def main(text, procNum):
+
     if startChek() == 0:
-        OrderFileName = getOrderFileName(text)
+
+        OrderFileName = text
         if 'ч1' in OrderFileName:
             days = 3
         else:
             days = 1
         if 'ФБС стекла' in OrderFileName:
-            make_glass(OrderFileName, days)
-            return 0
+            make_glass(OrderFileName, days, procNum)
         elif 'ФБС без принтов' in OrderFileName or 'ФБС планки принты' in OrderFileName:
-            make_with_name(OrderFileName, 1, days)
-            return 0
+            make_with_name(OrderFileName, 1, days, procNum)
         elif 'ФБС принты' in OrderFileName:
-            make_with_table(OrderFileName, 1, days)
-            return 0
+            make_with_table(OrderFileName, 1, days, procNum)
         else:
             mode, mode2 = menu()
             if mode == 1:
-                make_with_name(OrderFileName, mode2, days)
+                make_with_name(OrderFileName, mode2, days, procNum)
             elif mode == 2:
-                make_with_table(OrderFileName, mode2, days)
-    for tmpFile in os.listdir(TMPDir):
-        os.remove(os.path.join(TMPDir, tmpFile))
+                make_with_table(OrderFileName, mode2, days, procNum)
 
 
 if __name__ == '__main__':

@@ -54,7 +54,7 @@ def recreate_data(CaseList):
             Barcod = line['Баркод']
 
         data_new[Barcod] = {'Название 1С': line['Название 1С'].replace('\xa0', ' ') if type(line['Название 1С']) == str else None,
-                            'Код': line['Код'].replace('\xa0', ''),
+                            'Код': line['Код'].replace('\xa0', '') if type(line['Код']) == str else None,
                             'Артикул WB':  str(line['Артикул WB'])[0:-2] if type(line['Артикул WB']) == float else line['Артикул WB'],
                             'Артикул поставщика': line['Артикул поставщика'],
                             'Код размера (chrt_id)': str(line['Код размера (chrt_id)'])[0:-2] if type(line['Код размера (chrt_id)']) == float else line['Код размера (chrt_id)'],
