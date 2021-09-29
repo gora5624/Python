@@ -235,8 +235,33 @@ def create_1C_barcod(case_name, case_art, bar, procNum):
     return joinpath(TMPDir, Name1CStiker.format(procNum))
 
 
-def create_WB_barcod(Base64, procNum):
-    Base64 = bytes(Base64, 'utf-8')
+def getStiker(OrderNum):
+    OrderNum = OrderNum if type(OrderNum) != float else int(OrderNum)[0:-2]
+    with open(Token_path, 'r', encoding='UTF-8') as file:
+        Token = file.read()
+        file.close()
+    UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
+    trying = 0
+    OrderNumJson = {"orderIds": [int(OrderNum)]}
+    while True:
+        trying += 1
+        try:
+            response = requests.post(UrlStiker, headers={
+                'Authorization': '{}'.format(Token)}, json=OrderNumJson)
+            if response.status_code == 200:
+                break
+            elif trying > 500:
+                print("Не удолось достучаться до сервера ВБ")
+                return 1
+            else:
+                continue
+        except:
+            continue
+    return response.json()['data'][0]['sticker']['wbStickerSvgBase64']
+
+
+def create_WB_barcod(OrderNum, procNum):
+    Base64 = bytes(getStiker(OrderNum), 'utf-8')
     pdf_writer = PyPDF2.PdfFileWriter()
     png_recovered = base64.decodestring(Base64)
     f = open(joinpath(TMPDir, NameSVG.format(procNum)), "wb")
@@ -369,7 +394,7 @@ def make_with_name(OrderFileName, mode2, days, procNum):
                 writer.addpages(path2)
             if mode2 == 1 or mode2 == 3 or mode2 == 2:
                 path3 = PdfReader(create_WB_barcod(
-                    data['Стикер64'], procNum), decompress=False).pages
+                    data['Номер задания'], procNum), decompress=False).pages
                 writer.addpages(path3)
 
     writer.write(joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники',
@@ -423,7 +448,7 @@ def make_glass_body(OrderFileName, mode2, name_sheet, days, procNum):
                 writer.addpages(path2)
             if mode2 == 1 or mode2 == 3 or mode2 == 2:
                 path3 = PdfReader(create_WB_barcod(
-                    data['Стикер64'], procNum), decompress=False).pages
+                    data['Номер задания'], procNum), decompress=False).pages
                 writer.addpages(path3)
     return writer
 
@@ -521,7 +546,7 @@ def make_with_table(OrderFileName, mode2, days, procNum):
                 writer.addpages(path2)
             if mode2 == 1 or mode2 == 3 or mode2 == 2:
                 path3 = PdfReader(create_WB_barcod(
-                    data['Стикер64'], procNum), decompress=False).pages
+                    data['Номер задания'], procNum), decompress=False).pages
                 writer.addpages(path3)
 
     writer.write(joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники',
