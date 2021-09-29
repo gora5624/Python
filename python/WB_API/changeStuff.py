@@ -102,7 +102,7 @@ def changeCard(cardBody):
     for addin in cardBody['addin']:
         if addin['type'] == 'Наименование':
             addin['params'] = [
-                {'value': 'Защитное стекло iPhone 13 Pro Max (Apple iPhone XIII Pro Max). стекло Айфон 13 про макс'}]
+                {'value': 'Пленка iPad mini 6 (2021) (mini6 2021). Защитная бронепленка для айпад мини 6 2021 (не стекло)'}]
 
     cardBodyNew = {
         "id": '1',
@@ -140,6 +140,6 @@ def cangeCardFromListStuff(pathToListStuff):
 TmpLIstpd = pandas.DataFrame(TmpLIst)
 TmpLIstpd.to_excel(r'D:\barcodes and art1.xlsx', index=False)'''
 
-imtID = getIdWithBarcod('2007918291115')
+imtID = getIdWithBarcod('2008800795001')
 cardBody = getCardBody(imtID)
 changeCard(cardBody)

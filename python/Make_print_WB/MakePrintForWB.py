@@ -1,8 +1,11 @@
+from genericpath import isdir
 from PIL import Image
 import os
 from my_lib import file_exists, read_xlsx, generate_bar_WB
 import copy
 import pandas
+from os.path import isdir
+import multiprocessing
 
 pathToMaskFolder = r'D:\mask'
 pathToPrintFolder = r'D:\NewPrint'
@@ -94,6 +97,7 @@ def makePrint():
     maskFoldersList = os.listdir(pathToMaskFolder)
     printList = os.listdir(pathToPrintFolder)
     for maskFolder in maskFoldersList:
+
         print(maskFolder)
         pathToBackground = os.path.join(
             pathToMaskFolder, maskFolder, r'fon.png')
@@ -129,7 +133,14 @@ def makePrint():
                                  quality=70)
 
 
-makePrint()
-for dirModel in os.listdir(pathToDonePrints):
-    Rename_print(os.path.join(pathToDonePrints, dirModel))
-getBarcodForPrint(pathToDonePrints)
+def main():
+
+    makePrint()
+    for dirModel in os.listdir(pathToDonePrints):
+        if isdir(os.path.join(pathToDonePrints, dirModel)):
+            Rename_print(os.path.join(pathToDonePrints, dirModel))
+    getBarcodForPrint(pathToDonePrints)
+
+
+if __name__ == '__main__':
+    main()

@@ -499,9 +499,9 @@ def main():
     if startChek() == 0:
         OrderFileName = getOrderFileName()
         if 'ч1' in OrderFileName:
-            days = 3
+            days = 10
         else:
-            days = 1
+            days = 10
         if 'ФБС стекла' in OrderFileName:
             make_glass(OrderFileName, days)
             return 0
