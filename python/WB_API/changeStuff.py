@@ -100,10 +100,18 @@ def changeCard(cardBody):
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
     cardBody['countryProduction'] = 'Китай'
     for addin in cardBody['addin']:
-        if addin['type'] == 'Наименование':
+        if addin['type'] == 'Бренд':
             addin['params'] = [
-                {'value': 'Пленка iPad mini 6 (2021) (mini6 2021). Защитная бронепленка для айпад мини 6 2021 (не стекло)'}]
-
+                {'value': 'Чехол iPhone 13 Pro'}]
+        if addin['type'] == 'Материал изделия':
+            addin['params'] = [
+                {'value': ''}]
+        if addin['type'] == 'Вид застежки':
+            addin['params'] = [
+                {'value': ''}]
+        if addin['type'] == 'Тип чехлов':
+            addin['params'] = [
+                {'value': ''}]
     cardBodyNew = {
         "id": '1',
         "jsonrpc": "2.0",
@@ -140,6 +148,6 @@ def cangeCardFromListStuff(pathToListStuff):
 TmpLIstpd = pandas.DataFrame(TmpLIst)
 TmpLIstpd.to_excel(r'D:\barcodes and art1.xlsx', index=False)'''
 
-imtID = getIdWithBarcod('2008800795001')
+imtID = getIdWithBarcod('2001898798022')
 cardBody = getCardBody(imtID)
 changeCard(cardBody)
