@@ -10,7 +10,7 @@ from my_lib import read_xlsx
 import json
 
 
-pathToListStuff = r'D:\barcods.xlsx'
+pathToListStuff = r'D:\AllCasePrint.xlsx'
 main_path = r'C:\Users\Public\Documents\WBGetStuff'
 Token_path = joinpath(main_path, r'Token.txt')
 TmpLIst = []
@@ -59,11 +59,8 @@ def getIdWithBarcod(barcod):
                 continue
         except:
             continue
-    try:
-        return response.json()['result']['cards'][0]['imtId']
-    except:
-        tmp = {'barcod': barcod}
-        TmpLIst.append(tmp)
+
+    return response.json()['result']['cards'][0]['imtId']
 
 
 def getCardBody(imtID):
