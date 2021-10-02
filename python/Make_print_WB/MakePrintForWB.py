@@ -8,7 +8,7 @@ from os.path import isdir
 import multiprocessing
 
 pathToMaskFolder = r'D:\mask'
-pathToPrintFolder = r'D:\NewPrint'
+pathToPrintFolder = r'D:\Bookprint'
 pathToDonePrints = r'D:\printsPy'
 
 

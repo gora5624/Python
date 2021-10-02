@@ -273,9 +273,9 @@ def create_WB_barcod(OrderNum, procNum):
     pdf_file = PyPDF2.PdfFileReader(
         open(joinpath(TMPDir, NameWBStikerTMP.format(procNum)), 'rb'))
     page = pdf_file.getPage(0)
-    page.mediaBox.upperRight = (370, 280)
-    page.mediaBox.upperLeft = (20, 280)
-    page.mediaBox.lowerRight = (370, 15)
+    # page.mediaBox.upperRight = (370, 280)
+    # page.mediaBox.upperLeft = (20, 280)
+    # page.mediaBox.lowerRight = (370, 15)
     page.scaleBy(3)
     pdf_writer.addPage(page)
     with open(joinpath(TMPDir, NameWBStiker.format(procNum)), 'wb') as out_file:

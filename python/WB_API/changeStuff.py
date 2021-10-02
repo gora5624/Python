@@ -59,8 +59,11 @@ def getIdWithBarcod(barcod):
                 continue
         except:
             continue
-
-    return response.json()['result']['cards'][0]['imtId']
+    try:
+        return response.json()['result']['cards'][0]['imtId']
+    except:
+        tmp = {'barcod': barcod}
+        TmpLIst.append(tmp)
 
 
 def getCardBody(imtID):
@@ -92,7 +95,7 @@ def getCardBody(imtID):
     return json.loads(response.text)['result']['card']
 
 
-def changeCard(cardBody):
+def changeCard(cardBody, name):
     data = {}
     with open(Token_path, 'r', encoding='UTF-8') as file:
         Token = file.read()
@@ -100,18 +103,9 @@ def changeCard(cardBody):
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
     cardBody['countryProduction'] = 'Китай'
     for addin in cardBody['addin']:
-        if addin['type'] == 'Бренд':
+        if addin['type'] == 'Наименование':
             addin['params'] = [
-                {'value': 'Чехол iPhone 13 Pro'}]
-        if addin['type'] == 'Материал изделия':
-            addin['params'] = [
-                {'value': ''}]
-        if addin['type'] == 'Вид застежки':
-            addin['params'] = [
-                {'value': ''}]
-        if addin['type'] == 'Тип чехлов':
-            addin['params'] = [
-                {'value': ''}]
+                {'value': name}]
     cardBodyNew = {
         "id": '1',
         "jsonrpc": "2.0",
@@ -144,10 +138,10 @@ def cangeCardFromListStuff(pathToListStuff):
         changeCard(cardBody, name)
 
 
-'''cangeCardFromListStuff(pathToListStuff)
+cangeCardFromListStuff(pathToListStuff)
 TmpLIstpd = pandas.DataFrame(TmpLIst)
-TmpLIstpd.to_excel(r'D:\barcodes and art1.xlsx', index=False)'''
+TmpLIstpd.to_excel(r'D:\barcodes and art1.xlsx', index=False)
 
-imtID = getIdWithBarcod('2001898798022')
+'''imtID = getIdWithBarcod('2009040627008')
 cardBody = getCardBody(imtID)
-changeCard(cardBody)
+changeCard(cardBody)'''
