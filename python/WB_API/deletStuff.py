@@ -59,7 +59,7 @@ def getIdWithBarcod(barcod):
                 continue
         except:
             continue
-    a = response.json()['result']['cards'][0]
+
     return response.json()['result']['cards'][0]['nomenclatures'][0]['nmId']
 
 
@@ -68,19 +68,20 @@ def getCardBody(imtID):
     with open(Token_path, 'r', encoding='UTF-8') as file:
         Token = file.read()
         file.close()
-    getCardBodyUrl = 'https://suppliers-api.wildberries.ru/card/cardByImtID'
+    getCardBodyUrl = 'https://suppliers-api.wildberries.ru/card/deleteNomenclature'
 
-    getCardBodyDataJson = {
+    deletCardBodyDataJson = {
+        "id": 1,
         "jsonrpc": "2.0",
         "params": {
-            "imtID": imtID
+            "nomenclatureID": imtID
         }
     }
 
     while True:
         try:
             response = requests.post(getCardBodyUrl, headers={
-                'Authorization': '{}'.format(Token)}, json=getCardBodyDataJson)
+                'Authorization': '{}'.format(Token)}, json=deletCardBodyDataJson)
             if response.status_code == 200:
                 break
             else:
@@ -89,38 +90,40 @@ def getCardBody(imtID):
         except:
             continue
     response
-    return json.loads(response.text)['result']['card']
+    # return json.loads(response.text)['result']['card']
 
 
 def changeCard(cardBody, name):
-    with open(Token_path, 'r', encoding='UTF-8') as file:
-        Token = file.read()
-        file.close()
-    changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
-    cardBody['countryProduction'] = 'Китай'
-    for addin in cardBody['addin']:
-        if addin['type'] == 'Наименование':
-            addin['params'] = [
-                {'value': name}]
-    cardBodyNew = {
-        "id": '1',
-        "jsonrpc": "2.0",
-        "params": {
-            "card": cardBody
-        }
-    }
-    while True:
-        try:
-            response = requests.post(changeCardUrl, headers={
-                'Authorization': '{}'.format(Token)}, json=cardBodyNew)
-            if response.status_code == 200:
-                break
-        except:
-            print('error changeCard')
-            continue
-    TmpLIst.append({'Артикул': cardBody['nomenclatures'][0]['nmId'],
-                    'Баркод': cardBody['nomenclatures'][0]['variations'][0]['barcodes'][0]})
-    print(response.text)
+    pass
+    # with open(Token_path, 'r', encoding='UTF-8') as file:
+    #     Token = file.read()
+    #     file.close()
+    # changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
+    # cardBody['countryProduction'] = 'Китай'
+    # for addin in cardBody['addin']:
+    #     if addin['type'] == 'Наименование':
+    #         addin['params'] = [
+    #             {'value': name}]
+    # cardBodyNew = {
+    #     "id": '1',
+    #     "jsonrpc": "2.0",
+    #     "params": {
+    #         "card": cardBody
+    #     }
+    # }
+    # while True:
+    #     try:
+    #         response = requests.post(changeCardUrl, headers={
+    #             'Authorization': '{}'.format(Token)}, json=cardBodyNew)
+    #         if response.status_code == 200:
+    #             break
+    #     except:
+    #         print('error changeCard')
+    #         continue
+    # for nomenclatures in cardBody['nomenclatures']:
+    # TmpLIst.append({'Артикул': cardBody['nomenclatures'][0]['nmId'],
+    #                 'Баркод': cardBody['nomenclatures'][0]['variations'][0]['barcodes'][0]})
+    # print(response.text)
 
 
 def cangeCardFromListStuff(pathToListStuff):
@@ -131,7 +134,7 @@ def cangeCardFromListStuff(pathToListStuff):
         idStuff = getIdWithBarcod(barcod)
         cardBody = getCardBody(idStuff)
         name = stuffLine['Название']
-        changeCard(cardBody, name)
+        #changeCard(cardBody, name)
 
 
 cangeCardFromListStuff(pathToListStuff)
