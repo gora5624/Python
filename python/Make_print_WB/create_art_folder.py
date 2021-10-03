@@ -4,7 +4,7 @@ from my_lib import read_xlsx, file_exists
 import zipfile
 
 
-path_list_stuff = r'D:\barcodes and art1.XLSX'
+path_list_stuff = r'C:\Users\user\Downloads\report_2021_10_2.XLSX'
 Count_Arh = 200
 
 
@@ -17,18 +17,17 @@ def main(path_list_stuff, model_name):
         for barcod in list_barcod:
             if stuff['Баркод'] == str(barcod[0]):
                 dest_folder = os.path.join(
-                    'D:\Done', str(stuff['Артикул'])[0:-2], 'photo')
+                    'D:\Done', str(stuff['Артикул WB'])[0:-2], 'photo')
                 if not file_exists(os.path.join(
-                        'D:\Done', str(stuff['Артикул'])[0:-2])):
-
+                        'D:\Done', str(stuff['Артикул WB'])[0:-2])):
                     os.mkdir(os.path.join(
-                        'D:\Done', str(stuff['Артикул'])[0:-2]))
+                        'D:\Done', str(stuff['Артикул WB'])[0:-2]))
                 if not file_exists(dest_folder):
                     os.mkdir(dest_folder)
                 orig_folder = os.path.join(
                     'D:\printsPy', model_name, barcod[3] + '.jpg')
                 new_name = os.path.join(
-                    'D:\Done', str(stuff['Артикул'])[0:-2], 'photo', '1.jpg')
+                    'D:\Done', str(stuff['Артикул WB'])[0:-2], 'photo', '1.jpg')
                 new_folder = os.path.join(dest_folder, barcod[3]+'.jpg')
                 copyfile(os.path.join(orig_folder), new_folder)
                 os.rename(new_folder, new_name)
