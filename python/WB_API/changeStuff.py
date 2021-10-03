@@ -60,7 +60,7 @@ def getIdWithBarcod(barcod):
         except:
             continue
     a = response.json()['result']['cards'][0]
-    return response.json()['result']['cards'][0]['nomenclatures'][0]['nmId']
+    return response.json()['result']['cards'][0]['imtId']
 
 
 def getCardBody(imtID):
@@ -90,6 +90,9 @@ def getCardBody(imtID):
             continue
     response
     return json.loads(response.text)['result']['card']
+
+
+name = 'Защитная пленка для iPad 9 10.2 (2021) (айпад 10.2) Защита экрана, бронепленка(не стекло)'
 
 
 def changeCard(cardBody, name):
@@ -134,10 +137,10 @@ def cangeCardFromListStuff(pathToListStuff):
         changeCard(cardBody, name)
 
 
-cangeCardFromListStuff(pathToListStuff)
-TmpLIstpd = pandas.DataFrame(TmpLIst)
-TmpLIstpd.to_excel(r'D:\barcodes and art1.xlsx', index=False)
+# cangeCardFromListStuff(pathToListStuff)
+# TmpLIstpd = pandas.DataFrame(TmpLIst)
+# TmpLIstpd.to_excel(r'D:\barcodes and art1.xlsx', index=False)
 
-'''imtID = getIdWithBarcod('2009040627008')
+imtID = getIdWithBarcod('2008897097002')
 cardBody = getCardBody(imtID)
-changeCard(cardBody)'''
+changeCard(cardBody, name)

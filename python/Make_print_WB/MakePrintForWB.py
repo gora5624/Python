@@ -8,35 +8,43 @@ from os.path import isdir
 import multiprocessing
 
 pathToMaskFolder = r'D:\mask'
-pathToPrintFolder = r'D:\Bookprint'
+pathToPrintFolder = r'D:\NewPrint'
 pathToDonePrints = r'D:\printsPy'
+excelWithPrintAll = []
+lightPath = 'D:\light.png'
+
+
+def getBarcodForPrintMain(donePrint, listCase):
+    excelWithPrint = []
+    for case in listCase:
+        if case['Наименование'].replace('\xa0', ' ') == donePrint:
+            code1C = case['Код 1С']
+            break
+        else:
+            code1C = None
+    pathToPrint = os.path.join('D:\printsPy', donePrint)
+    listPrint = os.listdir(pathToPrint)
+    for Print in listPrint:
+        data = {
+            'Баркод': generate_bar_WB(),
+            'Название 1С': donePrint + ' ' + Print[0:-4],
+            'Код 1С': code1C,
+            'Название принта': Print[0:-4]
+        }
+        excelWithPrint.append(data)
+        excelWithPrintAll.append(data)
+    excelWithPrintpd = pandas.DataFrame(excelWithPrint)
+    excelWithPrintpd.to_excel(os.path.join(
+        pathToDonePrints, donePrint + '.xlsx'), index=False, header=False)
 
 
 def getBarcodForPrint(pathToDonePrints):
     listCase = read_xlsx(r'D:\Список чехлов под печать.xlsx')
-    excelWithPrintAll = []
+    pool = multiprocessing.Pool()
     for donePrint in os.listdir(pathToDonePrints):
-        excelWithPrint = []
-        for case in listCase:
-            if case['Наименование'].replace('\xa0', ' ') == donePrint:
-                code1C = case['Код 1С']
-                break
-            else:
-                code1C = None
-        pathToPrint = os.path.join('D:\printsPy', donePrint)
-        listPrint = os.listdir(pathToPrint)
-        for Print in listPrint:
-            data = {
-                'Баркод': generate_bar_WB(),
-                'Название 1С': donePrint + ' ' + Print[0:-4],
-                'Код 1С': code1C,
-                'Название принта': Print[0:-4]
-            }
-            excelWithPrint.append(data)
-            excelWithPrintAll.append(data)
-        excelWithPrintpd = pandas.DataFrame(excelWithPrint)
-        excelWithPrintpd.to_excel(os.path.join(
-            pathToDonePrints, donePrint + '.xlsx'), index=False, header=False)
+        pool.apply_async(getBarcodForPrintMain, args=(donePrint, listCase,))
+    pool.close()
+    pool.join()
     excelWithPrintAllpd = pandas.DataFrame(excelWithPrintAll)
     excelWithPrintAllpd.to_excel(os.path.join(
         pathToDonePrints, 'AllCasePrint.xlsx'), index=False, header=False)
@@ -72,9 +80,7 @@ def getSizeAndPos(pathToMask):
 
 
 def isPrintWithoutBack(pathToPrint):
-    rgbaPrint = Image.open(pathToPrint).convert(
-        "RGBA").getpixel((700, 30))
-    if rgbaPrint[3] == 0:
+    if file_exists(pathToPrint.replace('NewPrint', 'Bookprint')):
         return False
     else:
         return True
@@ -93,52 +99,66 @@ def Rename_print(pathToPrint):
                           os.path.join(pathToPrint, name+'.jpg'))
 
 
+def makePrintMain(maskFolder, printList, light):
+    lightNew = copy.copy(light)
+    print(maskFolder)
+    pathToBackground = os.path.join(
+        pathToMaskFolder, maskFolder, r'fon.png')
+    BackgroundImageOld = Image.open(pathToBackground)
+
+    if not file_exists(os.path.join(pathToDonePrints, maskFolder)):
+        os.makedirs(os.path.join(pathToDonePrints, maskFolder))
+    for printPath in printList:
+        pathToPrint = os.path.join(pathToPrintFolder, printPath)
+        back = isPrintWithoutBack(pathToPrint)
+        if back:
+            pathToMask = os.path.join(
+                pathToMaskFolder, maskFolder, r'mask.png')
+        else:
+            pathToMask = os.path.join(
+                pathToMaskFolder, maskFolder, r'mask.png')
+        maskImageOld = Image.open(pathToMask).convert("RGBA")
+        maskImage = copy.copy(maskImageOld)
+        maskImageOld.close()
+        BackgroundImage = copy.copy(BackgroundImageOld)
+        xLeft, xRight, yTop, yBott, size = getSizeAndPos(pathToMask)
+        printsize = (xRight-xLeft, yBott-yTop)
+        lighSize = (xRight-xLeft, yBott-yTop)
+        printPaste = (xLeft, yTop)
+        printImage = Image.open(pathToPrint).resize(printsize)
+        lightNew = lightNew.resize(lighSize)
+        BackgroundImage.paste(printImage, (printPaste), printImage)
+        if back:
+            BackgroundImage.paste(lightNew, (printPaste), lightNew)
+        printImage.close()
+        BackgroundImage.paste(maskImage, (0, 0), maskImage)
+        printDone = os.path.join(
+            pathToDonePrints, maskFolder, printPath.replace('png', 'jpg'))
+        BackgroundImage = BackgroundImage.convert('RGB')
+        BackgroundImage = BackgroundImage.resize(
+            (size[0]//3, size[1]//3))
+        BackgroundImage.save(printDone,
+                             quality=70)
+
+
 def makePrint():
     maskFoldersList = os.listdir(pathToMaskFolder)
     printList = os.listdir(pathToPrintFolder)
+    pool = multiprocessing.Pool()
+    light = Image.open(lightPath).convert("RGBA")
     for maskFolder in maskFoldersList:
-
-        print(maskFolder)
-        pathToBackground = os.path.join(
-            pathToMaskFolder, maskFolder, r'fon.png')
-        BackgroundImageOld = Image.open(pathToBackground)
-
-        if not file_exists(os.path.join(pathToDonePrints, maskFolder)):
-            os.makedirs(os.path.join(pathToDonePrints, maskFolder))
-        for printPath in printList:
-            pathToPrint = os.path.join(pathToPrintFolder, printPath)
-            if isPrintWithoutBack(pathToPrint):
-                pathToMask = os.path.join(
-                    pathToMaskFolder, maskFolder, r'mask.png')
-            else:
-                pathToMask = os.path.join(
-                    pathToMaskFolder, maskFolder, r'mask.png')
-            maskImageOld = Image.open(pathToMask).convert("RGBA")
-            maskImage = copy.copy(maskImageOld)
-            maskImageOld.close()
-            BackgroundImage = copy.copy(BackgroundImageOld)
-            xLeft, xRight, yTop, yBott, size = getSizeAndPos(pathToMask)
-            printsize = (xRight-xLeft+10, yBott-yTop+10)
-            printPaste = (xLeft, yTop)
-            printImage = Image.open(pathToPrint).resize(printsize)
-            BackgroundImage.paste(printImage, (printPaste), printImage)
-            printImage.close()
-            BackgroundImage.paste(maskImage, (0, 0), maskImage)
-            printDone = os.path.join(
-                pathToDonePrints, maskFolder, printPath.replace('png', 'jpg'))
-            BackgroundImage = BackgroundImage.convert('RGB')
-            BackgroundImage = BackgroundImage.resize(
-                (size[0]//3, size[1]//3))
-            BackgroundImage.save(printDone,
-                                 quality=70)
+        pool.apply_async(makePrintMain, args=(
+            maskFolder, printList, light))
+    pool.close()
+    pool.join()
 
 
 def main():
 
-    # makePrint()
-    # for dirModel in os.listdir(pathToDonePrints):
-    #     if isdir(os.path.join(pathToDonePrints, dirModel)):
-    #         Rename_print(os.path.join(pathToDonePrints, dirModel))
+    makePrint()
+    for dirModel in os.listdir(pathToDonePrints):
+        if isdir(os.path.join(pathToDonePrints, dirModel)):
+            Rename_print(os.path.join(pathToDonePrints, dirModel))
     getBarcodForPrint(pathToDonePrints)
 
 
