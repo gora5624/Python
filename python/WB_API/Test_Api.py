@@ -1,62 +1,42 @@
+
+from fpdf import FPDF
+from os.path import join as joinpath
+import fpdf
 import os
-import requests
-import pandas
-from datetime import datetime, timedelta
-import multiprocessing
-
-WBOrdersDataFileName = "Заказы полученые {}".format(
-    datetime.today().isoformat('T', 'seconds')).replace(':', '.') + '.xlsx'
 
 
-def getOrdersMain(Token, start_data):
-    while len(tmp1) > 0 or flag:
-        CountTry = 0
-        flag = False
-        while True:
-            CountTry += 1
-            try:
-                response = requests.get(Url.format(start_data, count_skip), headers={
-                    'Authorization': '{}'.format(Token)})
-                if response.status_code == 200:
-                    break
-                elif CountTry > 500:
-                    print("Не удалось достучасться до ВБ")
-                else:
-                    continue
-            except:
-                continue
-        count_skip = count_skip+1000
-        tmp1 = response.json()['orders']
-    return response
+pathToOrders = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
+WBOrdersDataFileName = r'Data_orders.xlsx'
+WBOrdersJsonDataFileName = r'Order.json'
+main_path = r'C:\Users\Public\Documents\WBHelpTools\MakeWBStikersWithName'
+WBOrdersData = joinpath(
+    main_path, r'WBOrdersData')
+TMPDir = joinpath(
+    main_path, r'TMPDir')
+Token_path = joinpath(
+    main_path, r'Token.txt')
+fpdf.set_global("SYSTEM_TTFONTS", os.path.join(
+    os.path.dirname(__file__), r'C:\Windows\Fonts'))
+Name1CStiker = '1c_{}.pdf'
+NameWBStikerTMP = 'WBTMP_{}.pdf'
+NameWBStiker = 'WB_{}.pdf'
+NameSVG = 'WB_{}.svg'
+NameTitle1CStiker = 'Name1.pdf'
+NameEAN13PNG = 'ean13_{}.png'
+NameTable = 'TBL_{}.pdf'
 
 
-def get_orders(days):
-    Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgyYTU2OGZlLTgyNTctNGQ2Yi05ZTg1LTJkYTgxMTgxYWI3MSJ9.ROCdF7eOfTZA-atpsLGTAi15yDzHk2UMes05vwjZwn4'
-    print("Идёт получение свежих заказов, ожидайте...")
-    Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
-    start_data = (datetime.today() - timedelta(days=int(days))).isoformat('T', 'seconds').replace(
-        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
-    count_skip = 0
-    tmp = []
-    tmp1 = []
-    flag = True
-    getOrdersMain
-    t1 = multiprocessing.Process(
-        target=getOrdersMain, args=(Token, start_data,))
-    t1.start()
-    for line in response.json()['orders']:
-        data = {'Дата': line['dateCreated'].split('T')[0],
-                'Баркод': line['barcode'],
-                'Количество': '1',
-                'Цена': str(line['totalPrice'])[0:-2],
-                'Стикер': line['sticker']
-                }
-        tmp.append(data)
-    all_data = pandas.DataFrame(tmp)
-    all_data.to_excel((os.path.join(os.path.join(
-        os.environ['USERPROFILE']), 'Desktop', WBOrdersDataFileName)), index=False)
+def create_CallBackStiker():
+    size = (370, 280)
+    pdf = FPDF(format=size)
+    pdf.add_page()
+    pdf.add_font(
+        'Arial', '', fname="Arial.ttf", uni=True)
+    pdf.set_font('Arial', '', 85)
+    pdf.multi_cell(360, 40, txt="{}".format(
+        'Уважаемый клиент, если у Вас возникли проблемы или вопросы с нашим товаром, свяжитесь с нами по WhatsApp +79096036674.'), align="C")
+    pdf.output(joinpath(TMPDir, NameTitle1CStiker))
+    return joinpath(TMPDir, NameTitle1CStiker)
 
 
-days = input('Введите количество дней: ')
-get_orders(days)
-input('Готово, нажмите Enter')
+create_CallBackStiker()
