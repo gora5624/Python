@@ -8,12 +8,12 @@ from os import makedirs
 import pandas
 from my_lib import read_xlsx
 import json
+import multiprocessing
 
 
-pathToListStuff = r'D:\AllCasePrint.xlsx'
+pathToListStuff = r'D:\new.xlsx'
 main_path = r'C:\Users\Public\Documents\WBGetStuff'
 Token_path = joinpath(main_path, r'Token.txt')
-TmpLIst = []
 
 
 def getIdWithBarcod(barcod):
@@ -92,10 +92,7 @@ def getCardBody(imtID):
     return json.loads(response.text)['result']['card']
 
 
-name = 'Защитная пленка для iPad 9 10.2 (2021) (айпад 10.2) Защита экрана, бронепленка(не стекло)'
-
-
-def changeCard(cardBody, name):
+def changeCard(cardBody, name, TmpLIst):
     with open(Token_path, 'r', encoding='UTF-8') as file:
         Token = file.read()
         file.close()
@@ -116,31 +113,43 @@ def changeCard(cardBody, name):
         try:
             response = requests.post(changeCardUrl, headers={
                 'Authorization': '{}'.format(Token)}, json=cardBodyNew)
-            if response.status_code == 200:
+            if 'error' not in response.text and 'timeout' not in response.text:
                 break
         except:
             print('error changeCard')
             continue
     TmpLIst.append({'Артикул': cardBody['nomenclatures'][0]['nmId'],
                     'Баркод': cardBody['nomenclatures'][0]['variations'][0]['barcodes'][0]})
+    TmpLIst
     print(response.text)
 
 
-def cangeCardFromListStuff(pathToListStuff):
+def changeBody(stuffLine, TmpLIst):
+    barcod = stuffLine['Баркод'] if type(
+        stuffLine['Баркод']) == str else str(stuffLine['Баркод'])[0:-2]
+    idStuff = getIdWithBarcod(barcod)
+    cardBody = getCardBody(idStuff)
+    name = stuffLine['Название']
+    changeCard(cardBody, name, TmpLIst)
+
+
+def cangeCardFromListStuff(pathToListStuff, TmpLIst):
     dataFromLIstStuff = read_xlsx(pathToListStuff)
+    pool = multiprocessing.Pool()
     for stuffLine in dataFromLIstStuff:
-        barcod = stuffLine['Баркод'] if type(
-            stuffLine['Баркод']) == str else str(stuffLine['Баркод'])[0:-2]
-        idStuff = getIdWithBarcod(barcod)
-        cardBody = getCardBody(idStuff)
-        name = stuffLine['Название']
-        changeCard(cardBody, name)
+        pool.apply_async(changeBody, args=(stuffLine, TmpLIst,))
+    pool.close()
+    pool.join()
 
 
-# cangeCardFromListStuff(pathToListStuff)
-# TmpLIstpd = pandas.DataFrame(TmpLIst)
-# TmpLIstpd.to_excel(r'D:\barcodes and art1.xlsx', index=False)
+if __name__ == '__main__':
+    with multiprocessing.Manager() as manager:
+        TmpLIst = manager.list()
+        cangeCardFromListStuff(pathToListStuff, TmpLIst)
+        TmpLIst = list(TmpLIst)
+        TmpLIstpd = pandas.DataFrame(TmpLIst)
+        TmpLIstpd.to_excel(r'D:\barcodes and art1.xlsx', index=False)
 
-imtID = getIdWithBarcod('2008897097002')
-cardBody = getCardBody(imtID)
-changeCard(cardBody, name)
+# imtID = getIdWithBarcod('2008897097002')
+# cardBody = getCardBody(imtID)
+# changeCard(cardBody, name)

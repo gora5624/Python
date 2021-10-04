@@ -2,14 +2,14 @@ import os
 from shutil import copyfile
 from my_lib import read_xlsx, file_exists
 import zipfile
+import multiprocessing
 
 
-path_list_stuff = r'C:\Users\user\Downloads\report_2021_10_2.XLSX'
+path_list_stuff = r'D:\Список номенклатуры — копия.XLSX'
 Count_Arh = 200
 
 
 def main(path_list_stuff, model_name):
-
     list_stuff = read_xlsx(path_list_stuff)
     list_barcod = read_xlsx(
         r'D:\printsPy\{}.xlsx'.format(model_name), title='No')
@@ -31,13 +31,16 @@ def main(path_list_stuff, model_name):
                 new_folder = os.path.join(dest_folder, barcod[3]+'.jpg')
                 copyfile(os.path.join(orig_folder), new_folder)
                 os.rename(new_folder, new_name)
-                print("Done")
+                print(model_name)
 
 
-for fold in os.listdir(r'D:\printsPy'):
-    if os.path.isdir(os.path.join('D:\printsPy', fold)) == True:
-        main(path_list_stuff, fold)
-
+if __name__ == '__main__':
+    pool = multiprocessing.Pool()
+    for fold in os.listdir(r'D:\printsPy'):
+        if os.path.isdir(os.path.join('D:\printsPy', fold)) == True:
+            pool.apply_async(main, args=(path_list_stuff, fold,))
+    pool.close()
+    pool.join()
 i = j = 0
 path_arh = r'D:\Done'
 for dir_ in os.listdir(path_arh):
