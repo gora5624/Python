@@ -14,8 +14,14 @@ Debug = 0
 
 
 main_path = r'C:\Users\Public\Documents\WBGetOrder'
-Token_path = joinpath(main_path, r'Token.txt')
 WBOrdersFileName = 'ФБС {} {} {}.xlsx' if Debug == 0 else 'DEBUG_ФБС {} {} {}.xlsx'
+newOrderPath = joinpath(
+    r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые', WBOrdersFileName)
+inWorkOrderPath = joinpath(
+    r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\В работе', WBOrdersFileName)
+doneOrderPath = joinpath(
+    r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Отработано', WBOrdersFileName)
+Token_path = joinpath(main_path, r'Token.txt')
 WBOrdersData = joinpath(
     main_path, r'WBOrdersData')
 WBErrorsFileName = r'ErrorsBarcod.xlsx'
@@ -95,7 +101,7 @@ def createFileName(FilePath, mode):
     elif mode == 'plankWithPrint':
         nametmp = 'планки принты'
     day = datetime.today().date().strftime(r"%d.%m.%Y")
-    while file_exists(FilePath.format(nametmp, day, piece)):
+    while file_exists(FilePath.format(nametmp, day, piece)) or file_exists(newOrderPath.format(nametmp, day, piece)) or file_exists(inWorkOrderPath.format(nametmp, day, piece)) or file_exists(doneOrderPath.format(nametmp, day, piece)):
         numpiece += 1
         piece = "ч"+str(numpiece)
     return FilePath.format(nametmp, day, piece)
