@@ -455,10 +455,11 @@ def make_glass_body(OrderFileName, mode2, name_sheet, days, procNum):
 
 def make_glass(OrderFileName, days, procNum):
     day = datetime.today().date().strftime(r"%d.%m.%Y")
+    pt = OrderFileName.replace('.xlsx', '')[-2:]
     writer = make_glass_body(OrderFileName, 1, '3D_стекла', days, procNum)
     if writer != 0:
         writer.write(
-            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D1_{}.pdf'.format(day)))
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D1_{}_{}.pdf'.format(day, pt)))
     writer = make_glass_body(OrderFileName, 4, '3D_стекла', days, procNum)
     if writer != 0:
         writer.write(
@@ -466,23 +467,23 @@ def make_glass(OrderFileName, days, procNum):
     writer = make_glass_body(OrderFileName, 1, 'глянец', days, procNum)
     if writer != 0:
         writer.write(
-            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL1_{}.pdf'.format(day)))
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL1_{}_{}.pdf'.format(day, pt)))
     writer = make_glass_body(OrderFileName, 4, 'глянец', days, procNum)
     if writer != 0:
         writer.write(
-            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL2_{}.pdf'.format(day)))
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL2_{}_{}.pdf'.format(day, pt)))
     writer = make_glass_body(OrderFileName, 1, 'матовые', days, procNum)
     if writer != 0:
         writer.write(
-            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT1_{}.pdf'.format(day)))
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT1_{}_{}.pdf'.format(day, pt)))
     writer = make_glass_body(OrderFileName, 4, 'матовые', days, procNum)
     if writer != 0:
         writer.write(
-            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT2_{}.pdf'.format(day)))
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT2_{}_{}.pdf'.format(day, pt)))
     writer = make_glass_body(OrderFileName, 1, 'камеры', days, procNum)
     if writer != 0:
         writer.write(
-            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'Cam_{}.pdf'.format(day)))
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'Cam_{}_{}.pdf'.format(day, pt)))
 
 
 def make_with_table(OrderFileName, mode2, days, procNum):

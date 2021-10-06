@@ -4,7 +4,7 @@ from my_lib import read_xlsx, file_exists
 import zipfile
 
 
-path_list_stuff = r'D:\Список номенклатуры — копия.XLSX'
+path_list_stuff = r'D:\barcodes and art1.xlsx'
 Count_Arh = 200
 
 
