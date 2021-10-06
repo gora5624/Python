@@ -99,11 +99,12 @@ def generate_bar_WB():
                'Content-Type': 'application/json',
                'accept': 'application/json'}
     data = "{\"id\":1,\"jsonrpc\":\"2.0\",\"params\":{\"quantity\":1,\"supplierID\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\"}}"
-
-    try:
-        r = requests.post(url, data=data, headers=headers)
-        data_from_wb = r.json()
-    except:
-        r = requests.post(url, data=data, headers=headers)
-        data_from_wb = r.json()
+    while True:
+        try:
+            r = requests.post(url, data=data, headers=headers)
+            data_from_wb = r.json()
+            break
+        except:
+            continue
+            data_from_wb = r.json()
     return data_from_wb['result']['barcodes'][0]
