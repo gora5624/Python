@@ -6,6 +6,7 @@ from my_lib import read_xlsx
 pathToPrint = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Каталог принтов'
 
 
+
 def Rename_print(pathToPrint):
     list_print_name = os.listdir(
         r'\\192.168.0.33\shared\Отдел производство\Wildberries\оригиналы принтов')
@@ -18,7 +19,7 @@ def Rename_print(pathToPrint):
                 os.rename(os.path.join(pathToPrint, Print),
                           os.path.join(pathToPrint, name+'.png'))
 
-
 '''for dir in os.listdir(pathToPrint):
     Rename_print(os.path.join(pathToPrint, dir))'''
 Rename_print(pathToPrint)
+
