@@ -6,7 +6,6 @@ import multiprocessing
 
 
 path_list_stuff = r'C:\Users\user\Downloads\report_2021_10_5.XLSX'
-Count_Arh = 200
 
 
 def main(path_list_stuff, model_name):
