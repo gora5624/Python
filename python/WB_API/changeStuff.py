@@ -11,7 +11,7 @@ import json
 import multiprocessing
 
 
-pathToListStuff = r'D:\new.xlsx'
+pathToListStuff = r'\\192.168.0.33\shared\Отдел производство\Wildberries\архив\Служебные файлы\Создание номенклатуры на ВБ\Лист Microsoft Excel.xlsx'
 main_path = r'C:\Users\Public\Documents\WBGetStuff'
 Token_path = joinpath(main_path, r'Token.txt')
 
@@ -88,11 +88,11 @@ def getCardBody(imtID):
                 continue
         except:
             continue
-    response
+    a = json.loads(response.text)
     return json.loads(response.text)['result']['card']
 
 
-def changeCard(cardBody, name, TmpLIst):
+def changeCard(cardBody, brand, name, TmpLIst):
     with open(Token_path, 'r', encoding='UTF-8') as file:
         Token = file.read()
         file.close()
@@ -102,6 +102,9 @@ def changeCard(cardBody, name, TmpLIst):
         if addin['type'] == 'Наименование':
             addin['params'] = [
                 {'value': name}]
+        if addin['type'] == 'Бренд':
+            addin['params'] = [
+                {'value': brand}]
     cardBodyNew = {
         "id": '1',
         "jsonrpc": "2.0",
@@ -113,15 +116,17 @@ def changeCard(cardBody, name, TmpLIst):
         try:
             response = requests.post(changeCardUrl, headers={
                 'Authorization': '{}'.format(Token)}, json=cardBodyNew)
-            if 'error' not in response.text and 'timeout' not in response.text:
+            # if 'error' not in response.text and 'timeout' not in response.text:
+            #     break
+            if response.status_code == 200:
                 break
         except:
             print('error changeCard')
             continue
-    TmpLIst.append({'Артикул': cardBody['nomenclatures'][0]['nmId'],
+    TmpLIst.append({'Артикул WB': cardBody['nomenclatures'][0]['nmId'],
                     'Баркод': cardBody['nomenclatures'][0]['variations'][0]['barcodes'][0]})
     TmpLIst
-    print(response.text)
+    print((response.text, name))
 
 
 def changeBody(stuffLine, TmpLIst):
@@ -130,7 +135,8 @@ def changeBody(stuffLine, TmpLIst):
     idStuff = getIdWithBarcod(barcod)
     cardBody = getCardBody(idStuff)
     name = stuffLine['Название']
-    changeCard(cardBody, name, TmpLIst)
+    brand = stuffLine['Бренд']
+    changeCard(cardBody, brand, name, TmpLIst)
 
 
 def cangeCardFromListStuff(pathToListStuff, TmpLIst):
@@ -146,9 +152,9 @@ if __name__ == '__main__':
     with multiprocessing.Manager() as manager:
         TmpLIst = manager.list()
         cangeCardFromListStuff(pathToListStuff, TmpLIst)
-        TmpLIst = list(TmpLIst)
-        TmpLIstpd = pandas.DataFrame(TmpLIst)
-        TmpLIstpd.to_excel(r'D:\barcodes and art1.xlsx', index=False)
+        # TmpLIst = list(TmpLIst)
+        # TmpLIstpd = pandas.DataFrame(TmpLIst)
+        # TmpLIstpd.to_excel(r'D:\barcodes and art1.xlsx', index=False)
 
 # imtID = getIdWithBarcod('2008897097002')
 # cardBody = getCardBody(imtID)

@@ -5,7 +5,7 @@ import zipfile
 import multiprocessing
 
 
-path_list_stuff = r'D:\Список номенклатуры — копия.XLSX'
+path_list_stuff = r'C:\Users\user\Downloads\report_2021_10_5.XLSX'
 Count_Arh = 200
 
 
