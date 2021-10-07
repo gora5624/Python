@@ -472,10 +472,8 @@ def changeStatus(listOrderForChangeStatus, Token):
 
 if startChek() == 0:
     Token = getToken()
-    data = get_orders(Token)
-    mode = choiseMode()
-    changeStatus(orderFilter(data, mode), Token)
     while input("Введите 0 чтобы выйти. Enter продожить получение заказов: ") != '0':
+        data = get_orders(Token)
         mode = choiseMode()
         changeStatus(orderFilter(data, mode), Token)
 
