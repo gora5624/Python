@@ -8,9 +8,9 @@ WBOrdersDataFileName = "Заказы полученые {}".format(
     datetime.today().isoformat('T', 'seconds')).replace(':', '.') + '.xlsx'
 
 
-def getOrdersMain(Token, start_data, Url, tmp1, count_skip, flag):
+# def getOrdersMain(Token, start_data, Url, tmp1, count_skip, flag):
 
-    return response
+#     return response
 
 
 def get_orders(days):
@@ -45,7 +45,11 @@ def get_orders(days):
             data = {'Баркод': int(line['barcode']),
                     'Дата': line['dateCreated'].split('T')[0].split('-')[2]+'.'+line['dateCreated'].split('T')[0].split('-')[1]+'.'+line['dateCreated'].split('T')[0].split('-')[0],
                     'Количество': 1,
-                    'Цена': int(str(line['totalPrice'])[0:-2])
+                    'Цена': int(str(line['totalPrice'])[0:-2]),
+                    'sticker': line['sticker'],
+                    'orderId': line['orderId'],
+                    'userInfo': line['userInfo'],
+                    'officeAddress': line['officeAddress']
                     }
             tmp.append(data)
     all_data = pandas.DataFrame(tmp)
