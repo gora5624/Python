@@ -463,7 +463,7 @@ def make_glass(OrderFileName, days, procNum):
     writer = make_glass_body(OrderFileName, 4, '3D_стекла', days, procNum)
     if writer != 0:
         writer.write(
-            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D2_{}.pdf'.format(day)))
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D2_{}_{}.pdf'.format(day, pt)))
     writer = make_glass_body(OrderFileName, 1, 'глянец', days, procNum)
     if writer != 0:
         writer.write(
