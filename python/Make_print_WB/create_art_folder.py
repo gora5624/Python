@@ -5,13 +5,15 @@ import zipfile
 import multiprocessing
 
 
-path_list_stuff = r'C:\Users\user\Downloads\report_2021_10_5.XLSX'
+path_list_stuff = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список номенклатуры — копия.XLSX'
+Count_Arh = 200
 
 
 def main(path_list_stuff, model_name):
     list_stuff = read_xlsx(path_list_stuff)
     list_barcod = read_xlsx(
-        r'D:\printsPy\{}.xlsx'.format(model_name), title='No')
+        r'D:\printsPy\{}.xlsx'.format(model_name), title='No') if file_exists(
+        r'D:\printsPy\{}.xlsx'.format(model_name)) else read_xlsx(r'D:\printsPy\{}.xls'.format(model_name), title='No')
     for stuff in list_stuff:
         for barcod in list_barcod:
             if stuff['Баркод'] == str(barcod[0]):
