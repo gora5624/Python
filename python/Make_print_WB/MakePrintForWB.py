@@ -163,7 +163,7 @@ def main():
     for dirModel in os.listdir(pathToDonePrints):
         if isdir(os.path.join(pathToDonePrints, dirModel)):
             Rename_print(os.path.join(pathToDonePrints, dirModel))
-    # getBarcodForPrint(pathToDonePrints)
+    getBarcodForPrint(pathToDonePrints)
 
 
 if __name__ == '__main__':
