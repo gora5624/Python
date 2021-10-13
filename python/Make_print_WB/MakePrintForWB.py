@@ -7,11 +7,15 @@ import pandas
 from os.path import isdir
 import multiprocessing
 
+
+Mode = 'All'
+#Mode = 'W  ithOtBack'
+
 pathToMaskFolder = r'D:\mask'
-pathToPrintFolder = r'D:\NewPrint'
+pathToPrintFolder = r'D:\tmp\my_prod\Python\python\Make_print_WB\PrintWithBack' if Mode == 'All' else r'D:\tmp\my_prod\Python\python\Make_print_WB\PrintWithOutBack'
 pathToDonePrints = r'D:\printsPy'
 excelWithPrintAll = []
-lightPath = 'D:\light.png'
+lightPath = 'python\Make_print_WB\light.png'
 
 
 def getBarcodForPrintMain(donePrint, listCase):
@@ -80,7 +84,7 @@ def getSizeAndPos(pathToMask):
 
 
 def isPrintWithoutBack(pathToPrint):
-    if file_exists(pathToPrint.replace('NewPrint', 'Bookprint')):
+    if file_exists(pathToPrint.replace('PrintWithBack', 'PrintWithOutBack')):
         return False
     else:
         return True
@@ -159,7 +163,7 @@ def main():
     for dirModel in os.listdir(pathToDonePrints):
         if isdir(os.path.join(pathToDonePrints, dirModel)):
             Rename_print(os.path.join(pathToDonePrints, dirModel))
-    getBarcodForPrint(pathToDonePrints)
+    # getBarcodForPrint(pathToDonePrints)
 
 
 if __name__ == '__main__':

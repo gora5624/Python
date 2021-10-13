@@ -14,10 +14,11 @@ WBOrdersDataFileName = "Заказы полученые {}".format(
 
 
 def get_orders(days):
-    Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgyYTU2OGZlLTgyNTctNGQ2Yi05ZTg1LTJkYTgxMTgxYWI3MSJ9.ROCdF7eOfTZA-atpsLGTAi15yDzHk2UMes05vwjZwn4'
+    Token = 'Mjc4YzZhY2YtOTlhMS00NDlkLTgwMTctZmFkMDk2YjQzNWEx'
     print("Идёт получение свежих заказов, ожидайте...")
-    Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
-    start_data = (datetime.today() - timedelta(days=int(days))).isoformat('T', 'seconds').replace(
+    # Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
+    Url = ' https://suppliers-stats.wildberries.ru/api/v1/supplier/stocks?dateFrom={}T21%3A00%3A00.000Z&key={}'
+    start_data = (datetime.today()).isoformat('T', 'seconds').replace(
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
     count_skip = 0
     tmp = []
@@ -29,8 +30,9 @@ def get_orders(days):
         while True:
             CountTry += 1
             try:
-                response = requests.get(Url.format(start_data, count_skip), headers={
-                    'Authorization': '{}'.format(Token)})
+                # response = requests.get(Url.format(start_data, count_skip), headers={
+                #     'Authorization': '{}'.format(Token)})
+                response = requests.get(Url.format(start_data, Token))
                 if response.status_code == 200:
                     break
                 elif CountTry > 500:
@@ -57,6 +59,7 @@ def get_orders(days):
         os.environ['USERPROFILE']), 'Desktop', WBOrdersDataFileName)), index=False)
 
 
-days = input('Введите количество дней: ')
+# days = input('Введите количество дней: ')
+days = 1
 get_orders(days)
 input('Готово, нажмите Enter')

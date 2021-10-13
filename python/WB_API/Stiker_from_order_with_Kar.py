@@ -83,7 +83,10 @@ def read_xlsx_by_name(file_path, nameList):
     '''Считывает построчно xlsx файл и возращает список словарей - если title = 'Yes', список списков - если title = 'No'
     '''
     rd = xlrd.open_workbook(file_path)
-    sheet = rd.sheet_by_name(nameList)
+    try:
+        sheet = rd.sheet_by_name('основной')
+    except:
+        sheet = rd.sheet_by_name('Лист1')
     try:
         Name_row = sheet.row_values(0)
     except IndexError:
