@@ -38,7 +38,8 @@ def get_orders(days):
         tmp.append(data)
     all_data = DataFrame(tmp)
     for line in tmp:
-        line['Дата'] = pandas.to_datetime(line['Дата']).date()
+        a = datetime.strptime(line['Дата'], "%Y-%m-%dT%H:%M:%S")
+        line['Дата'] = a.date()
         tmp1.append(line)
     all_data1 = DataFrame(tmp1)
     all_data1.to_excel((os.path.join(os.path.join(
