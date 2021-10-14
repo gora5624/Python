@@ -1,4 +1,6 @@
+from email import header
 from genericpath import isdir
+from operator import mul
 from PIL import Image
 import os
 from my_lib import file_exists, read_xlsx, generate_bar_WB
@@ -9,12 +11,11 @@ import multiprocessing
 
 
 Mode = 'All'
-#Mode = 'W  ithOtBack'
+# Mode = 'WithOtBack'
 
 pathToMaskFolder = r'D:\mask'
 pathToPrintFolder = r'D:\tmp\my_prod\Python\python\Make_print_WB\PrintWithBack' if Mode == 'All' else r'D:\tmp\my_prod\Python\python\Make_print_WB\PrintWithOutBack'
 pathToDonePrints = r'D:\printsPy'
-excelWithPrintAll = []
 lightPath = 'python\Make_print_WB\light.png'
 
 
@@ -36,7 +37,6 @@ def getBarcodForPrintMain(donePrint, listCase):
             'Название принта': Print[0:-4]
         }
         excelWithPrint.append(data)
-        excelWithPrintAll.append(data)
     excelWithPrintpd = pandas.DataFrame(excelWithPrint)
     excelWithPrintpd.to_excel(os.path.join(
         pathToDonePrints, donePrint + '.xlsx'), index=False, header=False)
@@ -46,12 +46,10 @@ def getBarcodForPrint(pathToDonePrints):
     listCase = read_xlsx(r'D:\Список чехлов под печать.xlsx')
     pool = multiprocessing.Pool()
     for donePrint in os.listdir(pathToDonePrints):
-        pool.apply_async(getBarcodForPrintMain, args=(donePrint, listCase,))
+        pool.apply_async(getBarcodForPrintMain,
+                         args=(donePrint, listCase, ))
     pool.close()
     pool.join()
-    excelWithPrintAllpd = pandas.DataFrame(excelWithPrintAll)
-    excelWithPrintAllpd.to_excel(os.path.join(
-        pathToDonePrints, 'AllCasePrint.xlsx'), index=False, header=False)
 
 
 def getSizeAndPos(pathToMask):
@@ -157,13 +155,25 @@ def makePrint():
     pool.join()
 
 
+def ceraterAllCaeXLSX():
+    allCaseList = []
+    for file in os.listdir(pathToDonePrints):
+        if '.xlsx' in file:
+            allCaseList.extend(read_xlsx(os.path.join(
+                pathToDonePrints, file), title='No'))
+    allCaseListpd = pandas.DataFrame(allCaseList)
+    allCaseListpd.to_excel(os.path.join(
+        pathToDonePrints, 'AllCasePrint.xlsx'), index=False, header=False)
+
+
 def main():
 
-    makePrint()
-    for dirModel in os.listdir(pathToDonePrints):
-        if isdir(os.path.join(pathToDonePrints, dirModel)):
-            Rename_print(os.path.join(pathToDonePrints, dirModel))
-    getBarcodForPrint(pathToDonePrints)
+    # makePrint()
+    # for dirModel in os.listdir(pathToDonePrints):
+    #     if isdir(os.path.join(pathToDonePrints, dirModel)):
+    #         Rename_print(os.path.join(pathToDonePrints, dirModel))
+    # getBarcodForPrint(pathToDonePrints)
+    ceraterAllCaeXLSX()
 
 
 if __name__ == '__main__':
