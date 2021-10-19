@@ -1,7 +1,6 @@
 from json import encoder
 from os.path import join as joinpath
 from datetime import datetime, timedelta
-import re
 import requests
 from my_lib import file_exists, read_xlsx
 from os import makedirs
@@ -147,8 +146,8 @@ def changeOneCard(cardBody, name):
         try:
             response = requests.post(changeCardUrl, headers={
                 'Authorization': '{}'.format(Token)}, json=cardBodyNew)
-            # if 'error' not in response.text and 'timeout' not in response.text:
-            #     break
+            if 'error' not in response.text and 'timeout' not in response.text:
+                break
             if response.status_code == 200:
                 break
         except:

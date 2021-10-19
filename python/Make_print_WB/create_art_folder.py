@@ -42,13 +42,13 @@ if __name__ == '__main__':
             pool.apply_async(main, args=(path_list_stuff, fold,))
     pool.close()
     pool.join()
-i = j = 0
-path_arh = r'D:\Done'
-for dir_ in os.listdir(path_arh):
-    if i == Count_Arh:
-        j = j+1
-        i = 0
-    with zipfile.ZipFile(path_arh + '\Done{}.zip'.format(j), 'a') as myzip:
-        myzip.write(os.path.join(path_arh, dir_, 'photo', '1.jpg'),
-                    arcname=os.path.join('D:\\', dir_, 'photo', '1.jpg'))
-    i = i+1
+    i = j = 0
+    path_arh = r'D:\Done'
+    for dir_ in os.listdir(path_arh):
+        if i == Count_Arh:
+            j = j+1
+            i = 0
+        with zipfile.ZipFile(path_arh + '\Done{}.zip'.format(j), 'a') as myzip:
+            myzip.write(os.path.join(path_arh, dir_, 'photo', '1.jpg'),
+                        arcname=os.path.join('D:\\', dir_, 'photo', '1.jpg'))
+        i = i+1

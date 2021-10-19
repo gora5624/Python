@@ -1,6 +1,4 @@
-from email import header
 from genericpath import isdir
-from operator import mul
 from PIL import Image
 import os
 from my_lib import file_exists, read_xlsx, generate_bar_WB
@@ -168,11 +166,11 @@ def ceraterAllCaeXLSX():
 
 def main():
 
-    # makePrint()
-    # for dirModel in os.listdir(pathToDonePrints):
-    #     if isdir(os.path.join(pathToDonePrints, dirModel)):
-    #         Rename_print(os.path.join(pathToDonePrints, dirModel))
-    # getBarcodForPrint(pathToDonePrints)
+    makePrint()
+    for dirModel in os.listdir(pathToDonePrints):
+        if isdir(os.path.join(pathToDonePrints, dirModel)):
+            Rename_print(os.path.join(pathToDonePrints, dirModel))
+    getBarcodForPrint(pathToDonePrints)
     ceraterAllCaeXLSX()
 
 
