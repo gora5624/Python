@@ -564,7 +564,7 @@ def main(text, procNum):
         if 'ч1' in OrderFileName:
             days = 3
         else:
-            days = 1
+            days = 3
         if 'ФБС стекла' in OrderFileName:
             make_glass(OrderFileName, days, procNum)
         elif 'ФБС без принтов' in OrderFileName or 'ФБС планки принты' in OrderFileName:

@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 from os.path import join as joinpath
 import copy
-from os import listdir
+from os import cpu_count, listdir
 from my_lib import read_xlsx
 import multiprocessing
 
@@ -11,7 +11,6 @@ fontPath = joinpath(fontDir, fontName + '.ttf')
 pathToDoneBook = r'D:\NanoBook'
 pathToFile = r'D:\книги.xlsx'
 imageBackPath = r'D:\tmp\my_prod\Python\python\makeWBNanoPic\back'
-imageBackList = listdir(imageBackPath)
 
 
 def openImage(imagePath):
@@ -71,12 +70,16 @@ def makeNanoBookPic(imagePath, line):
     savePic(imageWithText, barcod)
 
 
-def main(imageBackList, pathToFile):
-    for backImage in imageBackList:
-        imagePath = joinpath(imageBackPath, backImage)
+def main(pathToFile):
+    Pool = multiprocessing.Pool()
+    for line in read_xlsx(pathToFile):
+        imagePath = joinpath(
+            imageBackPath, 'gl.jpg' if 'глянцевое' in line['Признак'] else 'mt.jpg')
+        Pool.apply_async(makeNanoBookPic, args=(imagePath, line,))
+        # makeNanoBookPic(imagePath, line)
+    Pool.close()
+    Pool.join()
 
-        for line in read_xlsx(pathToFile):
-            makeNanoBookPic(imagePath, line)
 
-
-main(imageBackList, pathToFile)
+if __name__ == '__main__':
+    main(pathToFile)
