@@ -8,7 +8,7 @@ from shutil import copyfile
 
 
 # Режим отладки 1 - да, 0 - боевой режим
-Debug = 0
+Debug = 1
 stopList = ['2009539898001', '2009539892009', '2009539656007',
             '2009539490007', '2009539287003', '2009538490008']
 
@@ -67,14 +67,41 @@ def recreate_data(CaseList):
     return data_new
 
 
+def getStiker(OrderNum):
+    OrderNum = OrderNum if type(OrderNum) != float else int(OrderNum)[0:-2]
+    with open(Token_path, 'r', encoding='UTF-8') as file:
+        Token = file.read()
+        file.close()
+    UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
+    trying = 0
+    OrderNumJson = {"orderIds": [int(OrderNum)]}
+    while True:
+        trying += 1
+        try:
+            response = requests.post(UrlStiker, headers={
+                'Authorization': '{}'.format(Token)}, json=OrderNumJson)
+            if response.status_code == 200:
+                break
+            elif trying > 500:
+                print("Не удолось достучаться до сервера ВБ")
+                return 1
+            else:
+                continue
+        except:
+            continue
+    a = response.json()
+    a
+    return response.json()['data'][0]['sticker']
+
+
 def createLineForExcel(line, caseData):
     """Создаёт строку для записи в лист заказа нужного нам формата"""
     barcod = line['barcode'] if type(
         line['barcode']) == str else str(line['barcode'])[0:-2]
-    # stiker = line['sticker']["wbStickerIdParts"]['A'] + \
-    #     ' ' + line['sticker']["wbStickerIdParts"]['B']
     orderNum = line['orderId'] if type(
         line['orderId']) == str else str(line['orderId'])[0:-2]
+    # stiker = getStiker(orderNum)["wbStickerIdParts"]['A'] + \
+    #     ' ' + getStiker(orderNum)["wbStickerIdParts"]['B']
     lineExcel = {'Название': caseData[barcod]['Название 1С'],
                  #  'Этикетка': stiker,
                  'Код': caseData[barcod]['Код'],
@@ -223,8 +250,8 @@ def createPrintExcel(listOrderForChangeStatus, fileName):
         OrderLineData = {
             'Номер задания': orderLine['Номер задания'],
             'Название': orderLine['Название'],
-            'Размер': size,
-            'Этикетка': orderLine['Этикетка']}
+            'Размер': size}
+        # 'Этикетка': orderLine['Этикетка']}
         listOrderForTable.append(OrderLineData)
     listOrderForTablepd = pandas.DataFrame(listOrderForTable)
     with pandas.ExcelWriter(fileName) as writerCase:
