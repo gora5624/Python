@@ -30,16 +30,22 @@ def get_orders(days):
         except:
             continue
     for line in response.json():
-        #Date = line['date'].split('T')[0].split('-')
+        if line['incomeID'] == 0:
+            orderType = 'ФБС'
+        else:
+            orderType = 'ФБО'
+        #Date = line['date'].split('T')[0]
         data = {'Баркод': int(line['barcode']),
                 'Дата': line['date'],
                 'Количество': 1,
-                'Цена': int(line['totalPrice'])}
-        tmp.append(line)
+                'Цена': int(line['totalPrice']),
+                'Тип заказа': orderType}
+        # tmp.append(line)
+        tmp.append(data)
     all_data = DataFrame(tmp)
     for line in tmp:
-        # a = datetime.strptime(line['Дата'], "%Y-%m-%dT%H:%M:%S")
-        # line['Дата'] = a.date()
+        a = datetime.strptime(line['Дата'], "%Y-%m-%dT%H:%M:%S")
+        line['Дата'] = a.date()
         tmp1.append(line)
     all_data1 = DataFrame(tmp1)
     all_data1.to_excel((os.path.join(os.path.join(

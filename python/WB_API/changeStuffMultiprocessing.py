@@ -1,22 +1,23 @@
-from json import encoder
+
 from os.path import join as joinpath
-from datetime import datetime, timedelta
-import re
 import requests
-from my_lib import file_exists, read_xlsx
-from os import makedirs
-import pandas
 from my_lib import read_xlsx
+import pandas
 import json
 import multiprocessing
 
 
-pathToListStuff = r'D:\Лист Microsoft Excel.xlsx'
-main_path = r'C:\Users\Public\Documents\WBGetStuff'
+main_path = r'C:\Users\Public\Documents\WBChangeStuff'
+nameListStuff = r'StuffList.xlsx'
+pathToListStuff = joinpath(main_path, nameListStuff)
 Token_path = joinpath(main_path, r'Token.txt')
+outListName = 'barcodes and art.xlsx'
+outListName2 = 'barcodes and art2.xlsx'
+outListPath = joinpath(main_path, outListName)
+outListPath2 = joinpath(main_path, outListName2)
 
 
-def getIdWithBarcod(barcod):
+def getIdWithBarcod(barcod, TmpLIst2):
     with open(Token_path, 'r', encoding='UTF-8') as file:
         Token = file.read()
         file.close()
@@ -99,41 +100,7 @@ def changeCard(cardBody, name, TmpLIst):
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
     cardBody['countryProduction'] = 'Китай'
     for addin in cardBody['addin']:
-        if addin['type'] == 'Описание':
-            addin['params'] = [
-                {'value': name}]
-    cardBodyNew = {
-        "id": '1',
-        "jsonrpc": "2.0",
-        "params": {
-            "card": cardBody
-        }
-    }
-    while True:
-        try:
-            response = requests.post(changeCardUrl, headers={
-                'Authorization': '{}'.format(Token)}, json=cardBodyNew)
-            # if 'error' not in response.text and 'timeout' not in response.text:
-            #     break
-            if response.status_code == 200:
-                break
-        except:
-            print('error changeCard')
-            continue
-    for nomenclature in cardBody['nomenclatures']:
-        TmpLIst.append({'Артикул WB': nomenclature['nmId'],
-                        'Баркод': nomenclature['variations'][0]['barcodes'][0]})
-    print((response.text, name))
-
-
-def changeOneCard(cardBody, name):
-    with open(Token_path, 'r', encoding='UTF-8') as file:
-        Token = file.read()
-        file.close()
-    changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
-    cardBody['countryProduction'] = 'Китай'
-    for addin in cardBody['addin']:
-        if addin['type'] == 'Описание':
+        if addin['type'] == 'Название':
             addin['params'] = [
                 {'value': name}]
     cardBodyNew = {
@@ -154,24 +121,58 @@ def changeOneCard(cardBody, name):
         except:
             print('error changeCard')
             continue
+    for nomenclature in cardBody['nomenclatures']:
+        TmpLIst.append({'Артикул WB': nomenclature['nmId'],
+                        'Баркод': nomenclature['variations'][0]['barcodes'][0]})
+    print((response.text, name))
+
+
+def changeOneCard(cardBody, name):
+    with open(Token_path, 'r', encoding='UTF-8') as file:
+        Token = file.read()
+        file.close()
+    changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
+    cardBody['countryProduction'] = 'Китай'
+    for addin in cardBody['addin']:
+        if addin['type'] == 'Название':
+            addin['params'] = [
+                {'value': name}]
+    cardBodyNew = {
+        "id": '1',
+        "jsonrpc": "2.0",
+        "params": {
+            "card": cardBody
+        }
+    }
+    while True:
+        try:
+            response = requests.post(changeCardUrl, headers={
+                'Authorization': '{}'.format(Token)}, json=cardBodyNew)
+            if response.status_code == 200 and 'err' not in response.text and 'timeout' not in response.text:
+                break
+        except:
+            print('error changeCard')
+            continue
     print((response.text))
 
 
-def changeBody(stuffLine, TmpLIst):
+def changeBody(stuffLine, TmpLIst, TmpLIst2):
     barcod = stuffLine['Баркод'] if type(
         stuffLine['Баркод']) == str else str(stuffLine['Баркод'])[0:-2]
-    idStuff = getIdWithBarcod(barcod)
+    idStuff = getIdWithBarcod(barcod, TmpLIst2)
+    if idStuff == 0:
+        return 0
     cardBody = getCardBody(idStuff)
     #name = stuffLine['Название']
-    name = 'Внимание! Стекла меньше смартфона по краю на 1мм. Данный отступ служит для удобного ношения стекла с защитным силиконовым чехлом. Если такого зазора не будет чехол будет поднимать защитное стекло и испортит его.'
+    name = stuffLine['Название']
     changeCard(cardBody, name, TmpLIst)
 
 
-def cangeCardFromListStuff(pathToListStuff, TmpLIst):
+def cangeCardFromListStuff(pathToListStuff, TmpLIst, TmpLIst2):
     dataFromLIstStuff = read_xlsx(pathToListStuff)
     pool = multiprocessing.Pool()
     for stuffLine in dataFromLIstStuff:
-        pool.apply_async(changeBody, args=(stuffLine, TmpLIst,))
+        pool.apply_async(changeBody, args=(stuffLine, TmpLIst, TmpLIst2,))
     pool.close()
     pool.join()
 
@@ -179,10 +180,14 @@ def cangeCardFromListStuff(pathToListStuff, TmpLIst):
 if __name__ == '__main__':
     with multiprocessing.Manager() as manager:
         TmpLIst = manager.list()
-        cangeCardFromListStuff(pathToListStuff, TmpLIst)
+        TmpLIst2 = manager.list()
+        cangeCardFromListStuff(pathToListStuff, TmpLIst, TmpLIst2)
         TmpLIst = list(TmpLIst)
+        TmpLIst2 = list(TmpLIst2)
         TmpLIstpd = pandas.DataFrame(TmpLIst)
-        TmpLIstpd.to_excel(r'D:\barcodes and art1.xlsx', index=False)
+        TmpLIstpd2 = pandas.DataFrame(TmpLIst2)
+        TmpLIstpd.to_excel(outListPath, index=False)
+        TmpLIstpd2.to_excel(outListPath2, index=False)
 
 # imtID = getIdWithBarcod('2010027247003')
 # cardBody = getCardBody(imtID)

@@ -5,7 +5,7 @@ import zipfile
 import multiprocessing
 
 
-path_list_stuff = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список номенклатуры — копия.XLSX'
+path_list_stuff = r'C:\Users\Public\Documents\WBChangeStuff\barcodes and art.xlsx'
 Count_Arh = 200
 
 
@@ -31,7 +31,10 @@ def main(path_list_stuff, model_name):
                     'D:\Done', str(stuff['Артикул WB'])[0:-2], 'photo', '1.jpg')
                 new_folder = os.path.join(dest_folder, barcod[3]+'.jpg')
                 copyfile(os.path.join(orig_folder), new_folder)
-                os.rename(new_folder, new_name)
+                try:
+                    os.rename(new_folder, new_name)
+                except FileExistsError:
+                    continue
                 print(model_name)
 
 
