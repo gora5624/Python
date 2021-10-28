@@ -9,6 +9,8 @@ import time
 
 
 url = 'https://www.wildberries.ru/catalog/{}/detail.aspx?targetUrl=XS'
+mainDir = r'C:\Users\Public\Documents\DownloadImagesFromWB'
+listForDownloadsName = r'ListForDownloads.xlsx'
 
 
 def get_html(url):
@@ -81,7 +83,7 @@ def getImageFromList():
     #         pool.apply_async(bodyMain, args=(art,))
     # pool.close()
     # pool.join()
-    for art_ in read_xlsx('D:\Лист Microsoft Excel.xlsx'):
+    for art_ in read_xlsx(os.path.join(mainDir, listForDownloadsName)):
         art = str(art_['Артикул'])[0:-2]
         if file_exists(r'D:\image\{}\photo'.format(art)):
             continue

@@ -17,35 +17,39 @@ pathToDonePrints = r'D:\printsPy'
 lightPath = 'python\Make_print_WB\light.png'
 
 
-def getBarcodForPrintMain(donePrint, listCase):
-    excelWithPrint = []
-    for case in listCase:
-        if case['Наименование'].replace('\xa0', ' ') == donePrint:
-            code1C = case['Код 1С']
-            break
-        else:
-            code1C = None
-    pathToPrint = os.path.join('D:\printsPy', donePrint)
-    listPrint = os.listdir(pathToPrint)
-    for Print in listPrint:
-        data = {
-            'Баркод': generate_bar_WB(),
-            'Название 1С': donePrint + ' ' + Print[0:-4],
-            'Код 1С': code1C,
-            'Название принта': Print[0:-4]
-        }
-        excelWithPrint.append(data)
-    excelWithPrintpd = pandas.DataFrame(excelWithPrint)
-    excelWithPrintpd.to_excel(os.path.join(
-        pathToDonePrints, donePrint + '.xlsx'), index=False, header=False)
+def getBarcodForPrintMain(donePrint):
+    if not file_exists(os.path.join(
+            pathToDonePrints, donePrint + '.xlsx') if '.xlsx'not in donePrint else os.path.join(
+            pathToDonePrints, donePrint)):
+
+        excelWithPrint = []
+        # for case in listCase:
+        #     if case['Наименование'].replace('\xa0', ' ') == donePrint:
+        #         code1C = case['Код 1С']
+        #         break
+        #     else:
+        code1C = None
+        pathToPrint = os.path.join('D:\printsPy', donePrint)
+        listPrint = os.listdir(pathToPrint)
+        for Print in listPrint:
+            data = {
+                'Баркод': generate_bar_WB(),
+                'Название 1С': donePrint + ' ' + Print[0:-4],
+                'Код 1С': code1C,
+                'Название принта': Print[0:-4]
+            }
+            excelWithPrint.append(data)
+        excelWithPrintpd = pandas.DataFrame(excelWithPrint)
+        excelWithPrintpd.to_excel(os.path.join(
+            pathToDonePrints, donePrint + '.xlsx'), index=False, header=False)
 
 
 def getBarcodForPrint(pathToDonePrints):
-    listCase = read_xlsx(r'D:\Список чехлов под печать.xlsx')
+    #listCase = read_xlsx(r'D:\Список чехлов под печать.xlsx')
     pool = multiprocessing.Pool()
     for donePrint in os.listdir(pathToDonePrints):
         pool.apply_async(getBarcodForPrintMain,
-                         args=(donePrint, listCase, ))
+                         args=(donePrint, ))
     pool.close()
     pool.join()
 
@@ -122,14 +126,15 @@ def makePrintMain(maskFolder, printList, light):
         maskImageOld.close()
         BackgroundImage = copy.copy(BackgroundImageOld)
         xLeft, xRight, yTop, yBott, size = getSizeAndPos(pathToMask)
-        printsize = (xRight-xLeft, yBott-yTop)
+        printsize = (xRight-xLeft+5, yBott-yTop+5)
         lighSize = (xRight-xLeft, yBott-yTop)
         printPaste = (xLeft, yTop)
+        lighPaste = (xLeft, yTop)
         printImage = Image.open(pathToPrint).resize(printsize)
         lightNew = lightNew.resize(lighSize)
         BackgroundImage.paste(printImage, (printPaste), printImage)
         if back:
-            BackgroundImage.paste(lightNew, (printPaste), lightNew)
+            BackgroundImage.paste(lightNew, (lighPaste), lightNew)
         printImage.close()
         BackgroundImage.paste(maskImage, (0, 0), maskImage)
         printDone = os.path.join(
@@ -153,7 +158,7 @@ def makePrint():
     pool.join()
 
 
-def ceraterAllCaeXLSX():
+def ceraterAllCaseXLSX():
     allCaseList = []
     for file in os.listdir(pathToDonePrints):
         if '.xlsx' in file:
@@ -170,8 +175,8 @@ def main():
     for dirModel in os.listdir(pathToDonePrints):
         if isdir(os.path.join(pathToDonePrints, dirModel)):
             Rename_print(os.path.join(pathToDonePrints, dirModel))
-    getBarcodForPrint(pathToDonePrints)
-    ceraterAllCaeXLSX()
+    # getBarcodForPrint(pathToDonePrints)
+    # ceraterAllCaseXLSX()
 
 
 if __name__ == '__main__':

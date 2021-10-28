@@ -84,9 +84,9 @@ def read_xlsx_by_name(file_path, nameList):
     '''
     rd = xlrd.open_workbook(file_path)
     try:
-        sheet = rd.sheet_by_name('основной')
+        sheet = rd.sheet_by_name(nameList)
     except:
-        sheet = rd.sheet_by_name('Лист1')
+        sheet = rd.sheet_by_name('основной')
     try:
         Name_row = sheet.row_values(0)
     except IndexError:
@@ -110,7 +110,7 @@ def get_orders(days):
     print("Идёт получение свежих заказов, ожидайте...")
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
 
-    start_data = (datetime.today() - timedelta(days=int(days))).isoformat('T', 'seconds').replace(
+    start_data = (datetime.today() - timedelta(days=int(20))).isoformat('T', 'seconds').replace(
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
     count_skip = 0
     data = '123'
@@ -196,9 +196,9 @@ def create_WB_barcod(Base64):
     pdf_file = PyPDF2.PdfFileReader(
         open(joinpath(TMPDir, r'WB_barcod_tmp.PDF'), 'rb'))
     page = pdf_file.getPage(0)
-    page.mediaBox.upperRight = (370, 280)
-    page.mediaBox.upperLeft = (20, 280)
-    page.mediaBox.lowerRight = (370, 15)
+    # page.mediaBox.upperRight = (370, 280)
+    # page.mediaBox.upperLeft = (20, 280)
+    # page.mediaBox.lowerRight = (370, 15)
     page.scaleBy(3)
     pdf_writer.addPage(page)
     with open(joinpath(TMPDir, r'WB_barcod.PDF'), 'wb') as out_file:
@@ -462,7 +462,7 @@ def make_with_table(OrderFileName, mode2, days):
                    'Стикер64': data_about_order[num_ord]['Стикер64']}
         except KeyError:
             get_orders(days)
-            return make_with_table(OrderFileName, mode2)
+            return make_with_table(OrderFileName, mode2, days)
         data_for_print[num_ord].append(tmp)
     writer = PdfWriter()
     table_num = 1

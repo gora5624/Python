@@ -3,6 +3,7 @@ import requests
 import pandas
 from datetime import datetime, timedelta
 import multiprocessing
+import time
 
 WBOrdersDataFileName = "Заказы полученые {}".format(
     datetime.today().isoformat('T', 'seconds')).replace(':', '.') + '.xlsx'
@@ -13,20 +14,20 @@ def get_orders():
     Token = 'Mjc4YzZhY2YtOTlhMS00NDlkLTgwMTctZmFkMDk2YjQzNWEx'
     print("Идёт получение свежих заказов, ожидайте...")
     #Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
-    #Url = ' https://suppliers-stats.wildberries.ru/api/v1/supplier/stocks?dateFrom={}Z&key={}'
-    Url = 'https://suppliers-stats.wildberries.ru/api/v1/supplier/orders?dateFrom={}Z&flag=1&key={}'
-    start_data = ((datetime.today() - timedelta(hours=int(i)))).isoformat('T', 'seconds').replace(
-        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+    Url = ' https://suppliers-stats.wildberries.ru/api/v1/supplier/stocks?dateFrom={}Z&key={}'
+    #Url = 'https://suppliers-stats.wildberries.ru/api/v1/supplier/orders?dateFrom={}Z&flag=1&key={}'
     tmp = []
     all_data = []
     a = 0
     while a == 0:
-        start_data = ((datetime.today() - timedelta(hours=int(48)))).isoformat('T', 'seconds').replace(
+        start_data = ((datetime.today() - timedelta(hours=int(11)))).isoformat('T', 'seconds').replace(
             ':', '%3A').replace('+', '%2B').replace('.', '%2E')
         try:
             response = requests.get(Url.format(start_data, Token))
             i += 1
             a = len(response.json())
+            if response.status_code == 429:
+                time.sleep(10)
 
         except:
             continue
