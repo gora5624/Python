@@ -1,17 +1,16 @@
 from os.path import join as joinpath
 from datetime import datetime, timedelta
-import re
 import requests
 from my_lib import file_exists, read_xlsx
 from os import makedirs
 import pandas
 from shutil import copyfile
-import json
 
 
 # Режим отладки 1 - да, 0 - боевой режим
 Debug = 0
-
+stopList = ['2009539898001', '2009539892009', '2009539656007',
+            '2009539490007', '2009539287003', '2009538490008']
 
 main_path = r'C:\Users\Public\Documents\WBGetOrder'
 WBOrdersFileName = 'ФБС {} {} {}.xlsx' if Debug == 0 else 'DEBUG_ФБС {} {} {}.xlsx'
@@ -72,12 +71,12 @@ def createLineForExcel(line, caseData):
     """Создаёт строку для записи в лист заказа нужного нам формата"""
     barcod = line['barcode'] if type(
         line['barcode']) == str else str(line['barcode'])[0:-2]
-    stiker = line['sticker']["wbStickerIdParts"]['A'] + \
-        ' ' + line['sticker']["wbStickerIdParts"]['B']
+    # stiker = line['sticker']["wbStickerIdParts"]['A'] + \
+    #     ' ' + line['sticker']["wbStickerIdParts"]['B']
     orderNum = line['orderId'] if type(
         line['orderId']) == str else str(line['orderId'])[0:-2]
     lineExcel = {'Название': caseData[barcod]['Название 1С'],
-                 'Этикетка': stiker,
+                 #  'Этикетка': stiker,
                  'Код': caseData[barcod]['Код'],
                  'ШК': barcod,
                  'Количество': '1',
@@ -104,11 +103,26 @@ def createFileName(FilePath, mode):
     while file_exists(FilePath.format(nametmp, day, piece)) or file_exists(newOrderPath.format(nametmp, day, piece)) or file_exists(inWorkOrderPath.format(nametmp, day, piece)) or file_exists(doneOrderPath.format(nametmp, day, piece)):
         numpiece += 1
         piece = "ч"+str(numpiece)
+    print(FilePath.format(nametmp, day, piece))
     return FilePath.format(nametmp, day, piece)
+
+
+def getCountGlass(stuffNameIn1C):
+    try:
+        komplect = stuffNameIn1C.split(':')[0]
+    except:
+        return 1
+    for let in komplect:
+        try:
+            return int(let)
+        except:
+            continue
+    return 1
 
 
 def getGlassType(stuffNameIn1C):
     """Если в заказе стекло, определяем дополнительно какое это стекло для разделения"""
+    countGlass = getCountGlass(stuffNameIn1C)
     if "наностекло" in stuffNameIn1C or "пленка" in stuffNameIn1C:
         if "матов" in stuffNameIn1C:
             GlassType = "nanoglassMate"
@@ -118,13 +132,14 @@ def getGlassType(stuffNameIn1C):
             GlassType = "nanoglassCamera"
         else:
             GlassType = 0
-    elif ("Fullscreen" in stuffNameIn1C) or ('3D' in stuffNameIn1C):
+    elif ("Fullscreen" in stuffNameIn1C) or ('3D' in stuffNameIn1C) or ('керамич' in stuffNameIn1C):
         GlassType = "glass3D"
-    return GlassType
+    return GlassType, countGlass
 
 
 def getStuffType(barcodForGetType, caseData):
     """Определяем с каким товаром сейчас работаем, принты, не принты, стекло и т.п."""
+
     stuffType = 0
     stuffNameIn1C = caseData[barcodForGetType
                              ]['Название 1С'].lower()
@@ -181,6 +196,18 @@ def createNormalFromPrint(listOrderForChangeStatus):
     return dataForOrder
 
 
+def createlineForOrderGlass(listOrderForChangeStatus):
+    lineForOrderGlass = []
+    for lineGlass in listOrderForChangeStatus:
+        glassType, countGlass = getGlassType(lineGlass['Название'])
+        if glassType == 'glass3D':
+            nameGlassNew = lineGlass['Название'].split('для ')[1]
+            data = {'Название': nameGlassNew,
+                    'Количество': countGlass}
+            lineForOrderGlass.append(data)
+    return lineForOrderGlass
+
+
 def createPrintExcel(listOrderForChangeStatus, fileName):
     listOrderForChangeStatuspd = pandas.DataFrame(listOrderForChangeStatus)
     listOrderForChangeOrders = createNormalFromPrint(
@@ -200,7 +227,7 @@ def createPrintExcel(listOrderForChangeStatus, fileName):
             'Этикетка': orderLine['Этикетка']}
         listOrderForTable.append(OrderLineData)
     listOrderForTablepd = pandas.DataFrame(listOrderForTable)
-    with pandas.ExcelWriter(createFileName(fileName, mode)) as writerCase:
+    with pandas.ExcelWriter(fileName) as writerCase:
         listOrderForChangeStatuspd.sort_values(
             'Название').to_excel(writerCase, sheet_name='основной', index=False)
         listOrderForTablepd.sort_values(
@@ -237,21 +264,33 @@ def createExcel(listOrderForChangeStatus, listErrorBarcods, mode):
         listMateNanoglass = []
         listCameraNanoglass = []
         for lineGlass in listOrderForChangeStatus:
-            glassType = getGlassType(lineGlass['Название'])
+            glassType, countGlass = getGlassType(lineGlass['Название'])
             if glassType == 'glass3D':
+                lineGlass['Количество'] = countGlass
                 list3DGlass.append(lineGlass)
             elif glassType == 'nanoglassClear':
+                lineGlass['Количество'] = countGlass
                 listClearNanoglass.append(lineGlass)
             elif glassType == 'nanoglassMate':
+                lineGlass['Количество'] = countGlass
                 listMateNanoglass.append(lineGlass)
             elif glassType == 'nanoglassCamera':
+                lineGlass['Количество'] = countGlass
                 listCameraNanoglass.append(lineGlass)
+        listForOrder3D = createlineForOrderGlass(listOrderForChangeStatus)
+        listForOrder3Dpd = pandas.DataFrame(listForOrder3D)
         list3DGlass = pandas.DataFrame(list3DGlass)
         listClearNanoglass = pandas.DataFrame(listClearNanoglass)
         listMateNanoglass = pandas.DataFrame(listMateNanoglass)
         listCameraNanoglass = pandas.DataFrame(listCameraNanoglass)
         fileName = createFileName(FilePath, mode)
         with pandas.ExcelWriter(fileName) as writerglass:
+            try:
+                listForOrder3Dpd.groupby(['Название']).sum().reset_index().to_excel(
+                    writerglass, sheet_name='Заказ_3D', index=False)
+            except KeyError:
+                listForOrder3Dpd.to_excel(
+                    writerglass, sheet_name='Заказ_3D', index=False)
             try:
                 list3DGlass.sort_values(
                     'Название').to_excel(
@@ -291,6 +330,8 @@ def orderFilter(ordersForFilter, mode):
     listErrorBarcods = []
 
     for lineOrdersForFilter in ordersForFilter:
+        if lineOrdersForFilter['barcode'] in stopList:
+            continue
         if lineOrdersForFilter['status'] == 0:
 
             try:
@@ -436,10 +477,10 @@ def get_orders(Token, days=4):
         count_skip = count_skip+1000
         tmp = response.json()['orders']
         dataorders.extend(tmp)
-        for line in dataorders:
-            line.update(wbStickerEncoded=line['sticker']['wbStickerEncoded'])
-            line.update(
-                wbStickerSvgBase64=line['sticker']['wbStickerSvgBase64'])
+        # for line in dataorders:
+        #     line.update(wbStickerEncoded=line['sticker']['wbStickerEncoded'])
+        #     line.update(
+        #         wbStickerSvgBase64=line['sticker']['wbStickerSvgBase64'])
     all_data = pandas.DataFrame(dataorders)
     all_data.to_excel(joinpath(WBOrdersData,
                                WBOrdersDataFileName), index=False)
