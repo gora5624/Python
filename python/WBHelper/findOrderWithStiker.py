@@ -68,9 +68,12 @@ def read_xlsx(file_path, title='Yes'):
 
 def findLineOrder(fileOrder, stiker):
     for line in fileOrder:
-        if line['Этикетка'] == stiker:
-            print((line['Название'], line['ШК'], line['Номер задания']))
-            return True
+        try:
+            if line['Этикетка'] == stiker:
+                print((line['Название'], line['ШК'], line['Номер задания']))
+                return True
+        except:
+            return False
     return False
 
 
