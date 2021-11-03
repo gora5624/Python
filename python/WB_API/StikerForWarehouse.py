@@ -76,9 +76,9 @@ def create_1C_barcod(count, art='', case_name='', case_art='', bar=''):
                           os.path.basename(case_name + '.pdf')))
 
 
-case_name = 'Чехол для Realme C21Y силикон с закрытой камерой с усиленными углами прозрачный'
-case_art = 'Realme_C21Y_силПрозрачныйСусиленнымиУглами'
-bar = '2008965272720'
+case_name = ''
+case_art = ''
+bar = ''
 count = 300
 art = ''
 

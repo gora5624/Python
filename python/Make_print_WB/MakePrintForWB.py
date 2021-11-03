@@ -126,7 +126,7 @@ def makePrintMain(maskFolder, printList, light):
         maskImageOld.close()
         BackgroundImage = copy.copy(BackgroundImageOld)
         xLeft, xRight, yTop, yBott, size = getSizeAndPos(pathToMask)
-        printsize = (xRight-xLeft+5, yBott-yTop+5)
+        printsize = (xRight-xLeft, yBott-yTop)
         lighSize = (xRight-xLeft, yBott-yTop)
         printPaste = (xLeft, yTop)
         lighPaste = (xLeft, yTop)
@@ -175,8 +175,8 @@ def main():
     for dirModel in os.listdir(pathToDonePrints):
         if isdir(os.path.join(pathToDonePrints, dirModel)):
             Rename_print(os.path.join(pathToDonePrints, dirModel))
-    # getBarcodForPrint(pathToDonePrints)
-    # ceraterAllCaseXLSX()
+    getBarcodForPrint(pathToDonePrints)
+    ceraterAllCaseXLSX()
 
 
 if __name__ == '__main__':
