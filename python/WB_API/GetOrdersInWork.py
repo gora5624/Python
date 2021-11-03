@@ -457,7 +457,7 @@ def splitOrders(listOrderForChangeStatus, listErrorBarcods):
     countOrder = len(listOrderForChangeStatus)
     print(countOrder)
     countOrdersFiles = 1
-    while 140 <= countOrder // countOrdersFiles >= 160:
+    while 90 <= countOrder // countOrdersFiles >= 130:
         countOrdersFiles += 1
     orders = []
     i = 0
@@ -502,7 +502,7 @@ def choiseMode():
     return mode
 
 
-def get_orders(Token, days=4):
+def get_orders(Token, days=10):
     """Получает заказы за последние 4 дня"""
     print("Идёт получение свежих заказов, ожидайте...")
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
