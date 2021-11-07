@@ -14,7 +14,7 @@ Mode = 'All'
 pathToMaskFolder = r'D:\mask'
 pathToPrintFolder = r'D:\tmp\my_prod\Python\python\Make_print_WB\PrintWithBack' if Mode == 'All' else r'D:\tmp\my_prod\Python\python\Make_print_WB\PrintWithOutBack'
 pathToDonePrints = r'D:\printsPy'
-lightPath = 'python\Make_print_WB\light.png'
+lightPath = r'D:\tmp\my_prod\Python\python\Make_print_WB\light.png'
 
 
 def getBarcodForPrintMain(donePrint):
@@ -175,8 +175,8 @@ def main():
     for dirModel in os.listdir(pathToDonePrints):
         if isdir(os.path.join(pathToDonePrints, dirModel)):
             Rename_print(os.path.join(pathToDonePrints, dirModel))
-    getBarcodForPrint(pathToDonePrints)
-    ceraterAllCaseXLSX()
+    # getBarcodForPrint(pathToDonePrints)
+    # ceraterAllCaseXLSX()
 
 
 if __name__ == '__main__':

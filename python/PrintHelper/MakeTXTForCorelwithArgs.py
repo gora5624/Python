@@ -5,8 +5,8 @@ from my_lib import file_exists
 from os import makedirs
 
 
-# pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
-pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты 05.11.2021 ч3.xlsx'
+pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
+#pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты 05.11.2021 ч3.xlsx'
 mainPath = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper'
 pathToExcelWithSize = r'\\192.168.0.33\shared\Отдел производство\Wildberries\список печати.xlsx'
 pathToPrint = r'\\192.168.0.33\shared\Отдел производство\макеты для принтера\Макеты для 6090'
@@ -232,7 +232,7 @@ def splitOrderTable(dataFromOrderFile):
             else:
                 pathToFile = pathToBug
             data.append(';'.join([
-                line['Номер задания'], pathToFile, X.replace('.', ','), Y.replace('.', ',')]))
+                line['Номер задания'], pathToFile, X.replace('.', ','), Y.replace('.', ','), line['Название']]))
             with open(joinpath(pathToTables, nameTable.format(str(numTable))) + '.txt', 'w', encoding='ANSI') as file:
                 file.write('\n'.join(data))
                 file.close()
@@ -259,7 +259,7 @@ try:
 except:
     input('Произошла непредвиденная ошибка при получении информации из файла заказа {}'.format(
         pathToOrderFile))
-# try:
-splitOrderTable(dataFromOrderFile)
-# except:
-# input('Произошла непредвиденная ошибка при работе программы')
+try:
+    splitOrderTable(dataFromOrderFile)
+except:
+    input('Произошла непредвиденная ошибка при работе программы')
