@@ -17,7 +17,7 @@ outListPath = joinpath(main_path, outListName)
 outListPath2 = joinpath(main_path, outListName2)
 
 
-def getIdWithBarcod(barcod, TmpLIst2):
+def getIdWithBarcod(barcod):
     with open(Token_path, 'r', encoding='UTF-8') as file:
         Token = file.read()
         file.close()
@@ -90,6 +90,7 @@ def getCardBody(imtID):
         except:
             continue
     a = json.loads(response.text)
+    print(response.text)
     return json.loads(response.text)['result']['card']
 
 
@@ -100,7 +101,7 @@ def changeCard(cardBody, name, TmpLIst):
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
     cardBody['countryProduction'] = 'Китай'
     for addin in cardBody['addin']:
-        if addin['type'] == 'Название':
+        if addin['type'] == 'Наименование':
             addin['params'] = [
                 {'value': name}]
     cardBodyNew = {
@@ -110,21 +111,21 @@ def changeCard(cardBody, name, TmpLIst):
             "card": cardBody
         }
     }
-    while True:
-        try:
-            response = requests.post(changeCardUrl, headers={
-                'Authorization': '{}'.format(Token)}, json=cardBodyNew)
-            if 'error' not in response.text and 'timeout' not in response.text:
-                break
-            if response.status_code == 200:
-                break
-        except:
-            print('error changeCard')
-            continue
+    # while True:
+    #     try:
+    #         response = requests.post(changeCardUrl, headers={
+    #             'Authorization': '{}'.format(Token)}, json=cardBodyNew)
+    #         if 'error' not in response.text and 'timeout' not in response.text:
+    #             break
+    #         if response.status_code == 200:
+    #             break
+    #     except:
+    #         print('error changeCard')
+    #         continue
     for nomenclature in cardBody['nomenclatures']:
         TmpLIst.append({'Артикул WB': nomenclature['nmId'],
                         'Баркод': nomenclature['variations'][0]['barcodes'][0]})
-    print((response.text, name))
+    #print((response.text, name))
 
 
 def changeOneCard(cardBody, name):
@@ -134,7 +135,7 @@ def changeOneCard(cardBody, name):
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
     cardBody['countryProduction'] = 'Китай'
     for addin in cardBody['addin']:
-        if addin['type'] == 'Название':
+        if addin['type'] == 'Наименование':
             addin['params'] = [
                 {'value': name}]
     cardBodyNew = {
@@ -159,7 +160,7 @@ def changeOneCard(cardBody, name):
 def changeBody(stuffLine, TmpLIst, TmpLIst2):
     barcod = stuffLine['Баркод'] if type(
         stuffLine['Баркод']) == str else str(stuffLine['Баркод'])[0:-2]
-    idStuff = getIdWithBarcod(barcod, TmpLIst2)
+    idStuff = getIdWithBarcod(barcod)
     if idStuff == 0:
         return 0
     cardBody = getCardBody(idStuff)
@@ -189,7 +190,7 @@ if __name__ == '__main__':
         TmpLIstpd.to_excel(outListPath, index=False)
         TmpLIstpd2.to_excel(outListPath2, index=False)
 
-# imtID = getIdWithBarcod('2010027247003')
+# imtID = getIdWithBarcod('2011753370003')
 # cardBody = getCardBody(imtID)
-# name = 'Защитное стекло iPhone 13 (Pro) / Стекло для Айфон 13 (Про) (Под чехол) / стекла на айфон 13 (про)'
+# name = 'Защитное стекло для Samsung Galaxy M52 (M 52) (5G)|Cтекло Самсунг М52 (М 52) (5G) (не чехол)'
 # changeOneCard(cardBody, name)
