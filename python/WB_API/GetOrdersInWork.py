@@ -5,6 +5,7 @@ from my_lib import file_exists, read_xlsx
 from os import makedirs
 import pandas
 from shutil import copyfile
+import xlrd
 
 
 # Режим отладки 1 - да, 0 - боевой режим
@@ -29,6 +30,7 @@ listStuffPath = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список но�
 FilePath = joinpath(WBOrdersData, WBOrdersFileName)
 sizeListPath = r'\\192.168.0.33\shared\Отдел производство\Wildberries\список печати.xlsx'
 OrderDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
+nowFileName = ''
 
 
 def startChek():
@@ -67,14 +69,65 @@ def recreate_data(CaseList):
     return data_new
 
 
+def read_xlsx_by_name(file_path, nameList):
+    '''Считывает построчно xlsx файл и возращает список словарей - если title = 'Yes', список списков - если title = 'No'
+    '''
+    rd = xlrd.open_workbook(file_path)
+    try:
+        sheet = rd.sheet_by_name(nameList)
+    except:
+        sheet = rd.sheet_by_name('основной')
+    try:
+        Name_row = sheet.row_values(0)
+    except IndexError:
+        return None
+    start = 1
+    data = []
+    for rownum in range(start, sheet.nrows):
+        row = sheet.row_values(rownum)
+        dct = {}
+        for i, cel in enumerate(row):
+            tmp = {Name_row[i]: cel}
+            dct.update(tmp)
+        data.append(dct)
+    return data
+
+
+def getStiker(OrderNum):
+    OrderNum = OrderNum if type(OrderNum) != float else int(OrderNum)[0:-2]
+    with open(Token_path, 'r', encoding='UTF-8') as file:
+        Token = file.read()
+        file.close()
+    UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
+    trying = 0
+    OrderNumJson = {"orderIds": [int(OrderNum)]}
+    while True:
+        trying += 1
+        try:
+            response = requests.post(UrlStiker, headers={
+                'Authorization': '{}'.format(Token)}, json=OrderNumJson)
+            if response.status_code == 200:
+                break
+            elif trying > 500:
+                print("Не удолось достучаться до сервера ВБ")
+                return 1
+            else:
+                continue
+        except:
+            continue
+    a = response.json()
+    a
+    return response.json()['data'][0]['sticker']['wbStickerIdParts']['A'] + ' ' + response.json()['data'][0]['sticker']['wbStickerIdParts']['B']
+
+
 def createLineForExcel(line, caseData):
     """Создаёт строку для записи в лист заказа нужного нам формата"""
     barcod = line['barcode'] if type(
         line['barcode']) == str else str(line['barcode'])[0:-2]
-    # stiker = line['sticker']["wbStickerIdParts"]['A'] + \
-    #     ' ' + line['sticker']["wbStickerIdParts"]['B']
     orderNum = line['orderId'] if type(
         line['orderId']) == str else str(line['orderId'])[0:-2]
+    # stiker = getStiker(orderNum)["wbStickerIdParts"]['A'] + \
+    #     ' ' + getStiker(orderNum)["wbStickerIdParts"]['B']
     lineExcel = {'Название': caseData[barcod]['Название 1С'],
                  #  'Этикетка': stiker,
                  'Код': caseData[barcod]['Код'],
@@ -104,6 +157,8 @@ def createFileName(FilePath, mode):
         numpiece += 1
         piece = "ч"+str(numpiece)
     print(FilePath.format(nametmp, day, piece))
+    global nowFileName
+    nowFileName = FilePath.format(nametmp, day, piece)
     return FilePath.format(nametmp, day, piece)
 
 
@@ -223,8 +278,8 @@ def createPrintExcel(listOrderForChangeStatus, fileName):
         OrderLineData = {
             'Номер задания': orderLine['Номер задания'],
             'Название': orderLine['Название'],
-            'Размер': size,
-            'Этикетка': orderLine['Этикетка']}
+            'Размер': size}
+        # 'Этикетка': orderLine['Этикетка']}
         listOrderForTable.append(OrderLineData)
     listOrderForTablepd = pandas.DataFrame(listOrderForTable)
     with pandas.ExcelWriter(fileName) as writerCase:
@@ -319,8 +374,8 @@ def createExcel(listOrderForChangeStatus, listErrorBarcods, mode):
             except KeyError:
                 listCameraNanoglass.to_excel(
                     writerglass, sheet_name='камеры', index=False)
-    if Debug != 1:
-        copyfile(fileName, fileName.replace(WBOrdersData, OrderDir))
+    # if Debug != 1:
+    #     copyfile(fileName, fileName.replace(WBOrdersData, OrderDir))
 
 
 def orderFilter(ordersForFilter, mode):
@@ -402,7 +457,7 @@ def splitOrders(listOrderForChangeStatus, listErrorBarcods):
     countOrder = len(listOrderForChangeStatus)
     print(countOrder)
     countOrdersFiles = 1
-    while 140 <= countOrder // countOrdersFiles >= 160:
+    while 60 <= countOrder // countOrdersFiles >= 90:
         countOrdersFiles += 1
     orders = []
     i = 0
@@ -447,7 +502,7 @@ def choiseMode():
     return mode
 
 
-def get_orders(Token, days=4):
+def get_orders(Token, days=5):
     """Получает заказы за последние 4 дня"""
     print("Идёт получение свежих заказов, ожидайте...")
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
@@ -487,28 +542,38 @@ def get_orders(Token, days=4):
     return dataorders
 
 
+def addStikerInfoInOrder(nowFileName):
+    data = read_xlsx_by_name(nowFileName, 'основной')
+    for line in data:
+        line.update['Этикетка': getStiker(line['Номер задания'])]
+    data
+    if Debug != 1:
+        copyfile(nowFileName, nowFileName.replace(WBOrdersData, OrderDir))
+
+
 def changeStatus(listOrderForChangeStatus, Token):
     """Изменяет статус заказа на заданный, в данном случае "1" - на сборке"""
-    for orderForChange in listOrderForChangeStatus:
-        orderId = orderForChange['Номер задания']
-        Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
-        if Debug == 1:
-            status = 0
-        else:
-            status = 1
-        datajson = [{"orderId": orderId,
-                     "status": status}]
-        while True:
-            try:
-                response = requests.put(Url, headers={
-                    'Authorization': '{}'.format(Token)}, json=datajson)
-                if response.status_code != 200:
+    if Debug != 1:
+        for orderForChange in listOrderForChangeStatus:
+            orderId = orderForChange['Номер задания']
+            Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
+            if Debug == 1:
+                status = 0
+            else:
+                status = 1
+            datajson = [{"orderId": orderId,
+                         "status": status}]
+            while True:
+                try:
+                    response = requests.put(Url, headers={
+                        'Authorization': '{}'.format(Token)}, json=datajson)
+                    if response.status_code != 200:
+                        continue
+                    elif response.status_code == 200:
+                        break
+                except:
                     continue
-                elif response.status_code == 200:
-                    break
-            except:
-                continue
-        print(response)
+            print(response)
 
 
 if startChek() == 0:
@@ -517,6 +582,7 @@ if startChek() == 0:
         data = get_orders(Token)
         mode = choiseMode()
         changeStatus(orderFilter(data, mode), Token)
+        # addStikerInfoInOrder(nowFileName)
 
 # Token = getToken()
 # changeStatus(read_xlsx(r"C:\Users\Public\Documents\WBGetOrder\WBOrdersData\ФБС принты 31.08.2021 ч3.xlsx"),Token)

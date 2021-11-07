@@ -14,7 +14,7 @@ Mode = 'All'
 pathToMaskFolder = r'D:\mask'
 pathToPrintFolder = r'D:\tmp\my_prod\Python\python\Make_print_WB\PrintWithBack' if Mode == 'All' else r'D:\tmp\my_prod\Python\python\Make_print_WB\PrintWithOutBack'
 pathToDonePrints = r'D:\printsPy'
-lightPath = 'python\Make_print_WB\light.png'
+lightPath = r'D:\tmp\my_prod\Python\python\Make_print_WB\light.png'
 
 
 def getBarcodForPrintMain(donePrint):
@@ -126,7 +126,7 @@ def makePrintMain(maskFolder, printList, light):
         maskImageOld.close()
         BackgroundImage = copy.copy(BackgroundImageOld)
         xLeft, xRight, yTop, yBott, size = getSizeAndPos(pathToMask)
-        printsize = (xRight-xLeft+5, yBott-yTop+5)
+        printsize = (xRight-xLeft, yBott-yTop)
         lighSize = (xRight-xLeft, yBott-yTop)
         printPaste = (xLeft, yTop)
         lighPaste = (xLeft, yTop)

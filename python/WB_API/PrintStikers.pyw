@@ -205,9 +205,9 @@ def recreate_data(order_xlsx):
     for line in order_xlsx:
         Order_num = str(line['orderId'])[0:-2]
         data_new[Order_num] = {'Номер задания': Order_num,
-                               'Баркод': str(line['barcode'])[0:-2],
-                               'Информация в стикере': line['wbStickerEncoded'],
-                               'Стикер64': line['wbStickerSvgBase64']}
+                               'Баркод': str(line['barcode'])[0:-2]}
+        # 'Информация в стикере': line['wbStickerEncoded'],
+        # 'Стикер64': line['wbStickerSvgBase64']}
     return data_new
 
 
@@ -257,6 +257,7 @@ def getStiker(OrderNum):
                 continue
         except:
             continue
+
     return response.json()['data'][0]['sticker']['wbStickerSvgBase64']
 
 
@@ -370,12 +371,12 @@ def make_with_name(OrderFileName, mode2, days, procNum):
             num_ord = order['Номер задания']
         try:
             tmp = {'Название': order['Название'].replace('\xa0', ' '),
-                   'Этикетка': order['Этикетка'],
+                   # 'Этикетка': order['Этикетка'],
                    'ШК': bar,
                    'Артикул поставщика': order['Артикул поставщика'],
-                   'Номер задания': num_ord,
-                   'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
-                   'Стикер64': data_about_order[num_ord]['Стикер64']}
+                   'Номер задания': num_ord}
+            # 'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
+            # 'Стикер64': data_about_order[num_ord]['Стикер64']}
         except KeyError:
             get_orders(days)
             return make_with_name(OrderFileName, mode2, days, procNum)
@@ -424,12 +425,12 @@ def make_glass_body(OrderFileName, mode2, name_sheet, days, procNum):
             num_ord = order['Номер задания']
         try:
             tmp = {'Название': order['Название'].replace('\xa0', ' '),
-                   'Этикетка': order['Этикетка'],
+                   # 'Этикетка': order['Этикетка'],
                    'ШК': bar,
                    'Артикул поставщика': order['Артикул поставщика'],
-                   'Номер задания': num_ord,
-                   'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
-                   'Стикер64': data_about_order[num_ord]['Стикер64']}
+                   'Номер задания': num_ord}
+            # 'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
+            # 'Стикер64': data_about_order[num_ord]['Стикер64']}
         except KeyError:
             get_orders(days)
             return make_glass_body(OrderFileName, mode2, name_sheet, days, procNum)
@@ -454,36 +455,36 @@ def make_glass_body(OrderFileName, mode2, name_sheet, days, procNum):
 
 
 def make_glass(OrderFileName, days, procNum):
-    day = datetime.today().date().strftime(r"%d.%m.%Y")
-    pt = OrderFileName.replace('.xlsx', '')[-2:]
+    OrderFileNameN = os.path.basename(OrderFileName)
+    dayAndPt = OrderFileNameN.replace('.xlsx', '').replace('ФБС стекла ', '')
     writer = make_glass_body(OrderFileName, 1, '3D_стекла', days, procNum)
     if writer != 0:
         writer.write(
-            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D1_{}_{}.pdf'.format(day, pt)))
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D1_{}.pdf'.format(dayAndPt)))
     writer = make_glass_body(OrderFileName, 4, '3D_стекла', days, procNum)
     if writer != 0:
         writer.write(
-            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D2_{}_{}.pdf'.format(day, pt)))
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', '3D2_{}.pdf'.format(dayAndPt)))
     writer = make_glass_body(OrderFileName, 1, 'глянец', days, procNum)
     if writer != 0:
         writer.write(
-            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL1_{}_{}.pdf'.format(day, pt)))
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL1_{}.pdf'.format(dayAndPt)))
     writer = make_glass_body(OrderFileName, 4, 'глянец', days, procNum)
     if writer != 0:
         writer.write(
-            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL2_{}_{}.pdf'.format(day, pt)))
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'GL2_{}.pdf'.format(dayAndPt)))
     writer = make_glass_body(OrderFileName, 1, 'матовые', days, procNum)
     if writer != 0:
         writer.write(
-            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT1_{}_{}.pdf'.format(day, pt)))
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT1_{}.pdf'.format(dayAndPt)))
     writer = make_glass_body(OrderFileName, 4, 'матовые', days, procNum)
     if writer != 0:
         writer.write(
-            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT2_{}_{}.pdf'.format(day, pt)))
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'MT2_{}.pdf'.format(dayAndPt)))
     writer = make_glass_body(OrderFileName, 1, 'камеры', days, procNum)
     if writer != 0:
         writer.write(
-            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'Cam_{}_{}.pdf'.format(day, pt)))
+            joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники', 'Cam_{}.pdf'.format(dayAndPt)))
 
 
 def make_with_table(OrderFileName, mode2, days, procNum):
@@ -512,12 +513,12 @@ def make_with_table(OrderFileName, mode2, days, procNum):
 
         try:
             tmp = {'Название': order['Название'].replace('\xa0', ' '),
-                   'Этикетка': order['Этикетка'],
+                   # 'Этикетка': order['Этикетка'],
                    'ШК': bar,
                    'Артикул поставщика': order['Артикул поставщика'],
-                   'Номер задания': num_ord,
-                   'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
-                   'Стикер64': data_about_order[num_ord]['Стикер64']}
+                   'Номер задания': num_ord}
+            # 'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
+            # 'Стикер64': data_about_order[num_ord]['Стикер64']}
         except KeyError:
             get_orders(days)
             return make_with_table(OrderFileName, mode2, days, procNum)

@@ -7,7 +7,7 @@ import requests
 import json
 import pandas
 from datetime import datetime, timedelta
-from my_lib import file_exists
+from my_lib import file_exists, read_xlsx
 from os.path import join as joinpath
 from os import makedirs
 from os.path import isfile
@@ -32,11 +32,21 @@ Token_path = joinpath(
     main_path, r'Token.txt')
 FontPath = r'C:\Users\Public\Documents\WBHelpTools\MakeWBStikersWithName\font\ArialSans.ttf'
 orders = ''
+caseFilePath = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список номенклатуры — копия.XLSX'
 fpdf.set_global("SYSTEM_TTFONTS", os.path.join(
     os.path.dirname(__file__), r'C:\Windows\Fonts'))
 
 
-def create_1C_barcod(case_name, case_art, bar, count):
+def create_1C_barcod(count, art='', case_name='', case_art='', bar=''):
+    if case_name == '':
+        for line in read_xlsx(caseFilePath):
+            if art == str(line['Артикул WB'])[0:-2] if type(line['Артикул WB']) == float else line['Артикул WB']:
+                case_name = line['Название 1С']
+                case_art = line['Артикул поставщика']
+                bar = str(line['Баркод'])[0:-2] if type(
+                    line['Баркод']) == float else line['Баркод']
+                break
+
     options = dict(module_height=5.0, text_distance=1.0, format='PNG')
 
     barcode.get('ean13', bar,
@@ -63,11 +73,22 @@ def create_1C_barcod(case_name, case_art, bar, count):
     for i in range(count):
         writer.addpage(path2)
     writer.write(joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники',
-                          os.path.basename('Чехол для Samsung Galaxy A22 силикон с закрытой камерой с усиленными углами прозрачный.pdf')))
+                          os.path.basename(case_name + '.pdf')))
 
 
-case_name = 'Чехол для Samsung Galaxy A22 силикон с закрытой камерой с усиленными углами прозрачный'
-case_art = 'Samsung_A22ПрозрачныйСУсиленнымиУглами'
-bar = '2008965273222'
-count = 1350
-create_1C_barcod(case_name, case_art, bar, count)
+case_name = ''
+case_art = ''
+bar = ''
+count = 300
+art = ''
+
+while True:
+    if case_name == '':
+        try:
+            art = str(input('Введите артикул: '))
+            count = int(input('Введите количество: '))
+        except:
+            continue
+    create_1C_barcod(count, art, case_name, case_art, bar)
+    if case_name != '':
+        break
