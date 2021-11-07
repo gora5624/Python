@@ -90,6 +90,7 @@ def getCardBody(imtID):
         except:
             continue
     a = json.loads(response.text)
+    print(response.text)
     return json.loads(response.text)['result']['card']
 
 
@@ -110,21 +111,21 @@ def changeCard(cardBody, name, TmpLIst):
             "card": cardBody
         }
     }
-    while True:
-        try:
-            response = requests.post(changeCardUrl, headers={
-                'Authorization': '{}'.format(Token)}, json=cardBodyNew)
-            if 'error' not in response.text and 'timeout' not in response.text:
-                break
-            if response.status_code == 200:
-                break
-        except:
-            print('error changeCard')
-            continue
+    # while True:
+    #     try:
+    #         response = requests.post(changeCardUrl, headers={
+    #             'Authorization': '{}'.format(Token)}, json=cardBodyNew)
+    #         if 'error' not in response.text and 'timeout' not in response.text:
+    #             break
+    #         if response.status_code == 200:
+    #             break
+    #     except:
+    #         print('error changeCard')
+    #         continue
     for nomenclature in cardBody['nomenclatures']:
         TmpLIst.append({'Артикул WB': nomenclature['nmId'],
                         'Баркод': nomenclature['variations'][0]['barcodes'][0]})
-    print((response.text, name))
+    #print((response.text, name))
 
 
 def changeOneCard(cardBody, name):

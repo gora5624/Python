@@ -9,7 +9,7 @@ import xlrd
 
 
 # Режим отладки 1 - да, 0 - боевой режим
-Debug = 1
+Debug = 0
 stopList = ['2009539898001', '2009539892009', '2009539656007',
             '2009539490007', '2009539287003', '2009538490008']
 
@@ -457,7 +457,7 @@ def splitOrders(listOrderForChangeStatus, listErrorBarcods):
     countOrder = len(listOrderForChangeStatus)
     print(countOrder)
     countOrdersFiles = 1
-    while 90 <= countOrder // countOrdersFiles >= 130:
+    while 60 <= countOrder // countOrdersFiles >= 90:
         countOrdersFiles += 1
     orders = []
     i = 0
@@ -502,7 +502,7 @@ def choiseMode():
     return mode
 
 
-def get_orders(Token, days=10):
+def get_orders(Token, days=5):
     """Получает заказы за последние 4 дня"""
     print("Идёт получение свежих заказов, ожидайте...")
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
