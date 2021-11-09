@@ -17,7 +17,6 @@ def get_html(url):
     while True:
         r = requests.get(url, headers={
             'User-Agent': UserAgent().chrome})
-        time.sleep(1)
         if r.status_code == 200:
             break
         elif r.status_code == 429:
