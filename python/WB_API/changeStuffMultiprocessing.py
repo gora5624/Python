@@ -61,6 +61,7 @@ def getIdWithBarcod(barcod):
         except:
             continue
     a = response.json()['result']['cards'][0]
+    print(barcod)
     return response.json()['result']['cards'][0]['imtId']
 
 
@@ -90,7 +91,7 @@ def getCardBody(imtID):
         except:
             continue
     a = json.loads(response.text)
-    print(response.text)
+    # print(response.text)
     return json.loads(response.text)['result']['card']
 
 
@@ -101,9 +102,12 @@ def changeCard(cardBody, name, TmpLIst):
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
     cardBody['countryProduction'] = 'Китай'
     for addin in cardBody['addin']:
-        if addin['type'] == 'Наименование':
+        if addin['type'] == 'Комплектация':
             addin['params'] = [
                 {'value': name}]
+        if addin['type'] == 'Бренд':
+            addin['params'] = [
+                {'value': 'Mobi711'}]
     cardBodyNew = {
         "id": '1',
         "jsonrpc": "2.0",
@@ -123,9 +127,12 @@ def changeCard(cardBody, name, TmpLIst):
     #         print('error changeCard')
     #         continue
     for nomenclature in cardBody['nomenclatures']:
-        TmpLIst.append({'Артикул WB': nomenclature['nmId'],
-                        'Баркод': nomenclature['variations'][0]['barcodes'][0]})
-    #print((response.text, name))
+        try:
+            TmpLIst.append({'Артикул WB': nomenclature['nmId'],
+                            'Баркод': nomenclature['variations'][0]['barcodes'][0]})
+        except:
+            continue
+    #print((response.text, name, ))
 
 
 def changeOneCard(cardBody, name):
@@ -165,7 +172,14 @@ def changeBody(stuffLine, TmpLIst, TmpLIst2):
         return 0
     cardBody = getCardBody(idStuff)
     #name = stuffLine['Название']
-    name = stuffLine['Название']
+    if 'чехол' in str(stuffLine['Название']).lower():
+        name = 'Чехол'
+    elif 'стекло' in str(stuffLine['Название']).lower():
+        name = 'Защитное стекло'
+    elif 'планка' in str(stuffLine['Название']).lower():
+        name = 'Пластина для держалетя прямоугольная и круглая'
+    else:
+        name = 'Чехол'
     changeCard(cardBody, name, TmpLIst)
 
 
@@ -176,6 +190,16 @@ def cangeCardFromListStuff(pathToListStuff, TmpLIst, TmpLIst2):
         pool.apply_async(changeBody, args=(stuffLine, TmpLIst, TmpLIst2,))
     pool.close()
     pool.join()
+
+# def cangeCardFromListStuff(pathToListStuff, TmpLIst, TmpLIst2):
+#     dataFromLIstStuff = read_xlsx(pathToListStuff)
+#     changeBody
+#     pool = multiprocessing.Pool()
+#     for stuffLine in dataFromLIstStuff:
+#         changeBody(stuffLine, TmpLIst, TmpLIst2)
+#         pool.apply_async(changeBody, args=(stuffLine, TmpLIst, TmpLIst2,))
+#     pool.close()
+#     pool.join()
 
 
 if __name__ == '__main__':

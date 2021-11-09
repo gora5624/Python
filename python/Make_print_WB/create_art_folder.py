@@ -6,6 +6,7 @@ import multiprocessing
 
 
 path_list_stuff = r'C:\Users\Public\Documents\WBChangeStuff\barcodes and art.xlsx'
+#path_list_stuff = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список номенклатуры — копия.XLSX'
 Count_Arh = 200
 
 
@@ -16,7 +17,7 @@ def main(path_list_stuff, model_name):
         r'D:\printsPy\{}.xlsx'.format(model_name)) else read_xlsx(r'D:\printsPy\{}.xls'.format(model_name), title='No')
     for stuff in list_stuff:
         for barcod in list_barcod:
-            if stuff['Баркод'] == str(barcod[0]):
+            if (str(stuff['Баркод'])[0:-2] if type(stuff['Баркод']) == float else stuff['Баркод']) == (str(barcod[0])[0:-2] if type(barcod[0]) == float else str(barcod[0])):
                 dest_folder = os.path.join(
                     'D:\Done', str(stuff['Артикул WB'])[0:-2], 'photo')
                 if not file_exists(os.path.join(

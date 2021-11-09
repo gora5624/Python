@@ -2,11 +2,11 @@ import sys
 import xlrd
 from os.path import join as joinpath
 from my_lib import file_exists
-from os import makedirs
+from os import listdir, remove, makedirs
 
 
 pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
-#pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты 05.11.2021 ч3.xlsx'
+#pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты потерянные 06.11.2021.xlsx'
 mainPath = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper'
 pathToExcelWithSize = r'\\192.168.0.33\shared\Отдел производство\Wildberries\список печати.xlsx'
 pathToPrint = r'\\192.168.0.33\shared\Отдел производство\макеты для принтера\Макеты для 6090'
@@ -107,6 +107,8 @@ def startChek():
             errorsSizeFlag = True
             input('ВНИМАНИЕ, КАКОЙ_ТО РАЗМЕР НЕ СОВПАЛ ПО НАЗВАНИЮ В ФАЙЛЕ РАЗМЕРОВ "{}" И В ФАЙЛЕ КОНФИГУРАЦИИ "{}", ПРОВЕРЬТЕ ОБА ФАЙЛА!'.format(
                 pathToSizeFile, pathToConfig))
+        for file in listdir(pathToTables):
+            remove(joinpath(pathToTables, file))
     return errorsDirFlag*errorsSizeFlag
 
 
@@ -204,7 +206,10 @@ def createpathToFile(printNameAll, size):
         printName = printNameAll.split('(')[1]
     printFileName = printName.replace('принт', 'print') + '.cdr'
     pathToFolder = dataWithSizePath[size]
-    return joinpath(pathToFolder, printFileName)
+    fullPath = joinpath(pathToFolder, printFileName)
+    if not file_exists(fullPath):
+        fullPath = pathToBug
+    return fullPath
 
 
 def splitOrderTable(dataFromOrderFile):
@@ -214,7 +219,9 @@ def splitOrderTable(dataFromOrderFile):
     data = []
     if dataFromOrderFile != None:
         for line in dataFromOrderFile:
-            if line['Номер задания'] == '':
+            orderNum = line['Номер задания'] if type(
+                line['Номер задания']) == str else str(line['Номер задания'])[0:-2]
+            if orderNum == '':
                 with open(joinpath(pathToTables, nameTable.format(str(numTable))) + '.txt', 'w', encoding='ANSI') as file:
                     file.write('\n'.join(data))
                     file.close()
@@ -226,13 +233,13 @@ def splitOrderTable(dataFromOrderFile):
             count += 1
             printName = detectPtintFronName(line['Название'])
             size = detectSizeFromOrder(str(line['Размер'])[0:-2] if type(
-                line['Размер']) == float else line['Размер'], line['Номер задания'], str(numTable))
+                line['Размер']) == float else line['Размер'], orderNum, str(numTable))
             if size != None:
                 pathToFile = createpathToFile(printName, size)
             else:
                 pathToFile = pathToBug
             data.append(';'.join([
-                line['Номер задания'], pathToFile, X.replace('.', ','), Y.replace('.', ','), line['Название']]))
+                orderNum, pathToFile, X.replace('.', ','), Y.replace('.', ','), line['Название']]))
             with open(joinpath(pathToTables, nameTable.format(str(numTable))) + '.txt', 'w', encoding='ANSI') as file:
                 file.write('\n'.join(data))
                 file.close()

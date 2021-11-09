@@ -158,7 +158,7 @@ def makePrint():
     pool.join()
 
 
-def ceraterAllCaseXLSX():
+def createAllCaseXLSX():
     allCaseList = []
     for file in os.listdir(pathToDonePrints):
         if '.xlsx' in file:
@@ -175,8 +175,8 @@ def main():
     for dirModel in os.listdir(pathToDonePrints):
         if isdir(os.path.join(pathToDonePrints, dirModel)):
             Rename_print(os.path.join(pathToDonePrints, dirModel))
-    # getBarcodForPrint(pathToDonePrints)
-    # ceraterAllCaseXLSX()
+    getBarcodForPrint(pathToDonePrints)
+    createAllCaseXLSX()
 
 
 if __name__ == '__main__':
