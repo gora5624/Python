@@ -475,8 +475,8 @@ def choiseMode():
     return mode
 
 
-def get_orders(Token, days=4):
-    """Получает заказы за последние 4 дня"""
+def get_orders(Token, days=3):
+    """Получает заказы за последние 3 дня"""
     print("Идёт получение свежих заказов, ожидайте...")
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
 
@@ -505,10 +505,6 @@ def get_orders(Token, days=4):
         count_skip = count_skip+1000
         tmp = response.json()['orders']
         dataorders.extend(tmp)
-        # for line in dataorders:
-        #     line.update(wbStickerEncoded=line['sticker']['wbStickerEncoded'])
-        #     line.update(
-        #         wbStickerSvgBase64=line['sticker']['wbStickerSvgBase64'])
     all_data = pandas.DataFrame(dataorders)
     all_data.to_excel(joinpath(WBOrdersData,
                                WBOrdersDataFileName), index=False)
@@ -518,26 +514,43 @@ def get_orders(Token, days=4):
 def changeStatus(listOrderForChangeStatus, Token):
     """Изменяет статус заказа на заданный, в данном случае "1" - на сборке"""
     if Debug != 1:
+        orderListForChange = []
+        Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
+        if Debug == 1:
+            status = 0
+        else:
+            status = 1
         for orderForChange in listOrderForChangeStatus:
-            orderId = orderForChange['Номер задания']
-            Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
-            if Debug == 1:
-                status = 0
+            if len(orderListForChange) < 1000:
+                datajson = []
+                orderId = orderForChange['Номер задания']
+                datajson = {"orderId": orderId,
+                            "status": status}
+                orderListForChange.append(datajson)
             else:
-                status = 1
-            datajson = [{"orderId": orderId,
-                         "status": status}]
-            while True:
-                try:
-                    response = requests.put(Url, headers={
-                        'Authorization': '{}'.format(Token)}, json=datajson)
-                    if response.status_code != 200:
+                while True:
+                    try:
+                        response = requests.put(Url, headers={
+                            'Authorization': '{}'.format(Token)}, json=orderListForChange)
+                        if response.status_code != 200:
+                            continue
+                        elif response.status_code == 200:
+                            break
+                    except:
                         continue
-                    elif response.status_code == 200:
-                        break
-                except:
+                orderListForChange = []
+                print(response)
+        while True:
+            try:
+                response = requests.put(Url, headers={
+                    'Authorization': '{}'.format(Token)}, json=orderListForChange)
+                if response.status_code != 200:
                     continue
-            print(response)
+                elif response.status_code == 200:
+                    break
+            except:
+                continue
+        print(response)
 
 
 if startChek() == 0:
