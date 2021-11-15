@@ -65,6 +65,26 @@ def read_xlsx(file_path, title='Yes'):
         return data
 
 
+# def changeStatus(orderForChandeStatus, Token):
+#     orderId = orderForChandeStatus
+#     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
+#     status = 3
+#     datajson = [{"orderId": str(orderId),
+#                  "status": status}]
+#     while True:
+#         try:
+#             response = requests.put(Url, headers={
+#                 'Authorization': '{}'.format(Token)}, json=datajson)
+#             if response.status_code != 200:
+#                 print('Ошибка Вб')
+#                 continue
+#             elif response.status_code == 200 and response.text:
+#                 print("Заказ {} Успешно отменён.".format(orderForChandeStatus))
+#             return 0
+#         except:
+#             continue
+
+
 def changeStatus(orderForChandeStatus, Token):
     orderId = orderForChandeStatus
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
@@ -76,10 +96,11 @@ def changeStatus(orderForChandeStatus, Token):
             response = requests.put(Url, headers={
                 'Authorization': '{}'.format(Token)}, json=datajson)
             if response.status_code != 200:
+                print('Ошибка Вб')
                 continue
             elif response.status_code == 200 and response.text:
                 print("Заказ {} Успешно отменён.".format(orderForChandeStatus))
-                return 0
+            return 0
         except:
             continue
 
