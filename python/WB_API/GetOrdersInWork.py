@@ -374,8 +374,8 @@ def createExcel(listOrderForChangeStatus, listErrorBarcods, mode):
             except KeyError:
                 listCameraNanoglass.to_excel(
                     writerglass, sheet_name='камеры', index=False)
-    # if Debug != 1:
-    #     copyfile(fileName, fileName.replace(WBOrdersData, OrderDir))
+    if Debug != 1:
+        copyfile(fileName, fileName.replace(WBOrdersData, OrderDir))
 
 
 def orderFilter(ordersForFilter, mode):
@@ -532,10 +532,6 @@ def get_orders(Token, days=4):
         count_skip = count_skip+1000
         tmp = response.json()['orders']
         dataorders.extend(tmp)
-        # for line in dataorders:
-        #     line.update(wbStickerEncoded=line['sticker']['wbStickerEncoded'])
-        #     line.update(
-        #         wbStickerSvgBase64=line['sticker']['wbStickerSvgBase64'])
     all_data = pandas.DataFrame(dataorders)
     all_data.to_excel(joinpath(WBOrdersData,
                                WBOrdersDataFileName), index=False)
