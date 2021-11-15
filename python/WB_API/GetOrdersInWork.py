@@ -552,26 +552,43 @@ def addStikerInfoInOrder(nowFileName):
 def changeStatus(listOrderForChangeStatus, Token):
     """Изменяет статус заказа на заданный, в данном случае "1" - на сборке"""
     if Debug != 1:
+        orderListForChange = []
+        Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
+        if Debug == 1:
+            status = 0
+        else:
+            status = 1
         for orderForChange in listOrderForChangeStatus:
-            orderId = orderForChange['Номер задания']
-            Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
-            if Debug == 1:
-                status = 0
+            if len(orderListForChange) < 1000:
+                datajson = []
+                orderId = orderForChange['Номер задания']
+                datajson = {"orderId": orderId,
+                            "status": status}
+                orderListForChange.append(datajson)
             else:
-                status = 1
-            datajson = [{"orderId": orderId,
-                         "status": status}]
-            while True:
-                try:
-                    response = requests.put(Url, headers={
-                        'Authorization': '{}'.format(Token)}, json=datajson)
-                    if response.status_code != 200:
+                while True:
+                    try:
+                        response = requests.put(Url, headers={
+                            'Authorization': '{}'.format(Token)}, json=orderListForChange)
+                        if response.status_code != 200:
+                            continue
+                        elif response.status_code == 200:
+                            break
+                    except:
                         continue
-                    elif response.status_code == 200:
-                        break
-                except:
+                orderListForChange = []
+                print(response)
+        while True:
+            try:
+                response = requests.put(Url, headers={
+                    'Authorization': '{}'.format(Token)}, json=orderListForChange)
+                if response.status_code != 200:
                     continue
-            print(response)
+                elif response.status_code == 200:
+                    break
+            except:
+                continue
+        print(response)
 
 
 if startChek() == 0:
@@ -582,7 +599,3 @@ if startChek() == 0:
         changeStatus(orderFilter(data, mode), Token)
         if read_xlsx(r'C:\Users\Public\Documents\WBGetOrder\WBOrdersData\ФБС {} {} {}.xlsx', title='No') != []:
             print('ОБНОВИ БАЗУ')
-        # addStikerInfoInOrder(nowFileName)
-
-# Token = getToken()
-# changeStatus(read_xlsx(r"C:\Users\Public\Documents\WBGetOrder\WBOrdersData\ФБС принты 31.08.2021 ч3.xlsx"),Token)
