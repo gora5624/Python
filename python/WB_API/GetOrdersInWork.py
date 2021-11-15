@@ -93,33 +93,6 @@ def read_xlsx_by_name(file_path, nameList):
     return data
 
 
-def getStiker(OrderNum):
-    OrderNum = OrderNum if type(OrderNum) != float else int(OrderNum)[0:-2]
-    with open(Token_path, 'r', encoding='UTF-8') as file:
-        Token = file.read()
-        file.close()
-    UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
-    trying = 0
-    OrderNumJson = {"orderIds": [int(OrderNum)]}
-    while True:
-        trying += 1
-        try:
-            response = requests.post(UrlStiker, headers={
-                'Authorization': '{}'.format(Token)}, json=OrderNumJson)
-            if response.status_code == 200:
-                break
-            elif trying > 500:
-                print("Не удолось достучаться до сервера ВБ")
-                return 1
-            else:
-                continue
-        except:
-            continue
-    a = response.json()
-    a
-    return response.json()['data'][0]['sticker']['wbStickerIdParts']['A'] + ' ' + response.json()['data'][0]['sticker']['wbStickerIdParts']['B']
-
-
 def createLineForExcel(line, caseData):
     """Создаёт строку для записи в лист заказа нужного нам формата"""
     barcod = line['barcode'] if type(
@@ -374,8 +347,8 @@ def createExcel(listOrderForChangeStatus, listErrorBarcods, mode):
             except KeyError:
                 listCameraNanoglass.to_excel(
                     writerglass, sheet_name='камеры', index=False)
-    # if Debug != 1:
-    #     copyfile(fileName, fileName.replace(WBOrdersData, OrderDir))
+    if Debug != 1:
+        copyfile(fileName, fileName.replace(WBOrdersData, OrderDir))
 
 
 def orderFilter(ordersForFilter, mode):
@@ -542,13 +515,6 @@ def get_orders(Token, days=4):
     return dataorders
 
 
-def addStikerInfoInOrder(nowFileName):
-    data = read_xlsx_by_name(nowFileName, 'основной')
-    for line in data:
-        line.update['Этикетка': getStiker(line['Номер задания'])]
-    data
-
-
 def changeStatus(listOrderForChangeStatus, Token):
     """Изменяет статус заказа на заданный, в данном случае "1" - на сборке"""
     if Debug != 1:
@@ -582,7 +548,3 @@ if startChek() == 0:
         changeStatus(orderFilter(data, mode), Token)
         if read_xlsx(r'C:\Users\Public\Documents\WBGetOrder\WBOrdersData\ФБС {} {} {}.xlsx', title='No') != []:
             print('ОБНОВИ БАЗУ')
-        # addStikerInfoInOrder(nowFileName)
-
-# Token = getToken()
-# changeStatus(read_xlsx(r"C:\Users\Public\Documents\WBGetOrder\WBOrdersData\ФБС принты 31.08.2021 ч3.xlsx"),Token)
