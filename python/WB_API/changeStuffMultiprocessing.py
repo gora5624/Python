@@ -102,12 +102,9 @@ def changeCard(cardBody, name, TmpLIst):
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
     cardBody['countryProduction'] = 'Китай'
     for addin in cardBody['addin']:
-        if addin['type'] == 'Комплектация':
-            addin['params'] = [
-                {'value': name}]
         if addin['type'] == 'Бренд':
             addin['params'] = [
-                {'value': 'Mobi711'}]
+                {'value': name}]
     cardBodyNew = {
         "id": '1',
         "jsonrpc": "2.0",
@@ -115,17 +112,17 @@ def changeCard(cardBody, name, TmpLIst):
             "card": cardBody
         }
     }
-    # while True:
-    #     try:
-    #         response = requests.post(changeCardUrl, headers={
-    #             'Authorization': '{}'.format(Token)}, json=cardBodyNew)
-    #         if 'error' not in response.text and 'timeout' not in response.text:
-    #             break
-    #         if response.status_code == 200:
-    #             break
-    #     except:
-    #         print('error changeCard')
-    #         continue
+    while True:
+        try:
+            response = requests.post(changeCardUrl, headers={
+                'Authorization': '{}'.format(Token)}, json=cardBodyNew)
+            if 'error' not in response.text and 'timeout' not in response.text:
+                break
+            if response.status_code == 200:
+                break
+        except:
+            print('error changeCard')
+            continue
     for nomenclature in cardBody['nomenclatures']:
         try:
             TmpLIst.append({'Артикул WB': nomenclature['nmId'],
@@ -142,7 +139,7 @@ def changeOneCard(cardBody, name):
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
     cardBody['countryProduction'] = 'Китай'
     for addin in cardBody['addin']:
-        if addin['type'] == 'Наименование':
+        if addin['type'] == 'Бренд':
             addin['params'] = [
                 {'value': name}]
     cardBodyNew = {
@@ -172,14 +169,7 @@ def changeBody(stuffLine, TmpLIst, TmpLIst2):
         return 0
     cardBody = getCardBody(idStuff)
     #name = stuffLine['Название']
-    if 'чехол' in str(stuffLine['Название']).lower():
-        name = 'Чехол'
-    elif 'стекло' in str(stuffLine['Название']).lower():
-        name = 'Защитное стекло'
-    elif 'планка' in str(stuffLine['Название']).lower():
-        name = 'Пластина для держалетя прямоугольная и круглая'
-    else:
-        name = 'Чехол'
+    name = stuffLine['Название']
     changeCard(cardBody, name, TmpLIst)
 
 

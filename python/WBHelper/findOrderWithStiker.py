@@ -69,7 +69,7 @@ def read_xlsx(file_path, title='Yes'):
 def findLineOrder(fileOrder, stiker):
     for line in fileOrder:
         try:
-            if line['Этикетка'] == stiker:
+            if line['Номер задания'] == stiker:
                 print((line['Название'], line['ШК'], line['Номер задания']))
                 return True
         except:
@@ -100,9 +100,7 @@ def findDirOrder(stiker):
 
 def getStiker():
     stikerTMP = str(input('Введите стикер: '))
-    stiker = (stikerTMP[0:6] + ' ' + stikerTMP[6:]
-              ) if ' ' not in stikerTMP else stikerTMP
-    return stiker
+    return stikerTMP
 
 
 if __name__ == '__main__':
