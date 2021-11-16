@@ -9,7 +9,8 @@ fontDir = r'C:\Users\user\AppData\Local\Microsoft\Windows\Fonts'
 fontName = 'CarosSoftBold'
 fontPath = joinpath(fontDir, fontName + '.ttf')
 pathToDoneBook = r'D:\NanoBook'
-pathToFile = r'D:\книги.xlsx'
+fileName = r'Stuff.xlsx'
+pathToFile = joinpath(r'C:\Users\Public\Documents\WBCraeateNanoBook', fileName)
 imageBackPath = r'D:\tmp\my_prod\Python\python\makeWBNanoPic\back'
 
 
@@ -30,7 +31,24 @@ def pasteTextOnImage(image, text):
     font = ImageFont.truetype(fontPath, size=sizeFont)
     drawText = ImageDraw.Draw(image)
     i = -1
+    Flag = True
     while True:
+        # Пробуем в 1 строку
+        sizeText = drawText.textsize(text,
+                                     font=font)
+        if sizeText[0] < 1000:
+            text1 = text
+            text2 = ''
+            Flag = False
+            break
+        elif sizeText[0] > 1000 and sizeFont < 90:
+            sizeFont = 100
+            break
+        else:
+            sizeFont -= 1
+            font = ImageFont.truetype(fontPath, size=sizeFont)
+    while Flag:
+        # Делим на 2 части
         textList = text.split(' ')
         textNew = text.split(' ')[0:i]
         sizeText = drawText.textsize(' '.join(textNew),
@@ -74,7 +92,7 @@ def main(pathToFile):
     Pool = multiprocessing.Pool()
     for line in read_xlsx(pathToFile):
         imagePath = joinpath(
-            imageBackPath, 'gl.jpg' if 'глянцевое' in line['Признак'] else 'mt.jpg')
+            imageBackPath, 'mt.jpg' if 'матовое' in line['Признак'] else 'gl.jpg')
         Pool.apply_async(makeNanoBookPic, args=(imagePath, line,))
         # makeNanoBookPic(imagePath, line)
     Pool.close()

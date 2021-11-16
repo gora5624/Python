@@ -11,7 +11,7 @@ Count_Arh = 200
 def main(path_list_stuff):
     for line in read_xlsx(path_list_stuff):
         for file in os.listdir(r'D:\NanoBook'):
-            if line['Баркод'] == file[0:-4]:
+            if str(line['Баркод'])[0:-2] == file[0:-4]:
                 dest_folder = os.path.join(
                     'D:\Done', str(line['Артикул WB'])[0:-2] if type(line['Артикул WB']) == float else line['Артикул WB'], 'photo')
                 if not file_exists(os.path.join(

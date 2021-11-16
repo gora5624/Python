@@ -1,23 +1,11 @@
-import base64
 import barcode
 from barcode.writer import ImageWriter
 import fpdf
 from fpdf import FPDF
-import requests
-import json
-import pandas
-from datetime import datetime, timedelta
-from my_lib import file_exists, read_xlsx
+from my_lib import read_xlsx
 from os.path import join as joinpath
-from os import makedirs
-from os.path import isfile
-import PyPDF2
-from svglib.svglib import svg2rlg
-from reportlab.graphics import renderPDF
 from pdfrw import PdfReader, PdfWriter
-import xlrd
 import os
-import PIL
 
 WBOrdersDataFileName = r'Data_orders.xlsx'
 WBOrdersJsonDataFileName = r'Order.json'
@@ -82,13 +70,26 @@ bar = ''
 count = 300
 art = ''
 
-while True:
+# while True:
+#     if case_name == '':
+#         try:
+#             art = str(input('Введите артикул: '))
+#             count = int(input('Введите количество: '))
+#         except:
+#             continue
+#     create_1C_barcod(count, art, case_name, case_art, bar)
+#     if case_name != '':
+#         break
+
+for line in read_xlsx(r'D:\Книга1.xlsx'):
     if case_name == '':
         try:
-            art = str(input('Введите артикул: '))
-            count = int(input('Введите количество: '))
+            art = str(line['Артикул']) if type(
+                line['Артикул']) == str else str(line['Артикул'])[0:-2]
+            count = int(line['Количество'])
         except:
             continue
     create_1C_barcod(count, art, case_name, case_art, bar)
+    print(art)
     if case_name != '':
         break
