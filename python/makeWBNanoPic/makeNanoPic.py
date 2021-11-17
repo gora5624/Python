@@ -31,7 +31,7 @@ def pasteTextOnImage(image, text):
     font = ImageFont.truetype(fontPath, size=sizeFont)
     drawText = ImageDraw.Draw(image)
     i = -1
-    Flag = True
+    Flag = False
     while True:
         # Пробуем в 1 строку
         sizeText = drawText.textsize(text,
