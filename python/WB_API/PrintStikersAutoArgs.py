@@ -1,9 +1,5 @@
-from ntpath import join
 import sys
 import os
-
-from mydesign import Ui_MainWindow
-from PyQt5 import QtCore, QtGui, QtWidgets
 import base64
 import barcode
 from barcode.writer import ImageWriter
@@ -16,12 +12,12 @@ from datetime import datetime, timedelta
 from my_lib import file_exists
 from os.path import join as joinpath
 from os import makedirs, remove
-from os.path import join
 import PyPDF2
 from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPDF
 from pdfrw import PdfReader, PdfWriter
 import xlrd
+import multiprocessing
 
 pathToOrders = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
 WBOrdersDataFileName = r'Data_orders.xlsx'
@@ -113,6 +109,7 @@ def get_orders(days):
         Token = file.read()
         file.close()
     print("Идёт получение свежих заказов, ожидайте...")
+    sys.stdout.flush()
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
 
     start_data = (datetime.today() - timedelta(days=int(days))).isoformat('T', 'seconds').replace(
@@ -206,6 +203,7 @@ def getStiker(OrderNum):
                 break
             elif trying > 500:
                 print("Не удолось достучаться до сервера ВБ")
+                sys.stdout.flush()
                 return 1
             else:
                 continue
@@ -507,14 +505,16 @@ def make_with_table(OrderFileName, mode2, days, procNum):
 
     writer.write(joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники',
                           os.path.basename(OrderFileName.replace('.xlsx', '.pdf'))))
+    print(joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники',
+                   os.path.basename(OrderFileName.replace('.xlsx', '.pdf'))) + ' Готов!')
+    sys.stdout.flush()
 
     # Тело
 
 
-def main(text, procNum):
-
+def main(text):
+    procNum = multiprocessing.current_process().name
     if startChek() == 0:
-
         OrderFileName = text
         if 'ч1' in OrderFileName:
             days = 3
@@ -532,9 +532,9 @@ def main(text, procNum):
                 make_with_name(OrderFileName, mode2, days, procNum)
             elif mode == 2:
                 make_with_table(OrderFileName, mode2, days, procNum)
+        return 0
 
 
-if __name__ == '__main__':
-    procNum = str(datetime.today()).replace(":", '.')
-    text = sys.argv[1:][0].replace('#', ' ')
-    main(text, procNum)
+# if __name__ == '__main__':
+#     text = sys.argv[1:][0].replace('#', ' ')
+#     main(text, procNum)

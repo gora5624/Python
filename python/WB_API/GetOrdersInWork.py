@@ -6,8 +6,10 @@ from os import makedirs
 import pandas
 from shutil import copyfile
 import xlrd
-import subprocess
-import sys
+import multiprocessing
+from PrintStikersAutoArgs import main as printStiker
+from PrintStikersAutoArgs import TMPDir
+from os import remove, listdir
 
 # Режим отладки 1 - да, 0 - боевой режим
 Debug = 0
@@ -133,7 +135,8 @@ def createFileName(FilePath, mode):
         piece = "ч"+str(numpiece)
     print(FilePath.format(nametmp, day, piece))
     global nowFileName
-    nowFileName.append(FilePath.format(nametmp, day, piece))
+    if "ФБС принты" not in FilePath.format(nametmp, day, piece):
+        nowFileName.append(FilePath.format(nametmp, day, piece))
     return FilePath.format(nametmp, day, piece)
 
 
@@ -555,15 +558,23 @@ def changeStatus(listOrderForChangeStatus, Token):
         print(response)
 
 
-if startChek() == 0:
-    Token = getToken()
-    while input("Введите 0 чтобы выйти. Enter продожить получение заказов: ") != '0':
-        data = get_orders(Token)
-        mode = choiseMode()
-        nowFileName = []
-        changeStatus(orderFilter(data, mode), Token)
+if __name__ == '__main__':
+    if startChek() == 0:
+        Pool = multiprocessing.Pool(4)
+        Token = getToken()
+        while input("Введите 0 чтобы выйти. Enter продожить получение заказов: ") != '0':
+            data = get_orders(Token)
+            mode = choiseMode()
+            nowFileName = []
+            changeStatus(orderFilter(data, mode), Token)
+            if read_xlsx(r'C:\Users\Public\Documents\WBGetOrder\WBOrdersData\ФБС {} {} {}.xlsx', title='No') != []:
+                print('ОБНОВИ БАЗУ')
+        print('Не выключайте программу, идёт формирование ценников!')
+
         for order in nowFileName:
-            subprocess.Popen(
-                [sys.executable, pathToMakePrint, order.replace(' ', '#')])
-        if read_xlsx(r'C:\Users\Public\Documents\WBGetOrder\WBOrdersData\ФБС {} {} {}.xlsx', title='No') != []:
-            print('ОБНОВИ БАЗУ')
+            Pool.apply_async(printStiker, args=(order, ))
+        Pool.close()
+        Pool.join()
+        print("Ценники готовы")
+        for file in listdir(TMPDir):
+            remove(joinpath(TMPDir, file))
