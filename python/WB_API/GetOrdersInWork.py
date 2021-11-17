@@ -6,7 +6,8 @@ from os import makedirs
 import pandas
 from shutil import copyfile
 import xlrd
-
+import subprocess
+import sys
 
 # Режим отладки 1 - да, 0 - боевой режим
 Debug = 0
@@ -30,7 +31,8 @@ listStuffPath = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список но�
 FilePath = joinpath(WBOrdersData, WBOrdersFileName)
 sizeListPath = r'\\192.168.0.33\shared\Отдел производство\Wildberries\список печати.xlsx'
 OrderDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
-nowFileName = ''
+pathToMakePrint = r'D:\tmp\my_prod\Python\python\WB_API\PrintStikersAutoArgs.py'
+nowFileName = []
 
 
 def startChek():
@@ -131,7 +133,7 @@ def createFileName(FilePath, mode):
         piece = "ч"+str(numpiece)
     print(FilePath.format(nametmp, day, piece))
     global nowFileName
-    nowFileName = FilePath.format(nametmp, day, piece)
+    nowFileName.append(FilePath.format(nametmp, day, piece))
     return FilePath.format(nametmp, day, piece)
 
 
@@ -558,6 +560,10 @@ if startChek() == 0:
     while input("Введите 0 чтобы выйти. Enter продожить получение заказов: ") != '0':
         data = get_orders(Token)
         mode = choiseMode()
+        nowFileName = []
         changeStatus(orderFilter(data, mode), Token)
+        for order in nowFileName:
+            subprocess.Popen(
+                [sys.executable, pathToMakePrint, order.replace(' ', '#')])
         if read_xlsx(r'C:\Users\Public\Documents\WBGetOrder\WBOrdersData\ФБС {} {} {}.xlsx', title='No') != []:
             print('ОБНОВИ БАЗУ')

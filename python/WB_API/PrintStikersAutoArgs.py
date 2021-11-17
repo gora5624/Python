@@ -536,5 +536,5 @@ def main(text, procNum):
 
 if __name__ == '__main__':
     procNum = str(datetime.today()).replace(":", '.')
-    pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
+    text = sys.argv[1:][0].replace('#', ' ')
     main(text, procNum)
