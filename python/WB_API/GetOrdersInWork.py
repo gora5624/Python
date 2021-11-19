@@ -6,7 +6,10 @@ from os import makedirs
 import pandas
 from shutil import copyfile
 import xlrd
-
+import multiprocessing
+from PrintStikersAutoArgs import main as printStiker
+from PrintStikersAutoArgs import TMPDir
+from os import remove, listdir
 
 # Режим отладки 1 - да, 0 - боевой режим
 Debug = 0
@@ -30,7 +33,8 @@ listStuffPath = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список но�
 FilePath = joinpath(WBOrdersData, WBOrdersFileName)
 sizeListPath = r'\\192.168.0.33\shared\Отдел производство\Wildberries\список печати.xlsx'
 OrderDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
-nowFileName = ''
+pathToMakePrint = r'D:\tmp\my_prod\Python\python\WB_API\PrintStikersAutoArgs.py'
+nowFileName = []
 
 
 def startChek():
@@ -131,7 +135,8 @@ def createFileName(FilePath, mode):
         piece = "ч"+str(numpiece)
     print(FilePath.format(nametmp, day, piece))
     global nowFileName
-    nowFileName = FilePath.format(nametmp, day, piece)
+    if "ФБС принты" not in FilePath.format(nametmp, day, piece):
+        nowFileName.append(FilePath.format(nametmp, day, piece))
     return FilePath.format(nametmp, day, piece)
 
 
@@ -553,11 +558,23 @@ def changeStatus(listOrderForChangeStatus, Token):
         print(response)
 
 
-if startChek() == 0:
-    Token = getToken()
-    while input("Введите 0 чтобы выйти. Enter продожить получение заказов: ") != '0':
-        data = get_orders(Token)
-        mode = choiseMode()
-        changeStatus(orderFilter(data, mode), Token)
-        if read_xlsx(r'C:\Users\Public\Documents\WBGetOrder\WBOrdersData\ФБС {} {} {}.xlsx', title='No') != []:
-            print('ОБНОВИ БАЗУ')
+if __name__ == '__main__':
+    if startChek() == 0:
+        Pool = multiprocessing.Pool(4)
+        Token = getToken()
+        while input("Введите 0 чтобы выйти. Enter продожить получение заказов: ") != '0':
+            data = get_orders(Token)
+            mode = choiseMode()
+            nowFileName = []
+            changeStatus(orderFilter(data, mode), Token)
+            if read_xlsx(r'C:\Users\Public\Documents\WBGetOrder\WBOrdersData\ФБС {} {} {}.xlsx', title='No') != []:
+                print('ОБНОВИ БАЗУ')
+        print('Не выключайте программу, идёт формирование ценников!')
+
+        for order in nowFileName:
+            Pool.apply_async(printStiker, args=(order, ))
+        Pool.close()
+        Pool.join()
+        print("Ценники готовы")
+        for file in listdir(TMPDir):
+            remove(joinpath(TMPDir, file))
