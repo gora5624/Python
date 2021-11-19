@@ -565,6 +565,8 @@ if __name__ == '__main__':
         while input("Введите 0 чтобы выйти. Enter продожить получение заказов: ") != '0':
             data = get_orders(Token)
             mode = choiseMode()
+            if mode == 0:
+                break
             nowFileName = []
             changeStatus(orderFilter(data, mode), Token)
             if read_xlsx(r'C:\Users\Public\Documents\WBGetOrder\WBOrdersData\ФБС {} {} {}.xlsx', title='No') != []:
