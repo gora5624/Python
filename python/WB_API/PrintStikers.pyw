@@ -285,6 +285,7 @@ def create_WB_barcod(OrderNum, procNum):
 
 
 def create_1C_name(name, file_order_name, procNum):
+
     size = (370, 280)
     pdf = FPDF(format=size)
     pdf.add_page()
@@ -293,6 +294,51 @@ def create_1C_name(name, file_order_name, procNum):
     pdf.set_font('Arial', '', 70)
     pdf.multi_cell(350, 35, txt="{}".format(
         name))
+    pdf.set_font('Arial', '', 50)
+    pdf.multi_cell(350, 35, txt="{}".format(
+        os.path.basename(file_order_name)), align="C")
+    pdf.output(joinpath(TMPDir, NameTitle1CStiker.format(procNum)))
+    return joinpath(TMPDir, NameTitle1CStiker.format(procNum))
+
+
+def getCountGlass(stuffNameIn1C):
+    try:
+        komplect = stuffNameIn1C.split(':')[0]
+    except:
+        return 1
+    for let in komplect:
+        try:
+            return int(let)
+        except:
+            continue
+    return 1
+
+
+def create_1C_name_with_count(name, file_order_name, procNum):
+    dataFrom3DSheet = read_xlsx_by_name(file_order_name, '3D_стекла')
+    dataFrom3DSheetpd = pandas.DataFrame(dataFrom3DSheet)
+    dataFrom3DSheetpd = dataFrom3DSheetpd.groupby(
+        ['Название']).size().reset_index(name='Количество')
+    dataFrom3DSheet = dataFrom3DSheetpd.to_dict('records')
+    countInName = int(getCountGlass(name))
+    for line in dataFrom3DSheet:
+        if line['Название'] == name:
+            countIn3DSheet = int(line['Количество'])
+            break
+        else:
+            countIn3DSheet = 0
+    countGlass = countInName*countIn3DSheet
+    size = (370, 280)
+    pdf = FPDF(format=size)
+    pdf.add_page()
+    pdf.add_font(
+        'Arial', '', fname="Arial.ttf", uni=True)
+    pdf.set_font('Arial', '', 70)
+    pdf.multi_cell(350, 35, txt="{}".format(
+        name))
+    if countGlass != 0:
+        pdf.multi_cell(350, 35, txt="Количество: {} шт.".format(
+            str(countGlass)))
     pdf.set_font('Arial', '', 50)
     pdf.multi_cell(350, 35, txt="{}".format(
         os.path.basename(file_order_name)), align="C")
@@ -439,7 +485,7 @@ def make_glass_body(OrderFileName, mode2, name_sheet, days, procNum):
     writer = PdfWriter()
     for name in data_for_print:
         if mode2 == 1 or mode2 == 2 or mode2 == 4:
-            path1 = PdfReader(create_1C_name(
+            path1 = PdfReader(create_1C_name_with_count(
                 name, OrderFileName, procNum), decompress=False).pages
             writer.addpages(path1)
         for data in data_for_print[name]:

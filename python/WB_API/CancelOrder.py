@@ -1,117 +1,60 @@
+from my_lib import read_xlsx
 import requests
 from os.path import join as joinpath
 from os import listdir
 import xlrd
+from GetOrdersInWork import getToken
+import pandas
+from datetime import datetime, timedelta
 
 main_path = r'C:\Users\Public\Documents\WBGetOrder'
 Token_path = joinpath(main_path, r'Token.txt')
-Debug = 1
+WBOrdersDataFileName = 'ordersForCancel.xlsx'
+WBStikersDataFileName = 'stikersForCancel.xlsx'
+Debug = 0
 
 
-def read_xlsx(file_path, title='Yes'):
-    nameList = 'основной' if 'стекла' not in file_path else [
-        '3D_стекла', 'глянец', 'матовые', 'камеры']
-    rd = xlrd.open_workbook(file_path)
-    if type(nameList) == str:
-        try:
-            sheet = rd.sheet_by_name(nameList)
-        except:
-            data = []
-            return data
-        if title == 'Yes':
-            Name_row = sheet.row_values(0)
-            start = 1
-        elif title == 'No':
-            Name_row = None
-            start = 0
-        data = []
-        for rownum in range(start, sheet.nrows):
-            row = sheet.row_values(rownum)
-            if title == 'Yes':
-                dct = {}
-                for i, cel in enumerate(row):
-                    tmp = {Name_row[i]: cel}
-                    dct.update(tmp)
-                data.append(dct)
-            elif title == 'No':
-                data.append(row)
-        return data
-    elif type(nameList) == list:
-        data = []
-        for name in nameList:
+def get_orders(Token, days=30):
+    """Получает заказы за последние 3 дня"""
+    print("Идёт получение свежих заказов, ожидайте...")
+    Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
+
+    start_data = (datetime.today() - timedelta(days=int(days))).isoformat('T', 'seconds').replace(
+        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+    count_skip = 0
+    tmp = []
+    dataorders = []
+    flag = True
+    while len(tmp) > 0 or flag:
+        CountTry = 0
+        flag = False
+        while True:
+            CountTry += 1
             try:
-                sheet = rd.sheet_by_name(name)
-            except:
-                return data
-            if title == 'Yes':
-                try:
-                    Name_row = sheet.row_values(0)
-                except IndexError:
+                response = requests.get(Url.format(start_data, count_skip), headers={
+                    'Authorization': '{}'.format(Token)})
+                if response.status_code == 200:
+                    break
+                elif CountTry > 500:
+                    print("Не удалось достучасться до ВБ")
+                else:
                     continue
-                start = 1
-            elif title == 'No':
-                Name_row = None
-                start = 0
-            for rownum in range(start, sheet.nrows):
-                row = sheet.row_values(rownum)
-                if title == 'Yes':
-                    dct = {}
-                    for i, cel in enumerate(row):
-                        tmp = {Name_row[i]: cel}
-                        dct.update(tmp)
-                    data.append(dct)
-                elif title == 'No':
-                    data.append(row)
-        return data
-
-
-# def changeStatus(orderForChandeStatus, Token):
-#     orderId = orderForChandeStatus
-#     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
-#     status = 3
-#     datajson = [{"orderId": str(orderId),
-#                  "status": status}]
-#     while True:
-#         try:
-#             response = requests.put(Url, headers={
-#                 'Authorization': '{}'.format(Token)}, json=datajson)
-#             if response.status_code != 200:
-#                 print('Ошибка Вб')
-#                 continue
-#             elif response.status_code == 200 and response.text:
-#                 print("Заказ {} Успешно отменён.".format(orderForChandeStatus))
-#             return 0
-#         except:
-#             continue
-
-
-def changeStatus(orderForChandeStatus, Token):
-    orderId = orderForChandeStatus
-    Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
-    status = 3
-    datajson = [{"orderId": str(orderId),
-                 "status": status}]
-    while True:
-        try:
-            response = requests.put(Url, headers={
-                'Authorization': '{}'.format(Token)}, json=datajson)
-            if response.status_code != 200:
-                print('Ошибка Вб')
+            except:
                 continue
-            elif response.status_code == 200 and response.text:
-                print("Заказ {} Успешно отменён.".format(orderForChandeStatus))
-            return 0
-        except:
-            continue
+        count_skip = count_skip+1000
+        tmp = response.json()['orders']
+        dataorders.extend(tmp)
+    return dataorders
 
 
 def getStiker(OrderNum):
+    OrderNum = OrderNum if type(OrderNum) != float else int(OrderNum)[0:-2]
     with open(Token_path, 'r', encoding='UTF-8') as file:
         Token = file.read()
         file.close()
     UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
     trying = 0
-    OrderNumJson = {"orderIds": OrderNum}
+    OrderNumJson = {"orderIds": [int(OrderNum)]}
     while True:
         trying += 1
         try:
@@ -127,59 +70,56 @@ def getStiker(OrderNum):
         except:
             continue
 
-    return response.json()['data']
+    return response.json()['data'][0]['sticker']['wbStickerSvgBase64']
 
 
-def findDirOrder(stiker):
-    mainPath = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд'
-    dirListForFind = [joinpath(mainPath, r'Новые'),
-                      joinpath(mainPath, r'В работе'),
-                      joinpath(mainPath, r'Отработано')]
-    for dir_ in dirListForFind:
-        if findFileOrder(dir_, stiker) == 0:
+def getStiker(Token, dataorders):
+    stikers = []
+    tmpOrders = []
+    UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
+    for line in dataorders:
+        if line['status'] == 1:
+            tmpOrders.append(int(line['orderId']))
+        if len(tmpOrders) > 999:
+            OrderNumJson = {"orderIds": tmpOrders}
+            response = requests.post(UrlStiker, headers={
+                'Authorization': '{}'.format(Token)}, json=OrderNumJson)
+            stikers.extend(response.json()['data'])
+            tmpOrders = []
+    OrderNumJson = {"orderIds": [tmpOrders]}
+    response = requests.post(UrlStiker, headers={
+        'Authorization': '{}'.format(Token)}, json=OrderNumJson)
+    stikers.extend(response.json()['data'])
+    return stikers
+
+
+def changeStatus(listOrderForChangeStatus, Token):
+    """Изменяет статус заказа на заданный, в данном случае "1" - на сборке"""
+    if Debug != 1:
+        orderListForChange = []
+        Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
+        status = 3
+        orderId = listOrderForChangeStatus
+        datajson = {"orderId": str(orderId),
+                    "status": status}
+        orderListForChange.append(datajson)
+        response = requests.put(Url, headers={
+            'Authorization': '{}'.format(Token)}, json=orderListForChange)
+        print(response)
+        print(response.text)
+
+
+def cancelOrder(stikeriD, stikerslist):
+    for line in stikerslist:
+        if str(line['sticker']['wbStickerId']) == stikeriD:
+            listOrderForChangeStatus = line['orderId']
+            changeStatus(listOrderForChangeStatus, getToken())
+            print('{} отменен.'.format(stikeriD))
             return 0
 
 
-def findLineOrder(fileOrder):
-    tmp = []
-    for line in fileOrder:
-        try:
-            tmp.append(int(line['Номер задания']))
-        except:
-            continue
-    return tmp
-
-
-def findFileOrder(dir_, stiker):
-    for file in listdir(dir_):
-        if '.xls' in file and "$" not in file:
-            data = read_xlsx(joinpath(dir_, file))
-            listOrderNum = findLineOrder(data)
-            stikers = getStiker(listOrderNum)
-            for line in stikers:
-                if int(stiker) == line['sticker']['wbStickerId']:
-                    if changeStatus(line['orderId'], Token) == 0:
-                        return 0
-
-
-def getToken():
-    """Получаем токен для авторизации"""
-    with open(Token_path, 'r', encoding='UTF-8') as file:
-        Token = file.read()
-        file.close()
-    return Token
-
-
-if __name__ == '__main__':
-    while True:
-        stiker = str(input("Введите номер стикера или номер заказа: "))
-        if len(stiker) == 10:
-            Token = getToken()
-            findDirOrder(stiker)
-        elif len(stiker) == 9:
-            Token = getToken()
-            orderForChandeStatus = stiker
-            changeStatus(orderForChandeStatus, Token)
-        else:
-            print('Вы ввели не верные данные.')
-            continue
+dataorders = get_orders(getToken(), days=5)
+stikerslist = getStiker(getToken(), dataorders)
+while True:
+    stikeriD = str(input('Введи нормер стикера: '))
+    cancelOrder(stikeriD, stikerslist)

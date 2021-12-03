@@ -12,7 +12,8 @@ from PrintStikersAutoArgs import TMPDir
 from os import remove, listdir
 
 # Режим отладки 1 - да, 0 - боевой режим
-Debug = 0
+Debug = 1
+
 stopList = ['2009539898001', '2009539892009', '2009539656007',
             '2009539490007', '2009539287003', '2009538490008']
 
@@ -174,8 +175,11 @@ def getStuffType(barcodForGetType, caseData):
     """Определяем с каким товаром сейчас работаем, принты, не принты, стекло и т.п."""
 
     stuffType = 0
-    stuffNameIn1C = caseData[barcodForGetType
-                             ]['Название 1С'].lower()
+    try:
+        stuffNameIn1C = caseData[barcodForGetType
+                                 ]['Название 1С'].lower()
+    except:
+        return stuffType
     if "чехол" in stuffNameIn1C and "принт" in stuffNameIn1C:
         stuffType = 'caseWithPrint'
     elif "чехол" in stuffNameIn1C and "принт" not in stuffNameIn1C:
@@ -371,6 +375,9 @@ def orderFilter(ordersForFilter, mode):
                 stuffType = getStuffType(
                     lineOrdersForFilter['barcode'], caseData)
             except KeyError:
+                listErrorBarcods.append(lineOrdersForFilter['barcode'])
+                continue
+            if stuffType == 0:
                 listErrorBarcods.append(lineOrdersForFilter['barcode'])
                 continue
 
@@ -577,6 +584,6 @@ if __name__ == '__main__':
             Pool.apply_async(printStiker, args=(order, ))
         Pool.close()
         Pool.join()
-        print("Ценники готовы")
+        input("Ценники готовы, нажмите Enter")
         for file in listdir(TMPDir):
             remove(joinpath(TMPDir, file))
