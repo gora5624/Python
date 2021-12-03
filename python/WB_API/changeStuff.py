@@ -167,7 +167,7 @@ def changeOneCard(cardBody, name):
     print((response.text))
 
 
-def changeBody(stuffLine, TmpLIst, TmpLIst2):
+def changeBody(stuffLine, TmpLIst):
     barcod = stuffLine['Баркод'] if type(
         stuffLine['Баркод']) == str else str(stuffLine['Баркод'])[0:-2]
     idStuff = getIdWithBarcod(barcod)
@@ -181,11 +181,9 @@ def changeBody(stuffLine, TmpLIst, TmpLIst2):
 
 def cangeCardFromListStuff(pathToListStuff, TmpLIst, TmpLIst2):
     dataFromLIstStuff = read_xlsx(pathToListStuff)
-    pool = multiprocessing.Pool(3)
     for stuffLine in dataFromLIstStuff:
-        pool.apply_async(changeBody, args=(stuffLine, TmpLIst, TmpLIst2,))
-    pool.close()
-    pool.join()
+        changeBody(stuffLine, TmpLIst)
+
 
 # def cangeCardFromListStuff(pathToListStuff, TmpLIst, TmpLIst2):
 #     dataFromLIstStuff = read_xlsx(pathToListStuff)
