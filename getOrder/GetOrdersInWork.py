@@ -12,7 +12,7 @@ from PrintStikersAutoArgs import TMPDir
 from os import remove, listdir
 
 # Режим отладки 1 - да, 0 - боевой режим
-Debug = 0
+Debug = 1
 
 stopList = ['2009539898001', '2009539892009', '2009539656007',
             '2009539490007', '2009539287003', '2009538490008']
