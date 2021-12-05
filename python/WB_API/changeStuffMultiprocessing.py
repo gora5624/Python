@@ -6,7 +6,7 @@ import pandas
 import json
 import multiprocessing
 # 1 - изменяем, 0 - нет
-isChange = 0
+isChange = 1
 
 main_path = r'C:\Users\Public\Documents\WBChangeStuff'
 nameListStuff = r'StuffList.xlsx'
