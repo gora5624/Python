@@ -1,0 +1,4 @@
+role: master
+ignore: 
+period_min: 30
+autorun: True 
