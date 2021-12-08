@@ -10,6 +10,7 @@ import multiprocessing
 from PrintStikersAutoArgs import main as printStiker
 from PrintStikersAutoArgs import TMPDir
 from os import remove, listdir
+import os
 
 # Режим отладки 1 - да, 0 - боевой режим
 Debug = 1
@@ -17,7 +18,7 @@ Debug = 1
 stopList = ['2009539898001', '2009539892009', '2009539656007',
             '2009539490007', '2009539287003', '2009538490008']
 
-main_path = r'getOrder'
+main_path = os.path.dirname(os.path.abspath(__file__))
 WBOrdersFileName = 'ФБС {} {} {}.xlsx' if Debug == 0 else 'DEBUG_ФБС {} {} {}.xlsx'
 newOrderPath = joinpath(
     r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые', WBOrdersFileName)

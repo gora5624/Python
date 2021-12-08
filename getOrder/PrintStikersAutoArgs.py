@@ -22,7 +22,7 @@ import multiprocessing
 pathToOrders = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
 WBOrdersDataFileName = r'Data_orders.xlsx'
 WBOrdersJsonDataFileName = r'Order.json'
-main_path = r'C:\Users\Public\Documents\WBHelpTools\MakeWBStikersWithName'
+main_path = os.path.dirname(os.path.abspath(__file__))
 WBOrdersData = joinpath(
     main_path, r'WBOrdersData')
 TMPDir = joinpath(
