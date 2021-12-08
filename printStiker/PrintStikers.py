@@ -199,16 +199,16 @@ def get_orders(days):
     return 0
 
 
-def recreate_data(order_xlsx):
-    order_xlsx
-    data_new = {}
-    for line in order_xlsx:
-        Order_num = str(line['orderId'])[0:-2]
-        data_new[Order_num] = {'Номер задания': Order_num,
-                               'Баркод': str(line['barcode'])[0:-2]}
-        # 'Информация в стикере': line['wbStickerEncoded'],
-        # 'Стикер64': line['wbStickerSvgBase64']}
-    return data_new
+# def recreate_data(order_xlsx):
+#     order_xlsx
+#     data_new = {}
+#     for line in order_xlsx:
+#         Order_num = str(line['orderId'])[0:-2]
+#         data_new[Order_num] = {'Номер задания': Order_num,
+#                                'Баркод': str(line['barcode'])[0:-2]}
+#         # 'Информация в стикере': line['wbStickerEncoded'],
+#         # 'Стикер64': line['wbStickerSvgBase64']}
+#     return data_new
 
 
 def create_1C_barcod(case_name, case_art, bar, warehous, procNum):
@@ -417,7 +417,7 @@ def make_with_name(OrderFileName, mode2, days, procNum):
             num_ord = order['Номер задания']
         try:
             tmp = {'Название': order['Название'].replace('\xa0', ' '),
-                   # 'Этикетка': order['Этикетка'],
+                   'Склад': order['wbWhId'],
                    'ШК': bar,
                    'Артикул поставщика': order['Артикул поставщика'],
                    'Номер задания': num_ord}
@@ -475,7 +475,7 @@ def make_glass_body(OrderFileName, mode2, name_sheet, days, procNum):
             num_ord = order['Номер задания']
         try:
             tmp = {'Название': order['Название'].replace('\xa0', ' '),
-                   # 'Этикетка': order['Этикетка'],
+                   'Склад': order['wbWhId'],
                    'ШК': bar,
                    'Артикул поставщика': order['Артикул поставщика'],
                    'Номер задания': num_ord}
@@ -567,7 +567,7 @@ def make_with_table(OrderFileName, mode2, days, procNum):
 
         try:
             tmp = {'Название': order['Название'].replace('\xa0', ' '),
-                   # 'Этикетка': order['Этикетка'],
+                   'Склад': order['wbWhId'],
                    'ШК': bar,
                    'Артикул поставщика': order['Артикул поставщика'],
                    'Номер задания': num_ord}
