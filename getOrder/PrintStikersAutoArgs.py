@@ -162,7 +162,7 @@ def recreate_data(order_xlsx):
     return data_new
 
 
-def create_1C_barcod(case_name, case_art, bar, procNum):
+def create_1C_barcod(case_name, case_art, bar, warehous,  procNum):
     options = dict(module_height=5.0, text_distance=1.0, format='PNG')
 
     barcode.get('ean13', bar,
@@ -181,7 +181,7 @@ def create_1C_barcod(case_name, case_art, bar, procNum):
     pdf.multi_cell(350, 24, txt="{}".format(
         case_art))
     pdf.multi_cell(350, 24, txt="{}".format(
-        'Продавец: ИП Караханян Э.С'))
+        'Продавец: ИП Караханян Э.С, Склад: {}'.format(warehous)))
     pdf.output(joinpath(TMPDir, Name1CStiker.format(procNum)))
     return joinpath(TMPDir, Name1CStiker.format(procNum))
 
@@ -387,8 +387,12 @@ def make_with_name(OrderFileName, mode2, days, procNum):
             writer.addpages(path1)
         for data in data_for_print[name]:
             if mode2 == 1 or mode2 == 5 or mode2 == 4:
-                path2 = PdfReader(create_1C_barcod(data['Название'],
-                                                   data['Артикул поставщика'], data['ШК'], procNum), decompress=False).pages
+                try:
+                    path2 = PdfReader(create_1C_barcod(data['Название'],
+                                                       data['Артикул поставщика'], data['ШК'], data['Склад'],  procNum), decompress=False).pages
+                except:
+                    path2 = PdfReader(create_1C_barcod(data['Название'],
+                                                       data['Артикул поставщика'], data['ШК'], '',  procNum), decompress=False).pages
                 writer.addpages(path2)
             if mode2 == 1 or mode2 == 3 or mode2 == 2:
                 path3 = PdfReader(create_WB_barcod(
@@ -441,8 +445,12 @@ def make_glass_body(OrderFileName, mode2, name_sheet, days, procNum):
             writer.addpages(path1)
         for data in data_for_print[name]:
             if mode2 == 1 or mode2 == 5 or mode2 == 4:
-                path2 = PdfReader(create_1C_barcod(data['Название'],
-                                                   data['Артикул поставщика'], data['ШК'], procNum), decompress=False).pages
+                try:
+                    path2 = PdfReader(create_1C_barcod(data['Название'],
+                                                       data['Артикул поставщика'], data['ШК'], data['Склад'], procNum), decompress=False).pages
+                except:
+                    path2 = PdfReader(create_1C_barcod(data['Название'],
+                                                       data['Артикул поставщика'], data['ШК'], '', procNum), decompress=False).pages
                 writer.addpages(path2)
             if mode2 == 1 or mode2 == 3 or mode2 == 2:
                 path3 = PdfReader(create_WB_barcod(
@@ -540,8 +548,12 @@ def make_with_table(OrderFileName, mode2, days, procNum):
                 continue
         for data in data_for_print[order_line_num]:
             if mode2 == 1 or mode2 == 5 or mode2 == 4:
-                path2 = PdfReader(create_1C_barcod(data['Название'],
-                                                   data['Артикул поставщика'], data['ШК'], procNum), decompress=False).pages
+                try:
+                    path2 = PdfReader(create_1C_barcod(data['Название'],
+                                                       data['Артикул поставщика'], data['ШК'], data['Склад'], procNum), decompress=False).pages
+                except:
+                    path2 = PdfReader(create_1C_barcod(data['Название'],
+                                                       data['Артикул поставщика'], data['ШК'], '', procNum), decompress=False).pages
                 writer.addpages(path2)
             if mode2 == 1 or mode2 == 3 or mode2 == 2:
                 path3 = PdfReader(create_WB_barcod(

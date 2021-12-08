@@ -105,10 +105,11 @@ def createLineForExcel(line, caseData):
         line['barcode']) == str else str(line['barcode'])[0:-2]
     orderNum = line['orderId'] if type(
         line['orderId']) == str else str(line['orderId'])[0:-2]
+    warehous = 'KZN' if line['wbWhId'] == 117986 else 'ORB'
     # stiker = getStiker(orderNum)["wbStickerIdParts"]['A'] + \
     #     ' ' + getStiker(orderNum)["wbStickerIdParts"]['B']
     lineExcel = {'Название': caseData[barcod]['Название 1С'],
-                 #  'Этикетка': stiker,
+                 'Склад': warehous,
                  'Код': caseData[barcod]['Код'],
                  'ШК': barcod,
                  'Количество': '1',
