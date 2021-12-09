@@ -416,11 +416,15 @@ def make_with_name(OrderFileName, mode2, days, procNum):
         else:
             num_ord = order['Номер задания']
         try:
+            warehous = order['Склад']
+        except KeyError:
+            = ''
+        try:
             tmp = {'Название': order['Название'].replace('\xa0', ' '),
                    'ШК': bar,
                    'Артикул поставщика': order['Артикул поставщика'],
                    'Номер задания': num_ord,
-                   'Склад': order['Склад'], }
+                   'Склад': warehous}
             # 'Информация в стикере': data_about_order[num_ord]['Информация в стикере'],
             # 'Стикер64': data_about_order[num_ord]['Стикер64']}
         except KeyError:
@@ -474,8 +478,12 @@ def make_glass_body(OrderFileName, mode2, name_sheet, days, procNum):
         else:
             num_ord = order['Номер задания']
         try:
+            warehous = order['Склад']
+        except KeyError:
+            = ''
+        try:
             tmp = {'Название': order['Название'].replace('\xa0', ' '),
-                   'Склад': order['Склад'],
+                   'Склад': warehous,
                    'ШК': bar,
                    'Артикул поставщика': order['Артикул поставщика'],
                    'Номер задания': num_ord}
@@ -564,10 +572,13 @@ def make_with_table(OrderFileName, mode2, days, procNum):
             num_ord = str(order['Номер задания'])[0:-2]
         else:
             num_ord = order['Номер задания']
-
+        try:
+            warehous = order['Склад']
+        except KeyError:
+            warehous = ''
         try:
             tmp = {'Название': order['Название'].replace('\xa0', ' '),
-                   'Склад': order['Склад'],
+                   'Склад': warehous,
                    'ШК': bar,
                    'Артикул поставщика': order['Артикул поставщика'],
                    'Номер задания': num_ord}
