@@ -418,7 +418,7 @@ def make_with_name(OrderFileName, mode2, days, procNum):
         try:
             warehous = order['Склад']
         except KeyError:
-            = ''
+            warehous = ''
         try:
             tmp = {'Название': order['Название'].replace('\xa0', ' '),
                    'ШК': bar,
@@ -480,7 +480,7 @@ def make_glass_body(OrderFileName, mode2, name_sheet, days, procNum):
         try:
             warehous = order['Склад']
         except KeyError:
-            = ''
+            warehous = ''
         try:
             tmp = {'Название': order['Название'].replace('\xa0', ' '),
                    'Склад': warehous,
