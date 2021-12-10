@@ -257,8 +257,10 @@ def getStiker(OrderNum):
                 continue
         except:
             continue
-
-    return response.json()['data'][0]['sticker']['wbStickerSvgBase64']
+    try:
+        return response.json()['data'][0]['sticker']['wbStickerSvgBase64']
+    except IndexError:
+        return getStiker(OrderNum)
 
 
 def create_WB_barcod(OrderNum, procNum):
