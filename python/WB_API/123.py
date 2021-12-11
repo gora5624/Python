@@ -1,25 +1,9 @@
-from ntpath import join
-import sys
 import os
 import base64
-import barcode
-from barcode.writer import ImageWriter
 import fpdf
-from fpdf import FPDF
 import requests
-import json
-import pandas
-from datetime import datetime, timedelta
-from my_lib import file_exists
 from os.path import join as joinpath
-from os import makedirs, remove
-from os.path import join
 import PyPDF2
-from svglib.svglib import svg2rlg
-from reportlab.graphics import renderPDF
-from pdfrw import PdfReader, PdfWriter
-import xlrd
-import multiprocessing
 
 
 pathToOrders = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
