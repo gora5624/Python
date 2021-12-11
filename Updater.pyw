@@ -85,7 +85,5 @@ if mode == 'Master':
     for file in copyList:
         copyMaster(file.strip())
 elif mode == 'Slave':
-    while True:
-        for file in copyList:
-            copySlave(file.strip())
-        time.sleep(period_min*60)
+    for file in copyList:
+        copySlave(file.strip())
