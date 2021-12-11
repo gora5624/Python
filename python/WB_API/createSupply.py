@@ -3,6 +3,7 @@ from datetime import timedelta, datetime
 import base64
 import PyPDF2
 from os.path import join as joinpath
+import pandas
 
 
 Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgyYTU2OGZlLTgyNTctNGQ2Yi05ZTg1LTJkYTgxMTgxYWI3MSJ9.ROCdF7eOfTZA-atpsLGTAi15yDzHk2UMes05vwjZwn4'
@@ -99,15 +100,28 @@ def crateSupply(Token):
 
 def addOrderInSupply(Token, stikerslist, supplyId):
     orderIdList = []
-    stikerInput = ''
-    while stikerInput != 0:
+    stikerInput = 0
+    while True:
         Flag = False
-        stikerInput = int(input('Введите стикер: '))
+        tmp = input('Введите стикер, 0 - выйти: ')
+        if tmp == '0':
+            break
+        try:
+            stikerInput = int(tmp)
+        except:
+            stikerInput = tmp
         for stiker in stikerslist:
-            if stiker['sticker']['wbStickerId'] == stikerInput:
-                orderIdList.append(str(stiker['orderId']))
-                Flag = True
-                break
+            if type(stikerInput) == int:
+                if stiker['sticker']['wbStickerId'] == stikerInput:
+                    orderIdList.append(str(stiker['orderId']))
+                    Flag = True
+                    break
+            elif type(stikerInput) == str:
+                if stiker['sticker']['wbStickerEncoded'] == stikerInput:
+                    orderIdList.append(str(stiker['orderId']))
+                    Flag = True
+                    break
+
         if not Flag:
             print('Заказ {}, не добавлен.'.format(stikerInput))
     Url = 'https://suppliers-api.wildberries.ru/api/v2/supplies/{}'
@@ -129,13 +143,17 @@ def getBarcodeSupply(supplyId):
         Base64 = bytes(response.json()['file'], 'utf-8')
         png_recovered = base64.decodestring(Base64)
         f = open(joinpath(suppDir, 'postavka_{}.pdf'.format(
-            datetime.today())), "wb")
+            datetime.today().date())), "wb")
         f.write(png_recovered)
         f.close()
 
 
 dataorders = get_orders(Token, days=2)
+dataorderspd = pandas.DataFrame(dataorders)
+dataorderspd.to_excel(r'D:\\tmp.xlsx', index=False)
 stikerslist = getStiker(Token, dataorders)
+stikerslistdp = pandas.DataFrame(stikerslist)
+stikerslistdp.to_excel(r'D:\\tmp1.xlsx', index=False)
 if input('Создать поставку? 1-Да, 2-Нет: ') == '1':
     supplyId = crateSupply(Token)
 else:
