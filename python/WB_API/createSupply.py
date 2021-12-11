@@ -1,17 +1,12 @@
-from my_lib import read_xlsx
 import requests
+from datetime import timedelta, datetime
+import base64
+import PyPDF2
 from os.path import join as joinpath
-from os import listdir
-import xlrd
-from GetOrdersInWork import getToken
-import pandas
-from datetime import datetime, timedelta
 
-main_path = r'C:\Users\Public\Documents\WBGetOrder'
-Token_path = joinpath(main_path, r'Token.txt')
-WBOrdersDataFileName = 'ordersForCancel.xlsx'
-WBStikersDataFileName = 'stikersForCancel.xlsx'
-Debug = 0
+
+Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgyYTU2OGZlLTgyNTctNGQ2Yi05ZTg1LTJkYTgxMTgxYWI3MSJ9.ROCdF7eOfTZA-atpsLGTAi15yDzHk2UMes05vwjZwn4'
+suppDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ШК поставки Оренбург'
 
 
 def get_orders(Token, days=3):
@@ -47,11 +42,8 @@ def get_orders(Token, days=3):
     return dataorders
 
 
-def getStiker(OrderNum):
+def getStiker(OrderNum, Token):
     OrderNum = OrderNum if type(OrderNum) != float else int(OrderNum)[0:-2]
-    with open(Token_path, 'r', encoding='UTF-8') as file:
-        Token = file.read()
-        file.close()
     UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
     trying = 0
     OrderNumJson = {"orderIds": [int(OrderNum)]}
@@ -78,7 +70,7 @@ def getStiker(Token, dataorders):
     tmpOrders = []
     UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
     for line in dataorders:
-        if line['status'] == 2:
+        if line['status'] == 1:
             tmpOrders.append(int(line['orderId']))
         if len(tmpOrders) > 999:
             OrderNumJson = {"orderIds": tmpOrders}
@@ -93,34 +85,60 @@ def getStiker(Token, dataorders):
     return stikers
 
 
-def changeStatus(listOrderForChangeStatus, Token):
-    """Изменяет статус заказа на заданный, в данном случае "1" - на сборке"""
-    if Debug != 1:
-        orderListForChange = []
-        Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
-        status = 1
-        orderId = listOrderForChangeStatus
-        datajson = {"orderId": str(orderId),
-                    "status": status}
-        orderListForChange.append(datajson)
-        # response = requests.put(Url, headers={
-        #     'Authorization': '{}'.format(Token)}, json=orderListForChange)
-        print(orderId)
-        # print(response)
-        # print(response.text)
+def crateSupply(Token):
+    Url = 'https://suppliers-api.wildberries.ru/api/v2/supplies'
+
+    response = requests.post(Url, headers={
+        'Authorization': '{}'.format(Token)})
+    if response.status_code != 201:
+        print((response.status_code, response.text))
+    else:
+        print(response.json()['supplyId'])
+        return response.json()['supplyId']
 
 
-def cancelOrder(stikeriD, stikerslist):
-    for line in stikerslist:
-        if str(line['sticker']['wbStickerId']) == stikeriD:
-            listOrderForChangeStatus = line['orderId']
-            changeStatus(listOrderForChangeStatus, getToken())
-           # print('{} отменен.'.format(stikeriD))
-            return 0
+def addOrderInSupply(Token, stikerslist, supplyId):
+    orderIdList = []
+    stikerInput = ''
+    while stikerInput != 0:
+        Flag = False
+        stikerInput = int(input('Введите стикер: '))
+        for stiker in stikerslist:
+            if stiker['sticker']['wbStickerId'] == stikerInput:
+                orderIdList.append(str(stiker['orderId']))
+                Flag = True
+                break
+        if not Flag:
+            print('Заказ {}, не добавлен.'.format(stikerInput))
+    Url = 'https://suppliers-api.wildberries.ru/api/v2/supplies/{}'
+    response = requests.put(Url.format(supplyId), headers={
+        'Authorization': '{}'.format(Token)}, json={'orders': orderIdList})
+    if response.status_code != 204:
+        print((response.status_code, response.text))
+    else:
+        print((response.status_code, response.text))
 
 
-dataorders = get_orders(getToken(), days=5)
-stikerslist = getStiker(getToken(), dataorders)
-while True:
-    stikeriD = str(input('Введи нормер стикера: '))
-    cancelOrder(stikeriD, stikerslist)
+def getBarcodeSupply(supplyId):
+    Url = 'https://suppliers-api.wildberries.ru//api/v2/supplies/{}/barcode?type=pdf'
+    response = requests.get(Url.format(supplyId), headers={
+        'Authorization': '{}'.format(Token)})
+    if response.status_code != 200:
+        print((response.status_code, response.text))
+    else:
+        Base64 = bytes(response.json()['file'], 'utf-8')
+        png_recovered = base64.decodestring(Base64)
+        f = open(joinpath(suppDir, 'postavka_{}.pdf'.format(
+            datetime.today())), "wb")
+        f.write(png_recovered)
+        f.close()
+
+
+dataorders = get_orders(Token, days=2)
+stikerslist = getStiker(Token, dataorders)
+if input('Создать поставку? 1-Да, 2-Нет: ') == '1':
+    supplyId = crateSupply(Token)
+else:
+    supplyId = input('Введите номер поставки: ')
+addOrderInSupply(Token, stikerslist, supplyId)
+getBarcodeSupply(supplyId)
