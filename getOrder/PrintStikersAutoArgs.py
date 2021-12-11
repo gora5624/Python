@@ -26,7 +26,7 @@ main_path = os.path.dirname(os.path.abspath(__file__))
 WBOrdersData = joinpath(
     main_path, r'WBOrdersData')
 TMPDir = joinpath(
-    main_path, r'TMPDir')
+    main_path, r'TMPDirStiker')
 Token_path = joinpath(
     main_path, r'Token.txt')
 fpdf.set_global("SYSTEM_TTFONTS", os.path.join(
