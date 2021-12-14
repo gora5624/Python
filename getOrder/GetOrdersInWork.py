@@ -13,13 +13,13 @@ from os import remove, listdir
 import os
 
 # Режим отладки 1 - да, 0 - боевой режим
-Debug = 0
+Debug = 1
 
 stopList = ['2009539898001', '2009539892009', '2009539656007',
             '2009539490007', '2009539287003', '2009538490008']
 
 main_path = os.path.dirname(os.path.abspath(__file__))
-WBOrdersFileName = 'ФБС {} {} {}.xlsx' if Debug == 0 else 'DEBUG_ФБС {} {} {}.xlsx'
+WBOrdersFileName = 'ФБС {} {} {} {}.xlsx' if Debug == 0 else 'DEBUG_ФБС {} {} {}.xlsx'
 newOrderPath = joinpath(
     r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые', WBOrdersFileName)
 inWorkOrderPath = joinpath(
@@ -119,7 +119,7 @@ def createLineForExcel(line, caseData):
     return lineExcel
 
 
-def createFileName(FilePath, mode):
+def createFileName(FilePath, mode, warehous):
     """Создаёт правильное название файла под каждый заказ"""
     numpiece = 1
     piece = "ч"+str(numpiece)
@@ -141,7 +141,7 @@ def createFileName(FilePath, mode):
     global nowFileName
     if "ФБС принты" not in FilePath.format(nametmp, day, piece):
         nowFileName.append(FilePath.format(nametmp, day, piece))
-    return FilePath.format(nametmp, day, piece)
+    return FilePath.format(nametmp, day, piece, warehous)
 
 
 def getCountGlass(stuffNameIn1C):
@@ -276,7 +276,104 @@ def createPrintExcel(listOrderForChangeStatus, fileName):
             writerCase, sheet_name='Заказать', index=False)
 
 
-def createExcel(listOrderForChangeStatus, listErrorBarcods, mode):
+def createExcel(listOrderForChangeStatusAll, listErrorBarcods, mode):
+    warehous = 'KZN'
+    listOrderForChangeStatus = []
+    for order in listOrderForChangeStatusAll:
+        if order['Склад'] == 'KZN':
+            listOrderForChangeStatus.append(order)
+    if mode != 'glass':
+        listErrorBarcods = pandas.DataFrame(listErrorBarcods)
+        listOrderForChangeStatuspd = pandas.DataFrame(listOrderForChangeStatus)
+        listOrderForOrder = pandas.DataFrame(listOrderForChangeStatus)
+        listErrorBarcods.to_excel(FilePath, index=False)
+        fileName = createFileName(FilePath, mode, warehous)
+        if mode == 'case_without_print':
+            with pandas.ExcelWriter(fileName) as writerCase:
+                listOrderForChangeStatuspd.sort_values(
+                    'Название').to_excel(writerCase, sheet_name='основной', index=False)
+                listOrderForOrder.groupby(['Название', 'ШК']).size().reset_index(name='Количество').to_excel(
+                    writerCase, sheet_name='Заказать', index=False)
+        elif mode == 'case_print':
+            createPrintExcel(listOrderForChangeStatus, fileName)
+        elif mode == 'plankWithPrint':
+            with pandas.ExcelWriter(fileName) as writerCase:
+                listOrderForChangeStatuspd.sort_values(
+                    'Название').to_excel(writerCase, sheet_name='основной', index=False)
+
+    elif mode == 'glass':
+        listErrorBarcods = pandas.DataFrame(listErrorBarcods)
+        listErrorBarcods.to_excel(FilePath, index=False)
+        list3DGlass = []
+        listClearNanoglass = []
+        listMateNanoglass = []
+        listCameraNanoglass = []
+        for lineGlass in listOrderForChangeStatus:
+            glassType, countGlass = getGlassType(lineGlass['Название'])
+            if glassType == 'glass3D':
+                lineGlass['Количество'] = countGlass
+                list3DGlass.append(lineGlass)
+            elif glassType == 'nanoglassClear':
+                lineGlass['Количество'] = countGlass
+                listClearNanoglass.append(lineGlass)
+            elif glassType == 'nanoglassMate':
+                lineGlass['Количество'] = countGlass
+                listMateNanoglass.append(lineGlass)
+            elif glassType == 'nanoglassCamera':
+                lineGlass['Количество'] = countGlass
+                listCameraNanoglass.append(lineGlass)
+        listForOrder3D = createlineForOrderGlass(listOrderForChangeStatus)
+        listForOrder3Dpd = pandas.DataFrame(listForOrder3D)
+        list3DGlass = pandas.DataFrame(list3DGlass)
+        listClearNanoglass = pandas.DataFrame(listClearNanoglass)
+        listMateNanoglass = pandas.DataFrame(listMateNanoglass)
+        listCameraNanoglass = pandas.DataFrame(listCameraNanoglass)
+        fileName = createFileName(FilePath, mode, warehous)
+        with pandas.ExcelWriter(fileName) as writerglass:
+            try:
+                listForOrder3Dpd.groupby(['Название']).sum().reset_index().to_excel(
+                    writerglass, sheet_name='Заказ_3D', index=False)
+            except KeyError:
+                listForOrder3Dpd.to_excel(
+                    writerglass, sheet_name='Заказ_3D', index=False)
+            try:
+                list3DGlass.sort_values(
+                    'Название').to_excel(
+                    writerglass, sheet_name='3D_стекла', index=False)
+            except KeyError:
+                list3DGlass.to_excel(
+                    writerglass, sheet_name='3D_стекла', index=False)
+            try:
+                listClearNanoglass.sort_values(
+                    'Название').to_excel(
+                    writerglass, sheet_name='глянец', index=False)
+            except KeyError:
+                listClearNanoglass.to_excel(
+                    writerglass, sheet_name='глянец', index=False)
+            try:
+                listMateNanoglass.sort_values(
+                    'Название').to_excel(
+                    writerglass, sheet_name='матовые', index=False)
+            except KeyError:
+                listMateNanoglass.to_excel(
+                    writerglass, sheet_name='матовые', index=False)
+            try:
+                listCameraNanoglass.sort_values(
+                    'Название').to_excel(
+                    writerglass, sheet_name='камеры', index=False)
+            except KeyError:
+                listCameraNanoglass.to_excel(
+                    writerglass, sheet_name='камеры', index=False)
+    if Debug != 1:
+        copyfile(fileName, fileName.replace(WBOrdersData, OrderDir))
+
+
+def createExcelOren(listOrderForChangeStatusAll, listErrorBarcods, mode):
+    warehous = 'ORB'
+    listOrderForChangeStatus = []
+    for order in listOrderForChangeStatusAll:
+        if order['Склад'] == 'ORB':
+            listOrderForChangeStatus.append(order)
     if mode != 'glass':
         listErrorBarcods = pandas.DataFrame(listErrorBarcods)
         listOrderForChangeStatuspd = pandas.DataFrame(listOrderForChangeStatus)
@@ -323,7 +420,7 @@ def createExcel(listOrderForChangeStatus, listErrorBarcods, mode):
         listClearNanoglass = pandas.DataFrame(listClearNanoglass)
         listMateNanoglass = pandas.DataFrame(listMateNanoglass)
         listCameraNanoglass = pandas.DataFrame(listCameraNanoglass)
-        fileName = createFileName(FilePath, mode)
+        fileName = createFileName(FilePath, mode, warehous)
         with pandas.ExcelWriter(fileName) as writerglass:
             try:
                 listForOrder3Dpd.groupby(['Название']).sum().reset_index().to_excel(
@@ -412,6 +509,7 @@ def orderFilter(ordersForFilter, mode):
         splitOrders(listOrderForChangeStatus, listErrorBarcods)
     else:
         createExcel(listOrderForChangeStatus, listErrorBarcods, mode)
+        createExcelOren(listOrderForChangeStatus, listErrorBarcods, mode)
 
     return listOrderForChangeStatus
 
@@ -454,11 +552,13 @@ def splitOrders(listOrderForChangeStatus, listErrorBarcods):
     for order in listOrderForChangeStatus:
         if (i + 1 > int(float(countOrder) // countOrdersFiles)) and (normalNameForSplit(order) != normalNameForSplit(orders[-1])):
             createExcel(orders, listErrorBarcods, mode)
+            createExcelOren(orders, listErrorBarcods, mode)
             i = 0
             orders = []
         orders.append(order)
         i += 1
     createExcel(orders, listErrorBarcods, mode)
+    createExcelOren(orders, listErrorBarcods, mode)
 
 
 def getToken():
