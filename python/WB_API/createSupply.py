@@ -1,7 +1,6 @@
 import requests
 from datetime import timedelta, datetime
 import base64
-import PyPDF2
 from os.path import join as joinpath
 import pandas
 
@@ -95,6 +94,10 @@ def crateSupply(Token):
         print((response.status_code, response.text))
     else:
         print(response.json()['supplyId'])
+        with open(joinpath(suppDir, 'postavkaOren.txt'), 'a', encoding='utf-8') as file:
+            file.writelines(response.json()['supplyId'] + ' ' + str(
+                datetime.today().date()))
+            file.close()
         return response.json()['supplyId']
 
 
@@ -142,7 +145,7 @@ def getBarcodeSupply(supplyId):
     else:
         Base64 = bytes(response.json()['file'], 'utf-8')
         png_recovered = base64.decodestring(Base64)
-        f = open(joinpath(suppDir, 'postavka_{}.pdf'.format(
+        f = open(joinpath(suppDir, 'postavkaOren_{}.pdf'.format(
             datetime.today().date())), "wb")
         f.write(png_recovered)
         f.close()
@@ -160,3 +163,4 @@ else:
     supplyId = input('Введите номер поставки: ')
 addOrderInSupply(Token, stikerslist, supplyId)
 getBarcodeSupply(supplyId)
+input('Готово, нажмите Enter')
