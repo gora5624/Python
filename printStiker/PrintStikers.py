@@ -236,6 +236,7 @@ def create_1C_barcod(case_name, case_art, bar, warehous, procNum):
 
 
 def getStiker(OrderNum):
+    print(OrderNum)
     OrderNum = OrderNum if type(OrderNum) != float else int(OrderNum)[0:-2]
     with open(Token_path, 'r', encoding='UTF-8') as file:
         Token = file.read()
@@ -257,10 +258,11 @@ def getStiker(OrderNum):
                 continue
         except:
             continue
-    try:
-        return response.json()['data'][0]['sticker']['wbStickerSvgBase64']
-    except IndexError:
-        return getStiker(OrderNum)
+    # try:
+    #     return response.json()['data'][0]['sticker']['wbStickerSvgBase64']
+    # except IndexError:
+    #     return getStiker(OrderNum)
+    return response.json()['data'][0]['sticker']['wbStickerSvgBase64']
 
 
 def create_WB_barcod(OrderNum, procNum):
