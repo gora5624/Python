@@ -1,7 +1,6 @@
 import os
 from os.path import join as joinpath
 import shutil
-import time
 mainPath = os.path.dirname(os.path.abspath(__file__))
 upDateDirPath = r'\\192.168.0.33\shared\_Транзит_\updateSoft\{}'
 mode = ''
