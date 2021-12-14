@@ -150,7 +150,7 @@ def cancelOrder(Token, stikerslist):
             print('Заказ {}, не добавлен.'.format(stikerInput))
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
     response = requests.put(Url, headers={
-        'Authorization': '{}'.format(Token)}, json={datajson})
+        'Authorization': '{}'.format(Token)}, json=datajson)
     if response.status_code != 200:
         print((response.status_code, response.text))
     else:
