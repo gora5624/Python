@@ -352,8 +352,8 @@ def menu():
 def make_with_name(OrderFileName, mode2, days, procNum):
 
     data_from_order = read_xlsx_by_name(joinpath(OrderFileName), 'основной')
-    data_about_order = recreate_data(
-        read_xlsx(joinpath(WBOrdersData, WBOrdersDataFileName)))
+    # data_about_order = recreate_data(
+    #     read_xlsx(joinpath(WBOrdersData, WBOrdersDataFileName)))
     data_for_print = {}
     for order in data_from_order:
         if order['Название'].replace('\xa0', ' ') not in data_for_print:
