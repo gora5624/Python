@@ -3,6 +3,7 @@ from datetime import timedelta, datetime
 import base64
 from os.path import join as joinpath
 import pandas
+import os
 
 
 Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgyYTU2OGZlLTgyNTctNGQ2Yi05ZTg1LTJkYTgxMTgxYWI3MSJ9.ROCdF7eOfTZA-atpsLGTAi15yDzHk2UMes05vwjZwn4'
@@ -151,16 +152,32 @@ def getBarcodeSupply(supplyId):
         f.close()
 
 
+def closeSupply(supplyId):
+    Url = 'https://suppliers-api.wildberries.ru//api/v2/supplies/{}/close'
+    response = requests.post(Url.format(supplyId), headers={
+        'Authorization': '{}'.format(Token)})
+    if response.status_code != 204:
+        print((response.status_code, response.text))
+    else:
+        print('Поставка {} успешно закрыта.'.format(supplyId))
+
+
 dataorders = get_orders(Token, days=2)
 dataorderspd = pandas.DataFrame(dataorders)
-dataorderspd.to_excel(r'D:\\tmp.xlsx', index=False)
+dataorderspd.to_excel(joinpath(os.path.dirname(
+    os.path.abspath(__file__)), r'\tmp.xlsx'), index=False)
 stikerslist = getStiker(Token, dataorders)
 stikerslistdp = pandas.DataFrame(stikerslist)
-stikerslistdp.to_excel(r'D:\\tmp1.xlsx', index=False)
+stikerslistdp.to_excel(joinpath(os.path.dirname(
+    os.path.abspath(__file__)), r'\tmp.xlsx'), index=False)
 if input('Создать поставку? 1-Да, 2-Нет: ') == '1':
     supplyId = crateSupply(Token)
 else:
     supplyId = input('Введите номер поставки: ')
 addOrderInSupply(Token, stikerslist, supplyId)
 getBarcodeSupply(supplyId)
+if input('Закрыть поставку {}? 1 - Закрыть, 0 - оставить открытой.: '.format(supplyId)) == '1':
+    closeSupply(supplyId)
+else:
+    print('Поставка не {} закрыта.'.format(supplyId))
 input('Готово, нажмите Enter')
