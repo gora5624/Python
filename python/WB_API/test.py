@@ -47,16 +47,13 @@ def get_orders(Token, days=3):
 def changeStatus(listOrderForChangeStatus, Token):
     """Изменяет статус заказа на заданный, в данном случае "1" - на сборке"""
     orderListForChange = []
+    Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
     for order in listOrderForChangeStatus:
-        if order['wbWhId'] == 117986:
-            if Debug != 1:
-                Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
-                status = 2
-                datajson = {"orderId": str(order['orderId']),
-                            "status": status}
-                orderListForChange.append(datajson)
-        else:
-            pass
+        if order['wbWhId'] == 117986 and order['status'] == 1:
+            orderListForChange.append({"orderId": str(order['orderId']),
+                                       "status": 2})
+        elif order['wbWhId'] == 123821 and order['status'] == 1:
+            continue
     response = requests.put(Url, headers={
         'Authorization': '{}'.format(Token)}, json=orderListForChange)
     print(response)
@@ -64,5 +61,4 @@ def changeStatus(listOrderForChangeStatus, Token):
 
 
 dataorders = get_orders(getToken(), days=5)
-while True:
-    changeStatus(dataorders, Token)
+changeStatus(dataorders, Token)
