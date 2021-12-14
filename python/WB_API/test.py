@@ -1,10 +1,6 @@
-from my_lib import read_xlsx
 import requests
 from os.path import join as joinpath
-from os import listdir
-import xlrd
 from GetOrdersInWork import getToken
-import pandas
 from datetime import datetime, timedelta
 
 main_path = r'C:\Users\Public\Documents\WBGetOrder'
@@ -50,25 +46,23 @@ def get_orders(Token, days=3):
 
 def changeStatus(listOrderForChangeStatus, Token):
     """Изменяет статус заказа на заданный, в данном случае "1" - на сборке"""
+    orderListForChange = []
     for order in listOrderForChangeStatus:
-        if order['Склад'] == '1':
+        if order['wbWhId'] == 117986:
+            if Debug != 1:
+                Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
+                status = 2
+                datajson = {"orderId": str(order['orderId']),
+                            "status": status}
+                orderListForChange.append(datajson)
+        else:
             pass
-    if Debug != 1:
-        orderListForChange = []
-        Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
-        status = 2
-        orderId = listOrderForChangeStatus
-        datajson = {"orderId": str(orderId),
-                    "status": status}
-        orderListForChange.append(datajson)
-        response = requests.put(Url, headers={
-            'Authorization': '{}'.format(Token)}, json=orderListForChange)
-        print(orderId)
-        print(response)
-        print(response.text)
+    response = requests.put(Url, headers={
+        'Authorization': '{}'.format(Token)}, json=orderListForChange)
+    print(response)
+    print(response.text)
 
 
-dataorders = get_orders(getToken(), days=15)
+dataorders = get_orders(getToken(), days=5)
 while True:
-    #stikeriD = str(input('Введи нормер стикера: '))
     changeStatus(dataorders, Token)
