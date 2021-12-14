@@ -679,7 +679,7 @@ if __name__ == '__main__':
                 break
             nowFileName = []
             changeStatus(orderFilter(data, mode), Token)
-            if read_xlsx(joinpath(WBOrdersData, r'ФБС {} {} {}.xlsx'), title='No') != []:
+            if read_xlsx(joinpath(WBOrdersData, WBOrdersFileName), title='No') != []:
                 print('ОБНОВИ БАЗУ')
         print('Не выключайте программу, идёт формирование ценников!')
 
