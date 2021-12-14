@@ -56,7 +56,7 @@ def changeStatus(listOrderForChangeStatus, Token):
                 orderListForChange = []
                 Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
                 status = 2
-                orderId = listOrderForChangeStatus
+
                 datajson = {"orderId": str(orderId),
                             "status": status}
                 orderListForChange.append(datajson)
