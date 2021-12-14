@@ -1,43 +1,74 @@
-
-from os.path import join as joinpath
-import requests
 from my_lib import read_xlsx
+import requests
+from os.path import join as joinpath
+from os import listdir
+import xlrd
+from GetOrdersInWork import getToken
 import pandas
-import json
-import multiprocessing
-import uuid
+from datetime import datetime, timedelta
 
-main_path = r'C:\Users\Public\Documents\WBChangeStuff'
-nameListStuff = r'StuffList.xlsx'
-pathToListStuff = joinpath(main_path, nameListStuff)
+main_path = r'C:\Users\Public\Documents\WBGetOrder'
 Token_path = joinpath(main_path, r'Token.txt')
-outListName = 'barcodes and art.xlsx'
-outListName2 = 'barcodes and art2.xlsx'
-outListPath = joinpath(main_path, outListName)
-outListPath2 = joinpath(main_path, outListName2)
+WBOrdersDataFileName = 'ordersForCancel.xlsx'
+WBStikersDataFileName = 'stikersForCancel.xlsx'
+Debug = 0
+Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgyYTU2OGZlLTgyNTctNGQ2Yi05ZTg1LTJkYTgxMTgxYWI3MSJ9.ROCdF7eOfTZA-atpsLGTAi15yDzHk2UMes05vwjZwn4'
 
 
-def getIdWithBarcod(barcod):
-    id = str(uuid.uuid4())
-    with open(Token_path, 'r', encoding='UTF-8') as file:
-        Token = file.read()
-        file.close()
-    Url = 'https://suppliers-api.wildberries.ru/card/upload/file/multipart'
+def get_orders(Token, days=3):
+    """Получает заказы за последние 3 дня"""
+    print("Идёт получение свежих заказов, ожидайте...")
+    Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
 
-    while True:
-        try:
-            response = requests.post(Url, headers={
-                'Authorization': '{}'.format(Token), 'Content-Type': 'multipart/form-data', 'X-File-Id': id}, json=datajson)
-            if response.status_code == 200:
-                break
-            else:
-                print(response.text)
+    start_data = (datetime.today() - timedelta(days=int(days))).isoformat('T', 'seconds').replace(
+        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+    count_skip = 1
+    tmp = []
+    dataorders = []
+    flag = True
+    while len(tmp) > 0 or flag:
+        CountTry = 0
+        flag = False
+        while True:
+            CountTry += 1
+            try:
+                response = requests.get(Url.format(start_data, count_skip), headers={
+                    'Authorization': '{}'.format(Token)})
+                if response.status_code == 200:
+                    break
+                elif CountTry > 500:
+                    print("Не удалось достучасться до ВБ")
+                else:
+                    continue
+            except:
                 continue
-        except:
-            continue
-    a = response.json()['result']['cards'][0]
-    print(barcod)
-    return response.json()['result']['cards'][0]['imtId']
+        count_skip = count_skip+1000
+        tmp = response.json()['orders']
+        dataorders.extend(tmp)
+    return dataorders
 
 
-getIdWithBarcod('2011689379002')
+def changeStatus(listOrderForChangeStatus, Token):
+    """Изменяет статус заказа на заданный, в данном случае "1" - на сборке"""
+    for order in listOrderForChangeStatus:
+        if order['Склад'] == '1':
+            pass
+    if Debug != 1:
+        orderListForChange = []
+        Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
+        status = 2
+        orderId = listOrderForChangeStatus
+        datajson = {"orderId": str(orderId),
+                    "status": status}
+        orderListForChange.append(datajson)
+        response = requests.put(Url, headers={
+            'Authorization': '{}'.format(Token)}, json=orderListForChange)
+        print(orderId)
+        print(response)
+        print(response.text)
+
+
+dataorders = get_orders(getToken(), days=15)
+while True:
+    #stikeriD = str(input('Введи нормер стикера: '))
+    changeStatus(dataorders, Token)
