@@ -13,13 +13,13 @@ from os import remove, listdir
 import os
 
 # Режим отладки 1 - да, 0 - боевой режим
-Debug = 1
+Debug = 0
 
 stopList = ['2009539898001', '2009539892009', '2009539656007',
             '2009539490007', '2009539287003', '2009538490008']
 
 main_path = os.path.dirname(os.path.abspath(__file__))
-WBOrdersFileName = 'ФБС {} {} {} {}.xlsx' if Debug == 0 else 'DEBUG_ФБС {} {} {}.xlsx'
+WBOrdersFileName = 'ФБС {} {} {} {}.xlsx' if Debug == 0 else 'DEBUG_ФБС {} {} {} {}.xlsx'
 newOrderPath = joinpath(
     r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые', WBOrdersFileName)
 inWorkOrderPath = joinpath(
@@ -134,13 +134,13 @@ def createFileName(FilePath, mode, warehous):
     elif mode == 'plankWithPrint':
         nametmp = 'планки принты'
     day = datetime.today().date().strftime(r"%d.%m.%Y")
-    while file_exists(FilePath.format(nametmp, day, piece)) or file_exists(newOrderPath.format(nametmp, day, piece)) or file_exists(inWorkOrderPath.format(nametmp, day, piece)) or file_exists(doneOrderPath.format(nametmp, day, piece)):
+    while file_exists(FilePath.format(nametmp, day, piece, warehous)) or file_exists(newOrderPath.format(nametmp, day, piece, warehous)) or file_exists(inWorkOrderPath.format(nametmp, day, piece, warehous)) or file_exists(doneOrderPath.format(nametmp, day, piece, warehous)):
         numpiece += 1
         piece = "ч"+str(numpiece)
-    print(FilePath.format(nametmp, day, piece))
+    print(FilePath.format(nametmp, day, piece, warehous))
     global nowFileName
-    if "ФБС принты" not in FilePath.format(nametmp, day, piece):
-        nowFileName.append(FilePath.format(nametmp, day, piece))
+    if "ФБС принты" not in FilePath.format(nametmp, day, piece, warehous):
+        nowFileName.append(FilePath.format(nametmp, day, piece, warehous))
     return FilePath.format(nametmp, day, piece, warehous)
 
 
@@ -379,7 +379,7 @@ def createExcelOren(listOrderForChangeStatusAll, listErrorBarcods, mode):
         listOrderForChangeStatuspd = pandas.DataFrame(listOrderForChangeStatus)
         listOrderForOrder = pandas.DataFrame(listOrderForChangeStatus)
         listErrorBarcods.to_excel(FilePath, index=False)
-        fileName = createFileName(FilePath, mode)
+        fileName = createFileName(FilePath, mode, warehous)
         if mode == 'case_without_print':
             with pandas.ExcelWriter(fileName) as writerCase:
                 listOrderForChangeStatuspd.sort_values(
