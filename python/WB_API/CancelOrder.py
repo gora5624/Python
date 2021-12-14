@@ -12,6 +12,7 @@ Token_path = joinpath(main_path, r'Token.txt')
 WBOrdersDataFileName = 'ordersForCancel.xlsx'
 WBStikersDataFileName = 'stikersForCancel.xlsx'
 Debug = 0
+Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgyYTU2OGZlLTgyNTctNGQ2Yi05ZTg1LTJkYTgxMTgxYWI3MSJ9.ROCdF7eOfTZA-atpsLGTAi15yDzHk2UMes05vwjZwn4'
 
 
 def get_orders(Token, days=3):
@@ -78,7 +79,7 @@ def getStiker(Token, dataorders):
     tmpOrders = []
     UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
     for line in dataorders:
-        if line['status'] == 2:
+        if line['status'] == 1:
             tmpOrders.append(int(line['orderId']))
         if len(tmpOrders) > 999:
             OrderNumJson = {"orderIds": tmpOrders}
@@ -119,8 +120,45 @@ def cancelOrder(stikeriD, stikerslist):
             return 0
 
 
+def cancelOrder(Token, stikerslist):
+    datajson = []
+    stikerInput = 0
+    while True:
+        Flag = False
+        tmp = input('Введите стикер, 0 - выйти: ')
+        if tmp == '0':
+            break
+        try:
+            stikerInput = int(tmp)
+        except:
+            stikerInput = tmp
+        for stiker in stikerslist:
+            if type(stikerInput) == int:
+                if stiker['sticker']['wbStickerId'] == stikerInput:
+                    datajson.append({"orderId": str(stiker['orderId']),
+                                     "status": 3})
+                    Flag = True
+                    break
+            elif type(stikerInput) == str:
+                if stiker['sticker']['wbStickerEncoded'] == stikerInput:
+                    datajson.append({"orderId": str(stiker['orderId']),
+                                     "status": 3})
+                    Flag = True
+                    break
+
+        if not Flag:
+            print('Заказ {}, не добавлен.'.format(stikerInput))
+    Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
+    response = requests.put(Url, headers={
+        'Authorization': '{}'.format(Token)}, json={datajson})
+    if response.status_code != 200:
+        print((response.status_code, response.text))
+    else:
+        print((response.status_code, response.text))
+
+
 dataorders = get_orders(getToken(), days=5)
 stikerslist = getStiker(getToken(), dataorders)
 while True:
-    stikeriD = str(input('Введи нормер стикера: '))
-    cancelOrder(stikeriD, stikerslist)
+    #stikeriD = str(input('Введи нормер стикера: '))
+    cancelOrder(Token, stikerslist)
