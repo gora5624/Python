@@ -32,14 +32,22 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.btnClicked)
         self.ui.pushButton_2.clicked.connect(self.updateComboBox)
-        for excel in os.listdir(pathToOrders):
+        for excel in os.listdir(pathToOrdersKZN):
+            if '~' not in excel:
+                self.ui.comboBox.addItem(
+                    excel) if '~' not in excel else self.ui.comboBox
+        for excel in os.listdir(pathToOrdersORB):
             if '~' not in excel:
                 self.ui.comboBox.addItem(
                     excel) if '~' not in excel else self.ui.comboBox
 
     def updateComboBox(self):
         self.ui.comboBox.clear()
-        for excel in os.listdir(pathToOrders):
+        for excel in os.listdir(pathToOrdersKZN):
+            if '~' not in excel:
+                self.ui.comboBox.addItem(
+                    excel) if '~' not in excel else self.ui.comboBox
+        for excel in os.listdir(pathToOrdersORB):
             if '~' not in excel:
                 self.ui.comboBox.addItem(
                     excel) if '~' not in excel else self.ui.comboBox
@@ -48,9 +56,12 @@ class mywindow(QtWidgets.QMainWindow):
     def btnClicked(self, a):
         self.ui.textEdit.setText('Ожидайте, идёт формирование ценников')
         text = self.ui.comboBox.currentText()
-        t1 = multiprocessing.Process(
-            target=main, args=(os.path.join(pathToOrders, text), str(datetime.today()).replace(":", '.'),))
-
+        if file_exists(os.path.join(pathToOrdersKZN, text)):
+            t1 = multiprocessing.Process(
+                target=main, args=(os.path.join(pathToOrdersKZN, text), str(datetime.today()).replace(":", '.'),))
+        elif file_exists(os.path.join(pathToOrdersORB, text)):
+            t1 = multiprocessing.Process(
+                target=main, args=(os.path.join(pathToOrdersORB, text), str(datetime.today()).replace(":", '.'),))
         t1.start()
 
     def closeEvent(self, event):
@@ -69,7 +80,8 @@ class mywindow(QtWidgets.QMainWindow):
             event.ignore()
 
 
-pathToOrders = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
+pathToOrdersKZN = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\KZN'
+pathToOrdersORB = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ORB'
 WBOrdersDataFileName = r'Data_orders.xlsx'
 WBOrdersJsonDataFileName = r'Order.json'
 main_path = os.path.dirname(os.path.abspath(__file__))
