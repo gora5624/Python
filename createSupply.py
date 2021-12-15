@@ -8,6 +8,8 @@ import os
 
 Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgyYTU2OGZlLTgyNTctNGQ2Yi05ZTg1LTJkYTgxMTgxYWI3MSJ9.ROCdF7eOfTZA-atpsLGTAi15yDzHk2UMes05vwjZwn4'
 suppDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ШК поставки Оренбург'
+# Режим отладки 1 - да, 0 - боевой режим
+Debug = 0
 
 
 def get_orders(Token, days=3):
@@ -95,7 +97,7 @@ def crateSupply(Token):
         print((response.status_code, response.text))
     else:
         print(response.json()['supplyId'])
-        with open(joinpath(suppDir, 'postavkaOren.txt'), 'a', encoding='utf-8') as file:
+        with open(joinpath(suppDir, 'postavka.txt'), 'a', encoding='utf-8') as file:
             file.writelines(response.json()['supplyId'] + ' ' + str(
                 datetime.today().date()))
             file.close()
@@ -135,6 +137,7 @@ def addOrderInSupply(Token, stikerslist, supplyId):
         print((response.status_code, response.text))
     else:
         print((response.status_code, response.text))
+    changeStatus(orderIdList, Token)
 
 
 def getBarcodeSupply(supplyId):
@@ -146,8 +149,8 @@ def getBarcodeSupply(supplyId):
     else:
         Base64 = bytes(response.json()['file'], 'utf-8')
         png_recovered = base64.decodestring(Base64)
-        f = open(joinpath(suppDir, 'postavkaOren_{}.pdf'.format(
-            datetime.today().date())), "wb")
+        f = open(joinpath(suppDir, '{}_от_{}.pdf'.format(supplyId,
+                                                         datetime.today().date())), "wb")
         f.write(png_recovered)
         f.close()
 
@@ -160,6 +163,47 @@ def closeSupply(supplyId):
         print((response.status_code, response.text))
     else:
         print('Поставка {} успешно закрыта.'.format(supplyId))
+
+
+def changeStatus(listOrderForChangeStatus, Token):
+    """Изменяет статус заказа на заданный, в данном случае "1" - на сборке"""
+    if Debug != 1:
+        orderListForChange = []
+        Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
+        if Debug == 1:
+            status = 0
+        else:
+            status = 2
+        for orderId in listOrderForChangeStatus:
+            if len(orderListForChange) < 1000:
+                datajson = []
+                datajson = {"orderId": orderId,
+                            "status": status}
+                orderListForChange.append(datajson)
+            else:
+                while True:
+                    try:
+                        response = requests.put(Url, headers={
+                            'Authorization': '{}'.format(Token)}, json=orderListForChange)
+                        if response.status_code != 200:
+                            continue
+                        elif response.status_code == 200:
+                            break
+                    except:
+                        continue
+                orderListForChange = []
+                print(response)
+        while True:
+            try:
+                response = requests.put(Url, headers={
+                    'Authorization': '{}'.format(Token)}, json=orderListForChange)
+                if response.status_code != 200:
+                    continue
+                elif response.status_code == 200:
+                    break
+            except:
+                continue
+        print(response)
 
 
 dataorders = get_orders(Token, days=2)

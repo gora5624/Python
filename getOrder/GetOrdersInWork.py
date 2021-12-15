@@ -35,7 +35,8 @@ listStuffPath = joinpath(main_path, r'TMPDir',
                          'Список номенклатуры — копия.XLSX')
 FilePath = joinpath(WBOrdersData, WBOrdersFileName)
 sizeListPath = r'\\192.168.0.33\shared\Отдел производство\Wildberries\список печати.xlsx'
-OrderDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
+OrderDirKZN = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\KZN'
+OrderDirORB = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ORB'
 pathToMakePrint = joinpath('main_path', 'PrintStikersAutoArgs.py')
 nowFileName = []
 
@@ -365,7 +366,7 @@ def createExcel(listOrderForChangeStatusAll, listErrorBarcods, mode):
                 listCameraNanoglass.to_excel(
                     writerglass, sheet_name='камеры', index=False)
     if Debug != 1:
-        copyfile(fileName, fileName.replace(WBOrdersData, OrderDir))
+        copyfile(fileName, fileName.replace(WBOrdersData, OrderDirKZN))
 
 
 def createExcelOren(listOrderForChangeStatusAll, listErrorBarcods, mode):
@@ -374,6 +375,8 @@ def createExcelOren(listOrderForChangeStatusAll, listErrorBarcods, mode):
     for order in listOrderForChangeStatusAll:
         if order['Склад'] == 'ORB':
             listOrderForChangeStatus.append(order)
+    if len(listOrderForChangeStatus) == 0:
+        return 0
     if mode != 'glass':
         listErrorBarcods = pandas.DataFrame(listErrorBarcods)
         listOrderForChangeStatuspd = pandas.DataFrame(listOrderForChangeStatus)
@@ -457,7 +460,7 @@ def createExcelOren(listOrderForChangeStatusAll, listErrorBarcods, mode):
                 listCameraNanoglass.to_excel(
                     writerglass, sheet_name='камеры', index=False)
     if Debug != 1:
-        copyfile(fileName, fileName.replace(WBOrdersData, OrderDir))
+        copyfile(fileName, fileName.replace(WBOrdersData, OrderDirORB))
 
 
 def orderFilter(ordersForFilter, mode):
