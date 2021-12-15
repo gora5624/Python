@@ -43,6 +43,10 @@ class mywindow(QtWidgets.QMainWindow):
 
     def updateComboBox(self):
         self.ui.comboBox.clear()
+        for excel in os.listdir(pathToOrders):
+            if '~' not in excel:
+                self.ui.comboBox.addItem(
+                    excel) if '~' not in excel else self.ui.comboBox
         for excel in os.listdir(pathToOrdersKZN):
             if '~' not in excel:
                 self.ui.comboBox.addItem(
@@ -62,6 +66,9 @@ class mywindow(QtWidgets.QMainWindow):
         elif file_exists(os.path.join(pathToOrdersORB, text)):
             t1 = multiprocessing.Process(
                 target=main, args=(os.path.join(pathToOrdersORB, text), str(datetime.today()).replace(":", '.'),))
+        elif file_exists(os.path.join(pathToOrders, text)):
+            t1 = multiprocessing.Process(
+                target=main, args=(os.path.join(pathToOrders, text), str(datetime.today()).replace(":", '.'),))
         t1.start()
 
     def closeEvent(self, event):
@@ -82,6 +89,7 @@ class mywindow(QtWidgets.QMainWindow):
 
 pathToOrdersKZN = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\KZN'
 pathToOrdersORB = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ORB'
+pathToOrders = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
 WBOrdersDataFileName = r'Data_orders.xlsx'
 WBOrdersJsonDataFileName = r'Order.json'
 main_path = os.path.dirname(os.path.abspath(__file__))
