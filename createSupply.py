@@ -7,7 +7,7 @@ import os
 
 
 Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgyYTU2OGZlLTgyNTctNGQ2Yi05ZTg1LTJkYTgxMTgxYWI3MSJ9.ROCdF7eOfTZA-atpsLGTAi15yDzHk2UMes05vwjZwn4'
-suppDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ШК поставки Оренбург'
+suppDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ШК поставки'
 # Режим отладки 1 - да, 0 - боевой режим
 Debug = 0
 
@@ -45,35 +45,12 @@ def get_orders(Token, days=3):
     return dataorders
 
 
-def getStiker(OrderNum, Token):
-    OrderNum = OrderNum if type(OrderNum) != float else int(OrderNum)[0:-2]
-    UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
-    trying = 0
-    OrderNumJson = {"orderIds": [int(OrderNum)]}
-    while True:
-        trying += 1
-        try:
-            response = requests.post(UrlStiker, headers={
-                'Authorization': '{}'.format(Token)}, json=OrderNumJson)
-            if response.status_code == 200:
-                break
-            elif trying > 500:
-                print("Не удолось достучаться до сервера ВБ")
-                return 1
-            else:
-                continue
-        except:
-            continue
-
-    return response.json()['data'][0]['sticker']['wbStickerSvgBase64']
-
-
 def getStiker(Token, dataorders):
     stikers = []
     tmpOrders = []
     UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
     for line in dataorders:
-        if line['status'] == 1:
+        if line['status'] == 0 or line['status'] == 1:
             tmpOrders.append(int(line['orderId']))
         if len(tmpOrders) > 999:
             OrderNumJson = {"orderIds": tmpOrders}
@@ -81,7 +58,7 @@ def getStiker(Token, dataorders):
                 'Authorization': '{}'.format(Token)}, json=OrderNumJson)
             stikers.extend(response.json()['data'])
             tmpOrders = []
-    OrderNumJson = {"orderIds": [tmpOrders]}
+    OrderNumJson = {"orderIds": tmpOrders}
     response = requests.post(UrlStiker, headers={
         'Authorization': '{}'.format(Token)}, json=OrderNumJson)
     stikers.extend(response.json()['data'])
@@ -97,10 +74,13 @@ def crateSupply(Token):
         print((response.status_code, response.text))
     else:
         print(response.json()['supplyId'])
-        with open(joinpath(suppDir, 'postavka.txt'), 'a', encoding='utf-8') as file:
-            file.writelines(response.json()['supplyId'] + ' ' + str(
-                datetime.today().date()))
-            file.close()
+        try:
+            with open(joinpath(suppDir, 'postavka.txt'), 'a', encoding='utf-8') as file:
+                file.writelines(response.json()['supplyId'] + ' ' + str(
+                    datetime.today().date()))
+                file.close()
+        except FileNotFoundError:
+            print('Поставка создана, но не записана в файл.')
         return response.json()['supplyId']
 
 
@@ -137,7 +117,8 @@ def addOrderInSupply(Token, stikerslist, supplyId):
         print((response.status_code, response.text))
     else:
         print((response.status_code, response.text))
-    changeStatus(orderIdList, Token)
+        if response.status_code == 204:
+            changeStatus(orderIdList, Token)
 
 
 def getBarcodeSupply(supplyId):
@@ -206,14 +187,14 @@ def changeStatus(listOrderForChangeStatus, Token):
         print(response)
 
 
-dataorders = get_orders(Token, days=2)
+dataorders = get_orders(Token, days=3)
 dataorderspd = pandas.DataFrame(dataorders)
 dataorderspd.to_excel(joinpath(os.path.dirname(
     os.path.abspath(__file__)), r'\tmp.xlsx'), index=False)
 stikerslist = getStiker(Token, dataorders)
 stikerslistdp = pandas.DataFrame(stikerslist)
 stikerslistdp.to_excel(joinpath(os.path.dirname(
-    os.path.abspath(__file__)), r'\tmp.xlsx'), index=False)
+    os.path.abspath(__file__)), r'\tmp2.xlsx'), index=False)
 if input('Создать поставку? 1-Да, 2-Нет: ') == '1':
     supplyId = crateSupply(Token)
 else:

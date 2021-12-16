@@ -39,6 +39,8 @@ OrderDirKZN = r'\\192.168.0.33\shared\_Общие документы_\Заказ
 OrderDirORB = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ORB'
 pathToMakePrint = joinpath('main_path', 'PrintStikersAutoArgs.py')
 nowFileName = []
+dirList = [OrderDirKZN, OrderDirORB,
+           newOrderPath, doneOrderPath, inWorkOrderPath, WBOrdersData]
 
 
 def startChek():
@@ -135,9 +137,10 @@ def createFileName(FilePath, mode, warehous):
     elif mode == 'plankWithPrint':
         nametmp = 'планки принты'
     day = datetime.today().date().strftime(r"%d.%m.%Y")
-    while file_exists(FilePath.format(nametmp, day, piece, warehous)) or file_exists(newOrderPath.format(nametmp, day, piece, warehous)) or file_exists(inWorkOrderPath.format(nametmp, day, piece, warehous)) or file_exists(doneOrderPath.format(nametmp, day, piece, warehous)):
-        numpiece += 1
-        piece = "ч"+str(numpiece)
+    for dir in dirList:
+        if file_exists(dir.format(nametmp, day, piece, warehous)):
+            numpiece += 1
+            piece = "ч"+str(numpiece)
     print(FilePath.format(nametmp, day, piece, warehous))
     global nowFileName
     if "ФБС принты" not in FilePath.format(nametmp, day, piece, warehous):
