@@ -36,11 +36,15 @@ listStuffPath = joinpath(main_path, r'TMPDir',
 FilePath = joinpath(WBOrdersData, WBOrdersFileName)
 sizeListPath = r'\\192.168.0.33\shared\Отдел производство\Wildberries\список печати.xlsx'
 OrderDirKZN = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\KZN'
+OrderDirKZNPath = joinpath(
+    r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\KZN', WBOrdersFileName)
 OrderDirORB = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ORB'
+OrderDirORBPath = joinpath(
+    r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ORB', WBOrdersFileName)
 pathToMakePrint = joinpath('main_path', 'PrintStikersAutoArgs.py')
 nowFileName = []
-dirList = [OrderDirKZN, OrderDirORB,
-           newOrderPath, doneOrderPath, inWorkOrderPath, WBOrdersData]
+dirList = [OrderDirKZNPath, OrderDirORBPath,
+           newOrderPath, doneOrderPath, inWorkOrderPath, FilePath]
 
 
 def startChek():
@@ -138,7 +142,8 @@ def createFileName(FilePath, mode, warehous):
         nametmp = 'планки принты'
     day = datetime.today().date().strftime(r"%d.%m.%Y")
     for dir in dirList:
-        if file_exists(dir.format(nametmp, day, piece, warehous)):
+        a = file_exists(dir.format(nametmp, day, piece, warehous))
+        while file_exists(dir.format(nametmp, day, piece, warehous)):
             numpiece += 1
             piece = "ч"+str(numpiece)
     print(FilePath.format(nametmp, day, piece, warehous))
