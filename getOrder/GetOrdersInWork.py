@@ -43,8 +43,8 @@ OrderDirORBPath = joinpath(
     r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ORB', WBOrdersFileName)
 pathToMakePrint = joinpath('main_path', 'PrintStikersAutoArgs.py')
 nowFileName = []
-dirList = [OrderDirKZNPath, OrderDirORBPath,
-           newOrderPath, doneOrderPath, inWorkOrderPath, FilePath]
+# dirList = [OrderDirKZNPath, OrderDirORBPath,
+#            newOrderPath, doneOrderPath, inWorkOrderPath, FilePath]
 
 
 def startChek():
@@ -141,16 +141,20 @@ def createFileName(FilePath, mode, warehous):
     elif mode == 'plankWithPrint':
         nametmp = 'планки принты'
     day = datetime.today().date().strftime(r"%d.%m.%Y")
-    for dir in dirList:
-        a = file_exists(dir.format(nametmp, day, piece, warehous))
-        while file_exists(dir.format(nametmp, day, piece, warehous)):
-            numpiece += 1
-            piece = "ч"+str(numpiece)
-    print(FilePath.format(nametmp, day, piece, warehous))
-    global nowFileName
-    if "ФБС принты" not in FilePath.format(nametmp, day, piece, warehous):
-        nowFileName.append(FilePath.format(nametmp, day, piece, warehous))
-    return FilePath.format(nametmp, day, piece, warehous)
+    # while True:
+    #     for dir in dirList:
+    #         a = file_exists(dir.format(nametmp, day, piece, warehous))
+    #         if file_exists(dir.format(nametmp, day, piece, warehous)):
+    #             numpiece += 1
+    #             piece = "ч"+str(numpiece)
+    #             break
+    #     if not file_exists(dir.format(nametmp, day, piece, warehous)):
+    #         break
+    # print(FilePath.format(nametmp, day, piece, warehous))
+    # global nowFileName
+    # if "ФБС принты" not in FilePath.format(nametmp, day, piece, warehous):
+    #     nowFileName.append(FilePath.format(nametmp, day, piece, warehous))
+    # return FilePath.format(nametmp, day, piece, warehous)
 
 
 def getCountGlass(stuffNameIn1C):
