@@ -42,6 +42,7 @@ OrderDirORB = r'\\192.168.0.33\shared\_Общие документы_\Заказ
 OrderDirORBPath = joinpath(
     r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ORB', WBOrdersFileName)
 pathToMakePrint = joinpath('main_path', 'PrintStikersAutoArgs.py')
+OrderDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые'
 nowFileName = []
 # dirList = [OrderDirKZNPath, OrderDirORBPath,
 #            newOrderPath, doneOrderPath, inWorkOrderPath, FilePath]
@@ -155,6 +156,14 @@ def createFileName(FilePath, mode, warehous):
     # if "ФБС принты" not in FilePath.format(nametmp, day, piece, warehous):
     #     nowFileName.append(FilePath.format(nametmp, day, piece, warehous))
     # return FilePath.format(nametmp, day, piece, warehous)
+    while file_exists(FilePath.format(nametmp, day, piece)) or file_exists(newOrderPath.format(nametmp, day, piece)) or file_exists(inWorkOrderPath.format(nametmp, day, piece)) or file_exists(doneOrderPath.format(nametmp, day, piece)):
+        numpiece += 1
+        piece = "ч"+str(numpiece)
+    print(FilePath.format(nametmp, day, piece))
+    global nowFileName
+    if "ФБС принты" not in FilePath.format(nametmp, day, piece):
+        nowFileName.append(FilePath.format(nametmp, day, piece))
+    return FilePath.format(nametmp, day, piece)
 
 
 def getCountGlass(stuffNameIn1C):
@@ -378,7 +387,7 @@ def createExcel(listOrderForChangeStatusAll, listErrorBarcods, mode):
                 listCameraNanoglass.to_excel(
                     writerglass, sheet_name='камеры', index=False)
     if Debug != 1:
-        copyfile(fileName, fileName.replace(WBOrdersData, OrderDirKZN))
+        copyfile(fileName, fileName.replace(WBOrdersData, OrderDir))
 
 
 def createExcelOren(listOrderForChangeStatusAll, listErrorBarcods, mode):
@@ -472,7 +481,7 @@ def createExcelOren(listOrderForChangeStatusAll, listErrorBarcods, mode):
                 listCameraNanoglass.to_excel(
                     writerglass, sheet_name='камеры', index=False)
     if Debug != 1:
-        copyfile(fileName, fileName.replace(WBOrdersData, OrderDirORB))
+        copyfile(fileName, fileName.replace(WBOrdersData, OrderDir))
 
 
 def orderFilter(ordersForFilter, mode):
