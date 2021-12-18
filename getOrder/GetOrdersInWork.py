@@ -156,14 +156,14 @@ def createFileName(FilePath, mode, warehous):
     # if "ФБС принты" not in FilePath.format(nametmp, day, piece, warehous):
     #     nowFileName.append(FilePath.format(nametmp, day, piece, warehous))
     # return FilePath.format(nametmp, day, piece, warehous)
-    while file_exists(FilePath.format(nametmp, day, piece)) or file_exists(newOrderPath.format(nametmp, day, piece)) or file_exists(inWorkOrderPath.format(nametmp, day, piece)) or file_exists(doneOrderPath.format(nametmp, day, piece)):
+    while file_exists(FilePath.format(nametmp, day, piece, warehous)) or file_exists(newOrderPath.format(nametmp, day, piece, warehous)) or file_exists(inWorkOrderPath.format(nametmp, day, piece, warehous)) or file_exists(doneOrderPath.format(nametmp, day, piece, warehous)):
         numpiece += 1
         piece = "ч"+str(numpiece)
-    print(FilePath.format(nametmp, day, piece))
+    print(FilePath.format(nametmp, day, piece, warehous))
     global nowFileName
-    if "ФБС принты" not in FilePath.format(nametmp, day, piece):
-        nowFileName.append(FilePath.format(nametmp, day, piece))
-    return FilePath.format(nametmp, day, piece)
+    if "ФБС принты" not in FilePath.format(nametmp, day, piece, warehous):
+        nowFileName.append(FilePath.format(nametmp, day, piece, warehous))
+    return FilePath.format(nametmp, day, piece, warehous)
 
 
 def getCountGlass(stuffNameIn1C):
