@@ -5,8 +5,8 @@ import zipfile
 import multiprocessing
 
 
-path_list_stuff = r'C:\Users\Public\Documents\WBChangeStuff\barcodes and art.xlsx'
-#path_list_stuff = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список номенклатуры — копия.XLSX'
+#path_list_stuff = r'C:\Users\Public\Documents\WBChangeStuff\barcodes and art.xlsx'
+path_list_stuff = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Список номенклатуры — копия.XLSX'
 Count_Arh = 200
 
 
@@ -26,12 +26,19 @@ def main(path_list_stuff, model_name):
                         'D:\Done', str(stuff['Артикул WB'])[0:-2]))
                 if not file_exists(dest_folder):
                     os.mkdir(dest_folder)
+                mask_folder = os.path.join(
+                    'D:\mask', model_name, '2' + '.jpg')
                 orig_folder = os.path.join(
                     'D:\printsPy', model_name, barcod[3] + '.jpg')
                 new_name = os.path.join(
                     'D:\Done', str(stuff['Артикул WB'])[0:-2], 'photo', '1.jpg')
                 new_folder = os.path.join(dest_folder, barcod[3]+'.jpg')
+                new_name_2 = os.path.join(dest_folder, '2'+'.jpg')
                 copyfile(os.path.join(orig_folder), new_folder)
+                try:
+                    copyfile(os.path.join(mask_folder), new_name_2)
+                except:
+                    pass
                 try:
                     os.rename(new_folder, new_name)
                 except FileExistsError:
@@ -40,12 +47,13 @@ def main(path_list_stuff, model_name):
 
 
 if __name__ == '__main__':
-    pool = multiprocessing.Pool()
-    for fold in os.listdir(r'D:\printsPy'):
-        if os.path.isdir(os.path.join('D:\printsPy', fold)) == True:
-            pool.apply_async(main, args=(path_list_stuff, fold,))
-    pool.close()
-    pool.join()
+    # pool = multiprocessing.Pool()
+    # for fold in os.listdir(r'D:\printsPy'):
+    #     if os.path.isdir(os.path.join('D:\printsPy', fold)) == True:
+    #         pool.apply_async(main, args=(path_list_stuff, fold,))
+    # pool.close()
+    # pool.join()
+
     i = j = 0
     path_arh = r'D:\Done'
     for dir_ in os.listdir(path_arh):
@@ -55,4 +63,9 @@ if __name__ == '__main__':
         with zipfile.ZipFile(path_arh + '\Done{}.zip'.format(j), 'a') as myzip:
             myzip.write(os.path.join(path_arh, dir_, 'photo', '1.jpg'),
                         arcname=os.path.join('D:\\', dir_, 'photo', '1.jpg'))
+            try:
+                myzip.write(os.path.join(path_arh, dir_, 'photo', '2.jpg'),
+                            arcname=os.path.join('D:\\', dir_, 'photo', '2.jpg'))
+            except:
+                pass
         i = i+1
