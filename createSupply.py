@@ -99,14 +99,20 @@ def addOrderInSupply(Token, stikerslist, supplyId):
         for stiker in stikerslist:
             if type(stikerInput) == int:
                 if stiker['sticker']['wbStickerId'] == stikerInput:
-                    orderIdList.append(str(stiker['orderId']))
-                    Flag = True
-                    break
+                    if str(stiker['orderId']) not in orderIdList:
+                        orderIdList.append(str(stiker['orderId']))
+                        Flag = True
+                        break
+                    else:
+                        print("Уже добавлен")
             elif type(stikerInput) == str:
                 if stiker['sticker']['wbStickerEncoded'] == stikerInput:
-                    orderIdList.append(str(stiker['orderId']))
-                    Flag = True
-                    break
+                    if str(stiker['orderId']) not in orderIdList:
+                        orderIdList.append(str(stiker['orderId']))
+                        Flag = True
+                        break
+                    else:
+                        print("Уже добавлен")
 
         if not Flag:
             print('Заказ {}, не добавлен.'.format(stikerInput))
@@ -129,7 +135,7 @@ def getBarcodeSupply(supplyId):
         print((response.status_code, response.text))
     else:
         Base64 = bytes(response.json()['file'], 'utf-8')
-        png_recovered = base64.decodestring(Base64)
+        png_recovered = base64.decodebytes(Base64)
         f = open(joinpath(suppDir, '{}_от_{}.pdf'.format(supplyId,
                                                          datetime.today().date())), "wb")
         f.write(png_recovered)
@@ -181,6 +187,8 @@ def changeStatus(listOrderForChangeStatus, Token):
                 if response.status_code != 200:
                     continue
                 elif response.status_code == 200:
+                    print("Количество товара: {}".format(
+                        str(len(orderListForChange))))
                     break
             except:
                 continue
