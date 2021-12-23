@@ -5,8 +5,8 @@ import zipfile
 import multiprocessing
 
 
-#path_list_stuff = r'C:\Users\Public\Documents\WBChangeStuff\barcodes and art.xlsx'
-path_list_stuff = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Список номенклатуры — копия.XLSX'
+path_list_stuff = r'C:\Users\Public\Documents\WBChangeStuff\barcodes and art.xlsx'
+#path_list_stuff = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Список номенклатуры — копия.XLSX'
 Count_Arh = 200
 
 
@@ -47,12 +47,12 @@ def main(path_list_stuff, model_name):
 
 
 if __name__ == '__main__':
-    # pool = multiprocessing.Pool()
-    # for fold in os.listdir(r'D:\printsPy'):
-    #     if os.path.isdir(os.path.join('D:\printsPy', fold)) == True:
-    #         pool.apply_async(main, args=(path_list_stuff, fold,))
-    # pool.close()
-    # pool.join()
+    pool = multiprocessing.Pool()
+    for fold in os.listdir(r'D:\printsPy'):
+        if os.path.isdir(os.path.join('D:\printsPy', fold)) == True:
+            pool.apply_async(main, args=(path_list_stuff, fold,))
+    pool.close()
+    pool.join()
 
     i = j = 0
     path_arh = r'D:\Done'

@@ -132,7 +132,7 @@ def changeCard(cardBody, name, TmpLIst):
     for nomenclature in cardBody['nomenclatures']:
         try:
             TmpLIst.append({'Артикул WB': nomenclature['nmId'],
-                            'Баркод': nomenclature['variations'][0]['barcodes']})
+                            'Баркод': nomenclature['variations'][0]['barcodes'][0]})
         except:
             continue
     print(name)
