@@ -77,7 +77,7 @@ def crateSupply(Token):
         try:
             with open(joinpath(suppDir, 'postavka.txt'), 'a', encoding='utf-8') as file:
                 file.writelines(response.json()['supplyId'] + ' ' + str(
-                    datetime.today().date()))
+                    datetime.today().date())+'\n')
                 file.close()
         except FileNotFoundError:
             print('Поставка создана, но не записана в файл.')
@@ -121,6 +121,23 @@ def addOrderInSupply(Token, stikerslist, supplyId):
         'Authorization': '{}'.format(Token)}, json={'orders': orderIdList})
     if response.status_code != 204:
         print((response.status_code, response.text))
+    elif response.status_code == 409:
+        failedOrdersList = response.json()['data']['failedOrders']
+        for order in failedOrdersList:
+            try:
+                orderIdList.remove(order)
+                print(
+                    'Заказ {} успешно удалён из поставки, т.к. он отменён.'.format(order))
+            except ValueError:
+                print('Не удалось удалить лишние заказы из поставки. Попробуйте заного.')
+        print('Пробую повторно отправить поставку.')
+        response = requests.put(Url.format(supplyId), headers={
+            'Authorization': '{}'.format(Token)}, json={'orders': orderIdList})
+        if response.status_code == 204:
+            print((response.status_code, response.text))
+            print('Успешно!')
+        else:
+            print((response.status_code, response.text))
     else:
         print((response.status_code, response.text))
         if response.status_code == 204:
