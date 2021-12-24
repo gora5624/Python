@@ -109,29 +109,25 @@ def makePrintMain(maskFolder, printList, light):
     pathToBackground = os.path.join(
         pathToMaskFolder, maskFolder, r'fon.png')
     BackgroundImageOld = Image.open(pathToBackground)
-
+    pathToMask = os.path.join(
+        pathToMaskFolder, maskFolder, r'mask.png')
+    maskImageOld = Image.open(pathToMask).convert("RGBA")
+    maskImage = copy.copy(maskImageOld)
+    maskImageOld.close()
+    BackgroundImage = copy.copy(BackgroundImageOld)
+    xLeft, xRight, yTop, yBott, size = getSizeAndPos(pathToMask)
+    printsize = (xRight-xLeft, yBott-yTop)
+    lighSize = (xRight-xLeft, yBott-yTop)
+    printPaste = (xLeft, yTop)
+    lighPaste = (xLeft, yTop)
+    lightNew = lightNew.resize(lighSize)
     if not file_exists(os.path.join(pathToDonePrints, maskFolder)):
         os.makedirs(os.path.join(pathToDonePrints, maskFolder))
     for printPath in printList:
+        BackgroundImage = copy.copy(BackgroundImageOld)
         pathToPrint = os.path.join(pathToPrintFolder, printPath)
         back = isPrintWithoutBack(pathToPrint)
-        if back:
-            pathToMask = os.path.join(
-                pathToMaskFolder, maskFolder, r'mask.png')
-        else:
-            pathToMask = os.path.join(
-                pathToMaskFolder, maskFolder, r'mask.png')
-        maskImageOld = Image.open(pathToMask).convert("RGBA")
-        maskImage = copy.copy(maskImageOld)
-        maskImageOld.close()
-        BackgroundImage = copy.copy(BackgroundImageOld)
-        xLeft, xRight, yTop, yBott, size = getSizeAndPos(pathToMask)
-        printsize = (xRight-xLeft, yBott-yTop)
-        lighSize = (xRight-xLeft, yBott-yTop)
-        printPaste = (xLeft, yTop)
-        lighPaste = (xLeft, yTop)
         printImage = Image.open(pathToPrint).resize(printsize)
-        lightNew = lightNew.resize(lighSize)
         BackgroundImage.paste(printImage, (printPaste), printImage)
         if back:
             BackgroundImage.paste(lightNew, (lighPaste), lightNew)

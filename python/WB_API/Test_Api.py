@@ -20,7 +20,7 @@ def get_orders():
     all_data = []
     a = 0
     while a == 0:
-        start_data = ((datetime.today() - timedelta(hours=int(11)))).isoformat('T', 'seconds').replace(
+        start_data = ((datetime.today() - timedelta(hours=int(48)))).isoformat('T', 'seconds').replace(
             ':', '%3A').replace('+', '%2B').replace('.', '%2E')
         try:
             response = requests.get(Url.format(start_data, Token))
