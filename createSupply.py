@@ -119,9 +119,7 @@ def addOrderInSupply(Token, stikerslist, supplyId):
     Url = 'https://suppliers-api.wildberries.ru/api/v2/supplies/{}'
     response = requests.put(Url.format(supplyId), headers={
         'Authorization': '{}'.format(Token)}, json={'orders': orderIdList})
-    if response.status_code != 204:
-        print((response.status_code, response.text))
-    elif response.status_code == 409:
+    if response.status_code == 409:
         failedOrdersList = response.json()['data']['failedOrders']
         for order in failedOrdersList:
             try:
@@ -136,8 +134,12 @@ def addOrderInSupply(Token, stikerslist, supplyId):
         if response.status_code == 204:
             print((response.status_code, response.text))
             print('Успешно!')
+            changeStatus(orderIdList, Token)
         else:
             print((response.status_code, response.text))
+    elif response.status_code != 204:
+        print((response.status_code, response.text))
+
     else:
         print((response.status_code, response.text))
         if response.status_code == 204:
