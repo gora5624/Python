@@ -163,11 +163,11 @@ def createAllCaseXLSX():
                 pathToDonePrints, file), title='No'))
     allCaseListpd = pandas.DataFrame(allCaseList)
     allCaseListpd.to_excel(os.path.join(
-        pathToDonePrints, 'AllCasePrint{}.xlsx'.format(datetime.today())), index=False, header=False)
+        pathToDonePrints, 'AllCasePrint{}.xlsx'.format(datetime.today()).replace(':', '-')), index=False, header=False)
 
 
 def main():
-    makePrint()
+    # makePrint()
     for dirModel in os.listdir(pathToDonePrints):
         if isdir(os.path.join(pathToDonePrints, dirModel)):
             Rename_print(os.path.join(pathToDonePrints, dirModel))
