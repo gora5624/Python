@@ -6,7 +6,7 @@ import pandas
 import json
 import multiprocessing
 # 1 - изменяем, 0 - нет
-isChange = 1
+isChange = 0
 
 main_path = r'C:\Users\Public\Documents\WBChangeStuff'
 nameListStuff = r'StuffList.xlsx'
@@ -129,12 +129,12 @@ def changeCard(cardBody, name, TmpLIst):
             except:
                 print('error changeCard')
                 continue
-    # for nomenclature in cardBody['nomenclatures']:
-    #     try:
-    #         TmpLIst.append({'Артикул WB': nomenclature['nmId'],
-    #                         'Баркод': nomenclature['variations'][0]['barcodes'][0]})
-    #     except:
-    #         continue
+    for nomenclature in cardBody['nomenclatures']:
+        try:
+            TmpLIst.append({'Артикул WB': nomenclature['nmId'],
+                            'Баркод': nomenclature['variations'][0]['barcodes'][0]})
+        except:
+            continue
     print(name)
 
 
