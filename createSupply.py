@@ -214,22 +214,23 @@ def changeStatus(listOrderForChangeStatus, Token):
         print(response)
 
 
-dataorders = get_orders(Token, days=3)
-dataorderspd = pandas.DataFrame(dataorders)
-dataorderspd.to_excel(joinpath(os.path.dirname(
-    os.path.abspath(__file__)), r'\tmp.xlsx'), index=False)
-stikerslist = getStiker(Token, dataorders)
-stikerslistdp = pandas.DataFrame(stikerslist)
-stikerslistdp.to_excel(joinpath(os.path.dirname(
-    os.path.abspath(__file__)), r'\tmp2.xlsx'), index=False)
-if input('Создать поставку? 1-Да, 2-Нет: ') == '1':
-    supplyId = crateSupply(Token)
-else:
-    supplyId = input('Введите номер поставки: ')
-addOrderInSupply(Token, stikerslist, supplyId)
-getBarcodeSupply(supplyId)
-if input('Закрыть поставку {}? 1 - Закрыть, 0 - оставить открытой.: '.format(supplyId)) == '1':
-    closeSupply(supplyId)
-else:
-    print('Поставка не {} закрыта.'.format(supplyId))
-input('Готово, нажмите Enter')
+while True:
+    dataorders = get_orders(Token, days=3)
+    dataorderspd = pandas.DataFrame(dataorders)
+    dataorderspd.to_excel(joinpath(os.path.dirname(
+        os.path.abspath(__file__)), r'\tmp.xlsx'), index=False)
+    stikerslist = getStiker(Token, dataorders)
+    stikerslistdp = pandas.DataFrame(stikerslist)
+    stikerslistdp.to_excel(joinpath(os.path.dirname(
+        os.path.abspath(__file__)), r'\tmp2.xlsx'), index=False)
+    if input('Создать поставку? 1-Да, 2-Нет: ') == '1':
+        supplyId = crateSupply(Token)
+    else:
+        supplyId = input('Введите номер поставки: ')
+    addOrderInSupply(Token, stikerslist, supplyId)
+    getBarcodeSupply(supplyId)
+    if input('Закрыть поставку {}? 1 - Закрыть, 0 - оставить открытой.: '.format(supplyId)) == '1':
+        closeSupply(supplyId)
+    else:
+        print('Поставка не {} закрыта.'.format(supplyId))
+    input('Готово, нажмите Enter')
