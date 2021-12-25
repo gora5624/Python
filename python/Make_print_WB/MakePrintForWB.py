@@ -6,6 +6,7 @@ import copy
 import pandas
 from os.path import isdir
 import multiprocessing
+from datetime import datetime
 
 
 Mode = 'All'
@@ -162,7 +163,7 @@ def createAllCaseXLSX():
                 pathToDonePrints, file), title='No'))
     allCaseListpd = pandas.DataFrame(allCaseList)
     allCaseListpd.to_excel(os.path.join(
-        pathToDonePrints, 'AllCasePrint.xlsx'), index=False, header=False)
+        pathToDonePrints, 'AllCasePrint{}.xlsx'.format(datetime.today())), index=False, header=False)
 
 
 def main():
