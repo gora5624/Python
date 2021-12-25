@@ -16,17 +16,18 @@ def main(path_list_stuff, model_name):
     list_barcod = read_xlsx(
         r'D:\printsPy\{}.xlsx'.format(model_name), title='No') if file_exists(
         r'D:\printsPy\{}.xlsx'.format(model_name)) else read_xlsx(r'D:\printsPy\{}.xls'.format(model_name), title='No')
-    try:
-        image = Image.open(os.path.join(
-            'D:\mask', model_name, '2' + '.jpg')).convert('RGB')
-        size = image.size
-        size_new = (900, int(float(size[1])*(900.0/float(size[0]))))
-        image = image.resize(size_new)
-        image.save(os.path.join(
-            'D:\mask', model_name, '2_res' + '.jpg'),
-            quality=70)
-    except:
-        pass
+    if 'прозрачный' not in model_name:
+        try:
+            image = Image.open(os.path.join(
+                'D:\mask', model_name, '2' + '.jpg')).convert('RGB')
+            size = image.size
+            size_new = (900, int(float(size[1])*(900.0/float(size[0]))))
+            image = image.resize(size_new)
+            image.save(os.path.join(
+                'D:\mask', model_name, '2_res' + '.jpg'),
+                quality=70)
+        except:
+            pass
     for stuff in list_stuff:
         for barcod in list_barcod:
             if (str(stuff['Баркод'])[0:-2] if type(stuff['Баркод']) == float else stuff['Баркод']) == (str(barcod[0])[0:-2] if type(barcod[0]) == float else str(barcod[0])):
@@ -49,10 +50,11 @@ def main(path_list_stuff, model_name):
                 new_folder = os.path.join(dest_folder, barcod[3]+'.jpg')
                 new_name_2 = os.path.join(dest_folder, '2_res'+'.jpg')
                 copyfile(os.path.join(orig_folder), new_folder)
-                try:
-                    copyfile(os.path.join(mask_folder_res), new_name_2)
-                except:
-                    pass
+                if 'прозрачный' not in model_name:
+                    try:
+                        copyfile(os.path.join(mask_folder_res), new_name_2)
+                    except:
+                        pass
                 try:
                     os.rename(new_folder, new_name)
                 except FileExistsError:
