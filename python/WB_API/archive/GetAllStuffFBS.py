@@ -34,16 +34,17 @@ def get_stuff():
     tmp = []
     data = []
     flag = True
-    while tmp != None or flag:
+    while tmp != [] or flag:
         flag = False
         response = requests.get(Url.format(count_skip), headers={
             'Authorization': '{}'.format(Token)})
         if response.status_code != 200:
             print('Не удалось получить остатки, ошибка на стороне ВБ.')
             return 1
+        print(count_skip)
         count_skip = count_skip+1000
-        data.extend(tmp)
         tmp = response.json()['stocks']
+        data.extend(tmp)
     all_data = pandas.DataFrame(data)
     all_data.to_excel(joinpath(WBOrdersData,
                                WBOrdersDataFileName), index=False)
