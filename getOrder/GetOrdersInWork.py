@@ -13,7 +13,7 @@ from os import remove, listdir
 import os
 
 # Режим отладки 1 - да, 0 - боевой режим
-Debug = 0
+Debug = 1
 
 stopList = ['2009539898001', '2009539892009', '2009539656007',
             '2009539490007', '2009539287003', '2009538490008']
@@ -304,6 +304,9 @@ def createExcel(listOrderForChangeStatusAll, listErrorBarcods, mode):
     for order in listOrderForChangeStatusAll:
         if order['Склад'] == 'KZN':
             listOrderForChangeStatus.append(order)
+    if len(listOrderForChangeStatus) == 0:
+        print('Заказов на Казань нет.')
+        return 0
     if mode != 'glass':
         listErrorBarcods = pandas.DataFrame(listErrorBarcods)
         listOrderForChangeStatuspd = pandas.DataFrame(listOrderForChangeStatus)
