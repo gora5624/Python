@@ -1,11 +1,21 @@
+from io import BytesIO
+from re import A
+from reportlab.graphics.transform import scale
 import requests
 from datetime import timedelta, datetime
 import base64
 from os.path import join as joinpath
 import pandas
 import os
+import fpdf
+from fpdf import FPDF
+from reportlab.graphics import renderPDF, renderPM
+from svglib.svglib import svg2rlg
+import io
 
 
+fpdf.set_global("SYSTEM_TTFONTS", os.path.join(
+    os.path.dirname(__file__), r'C:\Windows\Fonts'))
 Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgyYTU2OGZlLTgyNTctNGQ2Yi05ZTg1LTJkYTgxMTgxYWI3MSJ9.ROCdF7eOfTZA-atpsLGTAi15yDzHk2UMes05vwjZwn4'
 suppDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ШК поставки'
 # Режим отладки 1 - да, 0 - боевой режим
@@ -119,6 +129,7 @@ def addOrderInSupply(Token, stikerslist, supplyId):
     Url = 'https://suppliers-api.wildberries.ru/api/v2/supplies/{}'
     response = requests.put(Url.format(supplyId), headers={
         'Authorization': '{}'.format(Token)}, json={'orders': orderIdList})
+    count = len(orderIdList)
     if response.status_code == 409:
         failedOrdersList = response.json()['data']['failedOrders']
         for order in failedOrdersList:
@@ -135,6 +146,7 @@ def addOrderInSupply(Token, stikerslist, supplyId):
             print((response.status_code, response.text))
             print('Успешно!')
             changeStatus(orderIdList, Token)
+            return count
         else:
             print((response.status_code, response.text))
     elif response.status_code != 204:
@@ -144,21 +156,47 @@ def addOrderInSupply(Token, stikerslist, supplyId):
         print((response.status_code, response.text))
         if response.status_code == 204:
             changeStatus(orderIdList, Token)
+            return count
 
 
-def getBarcodeSupply(supplyId):
-    Url = 'https://suppliers-api.wildberries.ru//api/v2/supplies/{}/barcode?type=pdf'
+def getBarcodeSupply(supplyId, count):
+    Url = 'https://suppliers-api.wildberries.ru//api/v2/supplies/{}/barcode?type=svg'
     response = requests.get(Url.format(supplyId), headers={
         'Authorization': '{}'.format(Token)})
     if response.status_code != 200:
         print((response.status_code, response.text))
     else:
         Base64 = bytes(response.json()['file'], 'utf-8')
-        png_recovered = base64.decodebytes(Base64)
-        f = open(joinpath(suppDir, '{}_от_{}.pdf'.format(supplyId,
-                                                         datetime.today().date())), "wb")
-        f.write(png_recovered)
-        f.close()
+        SVG_recovered = base64.decodebytes(Base64)
+        fileTMPName = joinpath(suppDir, '{}_от_{}_tmp.pdf'.format(supplyId,
+                                                                  datetime.today().date()))
+
+        drawing = svg2rlg(io.BytesIO(SVG_recovered))
+        renderPM.drawToFile(
+            drawing, fileTMPName.replace('.pdf', '.png'), fmt="PNG")
+    size = (200, 300)
+    pdf = FPDF(format=size)
+    pdf.add_page()
+    pdf.image(fileTMPName.replace('.pdf', '.png'), x=-1, y=0, w=210)
+    pdf.add_font(
+        'Arial', '', fname="Arial.ttf", uni=True)
+    pdf.set_font('Arial', '', 45)
+    pdf.multi_cell(180, 150)
+    pdf.multi_cell(180, 25, txt="{}".format(
+        'ИП Караханян Э.С.'), align='C')
+    pdf.multi_cell(180, 25, txt="{}".format(
+        'Маркетплейс Оренбург'), align='C')
+    day = datetime.today().date().strftime(r"%d.%m.%Y")
+    pdf.multi_cell(180, 25, txt="{}".format(
+        'От {}').format(day), align='C')
+    if count != 0:
+        pdf.multi_cell(180, 25, txt="{}".format(
+            'Количество {} шт.').format(str(count)), align='C')
+    pdf.output(fileTMPName.replace('_tmp', ''))
+    try:
+        os.remove(fileTMPName.replace('.pdf', '.png'))
+    except:
+        pass
 
 
 def closeSupply(supplyId):
@@ -227,10 +265,13 @@ while True:
         supplyId = crateSupply(Token)
     else:
         supplyId = input('Введите номер поставки: ')
-    addOrderInSupply(Token, stikerslist, supplyId)
-    getBarcodeSupply(supplyId)
+    count = addOrderInSupply(Token, stikerslist, supplyId)
+    getBarcodeSupply(supplyId, count)
     if input('Закрыть поставку {}? 1 - Закрыть, 0 - оставить открытой.: '.format(supplyId)) == '1':
         closeSupply(supplyId)
     else:
         print('Поставка не {} закрыта.'.format(supplyId))
     input('Готово, нажмите Enter')
+# supplyId = 'WB-GI-5260465'
+# count = 154
+# getBarcodeSupply(supplyId, count)
