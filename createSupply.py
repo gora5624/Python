@@ -61,8 +61,8 @@ def getStiker(Token, dataorders):
     tmpOrders = []
     UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
     for line in dataorders:
-        if line['status'] == 0 or line['status'] == 1:
-            tmpOrders.append(int(line['orderId']))
+        # if line['status'] == 0 or line['status'] == 1:
+        tmpOrders.append(int(line['orderId']))
         if len(tmpOrders) > 999:
             OrderNumJson = {"orderIds": tmpOrders}
             response = requests.post(UrlStiker, headers={
@@ -256,26 +256,23 @@ def changeStatus(listOrderForChangeStatus, Token):
         print(response)
 
 
-# while True:
-#     dataorders = get_orders(Token, days=3)
-#     dataorderspd = pandas.DataFrame(dataorders)
-#     dataorderspd.to_excel(joinpath(os.path.dirname(
-#         os.path.abspath(__file__)), r'\tmp.xlsx'), index=False)
-#     stikerslist = getStiker(Token, dataorders)
-#     stikerslistdp = pandas.DataFrame(stikerslist)
-#     stikerslistdp.to_excel(joinpath(os.path.dirname(
-#         os.path.abspath(__file__)), r'\tmp2.xlsx'), index=False)
-#     if input('Создать поставку? 1-Да, 2-Нет: ') == '1':
-#         supplyId = crateSupply(Token)
-#     else:
-#         supplyId = input('Введите номер поставки: ')
-#     count = addOrderInSupply(Token, stikerslist, supplyId)
-#     getBarcodeSupply(supplyId, count)
-#     if input('Закрыть поставку {}? 1 - Закрыть, 0 - оставить открытой.: '.format(supplyId)) == '1':
-#         closeSupply(supplyId)
-#     else:
-#         print('Поставка не {} закрыта.'.format(supplyId))
-#     input('Готово, нажмите Enter')
-supplyId = 'WB-GI-5260465'
-count = 154
-getBarcodeSupply(supplyId, count)
+while True:
+    dataorders = get_orders(Token, days=10)
+    dataorderspd = pandas.DataFrame(dataorders)
+    dataorderspd.to_excel(joinpath(os.path.dirname(
+        os.path.abspath(__file__)), r'\tmp.xlsx'), index=False)
+    stikerslist = getStiker(Token, dataorders)
+    stikerslistdp = pandas.DataFrame(stikerslist)
+    stikerslistdp.to_excel(joinpath(os.path.dirname(
+        os.path.abspath(__file__)), r'\tmp2.xlsx'), index=False)
+    if input('Создать поставку? 1-Да, 2-Нет: ') == '1':
+        supplyId = crateSupply(Token)
+    else:
+        supplyId = input('Введите номер поставки: ')
+    count = addOrderInSupply(Token, stikerslist, supplyId)
+    getBarcodeSupply(supplyId, count)
+    if input('Закрыть поставку {}? 1 - Закрыть, 0 - оставить открытой.: '.format(supplyId)) == '1':
+        closeSupply(supplyId)
+    else:
+        print('Поставка не {} закрыта.'.format(supplyId))
+    input('Готово, нажмите Enter')
