@@ -167,7 +167,7 @@ def createAllCaseXLSX():
 
 
 def main():
-    # makePrint()
+    makePrint()
     for dirModel in os.listdir(pathToDonePrints):
         if isdir(os.path.join(pathToDonePrints, dirModel)):
             Rename_print(os.path.join(pathToDonePrints, dirModel))
