@@ -12,6 +12,7 @@ from fpdf import FPDF
 from reportlab.graphics import renderPDF, renderPM
 from svglib.svglib import svg2rlg
 import io
+from PIL import Image
 
 
 fpdf.set_global("SYSTEM_TTFONTS", os.path.join(
@@ -174,10 +175,13 @@ def getBarcodeSupply(supplyId, count):
         drawing = svg2rlg(io.BytesIO(SVG_recovered))
         renderPM.drawToFile(
             drawing, fileTMPName.replace('.pdf', '.png'), fmt="PNG")
+    img = Image.open(fileTMPName.replace('.pdf', '.png'))
+    new_image = img.resize((600, 450))
+    new_image.save(fileTMPName.replace('.pdf', '.png'))
     size = (200, 300)
     pdf = FPDF(format=size)
     pdf.add_page()
-    pdf.image(fileTMPName.replace('.pdf', '.png'), x=-1, y=0, w=210)
+    pdf.image(fileTMPName.replace('.pdf', '.png'), x=-1, y=0, w=0)
     pdf.add_font(
         'Arial', '', fname="Arial.ttf", uni=True)
     pdf.set_font('Arial', '', 45)
@@ -252,26 +256,26 @@ def changeStatus(listOrderForChangeStatus, Token):
         print(response)
 
 
-while True:
-    dataorders = get_orders(Token, days=3)
-    dataorderspd = pandas.DataFrame(dataorders)
-    dataorderspd.to_excel(joinpath(os.path.dirname(
-        os.path.abspath(__file__)), r'\tmp.xlsx'), index=False)
-    stikerslist = getStiker(Token, dataorders)
-    stikerslistdp = pandas.DataFrame(stikerslist)
-    stikerslistdp.to_excel(joinpath(os.path.dirname(
-        os.path.abspath(__file__)), r'\tmp2.xlsx'), index=False)
-    if input('Создать поставку? 1-Да, 2-Нет: ') == '1':
-        supplyId = crateSupply(Token)
-    else:
-        supplyId = input('Введите номер поставки: ')
-    count = addOrderInSupply(Token, stikerslist, supplyId)
-    getBarcodeSupply(supplyId, count)
-    if input('Закрыть поставку {}? 1 - Закрыть, 0 - оставить открытой.: '.format(supplyId)) == '1':
-        closeSupply(supplyId)
-    else:
-        print('Поставка не {} закрыта.'.format(supplyId))
-    input('Готово, нажмите Enter')
-# supplyId = 'WB-GI-5260465'
-# count = 154
-# getBarcodeSupply(supplyId, count)
+# while True:
+#     dataorders = get_orders(Token, days=3)
+#     dataorderspd = pandas.DataFrame(dataorders)
+#     dataorderspd.to_excel(joinpath(os.path.dirname(
+#         os.path.abspath(__file__)), r'\tmp.xlsx'), index=False)
+#     stikerslist = getStiker(Token, dataorders)
+#     stikerslistdp = pandas.DataFrame(stikerslist)
+#     stikerslistdp.to_excel(joinpath(os.path.dirname(
+#         os.path.abspath(__file__)), r'\tmp2.xlsx'), index=False)
+#     if input('Создать поставку? 1-Да, 2-Нет: ') == '1':
+#         supplyId = crateSupply(Token)
+#     else:
+#         supplyId = input('Введите номер поставки: ')
+#     count = addOrderInSupply(Token, stikerslist, supplyId)
+#     getBarcodeSupply(supplyId, count)
+#     if input('Закрыть поставку {}? 1 - Закрыть, 0 - оставить открытой.: '.format(supplyId)) == '1':
+#         closeSupply(supplyId)
+#     else:
+#         print('Поставка не {} закрыта.'.format(supplyId))
+#     input('Готово, нажмите Enter')
+supplyId = 'WB-GI-5260465'
+count = 154
+getBarcodeSupply(supplyId, count)
