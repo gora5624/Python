@@ -131,7 +131,7 @@ def addOrderInSupply(Token, stikerslist, supplyId):
     response = requests.put(Url.format(supplyId), headers={
         'Authorization': '{}'.format(Token)}, json={'orders': orderIdList})
     count = len(orderIdList)
-    if response.status_code == 409:
+    while response.status_code == 409:
         failedOrdersList = response.json()['data']['failedOrders']
         for order in failedOrdersList:
             try:
@@ -150,7 +150,7 @@ def addOrderInSupply(Token, stikerslist, supplyId):
             return count
         else:
             print((response.status_code, response.text))
-    elif response.status_code != 204:
+    if response.status_code != 204:
         print((response.status_code, response.text))
 
     else:
