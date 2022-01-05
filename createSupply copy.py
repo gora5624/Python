@@ -23,7 +23,7 @@ suppDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы �
 Debug = 0
 
 
-def get_orders(Token, days=4):
+def get_orders(Token, days=10):
     """Получает заказы за последние 3 дня"""
     print("Идёт получение свежих заказов, ожидайте...")
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
@@ -56,26 +56,6 @@ def get_orders(Token, days=4):
     return dataorders
 
 
-def getStiker(Token, dataorders):
-    stikers = []
-    tmpOrders = []
-    UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
-    for line in dataorders:
-        # if line['status'] == 0 or line['status'] == 1:
-        tmpOrders.append(int(line['orderId']))
-        if len(tmpOrders) > 999:
-            OrderNumJson = {"orderIds": tmpOrders}
-            response = requests.post(UrlStiker, headers={
-                'Authorization': '{}'.format(Token)}, json=OrderNumJson)
-            stikers.extend(response.json()['data'])
-            tmpOrders = []
-    OrderNumJson = {"orderIds": tmpOrders}
-    response = requests.post(UrlStiker, headers={
-        'Authorization': '{}'.format(Token)}, json=OrderNumJson)
-    stikers.extend(response.json()['data'])
-    return stikers
-
-
 def crateSupply(Token):
     Url = 'https://suppliers-api.wildberries.ru/api/v2/supplies'
 
@@ -95,43 +75,15 @@ def crateSupply(Token):
         return response.json()['supplyId']
 
 
-def addOrderInSupply(Token, stikerslist, supplyId):
+def addOrderInSupply(Token, orderList, supplyId):
     orderIdList = []
-    stikerInput = 0
-    while True:
-        Flag = False
-        tmp = input('Введите стикер, 0 - выйти: ')
-        if tmp == '0':
-            break
-        try:
-            stikerInput = int(tmp)
-        except:
-            stikerInput = tmp
-        for stiker in stikerslist:
-            if type(stikerInput) == int:
-                if stiker['sticker']['wbStickerId'] == stikerInput:
-                    if str(stiker['orderId']) not in orderIdList:
-                        orderIdList.append(str(stiker['orderId']))
-                        Flag = True
-                        break
-                    else:
-                        print("Уже добавлен")
-            elif type(stikerInput) == str:
-                if stiker['sticker']['wbStickerEncoded'] == stikerInput:
-                    if str(stiker['orderId']) not in orderIdList:
-                        orderIdList.append(str(stiker['orderId']))
-                        Flag = True
-                        break
-                    else:
-                        print("Уже добавлен")
+    for order in orderList:
+        if order['status'] == 1:
+            orderIdList.append(order['orderId'])
 
-        if not Flag:
-            print('Заказ {}, не добавлен.'.format(stikerInput))
     Url = 'https://suppliers-api.wildberries.ru/api/v2/supplies/{}'
     response = requests.put(Url.format(supplyId), headers={
         'Authorization': '{}'.format(Token)}, json={'orders': orderIdList})
-    count = len(orderIdList)
-    print(response.text)
     while response.status_code == 409:
         failedOrdersList = response.json()['data']['failedOrders']
         for order in failedOrdersList:
@@ -148,7 +100,6 @@ def addOrderInSupply(Token, stikerslist, supplyId):
             print((response.status_code, response.text))
             print('Успешно!')
             changeStatus(orderIdList, Token)
-            return count
         else:
             print((response.status_code, response.text))
     if response.status_code != 204:
@@ -158,7 +109,6 @@ def addOrderInSupply(Token, stikerslist, supplyId):
         print((response.status_code, response.text))
         if response.status_code == 204:
             changeStatus(orderIdList, Token)
-            return count
 
 
 def getBarcodeSupply(supplyId, count):
@@ -258,22 +208,11 @@ def changeStatus(listOrderForChangeStatus, Token):
 
 
 while True:
-    dataorders = get_orders(Token, days=3)
-    dataorderspd = pandas.DataFrame(dataorders)
-    dataorderspd.to_excel(joinpath(os.path.dirname(
-        os.path.abspath(__file__)), r'\tmp.xlsx'), index=False)
-    stikerslist = getStiker(Token, dataorders)
-    stikerslistdp = pandas.DataFrame(stikerslist)
-    stikerslistdp.to_excel(joinpath(os.path.dirname(
-        os.path.abspath(__file__)), r'\tmp2.xlsx'), index=False)
+    dataorders = get_orders(Token, days=10)
     if input('Создать поставку? 1-Да, 2-Нет: ') == '1':
         supplyId = crateSupply(Token)
     else:
         supplyId = input('Введите номер поставки: ')
-    count = addOrderInSupply(Token, stikerslist, supplyId)
+    addOrderInSupply(Token, dataorders, supplyId)
+    count = 113
     getBarcodeSupply(supplyId, count)
-    if input('Закрыть поставку {}? 1 - Закрыть, 0 - оставить открытой.: '.format(supplyId)) == '1':
-        closeSupply(supplyId)
-    else:
-        print('Поставка не {} закрыта.'.format(supplyId))
-    input('Готово, нажмите Enter')
