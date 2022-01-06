@@ -134,6 +134,8 @@ def addOrderInSupply(Token, stikerslist, supplyId):
     print(response.text)
     while response.status_code == 409:
         failedOrdersList = response.json()['data']['failedOrders']
+        orderIdListForChange = []
+        orderIdListForChange.extend(orderIdList)
         for order in failedOrdersList:
             try:
                 orderIdList.remove(order)
@@ -147,7 +149,7 @@ def addOrderInSupply(Token, stikerslist, supplyId):
         if response.status_code == 204:
             print((response.status_code, response.text))
             print('Успешно!')
-            changeStatus(orderIdList, Token)
+            changeStatus(orderIdListForChange, orderIdList, Token)
             return count
         else:
             print((response.status_code, response.text))
@@ -157,7 +159,7 @@ def addOrderInSupply(Token, stikerslist, supplyId):
     else:
         print((response.status_code, response.text))
         if response.status_code == 204:
-            changeStatus(orderIdList, Token)
+            changeStatus(orderIdListForChange, orderIdList, Token)
             return count
 
 
@@ -214,10 +216,11 @@ def closeSupply(supplyId):
         print('Поставка {} успешно закрыта.'.format(supplyId))
 
 
-def changeStatus(listOrderForChangeStatus, Token):
+def changeStatus(listOrderForChangeStatus, orderIdList, Token):
     """Изменяет статус заказа на заданный, в данном случае "1" - на сборке"""
     if Debug != 1:
         orderListForChange = []
+        orderListForChange_2 = []
         Url = 'https://suppliers-api.wildberries.ru/api/v2/orders'
         if Debug == 1:
             status = 0
@@ -229,13 +232,24 @@ def changeStatus(listOrderForChangeStatus, Token):
                 datajson = {"orderId": orderId,
                             "status": status}
                 orderListForChange.append(datajson)
+        for orderId in orderIdList:
+            if len(orderListForChange_2) < 1000:
+                datajson = []
+                datajson = {"orderId": orderId,
+                            "status": status}
+                orderListForChange_2.append(datajson)
             else:
                 while True:
                     try:
                         response = requests.put(Url, headers={
                             'Authorization': '{}'.format(Token)}, json=orderListForChange)
                         if response.status_code != 200:
-                            continue
+                            response = requests.put(Url, headers={
+                                'Authorization': '{}'.format(Token)}, json=orderListForChange_2)
+                            if response.status_code != 200:
+                                continue
+                            elif response.status_code == 200:
+                                break
                         elif response.status_code == 200:
                             break
                     except:
@@ -258,7 +272,7 @@ def changeStatus(listOrderForChangeStatus, Token):
 
 
 while True:
-    dataorders = get_orders(Token, days=3)
+    dataorders = get_orders(Token, days=5)
     dataorderspd = pandas.DataFrame(dataorders)
     dataorderspd.to_excel(joinpath(os.path.dirname(
         os.path.abspath(__file__)), r'\tmp.xlsx'), index=False)

@@ -172,7 +172,7 @@ def changeStatus(listOrderForChangeStatus, Token):
         if Debug == 1:
             status = 0
         else:
-            status = 2
+            status = 3
         for orderId in listOrderForChangeStatus:
             if len(orderListForChange) < 1000:
                 datajson = []
@@ -207,12 +207,15 @@ def changeStatus(listOrderForChangeStatus, Token):
         print(response)
 
 
-while True:
-    dataorders = get_orders(Token, days=10)
-    if input('Создать поставку? 1-Да, 2-Нет: ') == '1':
-        supplyId = crateSupply(Token)
-    else:
-        supplyId = input('Введите номер поставки: ')
-    addOrderInSupply(Token, dataorders, supplyId)
-    count = 113
-    getBarcodeSupply(supplyId, count)
+# while True:
+#     dataorders = get_orders(Token, days=10)
+#     if input('Создать поставку? 1-Да, 2-Нет: ') == '1':
+#         supplyId = crateSupply(Token)
+#     else:
+#         supplyId = input('Введите номер поставки: ')
+#     addOrderInSupply(Token, dataorders, supplyId)
+#     count = 113
+#     getBarcodeSupply(supplyId, count)
+
+listOrderForChangeStatus = [165978286, 165874543, 166006990, 166193909]
+changeStatus(listOrderForChangeStatus, Token)
