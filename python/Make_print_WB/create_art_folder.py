@@ -6,8 +6,8 @@ import multiprocessing
 from PIL import Image
 
 
-path_list_stuff = r'C:\Users\Public\Documents\WBChangeStuff\barcodes and art.xlsx'
-#path_list_stuff = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Список номенклатуры — копия.XLSX'
+#path_list_stuff = r'C:\Users\Public\Documents\WBChangeStuff\barcodes and art.xlsx'
+path_list_stuff = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Список номенклатуры — копия.XLSX'
 Count_Arh = 200
 
 
