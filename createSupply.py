@@ -153,14 +153,15 @@ def addOrderInSupply(Token, stikerslist, supplyId):
             return count
         else:
             print((response.status_code, response.text))
-    if response.status_code != 204:
-        print((response.status_code, response.text))
+    #
+    # if response.status_code != 204:
+    #     print((response.status_code, response.text))
 
-    else:
-        print((response.status_code, response.text))
-        if response.status_code == 204:
-            changeStatus(orderIdListForChange, orderIdList, Token)
-            return count
+    # else:
+    #     print((response.status_code, response.text))
+    #     if response.status_code == 204:
+    #         changeStatus(orderIdListForChange, orderIdList, Token)
+    #         return count
 
 
 def getBarcodeSupply(supplyId, count):
