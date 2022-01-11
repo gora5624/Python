@@ -6,6 +6,7 @@ from os import listdir, remove, makedirs
 
 
 pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
+#pathToOrderFile = r'D:\ФБС принты 09.01.2022 ч1 ORB.xlsx'
 #pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты потерянные 06.11.2021.xlsx'
 mainPath = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper'
 pathToExcelWithSize = r'\\192.168.0.33\shared\Отдел производство\Wildberries\список печати.xlsx'
@@ -207,6 +208,9 @@ def createpathToFile(printNameAll, size):
     printFileName = printName.replace('принт', 'print') + '.cdr'
     pathToFolder = dataWithSizePath[size]
     fullPath = joinpath(pathToFolder, printFileName)
+    if not file_exists(fullPath):
+        printFileName = printFileName.replace('.cdr', '.pdf')
+        fullPath = joinpath(pathToFolder, printFileName)
     if not file_exists(fullPath):
         fullPath = pathToBug
     return fullPath

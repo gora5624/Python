@@ -9,11 +9,9 @@ import multiprocessing
 from datetime import datetime
 
 
-Mode = 'All'
-# Mode = 'WithOtBack'
-
 pathToMaskFolder = r'D:\mask'
-pathToPrintFolder = r'F:\китай png готово' if Mode == 'All' else r'D:\tmp\my_prod\Python\python\Make_print_WB\PrintWithOutBack'
+pathToPrintAll = r'F:\Все'
+pathToPrintWithOutBack = r'F:\Без фона'
 pathToDonePrints = r'D:\printsPy'
 lightPath = r'D:\tmp\my_prod\Python\python\Make_print_WB\light.png'
 
@@ -24,11 +22,6 @@ def getBarcodForPrintMain(donePrint):
             pathToDonePrints, donePrint)):
 
         excelWithPrint = []
-        # for case in listCase:
-        #     if case['Наименование'].replace('\xa0', ' ') == donePrint:
-        #         code1C = case['Код 1С']
-        #         break
-        #     else:
         code1C = None
         pathToPrint = os.path.join('D:\printsPy', donePrint)
         listPrint = os.listdir(pathToPrint)
@@ -82,7 +75,6 @@ def getSizeAndPos(pathToMask):
         yBott += 1
 
     return (xLeft, xRight, yTop, yBott, size)
-    # return (1200, 2200, 400, 2660, size)
 
 
 def isPrintWithoutBack(pathToPrint):
@@ -93,19 +85,14 @@ def isPrintWithoutBack(pathToPrint):
 
 
 def Rename_print(pathToPrint):
-    list_print_name = os.listdir(
-        r'\\192.168.0.33\shared\Отдел производство\Wildberries\оригиналы принтов')
     listPrint = os.listdir(pathToPrint)
     for Print in listPrint:
-        for name in list_print_name:
-            PrintN = Print.replace('print', 'Принт')[0:-4]
-            nameN = name[name.find('(')+1:name.find(')')]
-            if PrintN == nameN:
-                os.rename(os.path.join(pathToPrint, Print),
-                          os.path.join(pathToPrint, name+'.jpg'))
+        PrintN = Print.replace('print_', '(Принт ')[0:-4] + ')'
+        os.rename(os.path.join(pathToPrint, Print),
+                  os.path.join(pathToPrint, PrintN+'.jpg'))
 
 
-def makePrintMain(maskFolder, printList, light):
+def makePrintMain(maskFolder, printList, light, pathToPrintFolder):
     lightNew = copy.copy(light)
     print(maskFolder)
     pathToBackground = os.path.join(
@@ -146,12 +133,16 @@ def makePrintMain(maskFolder, printList, light):
 
 def makePrint():
     maskFoldersList = os.listdir(pathToMaskFolder)
-    printList = os.listdir(pathToPrintFolder)
     pool = multiprocessing.Pool()
     light = Image.open(lightPath).convert("RGBA")
     for maskFolder in maskFoldersList:
+        if "прозрачный" in maskFolder:
+            pathToPrintFolder = pathToPrintAll
+        else:
+            pathToPrintFolder = pathToPrintWithOutBack
+        printList = os.listdir(pathToPrintFolder)
         pool.apply_async(makePrintMain, args=(
-            maskFolder, printList, light))
+            maskFolder, printList, light, pathToPrintFolder,))
     pool.close()
     pool.join()
 
