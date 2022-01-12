@@ -72,7 +72,14 @@ def getStiker(Token, dataorders):
     OrderNumJson = {"orderIds": tmpOrders}
     response = requests.post(UrlStiker, headers={
         'Authorization': '{}'.format(Token)}, json=OrderNumJson)
-    stikers.extend(response.json()['data'])
+    count = 0
+    while response.json()['data'] == None and count < 100:
+        response = requests.post(UrlStiker, headers={
+            'Authorization': '{}'.format(Token)}, json=OrderNumJson)
+        count += 1
+    a = response.json()['data']
+    if response.json()['data'] != None:
+        stikers.extend(response.json()['data'])
     return stikers
 
 
