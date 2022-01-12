@@ -10,8 +10,8 @@ from datetime import datetime
 
 
 pathToMaskFolder = r'D:\mask'
-pathToPrintAll = r'F:\Все'
-pathToPrintWithOutBack = r'F:\Без фона'
+pathToPrintAll = r'F:\Картинки китай\Под натяжку\Все'
+pathToPrintWithOutBack = r'F:\Картинки китай\Под натяжку\Без фона'
 pathToDonePrints = r'D:\printsPy'
 lightPath = r'D:\tmp\my_prod\Python\python\Make_print_WB\light.png'
 
