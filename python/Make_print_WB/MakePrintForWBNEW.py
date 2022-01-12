@@ -51,7 +51,7 @@ def getBarcodForPrint(pathToDonePrints):
 def getSizeAndPos(pathToMask):
     image = Image.open(pathToMask).convert("RGBA")
     size = image.size
-    for xLeft in range(20, size[0]):
+    for xLeft in range(50, size[0]):
 
         rgba = image.getpixel((xLeft, 1700))
         if rgba[3] != 255:
@@ -63,7 +63,7 @@ def getSizeAndPos(pathToMask):
             break
         xRight += 1
     line = int((xRight - xLeft)/2) + xLeft
-    for yTop in range(20, size[1]):
+    for yTop in range(50, size[1]):
         rgba = image.getpixel((line, yTop))
         if rgba[3] != 255:
             break
