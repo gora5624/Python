@@ -1,6 +1,3 @@
-from io import BytesIO
-from re import A
-from reportlab.graphics.transform import scale
 import requests
 from datetime import timedelta, datetime
 import base64
@@ -9,7 +6,7 @@ import pandas
 import os
 import fpdf
 from fpdf import FPDF
-from reportlab.graphics import renderPDF, renderPM
+from reportlab.graphics import renderPM
 from svglib.svglib import svg2rlg
 import io
 from PIL import Image
