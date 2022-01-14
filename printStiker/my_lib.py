@@ -3,7 +3,6 @@ import os
 import time
 import requests
 import xlrd
-import json
 
 
 def file_exists(file_name):
