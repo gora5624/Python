@@ -574,7 +574,9 @@ def splitOrders(listOrderForChangeStatus, listErrorBarcods):
         countOrdersFiles += 1
     orders = []
     i = 0
-    pdtmp = pandas.DataFrame(listOrderForChangeStatus).sort_values('Название')
+    if len(listOrderForChangeStatus) != 0:
+        pdtmp = pandas.DataFrame(
+            listOrderForChangeStatus).sort_values('Название')
     listOrderForChangeStatus = pdtmp.to_dict(orient='records')
     for order in listOrderForChangeStatus:
         if (i + 1 > int(float(countOrder) // countOrdersFiles)) and (normalNameForSplit(order) != normalNameForSplit(orders[-1])):
