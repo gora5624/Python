@@ -44,10 +44,11 @@ def main(path_list_stuff, model_name):
                 mask_folder_res = os.path.join(
                     'D:\mask', model_name, '2_res' + '.jpg')
                 orig_folder = os.path.join(
-                    'D:\printsPy', model_name, barcod[3] + '.jpg')
+                    'D:\printsPy', model_name, barcod[3] + '.jpg').replace('))', ')')
                 new_name = os.path.join(
                     'D:\Done', str(stuff['Артикул WB'])[0:-2], 'photo', '1.jpg')
-                new_folder = os.path.join(dest_folder, barcod[3]+'.jpg')
+                new_folder = os.path.join(
+                    dest_folder, barcod[3]+'.jpg').replace('))', ')')
                 new_name_2 = os.path.join(dest_folder, '2_res'+'.jpg')
                 copyfile(os.path.join(orig_folder), new_folder)
                 if 'прозрачный' not in model_name:
