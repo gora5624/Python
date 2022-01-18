@@ -10,8 +10,8 @@ from datetime import datetime
 
 
 pathToMaskFolder = r'D:\mask'
-pathToPrintAll = r'F:\Картинки китай\Под натяжку\Все'
-pathToPrintWithOutBack = r'F:\Картинки китай\Под натяжку\Без фона'
+pathToPrintAll = r'D:\Картинки китай\Под натяжку\Все'
+pathToPrintWithOutBack = r'D:\Картинки китай\Под натяжку\Без фона'
 pathToDonePrints = r'D:\printsPy'
 lightPath = r'D:\tmp\my_prod\Python\python\Make_print_WB\light.png'
 
@@ -87,7 +87,10 @@ def isPrintWithoutBack(pathToPrint):
 def Rename_print(pathToPrint):
     listPrint = os.listdir(pathToPrint)
     for Print in listPrint:
-        PrintN = Print.replace('print_', '(Принт ')[0:-4] + ')'
+
+        PrintN = Print.replace('print_', '(Принт ')[
+            0:-4] + ')' if Print[-5] != ')' else Print.replace('print_', '(Принт ')[
+            0:-4] + ''
         os.rename(os.path.join(pathToPrint, Print),
                   os.path.join(pathToPrint, PrintN+'.jpg'))
 

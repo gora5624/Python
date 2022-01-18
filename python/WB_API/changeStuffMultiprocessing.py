@@ -6,13 +6,13 @@ import pandas
 import json
 import multiprocessing
 # 1 - изменяем, 0 - нет
-isChange = 0
+isChange = 1
 
 main_path = r'C:\Users\Public\Documents\WBChangeStuff'
 nameListStuff = r'StuffList.xlsx'
 pathToListStuff = joinpath(main_path, nameListStuff)
-#Token_path = joinpath(main_path, r'Token.txt')
-Token_path = joinpath(main_path, r'TokenAbr.txt')
+Token_path = joinpath(main_path, r'Token.txt')
+#Token_path = joinpath(main_path, r'TokenAbr.txt')
 outListName = 'barcodes and art.xlsx'
 outListName2 = 'barcodes and art2.xlsx'
 outListPath = joinpath(main_path, outListName)
@@ -204,12 +204,12 @@ if __name__ == '__main__':
         TmpLIst = manager.list()
         TmpLIst2 = manager.list()
         cangeCardFromListStuff(pathToListStuff, TmpLIst, TmpLIst2)
-        TmpLIst = list(TmpLIst)
-        TmpLIst2 = list(TmpLIst2)
-        TmpLIstpd = pandas.DataFrame(TmpLIst)
-        TmpLIstpd2 = pandas.DataFrame(TmpLIst2)
-        TmpLIstpd.to_excel(outListPath, index=False)
-        TmpLIstpd2.to_excel(outListPath2, index=False)
+        # TmpLIst = list(TmpLIst)
+        # TmpLIst2 = list(TmpLIst2)
+        # TmpLIstpd = pandas.DataFrame(TmpLIst)
+        # TmpLIstpd2 = pandas.DataFrame(TmpLIst2)
+        # TmpLIstpd.to_excel(outListPath, index=False)
+        # TmpLIstpd2.to_excel(outListPath2, index=False)
 
 # imtID = getIdWithBarcod('2007341371002')
 # cardBody = getCardBody(imtID)

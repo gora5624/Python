@@ -52,10 +52,10 @@ def downloadImage(imageUrl, art, countImage):
         fullUrl = r'https://' + \
             imageUrl.replace('1.jpg', '{}.jpg'.format(str(i)))
         try:
-            os.makedirs(r'F:\image\{}\photo'.format(art))
+            os.makedirs(r'E:\image\{}\photo'.format(art))
         except:
             pass
-        with open(r'F:\image\{}\photo\{}.jpg'.format(art, str(i)), 'wb') as file:
+        with open(r'E:\image\{}\photo\{}.jpg'.format(art, str(i)), 'wb') as file:
             count = 0
             while True:
                 count += 1
@@ -81,7 +81,7 @@ def getImageFromList():
     pool = multiprocessing.Pool()
     for art_ in read_xlsx(os.path.join(mainDir, listForDownloadsName)):
         art = str(art_['Артикул'])[0:-2]
-        folderList = os.listdir(r'F:\image')
+        folderList = os.listdir(r'E:\image')
         if art in folderList:
             continue
         else:
@@ -90,7 +90,7 @@ def getImageFromList():
     pool.join()
     # for art_ in read_xlsx(os.path.join(mainDir, listForDownloadsName)):
     #     art = str(art_['Артикул'])[0:-2]
-    #     if file_exists(r'F:\image\{}\photo'.format(art)):
+    #     if file_exists(r'E:\image\{}\photo'.format(art)):
     #         continue
     #     else:
     #         if bodyMain(art) == 0:
