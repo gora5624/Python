@@ -170,8 +170,8 @@ def getBarcodeSupply(supplyId, count):
     else:
         Base64 = bytes(response.json()['file'], 'utf-8')
         SVG_recovered = base64.decodebytes(Base64)
-        fileTMPName = joinpath(suppDir, '{}_от_{}_tmp.pdf'.format(supplyId,
-                                                                  datetime.today().date()))
+        fileTMPName = joinpath(suppDir, 'Фальш {}_от_{}_tmp.pdf'.format(supplyId,
+                                                                        datetime.today().date()))
 
         drawing = svg2rlg(io.BytesIO(SVG_recovered))
         renderPM.drawToFile(
@@ -234,3 +234,6 @@ while True:
     else:
         print('Поставка не {} закрыта.'.format(supplyId))
     input('Готово, нажмите Enter')
+# supplyId = 'WB-GI-5575633'
+# count = 0
+# getBarcodeSupply(supplyId, count)
