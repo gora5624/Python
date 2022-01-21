@@ -1,18 +1,14 @@
 from dataclasses import dataclass
-import re
 import requests
-from datetime import timedelta, datetime
-import base64
+from datetime import datetime
 from os.path import join as joinpath
-import pandas
 import os
 import fpdf
 from fpdf import FPDF
-from reportlab.graphics import renderPM
-from svglib.svglib import svg2rlg
-import io
-from PIL import Image
 
+
+'''1 - тестовый режим, остальное боевой'''
+debug = 1
 
 pathToPDFAct = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Акт'
 namePDFAct = r'Акт приёма передачи груза от {}.pdf'.format(
@@ -56,6 +52,9 @@ def createPDFAct(listBox):
     strListBox = ', '.join(listBox)
     pdf.multi_cell(
         2080, 70, txt='Настоящий документ подтверждает, что "Отправитель" передал, а "Перевозчик" принял коробы со следующими номерами: {}, общим количеством {} шт..'.format(strListBox, str(len(listBox))), align='L')
+    pdf.multi_cell(2080, 40)
+    pdf.multi_cell(
+        2080, 70, txt='Представитель перевозчика обязуется осуществить контроль факта приёмки товара на РЦ Оренбург ООО Вайлдберриз и убедиться, что каждая коробка была отсканирована надлежащим образом.', align='L')
     pdf.multi_cell(2080, 200)
     pdf.multi_cell(
         2080, 70, txt='Представитель отправителя ______________________________', align='L')
@@ -110,29 +109,14 @@ def getListBox():
     return listBox
 
 
-# def getListBox1():
-#     listBox = []
-#     listSupply = getListSupply()
-#     # if listSupply == 0:
-#     #     return 0
-#     # tmpSupply = input(
-#     #     'Отсканируйте поствку, "0" чтобы закончить сканирование: ')
-#     # while tmpSupply != '0':
-#     #     if tmpSupply not in listSupply:
-#     #         print(
-#     #             'Поставки нет в списке, проверьте корректность воода номер поставки, либо на ВБ неполадки.')
-#     #     else:
-#     #         if tmpSupply not in listBox:
-#     #             listBox.append(tmpSupply)
-#     #         else:
-#     #             print('Поставка {} уже добавленна.'.format(tmpSupply))
-#     #     tmpSupply = input(
-#     #         'Отсканируйте поствку, "0" чтобы закончить сканирование: ')
-#     # if len(listBox) == 0:
-#     #     print('В акт не добавлено ни одной поставки.')
-#     return listSupply[0:100]
+def getListBox1():
+    listSupply = getListSupply()
+    return listSupply[0:100]
 
 
 getListSupply()
-listBox = getListBox()
+if debug == 1:
+    listBox = getListBox1()
+else:
+    listBox = getListBox
 createPDFAct(listBox)
