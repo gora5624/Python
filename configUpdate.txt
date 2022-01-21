@@ -1,3 +1,3 @@
 role: master
-copyList: getOrder, my_mod, printStiker, configUpdate.txt, Updater.pyw, createSupply.py, cancelOrder.py
+copyList: getOrder, my_mod, printStiker, configUpdate.txt, Updater.pyw, createSupply.py, cancelOrder.py, createSupply.py
 period_min: 5
