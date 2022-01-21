@@ -8,7 +8,7 @@ from fpdf import FPDF
 
 
 '''1 - тестовый режим, остальное боевой'''
-debug = 1
+debug = 0
 
 pathToPDFAct = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Акт'
 namePDFAct = r'Акт приёма передачи груза от {}.pdf'.format(
@@ -43,7 +43,7 @@ def createPDFAct(listBox):
         2080, 70, txt='Адрес доставки: г. Оренбург, ул. Беляевская 4/4, ворота №1, пункт приёма ООО Вайлдберриз', align='L')
     pdf.multi_cell(2080, 40)
     pdf.multi_cell(
-        2080, 70, txt='Срок доставки груза: не позднее 19:40 {}'.format(
+        2080, 70, txt='Срок доставки груза: не позднее 19:30 {}'.format(
             datetime.today().date().strftime(r"%d.%m.%Y")), align='L')
     pdf.multi_cell(2080, 40)
     pdf.multi_cell(
