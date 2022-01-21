@@ -47,7 +47,7 @@ def createPDFAct(listBox):
         2080, 70, txt='Адрес доставки: г. Оренбург, ул. Беляевская 4/4, ворота №1, пункт приёма ООО Вайлдберриз', align='L')
     pdf.multi_cell(2080, 40)
     pdf.multi_cell(
-        2080, 70, txt='Срок доставки груза: не позднее 19:30 {}'.format(
+        2080, 70, txt='Срок доставки груза: не позднее 19:40 {}'.format(
             datetime.today().date().strftime(r"%d.%m.%Y")), align='L')
     pdf.multi_cell(2080, 40)
     pdf.multi_cell(
