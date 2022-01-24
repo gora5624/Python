@@ -12,8 +12,7 @@ debug = 1
 
 
 pathToPDFAct = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Акт'
-namePDFAct = r'Акт приёма передачи груза от {}.pdf'.format(
-    datetime.today().date().strftime(r"%d.%m.%Y"))
+namePDFAct = r'Акт приёма передачи груза от {} {}.pdf'
 fullPathToPDFAct = joinpath(pathToPDFAct, namePDFAct)
 Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgyYTU2OGZlLTgyNTctNGQ2Yi05ZTg1LTJkYTgxMTgxYWI3MSJ9.ROCdF7eOfTZA-atpsLGTAi15yDzHk2UMes05vwjZwn4'
 
@@ -67,7 +66,8 @@ def createPDFActKZN(listBox):
     pdf.multi_cell(
         2080, 70, txt='Дата_______________', align='L')
 
-    pdf.output(fullPathToPDFAct)
+    pdf.output(fullPathToPDFAct.format(
+        datetime.today().date().strftime(r"%d.%m.%Y"), datetime.today().time().strftime(r"%H.%M.%S")))
     input('Акт готов, нажмите Enter.')
 
 
@@ -116,7 +116,8 @@ def createPDFActORB(listBox):
     pdf.multi_cell(
         2080, 70, txt='Дата_______________', align='L')
 
-    pdf.output(fullPathToPDFAct)
+    pdf.output(fullPathToPDFAct.format(
+        datetime.today().date().strftime(r"%d.%m.%Y"), datetime.today().time().strftime(r"%H.%M.%S")))
     input('Акт готов, нажмите Enter.')
 
 
