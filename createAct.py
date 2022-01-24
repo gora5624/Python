@@ -8,7 +8,8 @@ from fpdf import FPDF
 
 
 '''1 - тестовый режим, остальное боевой'''
-debug = 0
+debug = 1
+
 
 pathToPDFAct = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Акт'
 namePDFAct = r'Акт приёма передачи груза от {}.pdf'.format(
@@ -21,7 +22,56 @@ fpdf.set_global("SYSTEM_TTFONTS", os.path.join(
     os.path.dirname(__file__), r'C:\Windows\Fonts'))
 
 
-def createPDFAct(listBox):
+def createPDFActKZN(listBox):
+    size = (2480, 3510)
+    pdf = FPDF(format=size)
+    pdf.add_page()
+    pdf.add_font(
+        'Arial', '', fname="Arial.ttf", uni=True)
+    pdf.set_font('Arial', '', 150)
+    pdf.set_margins(200, 0, 200)
+    pdf.multi_cell(2080, 100)
+    pdf.multi_cell(2080, 100, txt='Акт приёма передачи груза от {}'.format(
+        datetime.today().date().strftime(r"%d.%m.%Y")), align='C')
+    pdf.multi_cell(2080, 100)
+    pdf.multi_cell(
+        2080, 70, txt='Отправитель: ИП Караханян Э.С., ИНН: 561000521896', align='L')
+    pdf.multi_cell(2080, 40)
+    pdf.multi_cell(
+        2080, 70, txt='Получатель: ООО Вайлдберриз, ИНН: 7721546864', align='L')
+    pdf.multi_cell(2080, 40)
+    pdf.multi_cell(
+        2080, 70, txt='Адрес доставки: Республика Татарстан, Зеленодольский район, Казань, Технополис «Новая Тура». Координаты: 55.848862, 48.838177', align='L')
+    # pdf.multi_cell(2080, 40)
+    # pdf.multi_cell(
+    #     2080, 70, txt='Срок доставки груза: не позднее 19:30 {}'.format(
+    #         datetime.today().date().strftime(r"%d.%m.%Y")), align='L')
+    pdf.multi_cell(2080, 40)
+    pdf.multi_cell(
+        2080, 70, txt='Перевозчик: Частный грузоперевозчик', align='L')
+    pdf.multi_cell(2080, 80)
+    strListBox = ', '.join(listBox)
+    pdf.multi_cell(
+        2080, 70, txt='Настоящий документ подтверждает, что "Отправитель" передал, а "Перевозчик" принял коробы со следующими номерами: {}, общим количеством {} шт..'.format(strListBox, str(len(listBox))), align='L')
+    pdf.multi_cell(2080, 40)
+    pdf.multi_cell(
+        2080, 70, txt='Представитель перевозчика обязуется осуществить контроль факта приёмки товара на CЦ Казань ООО Вайлдберриз и убедиться, что каждая коробка была отсканирована надлежащим образом.', align='L')
+    pdf.multi_cell(2080, 200)
+    pdf.multi_cell(
+        2080, 70, txt='Представитель отправителя ______________________________', align='L')
+    pdf.multi_cell(
+        2080, 70, txt='Дата_______________', align='L')
+    pdf.multi_cell(2080, 70)
+    pdf.multi_cell(
+        2080, 70, txt='Представитель перевозчика _______________________________', align='L')
+    pdf.multi_cell(
+        2080, 70, txt='Дата_______________', align='L')
+
+    pdf.output(fullPathToPDFAct)
+    input('Акт готов, нажмите Enter.')
+
+
+def createPDFActORB(listBox):
     size = (2480, 3510)
     pdf = FPDF(format=size)
     pdf.add_page()
@@ -114,9 +164,15 @@ def getListBox1():
     return listSupply[0:100]
 
 
+mode = input('Введите режим: Казань - "1" (по умолчанию), Оренбург - "0".')
+
+
 getListSupply()
 if debug == 1:
     listBox = getListBox1()
 else:
     listBox = getListBox
-createPDFAct(listBox)
+if mode == 0:
+    createPDFActORB(listBox)
+else:
+    createPDFActKZN(listBox)

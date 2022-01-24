@@ -161,7 +161,7 @@ def addOrderInSupply(Token, stikerslist, supplyId):
             print((response.status_code, response.text))
 
 
-def getBarcodeSupply(supplyId, count):
+def getBarcodeSupplyORB(supplyId, count):
     Url = 'https://suppliers-api.wildberries.ru//api/v2/supplies/{}/barcode?type=svg'
     response = requests.get(Url.format(supplyId), headers={
         'Authorization': '{}'.format(Token)})
@@ -204,6 +204,49 @@ def getBarcodeSupply(supplyId, count):
         pass
 
 
+def getBarcodeSupplyKZN(supplyId, count):
+    Url = 'https://suppliers-api.wildberries.ru//api/v2/supplies/{}/barcode?type=svg'
+    response = requests.get(Url.format(supplyId), headers={
+        'Authorization': '{}'.format(Token)})
+    if response.status_code != 200:
+        print((response.status_code, response.text))
+    else:
+        Base64 = bytes(response.json()['file'], 'utf-8')
+        SVG_recovered = base64.decodebytes(Base64)
+        fileTMPName = joinpath(suppDir, 'Фальш {}_от_{}_tmp.pdf'.format(supplyId,
+                                                                        datetime.today().date()))
+
+        drawing = svg2rlg(io.BytesIO(SVG_recovered))
+        renderPM.drawToFile(
+            drawing, fileTMPName.replace('.pdf', '.png'), fmt="PNG")
+    img = Image.open(fileTMPName.replace('.pdf', '.png'))
+    new_image = img.resize((600, 450))
+    new_image.save(fileTMPName.replace('.pdf', '.png'))
+    size = (200, 300)
+    pdf = FPDF(format=size)
+    pdf.add_page()
+    pdf.image(fileTMPName.replace('.pdf', '.png'), x=-1, y=0, w=0)
+    pdf.add_font(
+        'Arial', '', fname="Arial.ttf", uni=True)
+    pdf.set_font('Arial', '', 45)
+    pdf.multi_cell(180, 150)
+    pdf.multi_cell(180, 25, txt="{}".format(
+        'ИП Караханян Э.С.'), align='C')
+    pdf.multi_cell(180, 25, txt="{}".format(
+        'Маркетплейс Казань.'), align='C')
+    day = datetime.today().date().strftime(r"%d.%m.%Y")
+    pdf.multi_cell(180, 25, txt="{}".format(
+        'От {}').format(day), align='C')
+    if count != 0:
+        pdf.multi_cell(180, 25, txt="{}".format(
+            'Количество {} шт.').format(str(count)), align='C')
+    pdf.output(fileTMPName.replace('_tmp', ''))
+    try:
+        os.remove(fileTMPName.replace('.pdf', '.png'))
+    except:
+        pass
+
+
 def closeSupply(supplyId):
     Url = 'https://suppliers-api.wildberries.ru//api/v2/supplies/{}/close'
     response = requests.post(Url.format(supplyId), headers={
@@ -214,8 +257,9 @@ def closeSupply(supplyId):
         print('Поставка {} успешно закрыта.'.format(supplyId))
 
 
+mode = input('Введите режим: Казань - "1" (по умолчанию), Оренбург - "0".')
 while True:
-    dataorders = get_orders(Token, days=10)
+    dataorders = get_orders(Token, days=5)
     dataorderspd = pandas.DataFrame(dataorders)
     dataorderspd.to_excel(joinpath(os.path.dirname(
         os.path.abspath(__file__)), r'\tmp.xlsx'), index=False)
@@ -228,7 +272,10 @@ while True:
     else:
         supplyId = input('Введите номер поставки: ')
     count = addOrderInSupply(Token, stikerslist, supplyId)
-    getBarcodeSupply(supplyId, count)
+    if mode == 0:
+        getBarcodeSupplyORB(supplyId, count)
+    else:
+        getBarcodeSupplyKZN(supplyId, count)
     if input('Закрыть поставку {}? 1 - Закрыть, 0 - оставить открытой.: '.format(supplyId)) == '1':
         closeSupply(supplyId)
     else:
