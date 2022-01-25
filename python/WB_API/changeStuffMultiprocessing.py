@@ -6,13 +6,13 @@ import pandas
 import json
 import multiprocessing
 # 1 - изменяем, 0 - нет
-isChange = 0
+isChange = 1
 
 main_path = r'C:\Users\Public\Documents\WBChangeStuff'
 nameListStuff = r'StuffList.xlsx'
 pathToListStuff = joinpath(main_path, nameListStuff)
 Token_path = joinpath(main_path, r'Token.txt')
-#Token_path = joinpath(main_path, r'TokenAbr.txt')
+# Token_path = joinpath(main_path, r'TokenAbr.txt')
 outListName = 'barcodes and art.xlsx'
 outListName2 = 'barcodes and art2.xlsx'
 outListPath = joinpath(main_path, outListName)
@@ -113,16 +113,32 @@ def getCardBody(imtID):
         return json.loads(response.text)['result']['card']
 
 
-def changeCard(cardBody, name, TmpLIst):
+def changeCard(cardBody, stuffLine, TmpLIst):
     with open(Token_path, 'r', encoding='UTF-8') as file:
         Token = file.read()
         file.close()
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
     cardBody['countryProduction'] = 'Китай'
-    for addin in cardBody['addin']:
-        if addin['type'] == 'Бренд':
-            addin['params'] = [
-                {'value': name}]
+    for ad in list(stuffLine.keys())[2:]:
+        flag = True
+        for addin in cardBody['addin']:
+            if addin['type'] == ad:
+                par = stuffLine[ad].split(';')
+                pars = []
+                for a in par:
+                    if a != '':
+                        pars.append({'value': a.strip()})
+                addin['params'] = pars
+                flag = False
+        if flag:
+            par = stuffLine[ad].split(';')
+            pars = []
+            for a in par:
+                if a != '':
+                    pars.append({'value': a.strip()})
+            ads = {'type': ad,
+                   'params': pars}
+            cardBody['addin'].append(ads)
     cardBodyNew = {
         "id": '1',
         "jsonrpc": "2.0",
@@ -139,6 +155,8 @@ def changeCard(cardBody, name, TmpLIst):
                     break
                 if response.status_code == 200:
                     print(response.text)
+                    if 'Запрещено использовать символы в начале значения' in response.text:
+                        pass
                     break
             except:
                 print('error changeCard')
@@ -150,7 +168,7 @@ def changeCard(cardBody, name, TmpLIst):
                                 'Баркод': bk})
             except:
                 continue
-    print(name)
+    print(stuffLine['Модель'])
 
 
 def changeOneCard(cardBody, name):
@@ -189,9 +207,8 @@ def changeBody(stuffLine, TmpLIst, TmpLIst2):
     if idStuff == 0:
         return 0
     cardBody = getCardBody(idStuff)
-    #name = stuffLine['Название']
-    name = stuffLine['Название']
-    changeCard(cardBody, name, TmpLIst)
+    # name = stuffLine['Название']
+    changeCard(cardBody, stuffLine, TmpLIst)
 
 
 def cangeCardFromListStuff(pathToListStuff, TmpLIst, TmpLIst2):
