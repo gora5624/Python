@@ -119,7 +119,7 @@ def changeCard(cardBody, stuffLine, TmpLIst):
         file.close()
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
     cardBody['countryProduction'] = 'Китай'
-    for ad in list(stuffLine.keys())[2:]:
+    for ad in list(stuffLine.keys())[1:]:
         flag = True
         for addin in cardBody['addin']:
             if addin['type'] == ad:
@@ -168,7 +168,6 @@ def changeCard(cardBody, stuffLine, TmpLIst):
                                 'Баркод': bk})
             except:
                 continue
-    print(stuffLine['Модель'])
 
 
 def changeOneCard(cardBody, name):
