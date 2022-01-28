@@ -1,8 +1,10 @@
 from os.path import join as joinpath
+from time import sleep
 import requests
 from my_lib import file_exists, read_xlsx
 from os import makedirs
 import pandas
+import time
 
 
 main_path = r'C:\Users\Public\Documents\WBGetStuff'
@@ -36,8 +38,13 @@ def get_stuff():
     flag = True
     while tmp != [] or flag:
         flag = False
-        response = requests.get(Url.format(count_skip), headers={
-            'Authorization': '{}'.format(Token)})
+        try:
+            response = requests.get(Url.format(count_skip), headers={
+                'Authorization': '{}'.format(Token)})
+        except:
+            time.sleep(5)
+            response = requests.get(Url.format(count_skip), headers={
+                'Authorization': '{}'.format(Token)})
         if response.status_code != 200:
             print('Не удалось получить остатки, ошибка на стороне ВБ.')
             return 1
