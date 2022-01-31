@@ -20,7 +20,7 @@ Token_path = joinpath(
     main_path, r'Token.txt')
 FontPath = r'C:\Users\Public\Documents\WBHelpTools\MakeWBStikersWithName\font\ArialSans.ttf'
 orders = ''
-caseFilePath = r'C:\Users\Public\Documents\WBGetOrder\TMPDir\Список номенклатуры — копия.XLSX'
+caseFilePath = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Список номенклатуры — копия.XLSX'
 fpdf.set_global("SYSTEM_TTFONTS", os.path.join(
     os.path.dirname(__file__), r'C:\Windows\Fonts'))
 
@@ -81,7 +81,7 @@ art = ''
 #     if case_name != '':
 #         break
 
-for line in read_xlsx(r'D:\Книга1.xlsx'):
+for line in read_xlsx(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБО без принтов 31.01.2022 ч1 KZN.xlsx'):
     if case_name == '':
         try:
             art = str(line['Артикул']) if type(
