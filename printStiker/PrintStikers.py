@@ -247,7 +247,8 @@ def getStiker(OrderNum):
         file.close()
     UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
     trying = 0
-    OrderNumJson = {"orderIds": [int(OrderNum)]}
+    OrderNumJson = {"orderIds": [int(OrderNum)],
+                    "type": "qr"}
     while True:
         trying += 1
         try:

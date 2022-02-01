@@ -53,7 +53,7 @@ def get_orders(Token, days=4):
     return dataorders
 
 
-def getStiker(Token, dataorders):
+def getStikers(Token, dataorders):
     stikers = []
     tmpOrders = []
     UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
