@@ -176,5 +176,20 @@ def main():
     createAllCaseXLSX()
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
+
+
+def createAllCaseXLSX1():
+    allCaseList = []
+    pathToDonePrints = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Реестры ФБО'
+    for file in os.listdir(pathToDonePrints):
+        if '.xlsx' in file:
+            allCaseList.extend(read_xlsx(os.path.join(
+                pathToDonePrints, file), title='Yes'))
+    allCaseListpd = pandas.DataFrame(allCaseList)
+    allCaseListpd.to_excel(os.path.join(
+        pathToDonePrints, 'AllCasePrint{}.xlsx'.format(datetime.today()).replace(':', '-')), index=False, header=False)
+
+
+createAllCaseXLSX1()
