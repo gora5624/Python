@@ -88,7 +88,7 @@ art = ''
 #     if case_name != '':
 #         break
 
-for line in read_xlsx(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБО без принтов 31.01.2022 ч2 KZN без ценников.xlsx'):
+for line in read_xlsx(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБО без принтов 01.02.2022 ч6 KZN.xlsx'):
     if case_name == '':
         try:
             art = str(line['Артикул']) if type(

@@ -47,7 +47,7 @@ def get_stuff():
                 'Authorization': '{}'.format(Token)})
         if response.status_code != 200:
             print('Не удалось получить остатки, ошибка на стороне ВБ.')
-            return 1
+            continue
         print(count_skip)
         count_skip = count_skip+1000
         tmp = response.json()['stocks']
