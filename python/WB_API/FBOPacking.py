@@ -21,15 +21,14 @@ while True:
         countBox += 1
     listBarcode = []
     barcode = str(input('Введите штрихкод товара, 0 чтобы закрыть коробку: '))
-    count = 1
     while barcode != '0':
         if barcode != '':
             listBarcode.append({'Баркод': barcode})
         barcode = str(
             input('Введите штрихкод товара, 0 чтобы закрыть коробку: '))
 
-        count += 1
     if listBarcode != []:
+        count = len(listBarcode)
         listBarcodepd = pandas.DataFrame(listBarcode)
         listBarcodepd.groupby(['Баркод']).size().reset_index(name='Количество').to_excel(
             nameBox.format(day, str(countBox)), index=False)

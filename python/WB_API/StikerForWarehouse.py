@@ -2,7 +2,7 @@ import barcode
 from barcode.writer import ImageWriter
 import fpdf
 from fpdf import FPDF
-from my_lib import read_xlsx
+from my_lib import file_exists, read_xlsx
 from os.path import join as joinpath
 from pdfrw import PdfReader, PdfWriter
 import os
@@ -60,8 +60,15 @@ def create_1C_barcod(count, art='', case_name='', case_art='', bar=''):
                       decompress=False).getPage(0)
     for i in range(count):
         writer.addpage(path2)
-    writer.write(joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники',
-                          os.path.basename(case_name + '.pdf')))
+    fileName = joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники',
+                        os.path.basename(case_name.replace(":", " ") + '.pdf'))
+    cnt = 1
+    while file_exists(fileName):
+        cnt += 1
+        fileName = joinpath(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\ценники',
+                            os.path.basename(case_name.replace(":", " ") + '_{}.pdf'.format(str(cnt))))
+
+    writer.write(fileName)
 
 
 case_name = ''
@@ -81,7 +88,7 @@ art = ''
 #     if case_name != '':
 #         break
 
-for line in read_xlsx(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБО без принтов 31.01.2022 ч1 KZN.xlsx'):
+for line in read_xlsx(r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБО без принтов 31.01.2022 ч2 KZN без ценников.xlsx'):
     if case_name == '':
         try:
             art = str(line['Артикул']) if type(
