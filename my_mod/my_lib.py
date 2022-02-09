@@ -6,6 +6,12 @@ import xlrd
 import json
 
 
+def multiReplace(tgt, dictWhatReplace):
+    for i, j in dictWhatReplace.items():
+        tgt = tgt.replace(i, j)
+    return tgt
+
+
 def file_exists(file_name):
     '''Функция возвращает True если файл по пути file_name существует и False если не существует'''
 
