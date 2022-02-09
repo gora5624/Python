@@ -1,18 +1,13 @@
-from genericpath import isdir
 from PIL import Image
 import os
-from my_lib import file_exists, read_xlsx, generate_bar_WB
-import copy
-import pandas
-from os.path import isdir
-import multiprocessing
-from datetime import datetime
 
 
-mainDir = r'F:\китай png готово — копия'
+mainDir = r'G:\Картинки китай\Китай 2 png — копия'
 
 for file in os.listdir(mainDir):
     filePath = os.path.join(mainDir, file)
+    if os.path.isdir(filePath):
+        continue
     image = Image.open(filePath).convert("RGBA")
     size = image.size
     yTop = 10
@@ -26,7 +21,7 @@ for file in os.listdir(mainDir):
                 if count > 10:
                     try:
                         os.replace(filePath, filePath.replace(
-                            r'китай png готово — копия', r'Без фона'))
+                            r'Китай 2 png — копия', r'Китай 2 png — копия\Без фона'))
                     except:
                         pass
                     break
