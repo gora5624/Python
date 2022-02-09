@@ -619,7 +619,7 @@ def choiseMode():
     return mode
 
 
-def get_orders(Token, days=3):
+def get_orders(Token, days=5):
     """Получает заказы за последние 3 дня"""
     print("Идёт получение свежих заказов, ожидайте...")
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
