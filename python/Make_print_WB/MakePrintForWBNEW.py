@@ -217,10 +217,10 @@ def createAllCaseXLSX():
 
 
 def main():
-    # makePrint()
-    # for dirModel in os.listdir(pathToDonePrints):
-    #     if isdir(os.path.join(pathToDonePrints, dirModel)):
-    #         Rename_print(os.path.join(pathToDonePrints, dirModel))
+    makePrint()
+    for dirModel in os.listdir(pathToDonePrints):
+        if isdir(os.path.join(pathToDonePrints, dirModel)):
+            Rename_print(os.path.join(pathToDonePrints, dirModel))
     getBarcodForPrint(pathToDonePrints)
     createAllCaseXLSX()
 
