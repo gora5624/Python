@@ -23,7 +23,7 @@ suppDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы �
 Debug = 0
 
 
-def get_orders(Token, days=10):
+def get_orders(Token, days=5):
     """Получает заказы за последние 3 дня"""
     print("Идёт получение свежих заказов, ожидайте...")
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'

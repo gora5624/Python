@@ -278,7 +278,11 @@ def createPrintExcel(listOrderForChangeStatus, fileName):
     listOrderForTable = []
     for orderLine in listOrderForChangeStatus:
         if 'книга' not in orderLine['Название']:
-            model = orderLine['Название'].split('для ')[1].split(' сил')[0]
+            if 'для ' in orderLine:
+                model = orderLine['Название'].split('для ')[1].split(' сил')[0]
+            else:
+                model = orderLine['Название'].split(
+                    'Чехол ')[1].split(' сил')[0]
             size = getSize(model)
         elif 'книга' in orderLine['Название']:
             size = 'Книга'
@@ -619,7 +623,7 @@ def choiseMode():
     return mode
 
 
-def get_orders(Token, days=5):
+def get_orders(Token, days=10):
     """Получает заказы за последние 3 дня"""
     print("Идёт получение свежих заказов, ожидайте...")
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
