@@ -13,7 +13,7 @@ from os import remove, listdir
 import os
 
 # Режим отладки 1 - да, 0 - боевой режим
-Debug = 1
+Debug = 0
 
 stopList = ['2009539898001', '2009539892009', '2009539656007',
             '2009539490007', '2009539287003', '2009538490008']
@@ -278,7 +278,7 @@ def createPrintExcel(listOrderForChangeStatus, fileName):
     listOrderForTable = []
     for orderLine in listOrderForChangeStatus:
         if 'книга' not in orderLine['Название']:
-            if 'для ' in orderLine:
+            if 'для ' in orderLine['Название']:
                 model = orderLine['Название'].split('для ')[1].split(' сил')[0]
             else:
                 model = orderLine['Название'].split(
@@ -623,7 +623,7 @@ def choiseMode():
     return mode
 
 
-def get_orders(Token, days=10):
+def get_orders(Token, days=5):
     """Получает заказы за последние 3 дня"""
     print("Идёт получение свежих заказов, ожидайте...")
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
