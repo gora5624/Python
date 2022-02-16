@@ -14,7 +14,7 @@ Count_Arh = 200
 def main(path_list_stuff, model_name):
     list_stuff = read_xlsx(path_list_stuff)
     list_barcod = read_xlsx(
-        r'D:\printsPy\{}.xlsx'.format(model_name), title='No') if file_exists(
+        r'D:\printsPy\{}.xlsx'. format(model_name), title='No') if file_exists(
         r'D:\printsPy\{}.xlsx'.format(model_name)) else read_xlsx(r'D:\printsPy\{}.xls'.format(model_name), title='No')
     if 'прозрачный' not in model_name:
         try:
