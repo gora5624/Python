@@ -6,13 +6,13 @@ import pandas
 import json
 import multiprocessing
 # 1 - изменяем, 0 - нет
-isChange = 1
+isChange = 0
 
 main_path = r'C:\Users\Public\Documents\WBChangeStuff'
 nameListStuff = r'StuffList.xlsx'
 pathToListStuff = joinpath(main_path, nameListStuff)
 Token_path = joinpath(main_path, r'Token.txt')
-# Token_path = joinpath(main_path, r'TokenAbr.txt')
+#Token_path = joinpath(main_path, r'TokenAbr.txt')
 outListName = 'barcodes and art.xlsx'
 outListName2 = 'barcodes and art2.xlsx'
 outListPath = joinpath(main_path, outListName)
