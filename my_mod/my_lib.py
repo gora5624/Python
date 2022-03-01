@@ -6,6 +6,10 @@ import xlrd
 import json
 
 
+dataCatalog = os.path.join(os.path.join(
+        os.environ['USERPROFILE']), 'Documents')
+
+
 def multiReplace(tgt, dictWhatReplace):
     for i, j in dictWhatReplace.items():
         tgt = tgt.replace(i, j)
