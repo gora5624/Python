@@ -16,6 +16,54 @@ pathToPrintAll = r'G:\Картинки китай\Под натяжку обще
 pathToPrintWithOutBack = r'G:\Картинки китай\Под натяжку общее\Без фона'
 pathToDonePrints = r'D:\printsPy'
 lightPath = r'D:\tmp\my_prod\Python\python\Make_print_WB\light.png'
+pathToCategoryList = r'D:\tmp\my_prod\Python\python\Make_print_WB\cat.xlsx'
+reductionDict = {'закрытой камерой': 'зак.кам.',
+                 'открытой камерой': 'отк.кам.',
+                 'матовый': 'мат.',
+                 'прозрачный': 'проз.',
+                 'с силиконовым основанием': 'с сил. вставкой',
+                 'противоударный': 'противоуд.',
+                 'переливающиеся блестки': 'жидк. блестки',
+                 'с усиленными углами': 'с усил.угл.',
+                 'Чехол для': 'Чехол'}
+reductionDict2 = {'Чехол для': 'Чехол'}
+
+siliconCaseColorDict = {'белый': 'WHT',
+                        'бирюзовый': 'TRQ',
+                        'бледно-розовый': 'L-PNK',
+                        'бордовый': 'VNS',
+                        'голубой': 'SKB',
+                        'желтый': 'YLW',
+                        'зеленый': 'GRN',
+                        'красный': 'RED',
+                        'пудра': 'PWD',
+                        'розовый': 'PNK',
+                        'салатовый': 'L-GRN',
+                        'светло-зеленый': 'L-GRN',
+                        'светло-розовый': 'L-PNK',
+                        'светло-фиолетовый': 'L-PPL',
+                        'серый': 'GRY',
+                        'синий': 'BLU',
+                        'темно-синий': 'D-BLU',
+                        'темно-сиреневый': 'D-LLC',
+                        'фиолетовый': 'PPL',
+                        'хаки': 'HCK',
+                        'черный': 'BLC',
+                        'прозрачный': 'CLR'
+                        }
+
+
+bookCaseColorDict = {'бордовый': 'VNS',
+                     'бронзовый': 'BNZ',
+                     'голубой': 'SKB',
+                     'зеленый': 'GRN',
+                     'золотой': 'GLD',
+                     'красный': 'RED',
+                     'розовое золото': 'P-GLD',
+                     'серый': 'GRY',
+                     'синий': 'BLU',
+                     'черный': 'BLC'
+                     }
 
 
 def generate_bar_WB(count):
@@ -93,12 +141,77 @@ def getBarcodForPrintMain(donePrint):
             pathToDonePrints, donePrint + '.xlsx'), index=False)
 
 
+def genArtColor(nameCase, listNamePrint):
+    listCase = []
+    # узнаём тип чехла
+    if 'книга' in nameCase:
+        colorList = bookCaseColorDict
+        artColor_1 = 'BK'
+    else:
+        colorList = siliconCaseColorDict
+        artColor_1 = 'BP'
+    # узнаём цвет чехла
+    for color, codeColor in colorList.items():
+        if color in nameCase:
+            artColor_2 = codeColor
+            break
+        else:
+            artColor_2 = 'UNKNOW_COLOR'
+    # узнаём в какие категории входит принт
+    categoryList = read_xlsx(pathToCategoryList)
+    for namePrint in listNamePrint:
+        for category in categoryList:
+            if category['Принт'] == namePrint[0:-4]:
+                printNum = namePrint[0:-4].split(' ')[1][0:-1]
+                printNum = '0'*(4-len(printNum)) + printNum
+                artColor = [artColor_1, artColor_2,
+                            category['Код категории'], 'PRNT', printNum]
+                dataTMP = {'Принт': namePrint[0:-4],
+                           'Категория': category['Категория'],
+                           'Код категории': category['Код категории'],
+                           'Артикул цвета': ('_').join(artColor),
+                           'Код товара': artColor_1,
+                           'Код цвета': artColor_2}
+                listCase.append(dataTMP)
+    return listCase
+
+
+def getBarcodForPrintWithCatMain(donePrint, reductionDict, reductionDict2):
+    if not file_exists(os.path.join(
+            pathToDonePrints, donePrint + '.xlsx') if '.xlsx'not in donePrint else os.path.join(
+            pathToDonePrints, donePrint)):
+        excelWithPrint = []
+        pathToPrint = os.path.join('D:\printsPy', donePrint)
+        listPrint = genArtColor(donePrint, os.listdir(pathToPrint))
+        listBarcodes = generate_bar_WB(len(listPrint))
+        for i, Print in enumerate(listPrint):
+            data = {
+                'Баркод': listBarcodes[i],
+                'Группа': 'Чехол производство (принт)',
+                'Основная характеристика': Print['Принт'],
+                'Название 1С': multiReplace(donePrint, reductionDict),
+                'Название полное': multiReplace(donePrint, reductionDict2),
+                'Название полное с принтом': multiReplace(donePrint, reductionDict2) + ' ' + Print['Принт'],
+                'Размер печать': '',
+                'Категория': Print['Категория'],
+                'Код категории': Print['Код категории'],
+                'Код цвета': Print['Код цвета'],
+                'Артикул цвета': Print['Артикул цвета']
+
+
+            }
+            excelWithPrint.append(data)
+        excelWithPrintpd = pandas.DataFrame(excelWithPrint)
+        excelWithPrintpd.to_excel(os.path.join(
+            pathToDonePrints, donePrint + '.xlsx'), index=False)
+
+
 def getBarcodForPrint(pathToDonePrints):
     #listCase = read_xlsx(r'D:\Список чехлов под печать.xlsx')
     pool = multiprocessing.Pool()
     for donePrint in os.listdir(pathToDonePrints):
-        pool.apply_async(getBarcodForPrintMain,
-                         args=(donePrint, ))
+        pool.apply_async(getBarcodForPrintWithCatMain,
+                         args=(donePrint, reductionDict, reductionDict2,))
     pool.close()
     pool.join()
 
@@ -142,10 +255,14 @@ def isPrintWithoutBack(pathToPrint):
 def Rename_print(pathToPrint):
     listPrint = os.listdir(pathToPrint)
     for Print in listPrint:
-
-        PrintN = Print.replace('print_', '(Принт ')[
-            0:-4] + ')' if Print[-5] != ')' else Print.replace('print_', '(Принт ')[
-            0:-4] + ''
+        if "_" in Print:
+            PrintN = Print.replace('print_', '(Принт ')[
+                0:-4] + ')' if Print[-5] != ')' else Print.replace('print_', '(Принт ')[
+                0:-4] + ''
+        else:
+            PrintN = Print.replace('print ', '(Принт ')[
+                0:-4] + ')' if Print[-5] != ')' else Print.replace('print_', '(Принт ')[
+                0:-4] + ''
         os.rename(os.path.join(pathToPrint, Print),
                   os.path.join(pathToPrint, PrintN+'.jpg'))
 

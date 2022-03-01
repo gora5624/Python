@@ -218,16 +218,6 @@ def cangeCardFromListStuff(pathToListStuff, TmpLIst, TmpLIst2):
     pool.close()
     pool.join()
 
-# def cangeCardFromListStuff(pathToListStuff, TmpLIst, TmpLIst2):
-#     dataFromLIstStuff = read_xlsx(pathToListStuff)
-#     changeBody
-#     pool = multiprocessing.Pool()
-#     for stuffLine in dataFromLIstStuff:
-#         changeBody(stuffLine, TmpLIst, TmpLIst2)
-#         pool.apply_async(changeBody, args=(stuffLine, TmpLIst, TmpLIst2,))
-#     pool.close()
-#     pool.join()
-
 
 if __name__ == '__main__':
     with multiprocessing.Manager() as manager:
@@ -240,8 +230,3 @@ if __name__ == '__main__':
         TmpLIstpd2 = pandas.DataFrame(TmpLIst2)
         TmpLIstpd.to_excel(outListPath, index=False)
         TmpLIstpd2.to_excel(outListPath2, index=False)
-
-# imtID = getIdWithBarcod('2007341371002')
-# cardBody = getCardBody(imtID)
-# name = 'Защитное стекло для Samsung Galaxy M52 (M 52) (5G)|Cтекло Самсунг М52 (М 52) (5G) (не чехол)'
-# changeOneCard(cardBody, name)
