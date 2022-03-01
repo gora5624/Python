@@ -1,10 +1,13 @@
-
 from os.path import join as joinpath
+import sys
+sys.path.insert(1, joinpath(sys.path[0], '../..'))
 import requests
-from my_lib import read_xlsx
+from my_mod.my_lib import read_xlsx
 import pandas
 import json
 import multiprocessing
+
+
 # 1 - изменяем, 0 - нет
 isChange = 1
 
