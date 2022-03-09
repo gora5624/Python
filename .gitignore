@@ -127,6 +127,6 @@ dmypy.json
 .pyre/
 
 # VSCode
-/.vscode
+.vscode
 
 \c#\ConsoleApp1\.vs
