@@ -1,7 +1,9 @@
 from genericpath import isdir
 from PIL import Image
 import os
-from my_lib import file_exists, read_xlsx, multiReplace
+import sys
+sys.path.append(os.path.abspath(os.path.join(__file__,'../../..')))
+from my_mod.my_lib import file_exists, read_xlsx, multiReplace
 import copy
 import pandas
 from os.path import isdir
@@ -10,13 +12,14 @@ from datetime import datetime
 import requests
 import time
 
-
-pathToMaskFolder = r'D:\mask'
-pathToPrintAll = r'G:\Картинки китай\Под натяжку общее\Все'
-pathToPrintWithOutBack = r'G:\Картинки китай\Под натяжку общее\Без фона'
-pathToDonePrints = r'D:\printsPy'
-lightPath = r'D:\tmp\my_prod\Python\python\Make_print_WB\light.png'
-pathToCategoryList = r'D:\tmp\my_prod\Python\python\Make_print_WB\cat.xlsx'
+diskWithPrint = 'F'
+diskForTMP = 'E'
+pathToMaskFolder = r'{}:\mask'.format(diskForTMP)
+pathToPrintAll = r'{}:\Картинки китай\Под натяжку общее\Все'.format(diskForTMP)
+pathToPrintWithOutBack = r'{}:\Картинки китай\Под натяжку общее\Без фона'.format(diskForTMP)
+pathToDonePrints = r'{}:\printsPy'.format(diskForTMP)
+lightPath = r'{}:\tmp\my_prod\Python\python\Make_print_WB\light.png'.format(diskForTMP)
+pathToCategoryList = r'{}:\tmp\my_prod\Python\python\Make_print_WB\cat.xlsx'.format(diskForTMP)
 reductionDict = {'закрытой камерой': 'зак.кам.',
                  'открытой камерой': 'отк.кам.',
                  'матовый': 'мат.',
@@ -27,7 +30,6 @@ reductionDict = {'закрытой камерой': 'зак.кам.',
                  'с усиленными углами': 'с усил.угл.',
                  'Чехол для': 'Чехол'}
 reductionDict2 = {'Чехол для': 'Чехол'}
-
 siliconCaseColorDict = {'белый': 'WHT',
                         'бирюзовый': 'TRQ',
                         'бледно-розовый': 'L-PNK',
@@ -51,8 +53,6 @@ siliconCaseColorDict = {'белый': 'WHT',
                         'черный': 'BLC',
                         'прозрачный': 'CLR'
                         }
-
-
 bookCaseColorDict = {'бордовый': 'VNS',
                      'бронзовый': 'BNZ',
                      'голубой': 'SKB',
@@ -114,16 +114,6 @@ def getBarcodForPrintMain(donePrint):
         excelWithPrint = []
         pathToPrint = os.path.join('D:\printsPy', donePrint)
         listPrint = os.listdir(pathToPrint)
-        reductionDict = {'закрытой камерой': 'зак.кам.',
-                         'открытой камерой': 'отк.кам.',
-                         'матовый': 'мат.',
-                         'прозрачный': 'проз.',
-                         'с силиконовым основанием': 'с сил. вставкой',
-                         'противоударный': 'противоуд.',
-                         'переливающиеся блестки': 'жидк. блестки',
-                         'с усиленными углами': 'с усил.угл.',
-                         'Чехол для': 'Чехол'}
-        reductionDict2 = {'Чехол для': 'Чехол'}
         listBarcodes = generate_bar_WB(len(listPrint))
         for i, Print in enumerate(listPrint):
             data = {

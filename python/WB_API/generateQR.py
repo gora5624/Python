@@ -1,3 +1,0 @@
-import qrcode
-
-dataQR =
