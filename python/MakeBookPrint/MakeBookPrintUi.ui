@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>284</width>
+    <height>427</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QPushButton" name="CreatePrint">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>400</y>
+     <width>101</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Создать принты</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>201</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Выберете цвета для создания принтов</string>
+   </property>
+  </widget>
+  <widget class="QSplitter" name="splitterColor">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>40</y>
+     <width>81</width>
+     <height>221</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Plain</enum>
+   </property>
+   <property name="lineWidth">
+    <number>0</number>
+   </property>
+   <property name="midLineWidth">
+    <number>0</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+   <property name="opaqueResize">
+    <bool>true</bool>
+   </property>
+   <widget class="QCheckBox" name="checkBox_1_Vinous">
+    <property name="text">
+     <string>Бордовый</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_2_SkyBlue">
+    <property name="text">
+     <string>Голубой</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_3_Green">
+    <property name="text">
+     <string>Зеленый</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_4_Gold">
+    <property name="text">
+     <string>Золотой</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_5_Red">
+    <property name="text">
+     <string>Красный</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_6_Pink">
+    <property name="text">
+     <string>Розовое золото</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_7_Grey">
+    <property name="text">
+     <string>Серый</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_8_Blue">
+    <property name="text">
+     <string>Синий</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_9_Black">
+    <property name="text">
+     <string>Черный</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QTextEdit" name="textEditModel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>340</y>
+     <width>261</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textEditBrand">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>280</y>
+     <width>261</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>260</y>
+     <width>31</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Бренд</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>320</y>
+     <width>41</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Модель</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="textLog">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>40</y>
+     <width>161</width>
+     <height>221</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>380</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>1</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>380</y>
+     <width>16</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>2</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="CreateExcel">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>400</y>
+     <width>101</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Создать Excel</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
