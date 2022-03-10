@@ -64,11 +64,11 @@ def create_1C_barcod(count, art='', case_name='', case_art='', bar=''):
     writer.write(fileName)
 
 
-case_name = 'Чехол для Huawei P20 Pro (P20 Plus) силикон прозрачный (Принт 155) Девушка в сиреневом 2'
-case_art = 'Huawei_P20_Pro_проз_пр42_Про_пр_155_Девушка_в_сиреневом_2'
-bar = '2011678235005'
+case_name = 'Чехол для Samsung Galaxy A52 (2021) силикон прозрачный (Принт 131) Лаванда и закат'
+case_art = 'Samsung_A52_2021_проз_1Принт_131_Лаванда_и_закат'
+bar = '2003319330712'
 count = 1
-art = '45737886'
+art = '30301860'
 
 while True:
     if case_name == '':

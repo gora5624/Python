@@ -41,10 +41,12 @@ def makeImageColor(color, modelBrand, modelModel):
         drawText = ImageDraw.Draw(imageDone)
         widthImage, heightImage = imageDone.size
         widthText, heightText = drawText.textsize(modelModel, font=customFontModel)
+        if widthText>800:
+            customFontModel = ImageFont.truetype(fontPath, 55)
         drawText = ImageDraw.Draw(imageDone)
         drawText.text((widthImage-XPasteModel-widthText,heightImage-YPasteModel-heightText), modelModel, font=customFontModel,fill='#000000')
         fullPathToSave = joinPath(pathToDoneImageWithName, modelBrand + ' ' + modelModel, color)
-        if not exists(fullPathToSave):
-            makedirs(fullPathToSave)
-        imageDone.save(joinPath(fullPathToSave, pic[0:-4] + '.jpg'), quality=75)
+        if not exists(fullPathToSave.replace('/','&')):
+            makedirs(fullPathToSave.replace('/','&'))
+        imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic[0:-4] + '.jpg'), quality=75)
         #pass

@@ -1,12 +1,17 @@
-from os.path import abspath, join as joinPath
-from os import listdir, rename
+from os.path import abspath, join as joinPath, isdir, exists
+from os import listdir, rename, remove
+from shutil import rmtree
 import sys
 sys.path.append(abspath(joinPath(__file__,'../../..')))
+import pandas
 from my_mod.my_lib import  read_xlsx, multiReplace
 import requests
 import time
 
+
+diskWithPrint = 'F'
 pathToCategoryList = abspath(joinPath(__file__, '..', 'cat.xlsx'))
+pathToBookPrint = r'{}:\Готовые картинки Fashion по моделям'.format(diskWithPrint)
 
 bookCaseColorDict = {'бордовый': 'VNS',
                      'бронзовый': 'BNZ',
@@ -48,6 +53,49 @@ def RenameImage(pathToPrint):
                   joinPath(pathToPrint, PrintN+'.jpg'))
 
 
+
+def createExcel(resp):
+    listImageAll = []
+    for model in listdir(pathToBookPrint):
+        modelForExcel = model.replace('&','/')
+        if '.xlsx' in model:
+            continue
+        listModel = []
+        for color in listdir(joinPath(pathToBookPrint, model)):
+            if '.xlsx' in color:
+                continue
+            listColor = []
+            RenameImage(joinPath(pathToBookPrint, model,color))
+            listArt = genArtColor(color, listdir(joinPath(pathToBookPrint, model,color)))
+            listBarcodes = generate_bar_WB(len(listArt))
+            for i, art in enumerate(listArt):
+                name = 'Чехол книга {} {} с силиконовый вставкой Fashion'.format(modelForExcel, color.lower())
+                data = {'Баркод': listBarcodes[i],
+                        'Группа': 'Чехол производство (принт)',
+                        'Основная характеристика': art['Принт'],
+                        'Название 1С': multiReplace(name, reductionDict),
+                        'Название полное': name,
+                        'Название полное с принтом': name + ' ' + art['Принт'],
+                        'Размер печать': '',
+                        'Категория': art['Категория'],
+                        'Код категории': art['Код категории'],
+                        'Код цвета': art['Код цвета'],
+                        'Артикул цвета': art['Артикул цвета'],
+                        'Код камеры':art['Код камеры'],
+                        'Рисунок':art['Рисунок'],
+                        'Любимые герои': art['Любимые герои']}
+                listColor.append(data)
+            listColorpf = pandas.DataFrame(listColor)
+            listColorpf.to_excel(joinPath(pathToBookPrint, model,color)+'.xlsx', index=False)
+            listModel.extend(listColor)
+        listModelpd = pandas.DataFrame(listModel)
+        listModelpd.to_excel(joinPath(pathToBookPrint, model) + '.xlsx', index=False)
+        listImageAll.extend(listModel)
+    listImageAllpd = pandas.DataFrame(listImageAll)
+    listImageAllpd.to_excel(pathToBookPrint + '.xlsx', index=False)
+    resp.put(0)
+
+
 def genArtColor(colorBook, listImage):
     listCase = []
     colorBook = colorBook.lower()
@@ -59,6 +107,7 @@ def genArtColor(colorBook, listImage):
             break
         else:
             artColor_2 = 'UNKNOW_COLOR'
+    artColor_3 = 'NTU'
     categoryList = read_xlsx(pathToCategoryList)
     for namePrint in listImage:
         for category in categoryList:
@@ -72,10 +121,31 @@ def genArtColor(colorBook, listImage):
                            'Код категории': category['Код категории'],
                            'Артикул цвета': ('_').join(artColor),
                            'Код товара': artColor_1,
-                           'Код цвета': artColor_2}
+                           'Код цвета': artColor_2,
+                           'Код камеры': artColor_3,
+                           'Рисунок':category['Рисунок'],
+                           'Любимые герои': category['Любимые герои']}
                 listCase.append(dataTMP)
     return listCase
 
+
+
+
+def deleteImage():
+    for catalog in listdir(pathToBookPrint):
+        if isdir(joinPath(pathToBookPrint,catalog)):
+            # resp = 0
+            # while resp != None:
+            #     try:
+            #         resp = removedirs(joinPath(pathToBookPrint,catalog))
+            #     except OSError:
+            #         for image in listdir(joinPath(pathToBookPrint,catalog)):
+            #             remove(joinPath(pathToBookPrint,catalog,image))
+            rmtree(joinPath(pathToBookPrint,catalog))
+        else:
+            remove(joinPath(pathToBookPrint,catalog))
+    if exists(pathToBookPrint+'.xlsx'):
+        remove(pathToBookPrint+'.xlsx')
 
 
 
