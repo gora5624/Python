@@ -14,12 +14,12 @@ import time
 
 diskWithPrint = 'F'
 diskForTMP = 'E'
-pathToMaskFolder = r'{}:\mask'.format(diskForTMP)
-pathToPrintAll = r'{}:\Картинки китай\Под натяжку общее\Все'.format(diskForTMP)
-pathToPrintWithOutBack = r'{}:\Картинки китай\Под натяжку общее\Без фона'.format(diskForTMP)
-pathToDonePrints = r'{}:\printsPy'.format(diskForTMP)
-lightPath = r'{}:\tmp\my_prod\Python\python\Make_print_WB\light.png'.format(diskForTMP)
-pathToCategoryList = r'{}:\tmp\my_prod\Python\python\Make_print_WB\cat.xlsx'.format(diskForTMP)
+pathToMaskFolder = r'{}:\ForPrints\mask'.format(diskForTMP)
+pathToPrintAll = r'{}:\Картинки китай\Под натяжку общее\Все'.format(diskWithPrint)
+pathToPrintWithOutBack = r'{}:\Картинки китай\Под натяжку общее\Без фона'.format(diskWithPrint)
+pathToDonePrints = r'{}:\ForPrints\printsPy'.format(diskForTMP)
+lightPath = os.path.abspath(os.path.join(__file__,'..','light.png'))
+pathToCategoryList = os.path.abspath(os.path.join(__file__,'..','cat.xlsx'))
 reductionDict = {'закрытой камерой': 'зак.кам.',
                  'открытой камерой': 'отк.кам.',
                  'матовый': 'мат.',
@@ -147,6 +147,12 @@ def genArtColor(nameCase, listNamePrint):
             break
         else:
             artColor_2 = 'UNKNOW_COLOR'
+    if 'открытой камерой' in nameCase:
+        artColor_3 = 'OCM'
+    elif 'закрытой камерой' in nameCase:
+        artColor_3 = 'CCM'
+    else:
+        artColor_3 = 'UCM'
     # узнаём в какие категории входит принт
     categoryList = read_xlsx(pathToCategoryList)
     for namePrint in listNamePrint:
@@ -161,7 +167,10 @@ def genArtColor(nameCase, listNamePrint):
                            'Код категории': category['Код категории'],
                            'Артикул цвета': ('_').join(artColor),
                            'Код товара': artColor_1,
-                           'Код цвета': artColor_2}
+                           'Код цвета': artColor_2,
+                           'Код камеры': artColor_3,
+                           'Рисунок':category['Рисунок'],
+                           'Любимые герои': category['Любимые герои']}
                 listCase.append(dataTMP)
     return listCase
 
@@ -171,7 +180,7 @@ def getBarcodForPrintWithCatMain(donePrint, reductionDict, reductionDict2):
             pathToDonePrints, donePrint + '.xlsx') if '.xlsx'not in donePrint else os.path.join(
             pathToDonePrints, donePrint)):
         excelWithPrint = []
-        pathToPrint = os.path.join('D:\printsPy', donePrint)
+        pathToPrint = os.path.join(pathToDonePrints, donePrint)
         listPrint = genArtColor(donePrint, os.listdir(pathToPrint))
         listBarcodes = generate_bar_WB(len(listPrint))
         for i, Print in enumerate(listPrint):
@@ -186,9 +195,10 @@ def getBarcodForPrintWithCatMain(donePrint, reductionDict, reductionDict2):
                 'Категория': Print['Категория'],
                 'Код категории': Print['Код категории'],
                 'Код цвета': Print['Код цвета'],
-                'Артикул цвета': Print['Артикул цвета']
-
-
+                'Артикул цвета': Print['Артикул цвета'],
+                'Код камеры':Print['Код камеры'],
+                'Рисунок':Print['Рисунок'],
+                'Любимые герои': Print['Любимые герои']
             }
             excelWithPrint.append(data)
         excelWithPrintpd = pandas.DataFrame(excelWithPrint)
@@ -197,7 +207,6 @@ def getBarcodForPrintWithCatMain(donePrint, reductionDict, reductionDict2):
 
 
 def getBarcodForPrint(pathToDonePrints):
-    #listCase = read_xlsx(r'D:\Список чехлов под печать.xlsx')
     pool = multiprocessing.Pool()
     for donePrint in os.listdir(pathToDonePrints):
         pool.apply_async(getBarcodForPrintWithCatMain,
@@ -324,7 +333,7 @@ def createAllCaseXLSX():
 
 
 def main():
-    # makePrint()
+    #makePrint()
     for dirModel in os.listdir(pathToDonePrints):
         if isdir(os.path.join(pathToDonePrints, dirModel)):
             Rename_print(os.path.join(pathToDonePrints, dirModel))

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'E:\MyProduct\Python\python\MakeBookPrint\MakeBookPrintUi.ui'
+# Form implementation generated from reading ui file 'E:\MyProduct\Python\WB\MakeBookPrint\MakeBookPrintUi.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(284, 427)
+        Form.resize(286, 472)
         self.CreatePrint = QtWidgets.QPushButton(Form)
         self.CreatePrint.setGeometry(QtCore.QRect(10, 400, 101, 23))
         self.CreatePrint.setObjectName("CreatePrint")
@@ -23,7 +23,7 @@ class Ui_Form(object):
         self.label.setAutoFillBackground(True)
         self.label.setObjectName("label")
         self.splitterColor = QtWidgets.QSplitter(Form)
-        self.splitterColor.setGeometry(QtCore.QRect(10, 40, 81, 221))
+        self.splitterColor.setGeometry(QtCore.QRect(10, 40, 101, 221))
         self.splitterColor.setAutoFillBackground(True)
         self.splitterColor.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.splitterColor.setFrameShadow(QtWidgets.QFrame.Plain)
@@ -65,17 +65,20 @@ class Ui_Form(object):
         self.label_3.setAutoFillBackground(True)
         self.label_3.setObjectName("label_3")
         self.textLog = QtWidgets.QTextBrowser(Form)
-        self.textLog.setGeometry(QtCore.QRect(110, 40, 161, 221))
+        self.textLog.setGeometry(QtCore.QRect(130, 40, 141, 221))
         self.textLog.setObjectName("textLog")
         self.label_4 = QtWidgets.QLabel(Form)
         self.label_4.setGeometry(QtCore.QRect(50, 380, 16, 16))
         self.label_4.setObjectName("label_4")
         self.label_5 = QtWidgets.QLabel(Form)
-        self.label_5.setGeometry(QtCore.QRect(170, 380, 16, 16))
+        self.label_5.setGeometry(QtCore.QRect(220, 380, 16, 16))
         self.label_5.setObjectName("label_5")
         self.CreateExcel = QtWidgets.QPushButton(Form)
-        self.CreateExcel.setGeometry(QtCore.QRect(120, 400, 101, 23))
+        self.CreateExcel.setGeometry(QtCore.QRect(170, 400, 101, 23))
         self.CreateExcel.setObjectName("CreateExcel")
+        self.DeleteImage = QtWidgets.QPushButton(Form)
+        self.DeleteImage.setGeometry(QtCore.QRect(160, 440, 111, 23))
+        self.DeleteImage.setObjectName("DeleteImage")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -99,3 +102,4 @@ class Ui_Form(object):
         self.label_4.setText(_translate("Form", "1"))
         self.label_5.setText(_translate("Form", "2"))
         self.CreateExcel.setText(_translate("Form", "Создать Excel"))
+        self.DeleteImage.setText(_translate("Form", "Удалить данные"))
