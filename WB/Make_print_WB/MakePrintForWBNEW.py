@@ -207,7 +207,7 @@ def getBarcodForPrintWithCatMain(donePrint, reductionDict, reductionDict2):
 
 
 def getBarcodForPrint(pathToDonePrints):
-    pool = multiprocessing.Pool()
+    pool = multiprocessing.Pool(6)
     for donePrint in os.listdir(pathToDonePrints):
         pool.apply_async(getBarcodForPrintWithCatMain,
                          args=(donePrint, reductionDict, reductionDict2,))
@@ -307,7 +307,7 @@ def makePrintMain(maskFolder, printList, light, pathToPrintFolder):
 
 def makePrint():
     maskFoldersList = os.listdir(pathToMaskFolder)
-    pool = multiprocessing.Pool()
+    pool = multiprocessing.Pool(6)
     light = Image.open(lightPath).convert("RGBA")
     for maskFolder in maskFoldersList:
         if "прозрачный" in maskFolder:

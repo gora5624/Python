@@ -1,3 +1,4 @@
+import multiprocessing
 from os.path import abspath, join as joinPath, isdir, exists
 from os import listdir, rename, remove
 from shutil import rmtree
@@ -54,40 +55,54 @@ def RenameImage(pathToPrint):
 
 
 
+def createModelExcel(model):
+    modelForExcel = model.replace('&','/')
+    for color in listdir(joinPath(pathToBookPrint, model)):
+        if '.xlsx' in color:
+            continue
+        listColor = []
+        RenameImage(joinPath(pathToBookPrint, model,color))
+        listArt = genArtColor(color, listdir(joinPath(pathToBookPrint, model,color)))
+        listBarcodes = generate_bar_WB(len(listArt))
+        for i, art in enumerate(listArt):
+            name = 'Чехол книга {} {} с силиконовый вставкой Fashion'.format(modelForExcel, color.lower())
+            data = {'Баркод': listBarcodes[i],
+                    'Группа': 'Чехол производство (принт)',
+                    'Основная характеристика': art['Принт'],
+                    'Название 1С': multiReplace(name, reductionDict),
+                    'Название полное': name,
+                    'Название полное с принтом': name + ' ' + art['Принт'],
+                    'Размер печать': '',
+                    'Категория': art['Категория'],
+                    'Код категории': art['Код категории'],
+                    'Код цвета': art['Код цвета'],
+                    'Артикул цвета': art['Артикул цвета'],
+                    'Код камеры':art['Код камеры'],
+                    'Рисунок':art['Рисунок'],
+                    'Любимые герои': art['Любимые герои']}
+            listColor.append(data)
+        listColorpd = pandas.DataFrame(listColor)
+        listColorpd.to_excel(joinPath(pathToBookPrint, model,color)+'.xlsx', index=False)
+
+
+
 def createExcel(resp):
     listImageAll = []
+    pool = multiprocessing.Pool(6)
     for model in listdir(pathToBookPrint):
-        modelForExcel = model.replace('&','/')
+        if '.xlsx' in model:
+            continue
+        pool.apply_async(createModelExcel, args=(model,))
+    pool.close()
+    pool.join()
+    for model in listdir(pathToBookPrint):
         if '.xlsx' in model:
             continue
         listModel = []
         for color in listdir(joinPath(pathToBookPrint, model)):
             if '.xlsx' in color:
-                continue
-            listColor = []
-            RenameImage(joinPath(pathToBookPrint, model,color))
-            listArt = genArtColor(color, listdir(joinPath(pathToBookPrint, model,color)))
-            listBarcodes = generate_bar_WB(len(listArt))
-            for i, art in enumerate(listArt):
-                name = 'Чехол книга {} {} с силиконовый вставкой Fashion'.format(modelForExcel, color.lower())
-                data = {'Баркод': listBarcodes[i],
-                        'Группа': 'Чехол производство (принт)',
-                        'Основная характеристика': art['Принт'],
-                        'Название 1С': multiReplace(name, reductionDict),
-                        'Название полное': name,
-                        'Название полное с принтом': name + ' ' + art['Принт'],
-                        'Размер печать': '',
-                        'Категория': art['Категория'],
-                        'Код категории': art['Код категории'],
-                        'Код цвета': art['Код цвета'],
-                        'Артикул цвета': art['Артикул цвета'],
-                        'Код камеры':art['Код камеры'],
-                        'Рисунок':art['Рисунок'],
-                        'Любимые герои': art['Любимые герои']}
-                listColor.append(data)
-            listColorpf = pandas.DataFrame(listColor)
-            listColorpf.to_excel(joinPath(pathToBookPrint, model,color)+'.xlsx', index=False)
-            listModel.extend(listColor)
+                listColor = read_xlsx(joinPath(pathToBookPrint, model, color))
+                listModel.extend(listColor)
         listModelpd = pandas.DataFrame(listModel)
         listModelpd.to_excel(joinPath(pathToBookPrint, model) + '.xlsx', index=False)
         listImageAll.extend(listModel)
@@ -153,7 +168,7 @@ def generate_bar_WB(count):
     listBarcode = []
     countTry = 0
     url = "https://suppliers-api.wildberries.ru/card/getBarcodes"
-    headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgyYTU2OGZlLTgyNTctNGQ2Yi05ZTg1LTJkYTgxMTgxYWI3MSJ9.ROCdF7eOfTZA-atpsLGTAi15yDzHk2UMes05vwjZwn4',
+    headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImEyNjQwNTAzLTk0NjktNGFkYy04MzVhLWM5MTQzZWU0NDBkYiJ9.UCh5I_5bnet0S2JcV92oDWS3p8RgUP5dsOwglCYu6ZE',
                'Content-Type': 'application/json',
                'accept': 'application/json'}
 
@@ -169,6 +184,7 @@ def generate_bar_WB(count):
             except:
                 print(
                     'Ошибка получения ШК. count = {}, пытаюсь повторно получить.'.format(count))
+                print(r.rext)
                 countTry += 1
                 time.sleep(10)
                 continue
