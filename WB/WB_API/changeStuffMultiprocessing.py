@@ -69,7 +69,7 @@ def getIdWithBarcod(barcod):
         a = response.json()['result']['cards'][0]
     except IndexError:
         return 0
-    print(barcod)
+    #print(barcod)
     return response.json()['result']['cards'][0]['imtId']
 
 

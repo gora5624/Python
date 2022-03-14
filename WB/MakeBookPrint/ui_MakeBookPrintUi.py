@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'E:\MyProduct\Python\WB\MakeBookPrint\MakeBookPrintUi.ui'
+# Form implementation generated from reading ui file 'e:\MyProduct\Python\.git-rewrite\t\WB\MakeBookPrint\MakeBookPrintUi.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(286, 472)
+        Form.resize(280, 472)
         self.CreatePrint = QtWidgets.QPushButton(Form)
         self.CreatePrint.setGeometry(QtCore.QRect(10, 400, 101, 23))
         self.CreatePrint.setObjectName("CreatePrint")

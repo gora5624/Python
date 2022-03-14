@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>286</width>
+    <width>280</width>
     <height>472</height>
    </rect>
   </property>
@@ -230,6 +230,19 @@
    </property>
    <property name="text">
     <string>Удалить данные</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="CreateImageFolderForWB">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>440</y>
+     <width>131</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Размесить фото в папки</string>
    </property>
   </widget>
  </widget>
