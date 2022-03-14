@@ -79,6 +79,9 @@ class Ui_Form(object):
         self.DeleteImage = QtWidgets.QPushButton(Form)
         self.DeleteImage.setGeometry(QtCore.QRect(160, 440, 111, 23))
         self.DeleteImage.setObjectName("DeleteImage")
+        self.CreateImageFolderForWB = QtWidgets.QPushButton(Form)
+        self.CreateImageFolderForWB.setGeometry(QtCore.QRect(10, 440, 131, 23))
+        self.CreateImageFolderForWB.setObjectName("CreateImageFolderForWB")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -103,3 +106,4 @@ class Ui_Form(object):
         self.label_5.setText(_translate("Form", "2"))
         self.CreateExcel.setText(_translate("Form", "Создать Excel"))
         self.DeleteImage.setText(_translate("Form", "Удалить данные"))
+        self.CreateImageFolderForWB.setText(_translate("Form", "Размесить фото в папки"))

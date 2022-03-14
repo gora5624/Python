@@ -3,7 +3,7 @@ from PyQt5 import QtWidgets
 from MakeBookPrintUi import Ui_Form
 import sys
 from makeImageWithNameModel import makeImageWithNameModel
-from AddSkriptForMakeImage import createExcel, deleteImage
+from AddSkriptForMakeImage import createExcel, deleteImage, CreateImageFolderForWBMain
 # pyuic5 E:\MyProduct\Python\WB\MakeBookPrint\MakeBookPrintUi.ui -o E:\MyProduct\Python\WB\MakeBookPrint\MakeBookPrintUi.py
 
 
@@ -12,13 +12,14 @@ pathToBookPrint = r'{}:\Готовые картинки Fashion по модел�
 
 
 class mameBookPrint(QtWidgets.QMainWindow):
-    def __init__(self):
-        super(mameBookPrint, self).__init__()
+    def __init__(self,parent=None):
+        super(mameBookPrint, self).__init__(parent)
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.ui.CreatePrint.clicked.connect(self.btnMakePrintClicked)
         self.ui.CreateExcel.clicked.connect(self.btnMakeExcelClicked)
         self.ui.DeleteImage.clicked.connect(self.btnMakeDeleteIamge)
+        self.ui.CreateImageFolderForWB.clicked.connect(self.btnCreateImageFolderForWB)
 
 
     def createMSGError(self,text):
@@ -56,6 +57,14 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 event.accept()
             else:
                 event.ignore()
+
+
+    def btnCreateImageFolderForWB(sefl):
+        fileName = QtWidgets.QFileDialog.getOpenFileName(None,'Выберете файл связи',r'C:\Users\Public\Documents\WBChangeStuff','*.xlsx')
+        filePathCumm = fileName[0]
+        CreateImageFolderForWBMain(filePathCumm, pathToBookPrint)
+
+
 
 
     def btnMakeExcelClicked(self):
