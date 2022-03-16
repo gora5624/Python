@@ -1,7 +1,9 @@
 from os.path import join as joinpath
 from time import sleep
 import requests
-from my_lib import file_exists, read_xlsx
+import sys
+sys.path.insert(1, joinpath(sys.path[0], '../../..'))
+from my_mod.my_lib import file_exists, read_xlsx
 from os import makedirs
 import pandas
 import time
