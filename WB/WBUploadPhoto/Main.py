@@ -10,7 +10,7 @@ data = {'Content-Disposition': 'form-data'}
 headers = {'Authorization': '{}'.format(token), 
            'Content-Type': 'multipart/form-data;boundary=img',
            'X-File-Id':fileID}
-files={'uploadfile': ('photo.jpg', open(r'F:\Done\69025844\photo\1.jpg', 'rb'), 'type=*/*')}
+files={'uploadfile': ('photo.jpg', open(r'F:\Done\69025844\photo\1.jpg', 'rb'), 'type=image/jpeg')}
 r = requests.post(url, headers=headers, files=files, data=data)
 print(r.headers)
 pass
