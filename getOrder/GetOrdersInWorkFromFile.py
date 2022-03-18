@@ -15,6 +15,8 @@ import os
 # Режим отладки 1 - да, 0 - боевой режим
 Debug = 1
 
+pathToOrders = r'C:\Users\Георгий\Downloads\orders.xlsx'
+
 stopList = ['2009539898001', '2009539892009', '2009539656007',
             '2009539490007', '2009539287003', '2009538490008']
 
@@ -278,7 +280,10 @@ def createPrintExcel(listOrderForChangeStatus, fileName):
     listOrderForTable = []
     for orderLine in listOrderForChangeStatus:
         if 'книга' not in orderLine['Название']:
-            model = orderLine['Название'].split('для ')[1].split(' сил')[0]
+            if 'для' in orderLine['Название']:
+                model = orderLine['Название'].split('для ')[1].split(' сил')[0]
+            else:
+                model = orderLine['Название'].split('Чехол ')[1].split(' сил')[0]
             size = getSize(model)
         elif 'книга' in orderLine['Название']:
             size = 'Книга'
@@ -703,8 +708,7 @@ if __name__ == '__main__':
         Token = getToken()
         while input("Введите 0 чтобы выйти. Enter продожить получение заказов: ") != '0':
             #data = get_orders(Token)
-            data = read_xlsx(
-                r'D:\tmp\my_prod\Python\getOrder\WBOrdersData\orders.xlsx')
+            data = read_xlsx(pathToOrders)
             mode = choiseMode()
             if mode == 0:
                 break

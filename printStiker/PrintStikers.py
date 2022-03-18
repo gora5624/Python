@@ -273,7 +273,7 @@ def getStiker(OrderNum):
 def create_WB_barcod(OrderNum, procNum):
     Base64 = bytes(getStiker(OrderNum), 'utf-8')
     pdf_writer = PyPDF2.PdfFileWriter()
-    png_recovered = base64.decodestring(Base64)
+    png_recovered = base64.decodebytes(Base64)
     f = open(joinpath(TMPDir, NameSVG.format(procNum)), "wb")
     f.write(png_recovered)
     f.close()
