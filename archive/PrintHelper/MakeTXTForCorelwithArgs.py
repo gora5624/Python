@@ -1,12 +1,14 @@
 import sys
 import xlrd
 from os.path import join as joinpath
-from my_lib import file_exists
+import sys
+sys.path.insert(1, joinpath(__file__,'../../..'))
+from my_mod.my_lib import file_exists
 from os import listdir, remove, makedirs
 
 
-pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
-#pathToOrderFile = r'D:\ФБС принты 09.01.2022 ч1 ORB.xlsx'
+#pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
+pathToOrderFile = r'D:\ФБС принты 09.01.2022 ч1 ORB.xlsx'
 #pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты потерянные 06.11.2021.xlsx'
 mainPath = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper'
 pathToExcelWithSize = r'\\192.168.0.33\shared\Отдел производство\Wildberries\список печати.xlsx'
@@ -261,10 +263,10 @@ try:
     applyConfig()
 except:
     input('Произошла непредвиденная ошибка при инициализации')
-try:
-    startChek()
-except:
-    input('Произошла непредвиденная ошибка при первоначальной проверке')
+# try:
+startChek()
+# except:
+#     input('Произошла непредвиденная ошибка при первоначальной проверке')
 try:
     dataFromOrderFile = getDataFromOrderFile(pathToOrderFile)
 except:
