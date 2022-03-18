@@ -20,7 +20,7 @@ suppDir = r'\\192.168.0.33\shared\_Общие документы_\Заказы �
 Debug = 0
 
 
-def get_orders(Token, days=4):
+def get_orders(Token, days=10):
     """Получает заказы за последние 3 дня"""
     print("Идёт получение свежих заказов, ожидайте...")
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
@@ -58,12 +58,13 @@ def getStikers(Token, dataorders):
     tmpOrders = []
     UrlStiker = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
     for line in dataorders:
-        # if line['status'] == 0 or line['status'] == 1:
-        tmpOrders.append(int(line['orderId']))
+        if line['status'] == 1 or line['status'] == 1:
+            tmpOrders.append(int(line['orderId']))
         if len(tmpOrders) > 999:
             OrderNumJson = {"orderIds": tmpOrders}
             response = requests.post(UrlStiker, headers={
                 'Authorization': '{}'.format(Token)}, json=OrderNumJson)
+            a=response.json()['data']
             stikers.extend(response.json()['data'])
             tmpOrders = []
     OrderNumJson = {"orderIds": tmpOrders}
@@ -74,8 +75,9 @@ def getStikers(Token, dataorders):
         response = requests.post(UrlStiker, headers={
             'Authorization': '{}'.format(Token)}, json=OrderNumJson)
         count += 1
-    a = response.json()['data']
+    a = response.json()
     if response.json()['data'] != None:
+        a=response.json()['data']
         stikers.extend(response.json()['data'])
     return stikers
 
@@ -263,7 +265,7 @@ while True:
     dataorderspd = pandas.DataFrame(dataorders)
     dataorderspd.to_excel(joinpath(os.path.dirname(
         os.path.abspath(__file__)), r'\tmp.xlsx'), index=False)
-    stikerslist = getStiker(Token, dataorders)
+    stikerslist = getStikers(Token, dataorders)
     stikerslistdp = pandas.DataFrame(stikerslist)
     stikerslistdp.to_excel(joinpath(os.path.dirname(
         os.path.abspath(__file__)), r'\tmp2.xlsx'), index=False)
