@@ -1,14 +1,11 @@
 import sys
 import xlrd
-from os.path import join as joinpath
-import sys
-sys.path.insert(1, joinpath(__file__,'../../..'))
-from my_mod.my_lib import file_exists
+from os.path import join as joinpath , exists
 from os import listdir, remove, makedirs
 
 
-#pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
-pathToOrderFile = r'D:\ФБС принты 09.01.2022 ч1 ORB.xlsx'
+pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
+#pathToOrderFile = r'C:\Users\Георгий\Downloads\Выгрузка_Документ_производства_000000001_от_11_03_2022_чехлы.xlsx'
 #pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты потерянные 06.11.2021.xlsx'
 mainPath = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper'
 pathToExcelWithSize = r'\\192.168.0.33\shared\Отдел производство\Wildberries\список печати.xlsx'
@@ -30,6 +27,11 @@ startPoint = ['47.569', '92.508']
 XDelta = '83'
 YDelta = '175'
 
+
+def file_exists(file_name):
+    '''Функция возвращает True если файл по пути file_name существует и False если не существует'''
+
+    return(exists(file_name))
 
 def applyConfig():
     with open(pathToConfig, 'r') as fileConfig:
@@ -119,7 +121,10 @@ def read_xlsx(file_path, nameList):
     '''Считывает построчно xlsx файл и возращает список словарей - если title = 'Yes', список списков - если title = 'No'
     '''
     rd = xlrd.open_workbook(file_path)
-    sheet = rd.sheet_by_name(nameList)
+    try:
+        sheet = rd.sheet_by_name(nameList)
+    except:
+        sheet = rd.sheet_by_index(0)
     try:
         Name_row = sheet.row_values(0)
     except IndexError:
@@ -263,10 +268,10 @@ try:
     applyConfig()
 except:
     input('Произошла непредвиденная ошибка при инициализации')
-# try:
-startChek()
-# except:
-#     input('Произошла непредвиденная ошибка при первоначальной проверке')
+try:
+    startChek()
+except:
+    input('Произошла непредвиденная ошибка при первоначальной проверке')
 try:
     dataFromOrderFile = getDataFromOrderFile(pathToOrderFile)
 except:
