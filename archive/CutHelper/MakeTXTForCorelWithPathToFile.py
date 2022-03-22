@@ -19,7 +19,7 @@ else:
 
 # Изменяемые настройки из файла конфигурации
 # Настройки по умолчанию, если не заданы аналогичные в файле "Config.txt". Парамерты в конфиге считаются главными и будут являться действующими
-pathToMakets = r'E:\Макеты'
+pathToMakets = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Макеты для новой программы'
 addForOrder = {"Глянцевые": 'clear',
                 "Матовые": 'mate'}
 
@@ -53,24 +53,27 @@ def read_xlsx(file_path, title='Yes'):
 
 def applyConfig():
     # Открываем и читаем файл конфига
-    print(pathToConfigFile)
-    with open(pathToConfigFile, 'r', encoding='utf-8') as fileConfig:
-        dataConfig = fileConfig.readlines()
-        for lineConfig in dataConfig:
-            # Построчно считываем текст файла и разбираем его
-            lineConfigList = lineConfig.split('#')[0].split('=')
-            # Если находим сопоставимые значения, записываем новые параметры во временные переменные
-            if lineConfigList[0].strip() == 'pathToMakets':
-                pathToMaketsConf = lineConfigList[1].strip() 
-            elif lineConfigList[0].strip() == 'addForOrder':
-                addForOrderConf= {"Глянцевые": lineConfigList[1].split(',')[0].strip(),
-                                  "Матовые": lineConfigList[1].split(',')[1].strip()}
-    fileConfig.close()
-    # Применяем занчения из временных переменных к глобальным переменным только после полного прочения файла
-    # Если при прочтении возникло исключение, настройки будут по умолчанию
-    global pathToMakets, addForOrder
-    pathToMakets = pathToMaketsConf
-    addForOrder = addForOrderConf
+    if exists(pathToConfigFile):
+        input('Обнаружен файл конфигурации по адресу {}. Настройки взяты из него. Нажмите Enter чтобы продолжить'.format(pathToConfigFile))
+        with open(pathToConfigFile, 'r', encoding='utf-8') as fileConfig:
+            dataConfig = fileConfig.readlines()
+            for lineConfig in dataConfig:
+                # Построчно считываем текст файла и разбираем его
+                lineConfigList = lineConfig.split('#')[0].split('=')
+                # Если находим сопоставимые значения, записываем новые параметры во временные переменные
+                if lineConfigList[0].strip() == 'pathToMakets':
+                    pathToMaketsConf = lineConfigList[1].strip() 
+                elif lineConfigList[0].strip() == 'addForOrder':
+                    addForOrderConf= {"Глянцевые": lineConfigList[1].split(',')[0].strip(),
+                                    "Матовые": lineConfigList[1].split(',')[1].strip()}
+        fileConfig.close()
+        # Применяем занчения из временных переменных к глобальным переменным только после полного прочения файла
+        # Если при прочтении возникло исключение, настройки будут по умолчанию
+        global pathToMakets, addForOrder
+        pathToMakets = pathToMaketsConf
+        addForOrder = addForOrderConf
+    else:
+        input('Файл конфигурации по адресу {} не обнаружен. Настройки взяты по умолчанию. Пусть к макетам {}. Нажмите Enter чтобы продолжить'.format(pathToConfigFile, pathToMakets))
 
 
 def makeTXTForCorel(dataFromOrder, add):
@@ -87,7 +90,7 @@ def makeTXTForCorel(dataFromOrder, add):
                 flagAdd = True
                 break
         if not flagAdd:
-            print('Для заказа {} не обнаружен макет. Проверьте штрихкод {} в {}.'.format(orderNum, barcod, pathToMakets))
+            input('Ошибка! Для заказа {} не обнаружен макет. Проверьте штрихкод {} в {}. Нажмите Enter чтобы продолжить'.format(orderNum, barcod, pathToMakets))
     with open(pathToOrderTXTForCorel.format(add), 'w', encoding='ANSI') as fileTXTForCorel:
         for line in listPathToFile:
             fileTXTForCorel.writelines(';'.join([line['Путь к макету'], line['Номер задания']])+'\n')
@@ -105,28 +108,27 @@ def main():
         # Применяем настройки из файла конфига, если возникает ошибка, настройки остануться по умолчанию
         applyConfig()
     except:
-        print('Ошибка при чении и применении файла конфигурации, значения будут заданы по умолчанию.')
+        input('Ошибка при чении и применении файла конфигурации, значения будут заданы по умолчанию. Нажмите Enter чтобы продолжить')
     try:
         dataFromOrder = read_xlsx(pathToOrder)
     except:
-        print('Непредвиденная ошибка при чтении файла с заказом')
+        input('Непредвиденная ошибка при чтении файла с заказом. Нажмите Enter чтобы продолжить')
         return 0
     if len(dataFromOrder)==0:
-        print('Пустой файл с заказом')
+        input('Пустой файл с заказом. Нажмите Enter чтобы продолжить')
         return 0
     try:
         makeTXTForCorel(dataFromOrder)
     except:
-        print('Непредвиденная ошибка при формировании файла с путями к макетам для корела.')
+        input('Непредвиденная ошибка при формировании файла с путями к макетам для корела. Нажмите Enter чтобы продолжить')
 
 def main2():
 # Применяем настройки из файла конфига, если возникает ошибка, настройки остануться по умолчанию
-    print(pathToConfigFile)
     applyConfig()
     deleteOredrTXT()
     dataFromOrder = read_xlsx(pathToOrder)
     if len(dataFromOrder)==0:
-        print('Пустой файл с заказом')
+        input('Пустой файл с заказом')
         return 0
     dataFromOrderCL = []
     dataFromOrderMT = []
@@ -136,11 +138,11 @@ def main2():
         elif lineOrder['Характеристика'] == 'матовая':
             dataFromOrderMT.append(lineOrder)
         else:
-            print('Для заказа {} не удалось определить характеристику (глянце/мат). Проверьте характеристику {} в {}.'.format(lineOrder['Номер задания'], lineOrder['Характеристика'], pathToMakets))
+            input('Для заказа {} не удалось определить характеристику (глянце/мат). Проверьте характеристику {} в {}.'.format(lineOrder['Номер задания'], lineOrder['Характеристика'], pathToMakets))
     if len(dataFromOrderCL)==0:
-        print('Не обнаружены глянцевые заказы')
+        input('Не обнаружены глянцевые заказы')
     elif len(dataFromOrderMT)==0:
-        print('Не обнаружены матовые заказы')
+        input('Не обнаружены матовые заказы')
     makeTXTForCorel(dataFromOrderCL, addForOrder['Глянцевые'])
     makeTXTForCorel(dataFromOrderMT, addForOrder['Матовые'])
     
