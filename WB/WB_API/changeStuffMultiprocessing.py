@@ -14,8 +14,8 @@ isChange = 1
 main_path = r'C:\Users\Public\Documents\WBChangeStuff'
 nameListStuff = r'StuffList.xlsx'
 pathToListStuff = joinpath(main_path, nameListStuff)
-#Token_path = joinpath(main_path, r'Token.txt')
-Token_path = joinpath(main_path, r'TokenAbr.txt')
+Token_path = joinpath(main_path, r'Token.txt')
+#Token_path = joinpath(main_path, r'TokenAbr.txt')
 outListName = 'barcodes and art.xlsx'
 outListName2 = 'barcodes and art2.xlsx'
 outListPath = joinpath(main_path, outListName)
@@ -69,7 +69,7 @@ def getIdWithBarcod(barcod):
         a = response.json()['result']['cards'][0]
     except IndexError:
         return 0
-    #print(barcod)
+    print(barcod)
     return response.json()['result']['cards'][0]['imtId']
 
 
