@@ -51,7 +51,8 @@ siliconCaseColorDict = {'белый': 'WHT',
                         'фиолетовый': 'PPL',
                         'хаки': 'HCK',
                         'черный': 'BLC',
-                        'прозрачный': 'CLR'
+                        'прозрачный': 'CLR',
+                        'проз': 'CLR'
                         }
 bookCaseColorDict = {'бордовый': 'VNS',
                      'бронзовый': 'BNZ',
@@ -70,7 +71,7 @@ def generate_bar_WB(count):
     listBarcode = []
     countTry = 0
     url = "https://suppliers-api.wildberries.ru/card/getBarcodes"
-    headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgyYTU2OGZlLTgyNTctNGQ2Yi05ZTg1LTJkYTgxMTgxYWI3MSJ9.ROCdF7eOfTZA-atpsLGTAi15yDzHk2UMes05vwjZwn4',
+    headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w',
                'Content-Type': 'application/json',
                'accept': 'application/json'}
 
@@ -147,9 +148,9 @@ def genArtColor(nameCase, listNamePrint):
             break
         else:
             artColor_2 = 'UNKNOW_COLOR'
-    if 'открытой камерой' in nameCase:
+    if 'открытой камерой' in nameCase or 'отк.кам.' in nameCase:
         artColor_3 = 'OCM'
-    elif 'закрытой камерой' in nameCase:
+    elif 'закрытой камерой' in nameCase or 'зак.кам.' in nameCase:
         artColor_3 = 'CCM'
     else:
         artColor_3 = 'UCM'
@@ -310,7 +311,7 @@ def makePrint():
     pool = multiprocessing.Pool(6)
     light = Image.open(lightPath).convert("RGBA")
     for maskFolder in maskFoldersList:
-        if "прозрачный" in maskFolder:
+        if "проз" in maskFolder:
             pathToPrintFolder = pathToPrintAll
         else:
             pathToPrintFolder = pathToPrintWithOutBack
@@ -324,7 +325,7 @@ def makePrint():
 def createAllCaseXLSX():
     allCaseList = []
     for file in os.listdir(pathToDonePrints):
-        if '.xlsx' in file:
+        if '.xlsx' in file and '~$' not in file:
             allCaseList.extend(read_xlsx(os.path.join(
                 pathToDonePrints, file), title='Yes'))
     allCaseListpd = pandas.DataFrame(allCaseList)
@@ -333,11 +334,11 @@ def createAllCaseXLSX():
 
 
 def main():
-    #makePrint()
-    for dirModel in os.listdir(pathToDonePrints):
-        if isdir(os.path.join(pathToDonePrints, dirModel)):
-            Rename_print(os.path.join(pathToDonePrints, dirModel))
-    getBarcodForPrint(pathToDonePrints)
+    # makePrint()
+    # for dirModel in os.listdir(pathToDonePrints):
+    #     if isdir(os.path.join(pathToDonePrints, dirModel)):
+    #         Rename_print(os.path.join(pathToDonePrints, dirModel))
+    # getBarcodForPrint(pathToDonePrints)
     createAllCaseXLSX()
 
 

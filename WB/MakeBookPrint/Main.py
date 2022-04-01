@@ -3,12 +3,8 @@ from PyQt5 import QtWidgets
 from MakeBookPrintUi import Ui_Form
 import sys
 from makeImageWithNameModel import makeImageWithNameModel
-from AddSkriptForMakeImage import createExcel, deleteImage, CreateImageFolderForWBMain
+from AddSkriptForMakeImage import createExcel, deleteImage, CreateImageFolderForWBMain, pathToBookPrint
 # pyuic5 E:\MyProduct\Python\WB\MakeBookPrint\MakeBookPrintUi.ui -o E:\MyProduct\Python\WB\MakeBookPrint\MakeBookPrintUi.py
-
-
-diskWithPrint = 'F'
-pathToBookPrint = r'{}:\Готовые картинки Fashion по моделям'.format(diskWithPrint)
 
 
 class mameBookPrint(QtWidgets.QMainWindow):
