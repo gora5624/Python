@@ -14,9 +14,9 @@ import requests
 
 diskWithPrint = 'F'
 pathToCategoryList = abspath(joinPath(__file__, '..', 'cat.xlsx'))
-pathToBookPrint = r'{}:\Готовые картинки Fashion по моделям'.format(diskWithPrint)
+pathToBookPrint = r'{}:\Готовые принты\Fashion'.format(diskWithPrint)
 pathToImageWithArt = r'{}:\Done'.format(diskWithPrint)
-pathToSecondImages = r'{}:\Вторые картинки'.format(diskWithPrint)
+pathToSecondImages = r'{}:\Готовые принты\Вторые картинки\Fashion'.format(diskWithPrint)
 
 bookCaseColorDict = {'бордовый': 'VNS',
                      'бронзовый': 'BNZ',
