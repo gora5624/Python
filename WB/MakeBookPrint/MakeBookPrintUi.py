@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(286, 505)
+        Form.resize(284, 505)
         self.tabWidget = QtWidgets.QTabWidget(Form)
         self.tabWidget.setGeometry(QtCore.QRect(10, 10, 271, 491))
         self.tabWidget.setObjectName("tabWidget")
@@ -25,7 +25,7 @@ class Ui_Form(object):
         self.CreatePrint.setObjectName("CreatePrint")
         self.splitterColor = QtWidgets.QSplitter(self.tabBook)
         self.splitterColor.setGeometry(QtCore.QRect(0, 40, 101, 221))
-        self.splitterColor.setAutoFillBackground(True)
+        self.splitterColor.setAutoFillBackground(False)
         self.splitterColor.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.splitterColor.setFrameShadow(QtWidgets.QFrame.Plain)
         self.splitterColor.setLineWidth(0)
@@ -90,10 +90,19 @@ class Ui_Form(object):
         self.tabWidget.addTab(self.tabBook, "")
         self.tabSilicon = QtWidgets.QWidget()
         self.tabSilicon.setObjectName("tabSilicon")
+        self.textSiliconMask = QtWidgets.QTextBrowser(self.tabSilicon)
+        self.textSiliconMask.setGeometry(QtCore.QRect(0, 10, 261, 81))
+        self.textSiliconMask.setObjectName("textSiliconMask")
+        self.CreateSiliconImage = QtWidgets.QPushButton(self.tabSilicon)
+        self.CreateSiliconImage.setGeometry(QtCore.QRect(190, 100, 75, 23))
+        self.CreateSiliconImage.setObjectName("CreateSiliconImage")
+        self.ChekMask = QtWidgets.QPushButton(self.tabSilicon)
+        self.ChekMask.setGeometry(QtCore.QRect(0, 100, 101, 23))
+        self.ChekMask.setObjectName("ChekMask")
         self.tabWidget.addTab(self.tabSilicon, "")
 
         self.retranslateUi(Form)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
@@ -118,4 +127,6 @@ class Ui_Form(object):
         self.label_3.setText(_translate("Form", "Модель"))
         self.label_2.setText(_translate("Form", "Бренд"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabBook), _translate("Form", "Книжки"))
+        self.CreateSiliconImage.setText(_translate("Form", "Создать всё"))
+        self.ChekMask.setText(_translate("Form", "Проверить маски"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabSilicon), _translate("Form", "Силикон"))
