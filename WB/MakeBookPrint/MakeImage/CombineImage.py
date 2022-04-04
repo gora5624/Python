@@ -35,7 +35,7 @@ def combineImage(pathToImgBack, pathToImgMask):
     imgTexture = Image.open(pathToEffect).convert('RGBA')
     # Пробегаемся по списку принтов
     for imagePrint in listdir(pathToPrint):
-            # Создаём пустое изображение
+        # Создаём пустое изображение
         imgMain = Image.new('RGBA', imgBack.size)
         # Открываем принт
         imgPrint = transformPrint(joinPath(pathToPrint,imagePrint))
