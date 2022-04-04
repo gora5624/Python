@@ -1,9 +1,13 @@
 import multiprocessing
+from os import listdir
+from os.path import join as joinPath
+from xmlrpc.server import list_public_methods
 from PyQt5 import QtWidgets
 from MakeBookPrintUi import Ui_Form
 import sys
-from makeImageWithNameModel import makeImageWithNameModel
-from AddSkriptForMakeImage import createExcel, deleteImage, CreateImageFolderForWBMain, pathToBookPrint
+from makeImageBookWithNameModel import makeImageBookWithNameModel
+from AddSkriptForMakeBookImage import createExcel, deleteImage, CreateImageFolderForWBMain, pathToBookPrint
+from AddSkriptForMakeSiliconImage import createAllSiliconImage, pathToSiliconMask
 # pyuic5 E:\MyProduct\Python\WB\MakeBookPrint\MakeBookPrintUi.ui -o E:\MyProduct\Python\WB\MakeBookPrint\MakeBookPrintUi.py
 
 
@@ -16,6 +20,9 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.CreateExcel.clicked.connect(self.btnMakeExcelClicked)
         self.ui.DeleteImage.clicked.connect(self.btnMakeDeleteIamge)
         self.ui.CreateImageFolderForWB.clicked.connect(self.btnCreateImageFolderForWB)
+        self.ui.tabWidget.tabBarClicked.connect(self.fillSiliconMaskList)
+        self.ui.ChekMask.clicked.connect(self.fillSiliconMaskList)
+        self.ui.CreateSiliconImage.clicked.connect(self.btnCreateSiliconImage)
 
 
     def createMSGError(self,text):
@@ -25,12 +32,37 @@ class mameBookPrint(QtWidgets.QMainWindow):
         msg.setIcon(QtWidgets.QMessageBox.Warning)
         msg.exec_()
 
+
     def createMSGSuc(self,text):
         msg = QtWidgets.QMessageBox()
         msg.setWindowTitle("Успешно")
         msg.setText(text)
         msg.setIcon(QtWidgets.QMessageBox.Information)
         msg.exec_()
+
+
+    def fillSiliconMaskList(self, tabIndex):
+        if tabIndex  == 1 or tabIndex  == False:
+            negFlag = False
+            for mask in listdir(pathToSiliconMask):
+                fileList = listdir(joinPath(pathToSiliconMask, mask))
+                if 'mask.png' in fileList and 'fon.png' in fileList:
+                    continue
+                elif 'mask.png' not in fileList and 'fon.png' not in fileList:
+                    self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ МАКСИ И ФОНА\n')
+                    negFlag = True
+                    continue
+                elif 'mask.png' not in fileList and 'fon.png' in fileList:
+                    self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ МАКСИ\n')
+                    negFlag = True
+                    continue
+                elif 'mask.png' in fileList and 'fon.png' not in fileList:
+                    self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ ФОНА\n')
+                    negFlag = True
+                    continue
+            if not negFlag:
+                self.ui.textSiliconMask.setText('Все маски готовы к работе\n')
+    
 
     def checkColorBox(self):
         listColor = []
@@ -53,6 +85,11 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 event.accept()
             else:
                 event.ignore()
+
+
+
+    def btnCreateSiliconImage(self):
+        createAllSiliconImage(pathToSiliconMask)
 
 
     def btnCreateImageFolderForWB(sefl):
@@ -89,7 +126,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         colorList = self.checkColorBox()
         if colorList == 0:
             return 0
-        p = multiprocessing.Process(target=makeImageWithNameModel, args=(colorList, modelBrand, modelModel,), name=modelBrand + ' ' + modelModel)
+        p = multiprocessing.Process(target=makeImageBookWithNameModel, args=(colorList, modelBrand, modelModel,), name=modelBrand + ' ' + modelModel)
         self.ui.textLog.setText(self.ui.textLog.toPlainText() + modelBrand +' ' + modelModel + ' добавлен в очередь\n')
         p.start()
 
