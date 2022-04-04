@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>286</width>
+    <width>284</width>
     <height>505</height>
    </rect>
   </property>
@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tabBook">
     <attribute name="title">
@@ -52,7 +52,7 @@
       </rect>
      </property>
      <property name="autoFillBackground">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
@@ -266,6 +266,42 @@
     <attribute name="title">
      <string>Силикон</string>
     </attribute>
+    <widget class="QTextBrowser" name="textSiliconMask">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>261</width>
+       <height>81</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="CreateSiliconImage">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>100</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Создать всё</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="ChekMask">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>100</y>
+       <width>101</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Проверить маски</string>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>

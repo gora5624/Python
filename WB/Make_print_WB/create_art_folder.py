@@ -8,8 +8,8 @@ import multiprocessing
 from PIL import Image
 
 workDisk = 'E'
-path_list_stuff = r'C:\Users\Public\Documents\WBChangeStuff\barcodes and art.xlsx'
-#path_list_stuff = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Список номенклатуры — копия.XLSX'
+#path_list_stuff = r'C:\Users\Public\Documents\WBChangeStuff\barcodes and art.xlsx'
+path_list_stuff = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Список номенклатуры — копия.XLSX'
 pathToPrint = r'{}:\ForPrints\printsPy'.format(workDisk)
 pathToDone = r'{}:\ForPrints\Done'.format(workDisk)
 pathToMask = r'{}:\ForPrints\mask'.format(workDisk)
@@ -49,7 +49,7 @@ def main(path_list_stuff, model_name):
                 mask_folder_res = os.path.join(
                     pathToMask, model_name, '2_res' + '.jpg')
                 orig_folder = os.path.join(
-                    pathToPrint, model_name, barcod[2] + '.jpg').replace('))', ')')
+                    pathToPrint, model_name, barcod[3] + '.jpg').replace('))', ')')
                 new_name = os.path.join(
                     pathToDone, str(stuff['Артикул WB'])[0:-2], 'photo', '1.jpg')
                 new_folder = os.path.join(
