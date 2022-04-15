@@ -1,13 +1,15 @@
 import multiprocessing
 from os import listdir
-from os.path import join as joinPath
-from xmlrpc.server import list_public_methods
+from os.path import join as joinPath, isdir
 from PyQt5 import QtWidgets
 from MakeBookPrintUi import Ui_Form
 import sys
 from makeImageBookWithNameModel import makeImageBookWithNameModel
 from AddSkriptForMakeBookImage import createExcel, deleteImage, CreateImageFolderForWBMain, pathToBookPrint
-from AddSkriptForMakeSiliconImage import createAllSiliconImage, pathToSiliconMask
+from makeImageSilicon import createAllSiliconImage, pathToSiliconMaskFolder, pathToDoneSiliconImage
+from AddSkriptForMakeSiliconImage import createExcelSilicon
+import time
+start_time = time.time()
 # pyuic5 E:\MyProduct\Python\WB\MakeBookPrint\MakeBookPrintUi.ui -o E:\MyProduct\Python\WB\MakeBookPrint\MakeBookPrintUi.py
 
 
@@ -23,6 +25,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.tabWidget.tabBarClicked.connect(self.fillSiliconMaskList)
         self.ui.ChekMask.clicked.connect(self.fillSiliconMaskList)
         self.ui.CreateSiliconImage.clicked.connect(self.btnCreateSiliconImage)
+        self.ui.CreateExcelForSilicon.clicked.connect(self.btnCreateExcelForSilicon)
 
 
     def createMSGError(self,text):
@@ -44,22 +47,23 @@ class mameBookPrint(QtWidgets.QMainWindow):
     def fillSiliconMaskList(self, tabIndex):
         if tabIndex  == 1 or tabIndex  == False:
             negFlag = False
-            for mask in listdir(pathToSiliconMask):
-                fileList = listdir(joinPath(pathToSiliconMask, mask))
-                if 'mask.png' in fileList and 'fon.png' in fileList:
-                    continue
-                elif 'mask.png' not in fileList and 'fon.png' not in fileList:
-                    self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ МАКСИ И ФОНА\n')
-                    negFlag = True
-                    continue
-                elif 'mask.png' not in fileList and 'fon.png' in fileList:
-                    self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ МАКСИ\n')
-                    negFlag = True
-                    continue
-                elif 'mask.png' in fileList and 'fon.png' not in fileList:
-                    self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ ФОНА\n')
-                    negFlag = True
-                    continue
+            for mask in listdir(pathToSiliconMaskFolder):
+                if isdir(joinPath(pathToSiliconMaskFolder, mask)):
+                    fileList = listdir(joinPath(pathToSiliconMaskFolder, mask))
+                    if 'mask.png' in fileList and 'fon.png' in fileList:
+                        continue
+                    elif 'mask.png' not in fileList and 'fon.png' not in fileList:
+                        self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ МАКСИ И ФОНА\n')
+                        negFlag = True
+                        continue
+                    elif 'mask.png' not in fileList and 'fon.png' in fileList:
+                        self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ МАКСИ\n')
+                        negFlag = True
+                        continue
+                    elif 'mask.png' in fileList and 'fon.png' not in fileList:
+                        self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ ФОНА\n')
+                        negFlag = True
+                        continue
             if not negFlag:
                 self.ui.textSiliconMask.setText('Все маски готовы к работе\n')
     
@@ -87,9 +91,22 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 event.ignore()
 
 
-
     def btnCreateSiliconImage(self):
-        createAllSiliconImage(pathToSiliconMask)
+        createAllSiliconImage(pathToSiliconMaskFolder,6)
+        
+        
+
+    def btnCreateExcelForSilicon(self):
+        {
+            'Бренд': self.ui.textSiliconBrand.toPlainText(),
+            'Совместимость': self.ui.textSiliconCompability.toPlainText(),
+            'Наименование': self.ui.textSiliconName.toPlainText(),
+            'Модель': self.ui.textSiliconModel.toPlainText(),
+        }
+
+        p = multiprocessing.Process(target=createExcelSilicon)
+        p.start()
+        p.join()
 
 
     def btnCreateImageFolderForWB(sefl):
