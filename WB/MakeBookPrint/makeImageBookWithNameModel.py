@@ -12,7 +12,7 @@ YPasteBrand = 100
 XPasteModel = 50
 YPasteModel = 20
 
-def makeImageWithNameModel(colorList, modelBrand, modelModel):
+def makeImageBookWithNameModel(colorList, modelBrand, modelModel):
     pool = multiprocessing.Pool()
     for color in colorList:
         pool.apply_async(makeImageColor, args=(color, modelBrand, modelModel,))

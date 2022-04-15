@@ -10,7 +10,6 @@ import datetime
 import pandas
 
 main_path = r'C:\Users\Public\Documents\WBUploadImage'
-nameListStuff = r'StuffList.xlsx'
 pathToListStuff = joinpath(__file__, '..', 'Photo.xlsx')
 #Token_path = joinpath(main_path, r'Token.txt')
 Token_path = joinpath(main_path, r'TokenAbr.txt')
@@ -50,6 +49,7 @@ def getIdWithBarcod(barcod):
             "withError": False
         }
     }
+
     while True:
         try:
             response = requests.post(Url, headers={
@@ -68,15 +68,13 @@ def getIdWithBarcod(barcod):
     return response.json()['result']['cards'][0]['imtId']
 
 
-
 def createDictWithBarcode(pathToListStuff):
     data = read_xlsx(pathToListStuff)
     dataNew = {}
     print('Получаю список ссылок...')
     for line in data:
-        tmpDict = {line['Баркод']: {"Баркод": line['Баркод'],
+        tmpDict = {str(line['Баркод'])[0:-2] if type(line['Баркод']) == float else line['Баркод']: {"Баркод": str(line['Баркод'])[0:-2] if type(line['Баркод']) == float else line['Баркод'],
                                     "Принт": line['Основная характеристика'],
-                                    "Цвет": line['Код цвета'],
                                     "Модель": line['Модель'],
                                     "Ссылка": line['Ссылка']}}
         dataNew.update(tmpDict)
@@ -123,6 +121,8 @@ def getCardBody(imtID):
                     continue
             except:
                 continue
+        with open(r'E:\json.json', 'w', encoding='utf-8') as file:
+            json.dump(json.loads(json.loads(response.text)['result']['card']), file, sort_keys=True, indent=2,ensure_ascii=False)
         return json.loads(response.text)['result']['card']
 
 
@@ -134,13 +134,12 @@ def changeCard(cardBody, dataFromLIstStuff):
     if cardBody['countryProduction'] == '':
         cardBody['countryProduction'] = 'Китай'
     cardBody['addin'].append({'type':'Комплектация',
-    'params':[{'value':'Чехол'}]})
-    # loop = asyncio.get_event_loop()
-    # loop.run_until_complete(TestMain(cardBody,dataFromLIstStuff, changeCardUrl, Token))
+    'params':[{'value':'Чехол 1 шт'}]})
     for i, nomenclatures in enumerate(cardBody['nomenclatures']):
         for variantion in nomenclatures['variations']:
             for barcodNom in variantion['barcodes']:
                 if barcodNom not in DoneList:
+                    barcodNom = str(barcodNom)[0:-2] if type(barcodNom) == float else barcodNom
                     try:
                         data = dataFromLIstStuff[barcodNom]
                         DoneList.append(barcodNom)
@@ -149,31 +148,31 @@ def changeCard(cardBody, dataFromLIstStuff):
                         print("По баркоду {} нет фото в списке.".format(barcodNom))
                         continue
         url_1 = data['Ссылка']
-        url_2 = mainUrl + 'Вторые картинки/' + data['Модель'] + '/' + data['Цвет'] + '/' + '2.jpg'
-        url_3 = mainUrl + 'Вторые картинки/' + data['Модель'] + '/' + data['Цвет'] + '/' + '3.jpg'
-        url_4 =mainUrl + 'Вторые картинки/' + data['Модель'] + '/' + data['Цвет'] + '/' + '4.jpg'
+        # url_2 = mainUrl + 'Вторые картинки/' + data['Модель'] + '/' + data['Цвет'] + '/' + '2.jpg'
+        # url_3 = mainUrl + 'Вторые картинки/' + data['Модель'] + '/' + data['Цвет'] + '/' + '3.jpg'
+        # url_4 =mainUrl + 'Вторые картинки/' + data['Модель'] + '/' + data['Цвет'] + '/' + '4.jpg'
         a = {
             "type": "Фото",
             "params": [
                 {
                 "value": url_1.replace(' ', '%20')
-                },
-                {
-                "value": url_2.replace(' ', '%20')
-                },
-                {
-                "value": url_3.replace(' ', '%20')
-                },
-                {
-                "value": url_4.replace(' ', '%20')
                 }
+                # {
+                # "value": url_2.replace(' ', '%20')
+                # },
+                # {
+                # "value": url_3.replace(' ', '%20')
+                # },
+                # {
+                # "value": url_4.replace(' ', '%20')
+                # }
             ]
             }
         flag = True
         flag2 = False
         for j, addin in enumerate(cardBody['nomenclatures'][i]['addin']):
             if addin['type'] == 'Фото':
-                if len(addin['params']) != 4:
+                if len(addin['params']) != 1:
                     cardBody['nomenclatures'][i]['addin'][j] = a
                     TMP_List.append(barcodNom + ' ;не все фото')
                     print(barcodNom + ' ;Не все фото')
@@ -195,89 +194,17 @@ def changeCard(cardBody, dataFromLIstStuff):
                 "card": cardBody
             }
         }
+
         if flag2:
             while True:
                 response = requests.post(changeCardUrl, headers={
                     'Authorization': '{}'.format(Token)}, json=cardBodyNew)
-                if response.status_code == 200:
+                if 'error' in response.text:
+                    print(response.text)
+                    continue
+                elif response.status_code == 200:
                     print(response.text)
                     break
-
-
-
-# async def TestMain(cardBody,dataFromLIstStuff, changeCardUrl, Token):
-#     listTask = []
-#     for i, nomenclatures in enumerate(cardBody['nomenclatures']):
-#         listTask.append(test(i, nomenclatures,dataFromLIstStuff, cardBody, changeCardUrl, Token))
-#     await asyncio.wait(listTask)
-
-
-# async def test(i, nomenclatures,dataFromLIstStuff, cardBody, changeCardUrl, Token):
-#     for variantion in nomenclatures['variations']:
-#             for barcodNom in variantion['barcodes']:
-#                 if barcodNom not in DoneList:
-#                     try:
-#                         data = dataFromLIstStuff[barcodNom]
-#                         DoneList.append(barcodNom)
-#                         break
-#                     except KeyError:
-#                         print("По баркоду {} нет фото в списке.".format(barcodNom))
-#                         continue
-#     url_1 = data['Ссылка']
-#     url_2 = mainUrl + 'Вторые картинки/' + data['Модель'] + '/' + data['Цвет'] + '/' + '2.jpg'
-#     url_3 = mainUrl + 'Вторые картинки/' + data['Модель'] + '/' + data['Цвет'] + '/' + '3.jpg'
-#     url_4 =mainUrl + 'Вторые картинки/' + data['Модель'] + '/' + data['Цвет'] + '/' + '4.jpg'
-#     a = {
-#         "type": "Фото",
-#         "params": [
-#             {
-#             "value": url_1.replace(' ', '%20')
-#             },
-#             {
-#             "value": url_2.replace(' ', '%20')
-#             },
-#             {
-#             "value": url_3.replace(' ', '%20')
-#             },
-#             {
-#             "value": url_4.replace(' ', '%20')
-#             }
-#         ]
-#         }
-#     flag = True
-#     flag2 = False
-#     for j, addin in enumerate(cardBody['nomenclatures'][i]['addin']):
-#         if addin['type'] == 'Фото':
-#             if len(addin['params']) != 4:
-#                 cardBody['nomenclatures'][i]['addin'][j] = a
-#                 TMP_List.append(barcodNom + ' ;не все фото')
-#                 print(barcodNom + ' ;Не все фото')
-#                 flag2 = True
-#             else:
-#                 TMP_List.append(barcodNom + ' ;было фото')
-#                 print(barcodNom + ' ;было фото')
-#             flag = False
-#             break
-#     if flag:
-#         cardBody['nomenclatures'][i]['addin'].append(a)
-#         TMP_List.append(barcodNom +' ;не было фото')
-#         print(barcodNom +' ;не было фото')
-#         flag2 = True
-#     cardBodyNew = {
-#         "id": '1',
-#         "jsonrpc": "2.0",
-#         "params": {
-#             "card": cardBody
-#         }
-#     }
-#     if flag2:
-#         while True:
-#             response = requests.post(changeCardUrl, headers={
-#                 'Authorization': '{}'.format(Token)}, json=cardBodyNew)
-#             if response.status_code == 200:
-#                 print(response.text)
-#                 break
-
 
 
 def changeBody(barcod, dataFromLIstStuff):
@@ -318,8 +245,8 @@ if __name__ == '__main__':
         doneList = manager.list()
         dataFromListStuff = createDictWithBarcode(pathToListStuff)
         countThreadMax = multiprocessing.cpu_count() - 2 if multiprocessing.cpu_count() > 2 else 0
-        pool = multiprocessing.Pool(countThreadMax)
-        for poolBarcodes in splitList(dataFromListStuff, countThreadMax):
+        pool = multiprocessing.Pool(1)
+        for poolBarcodes in splitList(dataFromListStuff, 1):
             pool.apply_async(startChangeCard, args=(poolBarcodes,dataFromListStuff,))
         pool.close()
         pool.join()

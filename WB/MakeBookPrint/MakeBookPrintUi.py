@@ -14,9 +14,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(284, 505)
+        Form.resize(272, 505)
         self.tabWidget = QtWidgets.QTabWidget(Form)
-        self.tabWidget.setGeometry(QtCore.QRect(10, 10, 271, 491))
+        self.tabWidget.setGeometry(QtCore.QRect(0, 10, 271, 491))
         self.tabWidget.setObjectName("tabWidget")
         self.tabBook = QtWidgets.QWidget()
         self.tabBook.setObjectName("tabBook")
@@ -99,6 +99,26 @@ class Ui_Form(object):
         self.ChekMask = QtWidgets.QPushButton(self.tabSilicon)
         self.ChekMask.setGeometry(QtCore.QRect(0, 100, 101, 23))
         self.ChekMask.setObjectName("ChekMask")
+        self.CreateExcelForSilicon = QtWidgets.QPushButton(self.tabSilicon)
+        self.CreateExcelForSilicon.setGeometry(QtCore.QRect(160, 320, 101, 23))
+        self.CreateExcelForSilicon.setObjectName("CreateExcelForSilicon")
+        self.textSiliconBrand = QtWidgets.QTextEdit(self.tabSilicon)
+        self.textSiliconBrand.setGeometry(QtCore.QRect(0, 140, 261, 21))
+        self.textSiliconBrand.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.textSiliconBrand.setObjectName("textSiliconBrand")
+        self.textSiliconName = QtWidgets.QTextEdit(self.tabSilicon)
+        self.textSiliconName.setGeometry(QtCore.QRect(0, 170, 261, 41))
+        self.textSiliconName.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.textSiliconName.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
+        self.textSiliconName.setObjectName("textSiliconName")
+        self.textSiliconCompability = QtWidgets.QTextEdit(self.tabSilicon)
+        self.textSiliconCompability.setGeometry(QtCore.QRect(0, 220, 261, 41))
+        self.textSiliconCompability.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.textSiliconCompability.setObjectName("textSiliconCompability")
+        self.textSiliconModel = QtWidgets.QTextEdit(self.tabSilicon)
+        self.textSiliconModel.setGeometry(QtCore.QRect(0, 270, 261, 41))
+        self.textSiliconModel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.textSiliconModel.setObjectName("textSiliconModel")
         self.tabWidget.addTab(self.tabSilicon, "")
 
         self.retranslateUi(Form)
@@ -129,4 +149,25 @@ class Ui_Form(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabBook), _translate("Form", "Книжки"))
         self.CreateSiliconImage.setText(_translate("Form", "Создать всё"))
         self.ChekMask.setText(_translate("Form", "Проверить маски"))
+        self.CreateExcelForSilicon.setText(_translate("Form", "Эксель силикон"))
+        self.textSiliconBrand.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Бренд</p></body></html>"))
+        self.textSiliconName.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Наименование ВБ</p></body></html>"))
+        self.textSiliconCompability.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Совместимость</p></body></html>"))
+        self.textSiliconModel.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Модель</p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabSilicon), _translate("Form", "Силикон"))
