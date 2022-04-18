@@ -1,3 +1,4 @@
+from genericpath import isfile
 import multiprocessing
 from os import listdir
 from os.path import join as joinPath, isdir
@@ -7,8 +8,10 @@ import sys
 from makeImageBookWithNameModel import makeImageBookWithNameModel
 from AddSkriptForMakeBookImage import createExcel, deleteImage, CreateImageFolderForWBMain, pathToBookPrint
 from makeImageSilicon import createAllSiliconImage, pathToSiliconMaskFolder, pathToDoneSiliconImage
-from AddSkriptForMakeSiliconImage import createExcelSilicon
+from AddSkriptForMakeSiliconImage import createExcelSilicon, markerForAllModel
+from MyClassForMakeImage import ModelWithAddin
 import time
+from Create import WBnomenclaturesCreater
 start_time = time.time()
 # pyuic5 E:\MyProduct\Python\WB\MakeBookPrint\MakeBookPrintUi.ui -o E:\MyProduct\Python\WB\MakeBookPrint\MakeBookPrintUi.py
 
@@ -16,6 +19,7 @@ start_time = time.time()
 class mameBookPrint(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(mameBookPrint, self).__init__(parent)
+        self.listModelForExcel = []
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.ui.CreatePrint.clicked.connect(self.btnMakePrintClicked)
@@ -26,6 +30,11 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.ChekMask.clicked.connect(self.fillSiliconMaskList)
         self.ui.CreateSiliconImage.clicked.connect(self.btnCreateSiliconImage)
         self.ui.CreateExcelForSilicon.clicked.connect(self.btnCreateExcelForSilicon)
+        self.ui.ApplyAddin.clicked.connect(self.btnApplyAddin)
+        self.ui.CreateCase.clicked.connect(self.btnCreateCase)
+        self.updeteListFile()
+        self.updateModelList()
+        self.ui.ModelSelector.activated.connect(self.updateModelList)
 
 
     def createMSGError(self,text):
@@ -42,6 +51,24 @@ class mameBookPrint(QtWidgets.QMainWindow):
         msg.setText(text)
         msg.setIcon(QtWidgets.QMessageBox.Information)
         msg.exec_()
+
+
+    def updeteListFile(self):
+        self.ui.FileSelector.clear()
+        for item in listdir(pathToDoneSiliconImage):
+            if isfile(joinPath(pathToDoneSiliconImage,item)):
+                self.ui.FileSelector.addItem(item)
+
+
+    def btnCreateCase(self):
+        fileName = self.ui.FileSelector.currentText()
+        pathToFileForUpload = joinPath(pathToDoneSiliconImage, fileName)
+        create = WBnomenclaturesCreater()
+        create.pathToFileForUpload = pathToFileForUpload
+        mode = self.ui.IPSelector.currentText()
+        create.createNomenclatures(mode)
+        self.ui.textSiliconMask.setText('{} готов.'.format(fileName))
+
 
 
     def fillSiliconMaskList(self, tabIndex):
@@ -91,22 +118,103 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 event.ignore()
 
 
+    def acceptEvent(self, text):
+            close = QtWidgets.QMessageBox.question(self,
+                                                "Вопрос",
+                                                text,
+                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+            if close == QtWidgets.QMessageBox.Yes:
+                return True
+            else:
+                return False
+
+
+    def updateModelList(self):
+        self.ui.ModelSelector.clear()
+        self.ui.ModelSelector.addItem(markerForAllModel)
+        listModel = listdir(pathToSiliconMaskFolder)
+        for model in listModel:
+            if isdir(joinPath(pathToSiliconMaskFolder,model)):
+                self.ui.ModelSelector.addItem(model)
+
+
     def btnCreateSiliconImage(self):
         createAllSiliconImage(pathToSiliconMaskFolder,6)
+        self.updateModelList()
+      
+
+    def btnApplyAddin(self, curModel = False):
+        if curModel == False:
+            curModel = self.ui.ModelSelector.currentText()
+        else:
+            curModel = markerForAllModel
+        listModel = []
+        for i in range(1,self.ui.ModelSelector.count()):
+            listModel.append(self.ui.ModelSelector.itemText(i))
+        if curModel == markerForAllModel:
+            self.listModelForExcel = []
+            brand = self.ui.textSiliconBrand.toPlainText()
+            compability = self.ui.textSiliconCompability.toPlainText()
+            name = self.ui.textSiliconName.toPlainText()
+            modelAddin = self.ui.textSiliconModel.toPlainText()
+            cameraType = self.ui.CameraType.currentText()
+            price = self.ui.textPrice.toPlainText()
+            for model in listModel:
+                modelWithAddin = ModelWithAddin(model, brand, compability, name, modelAddin, cameraType, price)
+                modelWithAddin.colorList = listdir(joinPath(pathToSiliconMaskFolder, model))
+                self.listModelForExcel.append(modelWithAddin)
+                self.ui.textSiliconMask.setText('Все модели из списка записаны\n')
+        else:
+            if self.listModelForExcel != []:
+                for i, item in enumerate(self.listModelForExcel):
+                    if item.model == curModel:
+                        if self.acceptEvent("Свойства для {} уже записаны, перезаписать?".format(item.model)):
+                            brand = self.ui.textSiliconBrand.toPlainText()
+                            compability = self.ui.textSiliconCompability.toPlainText()
+                            name = self.ui.textSiliconName.toPlainText()
+                            modelAddin = self.ui.textSiliconModel.toPlainText()
+                            cameraType = self.ui.CameraType.currentText()
+                            price = self.ui.textPrice.toPlainText()
+                            self.listModelForExcel[i] = ModelWithAddin(curModel, brand, compability, name, modelAddin, cameraType, price)
+                            self.listModelForExcel[i].colorList = listdir(joinPath(pathToSiliconMaskFolder, curModel))
+                            self.ui.textSiliconMask.setText(curModel+' перезаписана\n')
+                            break
+                        else:
+                            return None
+                brand = self.ui.textSiliconBrand.toPlainText()
+                compability = self.ui.textSiliconCompability.toPlainText()
+                name = self.ui.textSiliconName.toPlainText()
+                modelAddin = self.ui.textSiliconModel.toPlainText()
+                cameraType = self.ui.CameraType.currentText()
+                price = self.ui.textPrice.toPlainText()
+                modelWithAddin = ModelWithAddin(curModel, brand, compability, name, modelAddin, cameraType, price)
+                modelWithAddin.colorList = listdir(joinPath(pathToSiliconMaskFolder, curModel))
+                self.listModelForExcel.append(modelWithAddin)
+                self.ui.textSiliconMask.setText(curModel+' записан\n')
+                return None
+            else:
+                brand = self.ui.textSiliconBrand.toPlainText()
+                compability = self.ui.textSiliconCompability.toPlainText()
+                name = self.ui.textSiliconName.toPlainText()
+                modelAddin = self.ui.textSiliconModel.toPlainText()
+                cameraType = self.ui.CameraType.currentText()
+                price = self.ui.textPrice.toPlainText()
+                modelWithAddin = ModelWithAddin(curModel, brand, compability, name, modelAddin, cameraType, price)
+                modelWithAddin.colorList = listdir(joinPath(pathToSiliconMaskFolder, curModel))
+                self.listModelForExcel.append(modelWithAddin)
+                self.ui.textSiliconMask.setText(curModel+' записан\n')
+                return None
+        pass
         
-        
+
 
     def btnCreateExcelForSilicon(self):
-        {
-            'Бренд': self.ui.textSiliconBrand.toPlainText(),
-            'Совместимость': self.ui.textSiliconCompability.toPlainText(),
-            'Наименование': self.ui.textSiliconName.toPlainText(),
-            'Модель': self.ui.textSiliconModel.toPlainText(),
-        }
-
-        p = multiprocessing.Process(target=createExcelSilicon)
+        if self.listModelForExcel == []:
+            self.btnApplyAddin(True)
+        p = multiprocessing.Process(target=createExcelSilicon, args=(self.listModelForExcel, ))
         p.start()
         p.join()
+        self.updeteListFile()
 
 
     def btnCreateImageFolderForWB(sefl):
