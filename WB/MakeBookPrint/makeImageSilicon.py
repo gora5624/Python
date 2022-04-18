@@ -9,6 +9,7 @@ from PIL import Image
 import time
 from copy import copy
 
+
 maxCPUUse = 6
 
 
@@ -17,7 +18,7 @@ pathToSiliconMaskFolder = r'{}:\Маски силикон'.format(diskWithPrint)
 pathToCategoryList = joinPath(pathToSiliconMaskFolder,'cat.xlsx')
 pathToPrintAll = r'{}:\Картинки китай\Принты со светом\Все'.format(diskWithPrint)
 pathToPrintWithOutBack = r'{}:\Картинки китай\Принты со светом\Без фона'.format(diskWithPrint)
-pathToSecondImagesFolder = r'{}:\Вторые картинки\Силикон'.format(diskWithPrint)
+pathToSecondImagesFolder = r'{}:\Для загрузки\Вторые картинки\Силикон'.format(diskWithPrint)
 pathToDoneSiliconImage = r'{}:\Для загрузки\Готовые принты\Силикон'.format(diskWithPrint)
 reductionDict = {'закрытой камерой': 'зак.кам.',
                  'открытой камерой': 'отк.кам.',

@@ -305,22 +305,22 @@
     <widget class="QPushButton" name="CreateExcelForSilicon">
      <property name="geometry">
       <rect>
-       <x>160</x>
-       <y>320</y>
+       <x>0</x>
+       <y>440</y>
        <width>101</width>
        <height>23</height>
       </rect>
      </property>
      <property name="text">
-      <string>Эксель силикон</string>
+      <string>Создать эксель</string>
      </property>
     </widget>
     <widget class="QTextEdit" name="textSiliconBrand">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>140</y>
-       <width>261</width>
+       <y>160</y>
+       <width>51</width>
        <height>21</height>
       </rect>
      </property>
@@ -332,14 +332,14 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Бренд&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Mobi711&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QTextEdit" name="textSiliconName">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>170</y>
+       <y>190</y>
        <width>261</width>
        <height>41</height>
       </rect>
@@ -362,7 +362,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>220</y>
+       <y>240</y>
        <width>261</width>
        <height>41</height>
       </rect>
@@ -382,7 +382,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>270</y>
+       <y>290</y>
        <width>261</width>
        <height>41</height>
       </rect>
@@ -397,6 +397,112 @@ p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Модель&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
+    </widget>
+    <widget class="QComboBox" name="ModelSelector">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>130</y>
+       <width>261</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="ApplyAddin">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>340</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Применить</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="CameraType">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>340</y>
+       <width>121</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>с закрытой камерой</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>с открытой камерой</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QTextEdit" name="textPrice">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>160</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Цена&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="CreateCase">
+     <property name="geometry">
+      <rect>
+       <x>174</x>
+       <y>440</y>
+       <width>91</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Создать чехлы</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="FileSelector">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>370</y>
+       <width>261</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="IPSelector">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>400</y>
+       <width>91</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>Караханян</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Абраамян</string>
+      </property>
+     </item>
     </widget>
    </widget>
   </widget>

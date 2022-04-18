@@ -1,3 +1,7 @@
+from AddSkriptForMakeSiliconImage import pathToSecondImagesFolder
+pathToUpload = r'http://80.237.77.44/joomla/images/mobi/Готовые принты/Силикон'
+pathToReplace = r'F:\\Для загрузки\\Готовые принты\\Силикон'
+
 class CardCase:
 
     def __init__(self, uuid) -> None:
@@ -258,9 +262,10 @@ class Nomenclature:
     
     def __init__(self, colorCode='', barcode='', price=int, photoURLs=[]) -> None:
         self.colorCode = colorCode
-        self.photoURLs = photoURLs
+        photoURLs = photoURLs.replace(pathToReplace, pathToUpload).replace('\\', '/')
+        self.photoURLs = photoURLs.split('#')
         self.barcode = barcode
-        self.price = price
+        self.price = price if type(price)==int else int(price)
         self.id = ''
         self.structNomenclature = {"addin": [
                             {
@@ -269,7 +274,7 @@ class Nomenclature:
                             }
                             ],
                             "concatVendorCode":'',
-                            "id":'d0b19511-ee51-4d61-8fae-8e3180bb4590',
+                            "id":'',
                             "variations": [
                             {
                                 "addin": [
@@ -284,7 +289,7 @@ class Nomenclature:
                                 ],
                                 "barcode": "",
                                 "barcodes": [],
-                                "id":'d0b19511-ee51-4d61-8fae-8e3180bb4590'
+                                "id":''
                             }
                             ],
                             "vendorCode": "",
@@ -296,8 +301,9 @@ class Nomenclature:
 
     def SetUUID(self, uuid):
         self.id = uuid
-        self.structNomenclature['addin']['id'] = self.id
-        self.structNomenclature['variations']['id'] = self.id
+        self.structNomenclature['id'] = self.id
+        for i, variation in enumerate(self.structNomenclature['variations']):
+            self.structNomenclature['variations'][i]['id'] = self.id
 
 
     def SetStruct(self):

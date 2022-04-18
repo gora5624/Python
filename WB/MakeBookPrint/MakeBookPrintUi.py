@@ -100,25 +100,51 @@ class Ui_Form(object):
         self.ChekMask.setGeometry(QtCore.QRect(0, 100, 101, 23))
         self.ChekMask.setObjectName("ChekMask")
         self.CreateExcelForSilicon = QtWidgets.QPushButton(self.tabSilicon)
-        self.CreateExcelForSilicon.setGeometry(QtCore.QRect(160, 320, 101, 23))
+        self.CreateExcelForSilicon.setGeometry(QtCore.QRect(0, 440, 101, 23))
         self.CreateExcelForSilicon.setObjectName("CreateExcelForSilicon")
         self.textSiliconBrand = QtWidgets.QTextEdit(self.tabSilicon)
-        self.textSiliconBrand.setGeometry(QtCore.QRect(0, 140, 261, 21))
+        self.textSiliconBrand.setGeometry(QtCore.QRect(0, 160, 51, 21))
         self.textSiliconBrand.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.textSiliconBrand.setObjectName("textSiliconBrand")
         self.textSiliconName = QtWidgets.QTextEdit(self.tabSilicon)
-        self.textSiliconName.setGeometry(QtCore.QRect(0, 170, 261, 41))
+        self.textSiliconName.setGeometry(QtCore.QRect(0, 190, 261, 41))
         self.textSiliconName.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.textSiliconName.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
         self.textSiliconName.setObjectName("textSiliconName")
         self.textSiliconCompability = QtWidgets.QTextEdit(self.tabSilicon)
-        self.textSiliconCompability.setGeometry(QtCore.QRect(0, 220, 261, 41))
+        self.textSiliconCompability.setGeometry(QtCore.QRect(0, 240, 261, 41))
         self.textSiliconCompability.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
         self.textSiliconCompability.setObjectName("textSiliconCompability")
         self.textSiliconModel = QtWidgets.QTextEdit(self.tabSilicon)
-        self.textSiliconModel.setGeometry(QtCore.QRect(0, 270, 261, 41))
+        self.textSiliconModel.setGeometry(QtCore.QRect(0, 290, 261, 41))
         self.textSiliconModel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.textSiliconModel.setObjectName("textSiliconModel")
+        self.ModelSelector = QtWidgets.QComboBox(self.tabSilicon)
+        self.ModelSelector.setGeometry(QtCore.QRect(0, 130, 261, 22))
+        self.ModelSelector.setObjectName("ModelSelector")
+        self.ApplyAddin = QtWidgets.QPushButton(self.tabSilicon)
+        self.ApplyAddin.setGeometry(QtCore.QRect(190, 340, 75, 23))
+        self.ApplyAddin.setObjectName("ApplyAddin")
+        self.CameraType = QtWidgets.QComboBox(self.tabSilicon)
+        self.CameraType.setGeometry(QtCore.QRect(0, 340, 121, 22))
+        self.CameraType.setObjectName("CameraType")
+        self.CameraType.addItem("")
+        self.CameraType.addItem("")
+        self.textPrice = QtWidgets.QTextEdit(self.tabSilicon)
+        self.textPrice.setGeometry(QtCore.QRect(60, 160, 71, 21))
+        self.textPrice.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.textPrice.setObjectName("textPrice")
+        self.CreateCase = QtWidgets.QPushButton(self.tabSilicon)
+        self.CreateCase.setGeometry(QtCore.QRect(174, 440, 91, 23))
+        self.CreateCase.setObjectName("CreateCase")
+        self.FileSelector = QtWidgets.QComboBox(self.tabSilicon)
+        self.FileSelector.setGeometry(QtCore.QRect(0, 370, 261, 22))
+        self.FileSelector.setObjectName("FileSelector")
+        self.IPSelector = QtWidgets.QComboBox(self.tabSilicon)
+        self.IPSelector.setGeometry(QtCore.QRect(0, 400, 91, 22))
+        self.IPSelector.setObjectName("IPSelector")
+        self.IPSelector.addItem("")
+        self.IPSelector.addItem("")
         self.tabWidget.addTab(self.tabSilicon, "")
 
         self.retranslateUi(Form)
@@ -149,12 +175,12 @@ class Ui_Form(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabBook), _translate("Form", "Книжки"))
         self.CreateSiliconImage.setText(_translate("Form", "Создать всё"))
         self.ChekMask.setText(_translate("Form", "Проверить маски"))
-        self.CreateExcelForSilicon.setText(_translate("Form", "Эксель силикон"))
+        self.CreateExcelForSilicon.setText(_translate("Form", "Создать эксель"))
         self.textSiliconBrand.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Бренд</p></body></html>"))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Mobi711</p></body></html>"))
         self.textSiliconName.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -170,4 +196,15 @@ class Ui_Form(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Модель</p></body></html>"))
+        self.ApplyAddin.setText(_translate("Form", "Применить"))
+        self.CameraType.setItemText(0, _translate("Form", "с закрытой камерой"))
+        self.CameraType.setItemText(1, _translate("Form", "с открытой камерой"))
+        self.textPrice.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Цена</p></body></html>"))
+        self.CreateCase.setText(_translate("Form", "Создать чехлы"))
+        self.IPSelector.setItemText(0, _translate("Form", "Караханян"))
+        self.IPSelector.setItemText(1, _translate("Form", "Абраамян"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabSilicon), _translate("Form", "Силикон"))

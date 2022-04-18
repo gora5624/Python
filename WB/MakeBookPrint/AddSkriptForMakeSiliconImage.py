@@ -1,7 +1,7 @@
 
 
 from os import listdir
-from os.path import join as joinPath, abspath
+from os.path import join as joinPath, abspath, exists
 import sys
 sys.path.append(abspath(joinPath(__file__,'../../..')))
 from my_mod.my_lib import  read_xlsx, multiReplace
@@ -9,10 +9,14 @@ import requests
 import time
 import pandas
 import multiprocessing
-from makeImageSilicon import pathToDoneSiliconImage
+from makeImageSilicon import pathToDoneSiliconImage, pathToSecondImagesFolder
+from MyClassForMakeImage import ModelWithAddin
 
 
 pathToCategoryList = abspath(joinPath(__file__, '..', 'cat.xlsx'))
+pathToUpload = r'http://80.237.77.44/joomla/images/mobi/Готовые принты/Силикон'
+pathToUploadSecond = r'http://80.237.77.44/joomla/images/mobi/Вторые картинки/Силикон'
+markerForAllModel = 'Применить для всех'
 siliconCaseColorDict = {'белый': 'WHT',
                         'светло-зеленый': 'L-GRN',
                         'светло-розовый': 'L-PNK',
@@ -50,19 +54,20 @@ reductionDict = {'закрытой камерой': 'зак.кам.',
 reductionDict2 = {'Чехол для': 'Чехол'}
 
 
-def genArtColor(folder, listImage):
+def genArtColor(modelClass, colorCase, pathToImage):
+    listImage = listdir(pathToImage)
     listCase = []
     artColor_1 = 'BP'
     # узнаём цвет чехла
     for color, codeColor in siliconCaseColorDict.items():
-        if color in folder:
+        if color == colorCase.lower():
             artColor_2 = codeColor
             break
         else:
             artColor_2 = 'UNKNOW_COLOR'
-    if 'открытой камерой' in folder or 'отк.кам.' in folder:
+    if modelClass.cameraType == 'с закрытой камерой':
         artColor_3 = 'OCM'
-    elif 'закрытой камерой' in folder or 'зак.кам.' in folder:
+    elif modelClass.cameraType == 'с открытой камерой':
         artColor_3 = 'CCM'
     else:
         artColor_3 = 'UCM'
@@ -82,7 +87,8 @@ def genArtColor(folder, listImage):
                            'Код цвета': artColor_2,
                            'Код камеры': artColor_3,
                            'Рисунок':category['Рисунок'],
-                           'Любимые герои': category['Любимые герои']}
+                           'Любимые герои': category['Любимые герои'],
+                           'Путь к картинке': joinPath(pathToImage,namePrint)}
                 listCase.append(dataTMP)
     return listCase
 
@@ -129,44 +135,54 @@ def generate_bar_WB(count):
     return listBarcode
 
 
-def CreateExcelForFolder(pathToDoneSiliconImage,folder):
-    modelForExcel = folder.replace('&','/')
+def CreateExcelForFolder(modelClass=ModelWithAddin, color=str):
     listColor = []
-    listArt = genArtColor(folder, listdir(joinPath(pathToDoneSiliconImage, folder)))
+    model = modelClass.model
+    listArt = genArtColor(modelClass, color, joinPath(pathToDoneSiliconImage, model, color))
     listBarcodes = generate_bar_WB(len(listArt))
+    cameraType = modelClass.cameraType
+    colorCase = color if color == 'прозрачный' else color + ' матовый'
+    nameFor1C = 'Чехол {} силикон {} {}'.format(model, cameraType, colorCase)
     for i, art in enumerate(listArt):
+        imageList = [art['Путь к картинке'].replace(pathToDoneSiliconImage, pathToUpload).replace('\\','/')]
+        if exists(joinPath(pathToSecondImagesFolder, model, color, '2.jpg')):
+            imageList.append(joinPath(pathToSecondImagesFolder, model, color, '2.jpg').replace(pathToSecondImagesFolder, pathToUploadSecond).replace('\\','/'))
         data = {'Баркод': listBarcodes[i],
-                'Группа': 'Чехол производство (принт)',
-                'Основная характеристика': art['Принт'],
-                'Название 1С': multiReplace(folder, reductionDict),
-                'Название полное': folder,
-                'Название полное с принтом': folder + ' ' + art['Принт'],
-                'Размер печать': '',
-                'Категория': art['Категория'],
-                'Код категории': art['Код категории'],
-                'Код цвета': art['Код цвета'],
+                'Бренд': modelClass.brand,
+                'Наименование': modelClass.name,
+                'Розничная цена': modelClass.price,
+                'Артикул поставщика': '_'.join([model.replace(' ','_'),'PRNT',art['Код цвета'], art['Код камеры'],art['Код категории']]),
                 'Артикул цвета': art['Артикул цвета'],
-                'Код камеры':art['Код камеры'],
-                'Рисунок':art['Рисунок'],
+                'Описание': modelClass.description,
+                'Тнвэд': modelClass.TNVED,
+                'Комплектация': modelClass.equipment,
+                'Повод': modelClass.reason,
+                'Особенности чехла': modelClass.special,
+                'Вид застежки': modelClass.lock,
+                'Рисунок': art['Рисунок'],
                 'Любимые герои': art['Любимые герои'],
-                'Модель': modelForExcel,
-                'Путь к файлу': joinPath(pathToDoneSiliconImage, folder,art['Принт']+'.jpg')}
+                'Совместимость': modelClass.compatibility,
+                'Тип чехлов': modelClass.type,
+                'Модель':modelClass.model,
+                'Основная характеристика': art['Принт'],
+                'Название 1С': multiReplace(nameFor1C, reductionDict),
+                'Название полное': nameFor1C,
+                'Название полное с принтом': nameFor1C + ' ' + art['Принт'],
+                'Размер печать': '',
+                'Путь к файлу': '#'.join(imageList)}
         listColor.append(data)
     listColorpd = pandas.DataFrame(listColor)
-    listColorpd.to_excel(joinPath(pathToDoneSiliconImage,folder)+'.xlsx', index=False)
-    print(joinPath(pathToDoneSiliconImage,folder)+'.xlsx')
+    listColorpd.to_excel(joinPath(pathToDoneSiliconImage, model + ' ' + color)+'.xlsx', index=False)
 
 
-def createExcelSilicon():
+def createExcelSilicon(modelList):
     listImageAll = []
     pool = multiprocessing.Pool(6)
-    for model in listdir(pathToDoneSiliconImage):
-        if '.xlsx' in model:
-            continue
-        pool.apply_async(CreateExcelForFolder, args=(pathToDoneSiliconImage,model,))
+    for model in modelList:
+        for color in model.colorList:
+            pool.apply_async(CreateExcelForFolder, args=(model,color,))
     pool.close()
     pool.join()
-    print('1')
     for folder in listdir(pathToDoneSiliconImage):
         if '.xlsx' in folder:
             listModel = read_xlsx(joinPath(pathToDoneSiliconImage, folder))
