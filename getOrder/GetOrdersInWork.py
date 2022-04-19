@@ -218,13 +218,45 @@ def getStuffType(barcodForGetType, caseData):
     return stuffType
 
 
-def getSize(model):
-    sizeList = read_xlsx(sizeListPath)
-    for modelLine in sizeList:
-        if modelLine['Название модели в 1С'].lower().replace('\\', '').replace('/', '') == model.lower().replace('\\', '').replace('/', ''):
-            return modelLine['Типоразмер']
-    return 'Нет в списке размеров'
+def read_xlsx_sheet(file_path, index, title='Yes'):
+    '''Считывает построчно xlsx файл и возращает список словарей - если title = 'Yes', список списков - если title = 'No'
+    '''
+    rd = xlrd.open_workbook(file_path)
+    sheet = rd.sheet_by_index(index)
+    if title == 'Yes':
+        Name_row = sheet.row_values(0)
+        start = 1
+    elif title == 'No':
+        Name_row = None
+        start = 0
+    data = []
+    for rownum in range(start, sheet.nrows):
+        row = sheet.row_values(rownum)
+        if title == 'Yes':
+            dct = {}
+            for i, cel in enumerate(row):
+                tmp = {Name_row[i]: cel}
+                dct.update(tmp)
+            data.append(dct)
+        elif title == 'No':
+            data.append(row)
+    return data
 
+
+
+def getSize(model, caseType):
+    if caseType == 'silicon':
+        sizeList = read_xlsx_sheet(sizeListPath, 0)
+        for modelLine in sizeList:
+            if modelLine['Название модели в 1С'].lower().replace('\\', '').replace('/', '') == model.lower().replace('\\', '').replace('/', ''):
+                return modelLine['Типоразмер']
+        return 'Нет в списке размеров'
+    else:
+        sizeList = read_xlsx_sheet(sizeListPath, 1)
+        for modelLine in sizeList:
+            if modelLine['Название модели в 1С'].lower().replace('\\', '').replace('/', '') == model.lower().replace('\\', '').replace('/', ''):
+                return modelLine['Типоразмер']
+        return 'Нет в списке размеров'
 
 def createNormalFromPrint(listOrderForChangeStatus):
     dataForOrder = []
@@ -278,14 +310,21 @@ def createPrintExcel(listOrderForChangeStatus, fileName):
     listOrderForTable = []
     for orderLine in listOrderForChangeStatus:
         if 'книга' not in orderLine['Название']:
+            caseType = 'silicon'
             if 'для ' in orderLine['Название']:
                 model = orderLine['Название'].split('для ')[1].split(' сил')[0]
             else:
                 model = orderLine['Название'].split(
                     'Чехол ')[1].split(' сил')[0]
-            size = getSize(model)
+            size = getSize(model, caseType)
         elif 'книга' in orderLine['Название']:
-            size = 'Книга'
+            if 'для ' in orderLine['Название']:
+                model = orderLine['Название'].split('для ')[1].split(' сил')[0]
+            else:
+                model = orderLine['Название'].split(
+                    'Чехол ')[1].split(' сил')[0]
+            caseType = 'book'
+            size = getSize(model, caseType)
         OrderLineData = {
             'Номер задания': orderLine['Номер задания'],
             'Название': orderLine['Название'],
@@ -623,7 +662,7 @@ def choiseMode():
     return mode
 
 
-def get_orders(Token, days=3):
+def get_orders(Token, days=5):
     """Получает заказы за последние 3 дня"""
     print("Идёт получение свежих заказов, ожидайте...")
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
