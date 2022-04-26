@@ -1,25 +1,16 @@
 from genericpath import isdir
 from os.path import join as joinPath, abspath, exists
-from shutil import copyfile
 from os import listdir, makedirs
 import multiprocessing
 import sys
-sys.path.append(abspath(joinPath(__file__,'../../..')))
+sys.path.append(abspath(joinPath(__file__,'../..')))
 from PIL import Image
 import time
 from copy import copy
+from Folders import pathToSiliconMaskFolder, pathToDoneSiliconImage, pathToPrintAll, pathToSecondImagesFolder, pathToPrintWithOutBack
 
 
 maxCPUUse = 6
-
-
-diskWithPrint = 'F'
-pathToSiliconMaskFolder = r'{}:\Маски силикон'.format(diskWithPrint)
-pathToCategoryList = joinPath(pathToSiliconMaskFolder,'cat.xlsx')
-pathToPrintAll = r'{}:\Картинки китай\Принты со светом\Все'.format(diskWithPrint)
-pathToPrintWithOutBack = r'{}:\Картинки китай\Принты со светом\Без фона'.format(diskWithPrint)
-pathToSecondImagesFolder = r'{}:\Для загрузки\Вторые картинки\Силикон'.format(diskWithPrint)
-pathToDoneSiliconImage = r'{}:\Для загрузки\Готовые принты\Силикон'.format(diskWithPrint)
 reductionDict = {'закрытой камерой': 'зак.кам.',
                  'открытой камерой': 'отк.кам.',
                  'матовый': 'мат.',
