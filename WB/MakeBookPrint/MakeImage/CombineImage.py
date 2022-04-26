@@ -1,21 +1,17 @@
-from os.path import join as joinPath
-from os.path import abspath
+from os.path import join as joinPath, abspath
 from os import listdir, makedirs
 from os.path import exists, basename
 from PIL import Image
 from perspective import transformPrint
+import sys
+sys.path.append(abspath(joinPath(__file__,'../..')))
+from Folders import pathToPrintAll,  pathToPrintWithOutBack, pathToDonePic, pathToEffect
 
 '''1 - все принты
     другие значения - только без фона'''
-mode = 1
 
-diskWithPrint = 'F'
-diskForDone = 'F'
-pathToPrintAll = r'{}:\Картинки китай\Под натяжку общее\Все'.format(diskForDone)
-pathToPrintWithOutBack = r'{}:\Картинки китай\Под натяжку общее\Без фона'.format(diskForDone)
+mode = 1
 pathToPrint = pathToPrintAll  if mode == 1 else pathToPrintWithOutBack
-pathToDonePic = r'{}:\Готовые принты книжки Fashion'.format(diskForDone)
-pathToEffect = abspath(joinPath(__file__, '..',r'Effect\light.png'))
 pastePrintCoord = (200,547)
 width = 1870
 widthDone = 900
@@ -60,9 +56,3 @@ def combineImage(pathToImgBack, pathToImgMask):
         imgMain = Image.alpha_composite(imgMain,imgMask)
         imgMainDone = imgMain.resize((widthDone, int(imgMain.size[1]*(widthDone/imgMain.size[0]))))
         imgMainDone.save(joinPath(pathToSave, basename(imagePrint)), quality=70)
-
-
-
-# pathToImgBack = r'E:\MyProduct\Python\python\MakeBookPrint\BookPic\BookBack\Голубая.jpg'
-# pathToImgMask = r'E:\MyProduct\Python\python\MakeBookPrint\BookPic\BookMask\Голубая.png'
-# combineImage(pathToImgBack, pathToImgMask)

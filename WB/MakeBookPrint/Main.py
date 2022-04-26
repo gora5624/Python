@@ -8,9 +8,10 @@ import sys
 from makeImageBookWithNameModel import makeImageBookWithNameModel
 from AddSkriptForMakeBookImage import createExcel, deleteImage, CreateImageFolderForWBMain, pathToBookPrint
 from makeImageSilicon import createAllSiliconImage, pathToSiliconMaskFolder, pathToDoneSiliconImage
-from AddSkriptForMakeSiliconImage import createExcelSilicon, markerForAllModel
+from AddSkriptForMakeSiliconImage import createExcelSilicon, markerForAllModel, copyImage, chekImage
 from MyClassForMakeImage import ModelWithAddin
 import time
+from GetCardAsincio import getListCard
 from Create import WBnomenclaturesCreater
 start_time = time.time()
 # pyuic5 E:\MyProduct\Python\WB\MakeBookPrint\MakeBookPrintUi.ui -o E:\MyProduct\Python\WB\MakeBookPrint\MakeBookPrintUi.py
@@ -30,11 +31,11 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.ChekMask.clicked.connect(self.fillSiliconMaskList)
         self.ui.CreateSiliconImage.clicked.connect(self.btnCreateSiliconImage)
         self.ui.CreateExcelForSilicon.clicked.connect(self.btnCreateExcelForSilicon)
+        self.ui.ChekImage.clicked.connect(self.btnChekImage)
         self.ui.ApplyAddin.clicked.connect(self.btnApplyAddin)
         self.ui.CreateCase.clicked.connect(self.btnCreateCase)
         self.updeteListFile()
         self.updateModelList()
-        self.ui.ModelSelector.activated.connect(self.updateModelList)
 
 
     def createMSGError(self,text):
@@ -53,6 +54,17 @@ class mameBookPrint(QtWidgets.QMainWindow):
         msg.exec_()
 
 
+    def btnChekImage(self):
+        fileName = self.ui.FileSelector.currentText()
+        mode = self.ui.IPSelector.currentText()
+        status = chekImage(fileName, mode)
+        self.ui.textSiliconMask.setText('{} готов.\nСтатус: {}'.format(fileName, status))
+        if status == 'Во всех карточках присутствуют фото.':
+            self.ui.textSiliconMask.setStyleSheet("background-color: green;")
+        else:
+            self.ui.textSiliconMask.setStyleSheet("background-color: red;")
+
+
     def updeteListFile(self):
         self.ui.FileSelector.clear()
         for item in listdir(pathToDoneSiliconImage):
@@ -66,31 +78,35 @@ class mameBookPrint(QtWidgets.QMainWindow):
         create = WBnomenclaturesCreater()
         create.pathToFileForUpload = pathToFileForUpload
         mode = self.ui.IPSelector.currentText()
-        create.createNomenclatures(mode)
+        barcodeList = getListCard(mode)
+        create.createNomenclatures(mode, barcodeList)
         self.ui.textSiliconMask.setText('{} готов.'.format(fileName))
+        getListCard(mode)
 
 
 
     def fillSiliconMaskList(self, tabIndex):
+        self.ui.textSiliconMask.setText('')
         if tabIndex  == 1 or tabIndex  == False:
             negFlag = False
             for mask in listdir(pathToSiliconMaskFolder):
                 if isdir(joinPath(pathToSiliconMaskFolder, mask)):
-                    fileList = listdir(joinPath(pathToSiliconMaskFolder, mask))
-                    if 'mask.png' in fileList and 'fon.png' in fileList:
-                        continue
-                    elif 'mask.png' not in fileList and 'fon.png' not in fileList:
-                        self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ МАКСИ И ФОНА\n')
-                        negFlag = True
-                        continue
-                    elif 'mask.png' not in fileList and 'fon.png' in fileList:
-                        self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ МАКСИ\n')
-                        negFlag = True
-                        continue
-                    elif 'mask.png' in fileList and 'fon.png' not in fileList:
-                        self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ ФОНА\n')
-                        negFlag = True
-                        continue
+                    for color in listdir(joinPath(pathToSiliconMaskFolder, mask)):
+                        fileList = listdir(joinPath(pathToSiliconMaskFolder, mask, color))
+                        if 'mask.png' in fileList and 'fon.png' in fileList:
+                            continue
+                        elif 'mask.png' not in fileList and 'fon.png' not in fileList:
+                            self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' ' + color + ' НЕТ МАКСИ И ФОНА\n')
+                            negFlag = True
+                            continue
+                        elif 'mask.png' not in fileList and 'fon.png' in fileList:
+                            self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' ' + color + ' НЕТ МАКСИ\n')
+                            negFlag = True
+                            continue
+                        elif 'mask.png' in fileList and 'fon.png' not in fileList:
+                            self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' ' + color +' НЕТ ФОНА\n')
+                            negFlag = True
+                            continue
             if not negFlag:
                 self.ui.textSiliconMask.setText('Все маски готовы к работе\n')
     
@@ -141,6 +157,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
     def btnCreateSiliconImage(self):
         createAllSiliconImage(pathToSiliconMaskFolder,6)
         self.updateModelList()
+        copyImage()
       
 
     def btnApplyAddin(self, curModel = False):
