@@ -14,7 +14,7 @@ class WBnomenclaturesCreater:
         self.mainUrl = 'https://suppliers-api.wildberries.ru/card/batchCreate'
         self.pathToFileForUpload = ''
 
-    def createNomenclatures(self, mode):
+    def createNomenclatures(self, mode, barcodeList):
         Token = self.tokenAb if mode == 'Абраамян' else self.tokenKar
         if self.pathToFileForUpload =='':
             print('Путь к файлу не указан')
@@ -22,23 +22,24 @@ class WBnomenclaturesCreater:
         data = read_xlsx(self.pathToFileForUpload)
         tmpListCard = {}
         for line in data:
-            nomenclature = Nomenclature(line['Артикул цвета'], line['Баркод'], line['Розничная цена'], line['Путь к файлу'])
+            if line['Баркод'] not in barcodeList:
+                nomenclature = Nomenclature(line['Артикул цвета'], line['Баркод'], line['Розничная цена'], line['Путь к файлу'])
 
-            if line['Артикул поставщика'] in tmpListCard.keys():
-                id = tmpListCard[line['Артикул поставщика']].id
-                nomenclature.SetUUID(id)
-                tmpListCard[line['Артикул поставщика']].AddNomenklatures(nomenclature.GetStruct())
-            else:
-                id = str(uuid.uuid4())
-                card = CardCase(id)
-                card.SetAddin(line)
-                card.SetStruct()
-                nomenclature.SetUUID(id)
-                card.AddNomenklatures(nomenclature.GetStruct())
-                tmpListCard.update({line['Артикул поставщика']:card})
+                if line['Артикул поставщика'] in tmpListCard.keys():
+                    id = tmpListCard[line['Артикул поставщика']].id
+                    nomenclature.SetUUID(id)
+                    tmpListCard[line['Артикул поставщика']].AddNomenklatures(nomenclature.GetStruct())
+                else:
+                    id = str(uuid.uuid4())
+                    card = CardCase(id)
+                    card.SetAddin(line)
+                    card.SetStruct()
+                    nomenclature.SetUUID(id)
+                    card.AddNomenklatures(nomenclature.GetStruct())
+                    tmpListCard.update({line['Артикул поставщика']:card})
         for item in tmpListCard.values():
             datajson = item.GetStruct()
             datajson
             response = requests.post(url=self.mainUrl, headers={
                         'Authorization': '{}'.format(Token)}, json=datajson)
-            response
+            print('Номенклатура создана, код {}, текст ответа {}'.format(str(response.status_code), response.text))

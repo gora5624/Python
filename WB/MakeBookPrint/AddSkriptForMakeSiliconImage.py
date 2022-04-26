@@ -2,6 +2,8 @@
 
 from os import listdir
 from os.path import join as joinPath, abspath, exists
+import re
+import shutil
 import sys
 sys.path.append(abspath(joinPath(__file__,'../../..')))
 from my_mod.my_lib import  read_xlsx, multiReplace
@@ -11,10 +13,16 @@ import pandas
 import multiprocessing
 from makeImageSilicon import pathToDoneSiliconImage, pathToSecondImagesFolder
 from MyClassForMakeImage import ModelWithAddin
+from shutil import copytree, ignore_patterns
+from ChekPhotoClass import ImageCheker
 
-
+TokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+TokenArb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
 pathToCategoryList = abspath(joinPath(__file__, '..', 'cat.xlsx'))
 pathToUpload = r'http://80.237.77.44/joomla/images/mobi/Готовые принты/Силикон'
+pathToUploadFolder = r'\\192.168.0.33\web_packages\joomla\images\mobi\Готовые принты\Силикон'
+pathToSecondImage = r'F:\Для загрузки\Вторые картинки\Силикон'
+pathToSecondImageUploadFolder = r'\\192.168.0.33\web_packages\joomla\images\mobi\Вторые картинки\Силикон'
 pathToUploadSecond = r'http://80.237.77.44/joomla/images/mobi/Вторые картинки/Силикон'
 markerForAllModel = 'Применить для всех'
 siliconCaseColorDict = {'белый': 'WHT',
@@ -97,7 +105,7 @@ def generate_bar_WB(count):
     listBarcode = []
     countTry = 0
     url = "https://suppliers-api.wildberries.ru/card/getBarcodes"
-    headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w',
+    headers = {'Authorization': TokenKar,
                'Content-Type': 'application/json',
                'accept': 'application/json'}
 
@@ -170,9 +178,17 @@ def CreateExcelForFolder(modelClass=ModelWithAddin, color=str):
                 'Название полное с принтом': nameFor1C + ' ' + art['Принт'],
                 'Размер печать': '',
                 'Путь к файлу': '#'.join(imageList)}
+        if art['Артикул цвета']=='BP_SKB_TXT_PRNT_0010':
+            print(art['Артикул цвета'])
         listColor.append(data)
     listColorpd = pandas.DataFrame(listColor)
     listColorpd.to_excel(joinPath(pathToDoneSiliconImage, model + ' ' + color)+'.xlsx', index=False)
+
+
+def copyImage():
+    copytree(pathToDoneSiliconImage, pathToUploadFolder, dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
+    copytree(pathToSecondImage, pathToSecondImageUploadFolder, dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
+
 
 
 def createExcelSilicon(modelList):
@@ -184,12 +200,28 @@ def createExcelSilicon(modelList):
     pool.close()
     pool.join()
     for folder in listdir(pathToDoneSiliconImage):
-        if '.xlsx' in folder:
+        if '.xlsx' in folder and '~' not in folder:
             listModel = read_xlsx(joinPath(pathToDoneSiliconImage, folder))
             listImageAll.extend(listModel)
     listImageAllpd = pandas.DataFrame(listImageAll)
     listImageAllpd.to_excel(pathToDoneSiliconImage + '.xlsx', index=False)
 
 
-def copyImage():
-    pass
+def chekImage(fileName, supplier):
+    pathToFileForUpload = joinPath(pathToDoneSiliconImage, fileName)
+    listCase = read_xlsx(pathToFileForUpload)
+    a = ImageCheker(listCase, supplier)
+    a.setImageForCards()
+    a.updateCardsStart()
+    return a.status
+
+
+if __name__ == '__main__':
+    listImageAll = []
+    pathToDoneSiliconImage = r'F:\Для загрузки\Готовые принты\Силикон'
+    for folder in listdir(pathToDoneSiliconImage):
+        if '.xlsx' in folder and '~' not in folder:
+            listModel = read_xlsx(joinPath(pathToDoneSiliconImage, folder))
+            listImageAll.extend(listModel)
+    listImageAllpd = pandas.DataFrame(listImageAll)
+    listImageAllpd.to_excel(pathToDoneSiliconImage + '.xlsx', index=False)
