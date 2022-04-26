@@ -2,15 +2,16 @@ from os.path import join as joinPath, abspath, exists
 from os import listdir, makedirs
 import multiprocessing
 from PIL import Image, ImageDraw, ImageFont
+import sys
+sys.path.append(abspath(joinPath(__file__,'../..')))
+from Folders import pathToDoneImageWithName, fontPath, pathToImage
 
-disk = 'F'
-pathToImage = r'{}:\Готовые принты книжки Fashion'.format(disk)
-fontPath = abspath(joinPath(__file__, '..','Fonts','CarosSoftBold.ttf'))
-pathToDoneImageWithName = r'{}:\Готовые картинки Fashion по моделям'.format(disk)
+
 XPasteBrand = 50
 YPasteBrand = 100
 XPasteModel = 50
 YPasteModel = 20
+
 
 def makeImageBookWithNameModel(colorList, modelBrand, modelModel):
     pool = multiprocessing.Pool()
@@ -49,4 +50,3 @@ def makeImageColor(color, modelBrand, modelModel):
         if not exists(fullPathToSave.replace('/','&')):
             makedirs(fullPathToSave.replace('/','&'))
         imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic[0:-4] + '.jpg'), quality=75)
-        #pass
