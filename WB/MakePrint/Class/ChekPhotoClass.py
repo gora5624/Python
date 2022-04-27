@@ -1,5 +1,8 @@
 
-from GetCardAsincio import getListCard
+from os.path import abspath, join as joinPath
+import sys
+sys.path.append(abspath(joinPath(__file__,'../..')))
+from Moduls.GetCardAsincio import getListCard
 import asyncio
 import aiohttp
 

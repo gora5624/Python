@@ -1,4 +1,4 @@
-from CardBodyClass import CardCase, Nomenclature
+from Class.CardBodyClass import CardCase, Nomenclature
 import sys
 from os.path import join as joinPath
 sys.path.insert(1, joinPath(sys.path[0], '../..'))

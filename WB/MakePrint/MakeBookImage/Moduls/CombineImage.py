@@ -2,16 +2,16 @@ from os.path import join as joinPath, abspath
 from os import listdir, makedirs
 from os.path import exists, basename
 from PIL import Image
-from perspective import transformPrint
+from Moduls.perspective import transformPrint
 import sys
-sys.path.append(abspath(joinPath(__file__,'../..')))
-from Folders import pathToPrintAll,  pathToPrintWithOutBack, pathToDonePic, pathToEffect
+sys.path.append(abspath(joinPath(__file__,'../../..')))
+from Folders import pathToPrintImageFolderAll,  pathToPrintImageFolderWithOutBack, pathToBookImageWithOutModel, pathToBookEffect
 
 '''1 - все принты
     другие значения - только без фона'''
 
 mode = 1
-pathToPrint = pathToPrintAll  if mode == 1 else pathToPrintWithOutBack
+pathToPrint = pathToPrintImageFolderAll  if mode == 1 else pathToPrintImageFolderWithOutBack
 pastePrintCoord = (200,547)
 width = 1870
 widthDone = 900
@@ -23,12 +23,12 @@ def chek(pathToChek):
 
 
 def combineImage(pathToImgBack, pathToImgMask):
-    pathToSave = joinPath(pathToDonePic, basename(pathToImgBack)[0:-4])
+    pathToSave = joinPath(pathToBookImageWithOutModel, basename(pathToImgBack)[0:-4])
     chek(pathToSave)
     # Открываем фон, маску, эффект текстуры
     imgBack = Image.open(pathToImgBack).convert('RGBA')
     imgMask = Image.open(pathToImgMask).convert('RGBA')
-    imgTexture = Image.open(pathToEffect).convert('RGBA')
+    imgTexture = Image.open(pathToBookEffect).convert('RGBA')
     # Пробегаемся по списку принтов
     for imagePrint in listdir(pathToPrint):
         # Создаём пустое изображение

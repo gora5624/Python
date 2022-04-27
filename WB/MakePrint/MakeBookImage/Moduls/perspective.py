@@ -1,5 +1,5 @@
 from PIL import Image
-from findCoef import find_coeffs
+from Moduls.findCoef import find_coeffs
 
 
 

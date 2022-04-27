@@ -1,4 +1,3 @@
-from AddSkriptForMakeSiliconImage import pathToSecondImagesFolder
 pathToUpload = r'http://80.237.77.44/joomla/images/mobi/Готовые принты/Силикон'
 pathToReplace = r'F:\\Для загрузки\\Готовые принты\\Силикон'
 

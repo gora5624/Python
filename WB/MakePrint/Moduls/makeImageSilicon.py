@@ -7,7 +7,7 @@ sys.path.append(abspath(joinPath(__file__,'../..')))
 from PIL import Image
 import time
 from copy import copy
-from Folders import pathToSiliconMaskFolder, pathToDoneSiliconImage, pathToPrintAll, pathToSecondImagesFolder, pathToPrintWithOutBack
+from Folders import pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToPrintImageFolderAll, pathToPrintImageFolderWithOutBack, pathToSecondImagesFolderSilicon
 
 
 maxCPUUse = 6
@@ -86,24 +86,24 @@ def combineImage(imageMask, imagePrintPath, imageBack, printsize, printPaste, pa
     imageBackNew.save(joinPath(pathToSave,imagePrintPath.replace('print','(Принт').replace('.png',').jpg')),"JPEG",optimize=True, progressive=True, quality=70)
 
 def chekPath(path=str):
-    fullpathToDoneSiliconImage = path.replace(pathToSiliconMaskFolder, pathToDoneSiliconImage)
+    fullpathToDoneSiliconImage = path.replace(pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon)
     if not exists(fullpathToDoneSiliconImage):
         makedirs(fullpathToDoneSiliconImage)
 
 
 def createSiliconImage(pathToMaskFolder, countCPU):
     if "проз." in pathToMaskFolder.lower() or "прозрачный" in pathToMaskFolder.lower():
-        pathToPrintFolder = pathToPrintAll
+        pathToPrintFolder = pathToPrintImageFolderAll
     else:
         try:
-            pathToSecondImageFolder = pathToMaskFolder.replace(pathToSiliconMaskFolder,pathToSecondImagesFolder)
+            pathToSecondImageFolder = pathToMaskFolder.replace(pathToMaskFolderSilicon,pathToSecondImagesFolderSilicon)
             chekPath(pathToSecondImageFolder)
             secondImage = Image.open(joinPath(pathToMaskFolder, '2.jpg'))
             secondImage = secondImage.resize((secondImage.size[0]//3, secondImage.size[1]//3))
             secondImage.save(joinPath(pathToSecondImageFolder, '2.jpg'),"JPEG",optimize=True, progressive=True, quality=70)
         except:
             print('Не удалось скопировать 2е фото для {}'.format(pathToMaskFolder))
-        pathToPrintFolder = pathToPrintWithOutBack
+        pathToPrintFolder = pathToPrintImageFolderWithOutBack
     chekPath(pathToMaskFolder)
     pathToMask = joinPath(pathToMaskFolder,'mask.png')
     #xLeft, xRight, yTop, yBott = getSizeAndPos(imageMask)
@@ -115,7 +115,7 @@ def createSiliconImage(pathToMaskFolder, countCPU):
     xLeft, xRight, yTop, yBott = getSizeAndPos(imageMask)
     printsize = (xRight-xLeft, yBott-yTop)
     printPaste = (xLeft, yTop)
-    pathToSave = pathToMaskFolder.replace(pathToSiliconMaskFolder, pathToDoneSiliconImage)
+    pathToSave = pathToMaskFolder.replace(pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon)
     if countCPU != 1:
         pool = multiprocessing.Pool(countCPU)
         imageMaskN = copy(imageMask)
