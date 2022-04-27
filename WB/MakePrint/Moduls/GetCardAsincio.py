@@ -2,7 +2,6 @@ from os.path import join as joinPath
 import aiohttp
 import asyncio
 import requests
-import datetime
 import pandas
 
 main_path = r'C:\Users\Public\Documents\WBUploadImage'

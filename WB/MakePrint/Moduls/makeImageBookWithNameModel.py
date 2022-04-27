@@ -4,7 +4,7 @@ import multiprocessing
 from PIL import Image, ImageDraw, ImageFont
 import sys
 sys.path.append(abspath(joinPath(__file__,'../..')))
-from Folders import pathToDoneImageWithName, fontPath, pathToImage
+from Folders import pathToDoneBookImageWithName, fontPath, pathToBookImageWithOutModel
 
 
 XPasteBrand = 50
@@ -25,7 +25,7 @@ def makeImageBookWithNameModel(colorList, modelBrand, modelModel):
 
 
 def makeImageColor(color, modelBrand, modelModel):
-    pathToColor = joinPath(pathToImage, color)
+    pathToColor = joinPath(pathToBookImageWithOutModel, color)
     customFontBrand = ImageFont.truetype(fontPath, 80)
     customFontModel = ImageFont.truetype(fontPath, 65)
     for pic in listdir(pathToColor): 
@@ -46,7 +46,7 @@ def makeImageColor(color, modelBrand, modelModel):
             customFontModel = ImageFont.truetype(fontPath, 55)
         drawText = ImageDraw.Draw(imageDone)
         drawText.text((widthImage-XPasteModel-widthText,heightImage-YPasteModel-heightText), modelModel, font=customFontModel,fill='#000000')
-        fullPathToSave = joinPath(pathToDoneImageWithName, modelBrand + ' ' + modelModel, color)
+        fullPathToSave = joinPath(pathToDoneBookImageWithName, modelBrand + ' ' + modelModel, color)
         if not exists(fullPathToSave.replace('/','&')):
             makedirs(fullPathToSave.replace('/','&'))
         imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic[0:-4] + '.jpg'), quality=75)

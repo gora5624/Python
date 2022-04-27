@@ -57,9 +57,6 @@ class Ui_Form(object):
         self.textEditModel = QtWidgets.QTextEdit(self.tabBook)
         self.textEditModel.setGeometry(QtCore.QRect(0, 340, 261, 31))
         self.textEditModel.setObjectName("textEditModel")
-        self.CreateImageFolderForWB = QtWidgets.QPushButton(self.tabBook)
-        self.CreateImageFolderForWB.setGeometry(QtCore.QRect(0, 440, 131, 23))
-        self.CreateImageFolderForWB.setObjectName("CreateImageFolderForWB")
         self.label_5 = QtWidgets.QLabel(self.tabBook)
         self.label_5.setGeometry(QtCore.QRect(210, 380, 16, 16))
         self.label_5.setObjectName("label_5")
@@ -151,7 +148,7 @@ class Ui_Form(object):
         self.tabWidget.addTab(self.tabSilicon, "")
 
         self.retranslateUi(Form)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
@@ -168,7 +165,6 @@ class Ui_Form(object):
         self.checkBox_8_Blue.setText(_translate("Form", "Синий"))
         self.checkBox_1_Vinous.setText(_translate("Form", "Бордовый"))
         self.DeleteImage.setText(_translate("Form", "Удалить данные"))
-        self.CreateImageFolderForWB.setText(_translate("Form", "Размесить фото в папки"))
         self.label_5.setText(_translate("Form", "2"))
         self.CreateExcel.setText(_translate("Form", "Создать Excel"))
         self.label.setText(_translate("Form", "Выберете цвета для создания принтов"))

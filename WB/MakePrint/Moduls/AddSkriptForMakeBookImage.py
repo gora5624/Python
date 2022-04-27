@@ -3,20 +3,14 @@ from os.path import abspath, join as joinPath, isdir, exists
 from os import listdir, rename, remove, makedirs
 from shutil import rmtree, copyfile
 import sys
-sys.path.append(abspath(joinPath(__file__,'../../..')))
+sys.path.append(abspath(joinPath(__file__,'../../../..')))
 import pandas
 from my_mod.my_lib import  read_xlsx, multiReplace
 from PIL import Image
 import time
 import requests
+from Folders import pathToDoneBookImageWithName, pathToCategoryList
 
-
-
-diskWithPrint = 'F'
-pathToCategoryList = abspath(joinPath(__file__, '..', 'cat.xlsx'))
-pathToBookPrint = r'{}:\Готовые принты\Fashion'.format(diskWithPrint)
-pathToImageWithArt = r'{}:\Done'.format(diskWithPrint)
-pathToSecondImages = r'{}:\Готовые принты\Вторые картинки\Fashion'.format(diskWithPrint)
 
 bookCaseColorDict = {'бордовый': 'VNS',
                      'бронзовый': 'BNZ',
@@ -28,8 +22,6 @@ bookCaseColorDict = {'бордовый': 'VNS',
                      'серый': 'GRY',
                      'синий': 'BLU',
                      'черный': 'BLC'}
-
-
 reductionDict = {'закрытой камерой': 'зак.кам.',
                  'открытой камерой': 'отк.кам.',
                  'матовый': 'мат.',
@@ -61,12 +53,12 @@ def RenameImage(pathToPrint):
 
 def createModelExcel(model):
     modelForExcel = model.replace('&','/')
-    for color in listdir(joinPath(pathToBookPrint, model)):
+    for color in listdir(joinPath(pathToDoneBookImageWithName, model)):
         if '.xlsx' in color:
             continue
         listColor = []
-        RenameImage(joinPath(pathToBookPrint, model,color))
-        listArt = genArtColor(color, listdir(joinPath(pathToBookPrint, model,color)))
+        RenameImage(joinPath(pathToDoneBookImageWithName, model,color))
+        listArt = genArtColor(color, listdir(joinPath(pathToDoneBookImageWithName, model,color)))
         listBarcodes = generate_bar_WB(len(listArt))
         for i, art in enumerate(listArt):
             name = 'Чехол книга {} {} с силиконовый вставкой Fashion'.format(modelForExcel, color.lower())
@@ -85,35 +77,58 @@ def createModelExcel(model):
                     'Рисунок':art['Рисунок'],
                     'Любимые герои': art['Любимые герои'],
                     'Модель': modelForExcel,
-                    'Путь к файлу': joinPath(pathToBookPrint, model,color,art['Принт']+'.jpg')}
+                    'Путь к файлу': joinPath(pathToDoneBookImageWithName, model,color,art['Принт']+'.jpg')}
+            data = {'Баркод': listBarcodes[i],
+                'Бренд': modelClass.brand,
+                'Наименование': modelClass.name,
+                'Розничная цена': modelClass.price,
+                'Артикул поставщика': '_'.join([model.replace(' ','_'),'PRNT',art['Код цвета'], art['Код камеры'],art['Код категории']]),
+                'Артикул цвета': art['Артикул цвета'],
+                'Описание': modelClass.description,
+                'Тнвэд': modelClass.TNVED,
+                'Комплектация': modelClass.equipment,
+                'Повод': modelClass.reason,
+                'Особенности чехла': modelClass.special,
+                'Вид застежки': modelClass.lock,
+                'Рисунок': art['Рисунок'],
+                'Любимые герои': art['Любимые герои'],
+                'Совместимость': modelClass.compatibility,
+                'Тип чехлов': modelClass.type,
+                'Модель':modelClass.model,
+                'Основная характеристика': art['Принт'],
+                'Название 1С': multiReplace(nameFor1C, reductionDict),
+                'Название полное': nameFor1C,
+                'Название полное с принтом': nameFor1C + ' ' + art['Принт'],
+                'Размер печать': '',
+                'Путь к файлу': '#'.join(imageList)}
             listColor.append(data)
         listColorpd = pandas.DataFrame(listColor)
-        listColorpd.to_excel(joinPath(pathToBookPrint, model,color)+'.xlsx', index=False)
+        listColorpd.to_excel(joinPath(pathToDoneBookImageWithName, model,color)+'.xlsx', index=False)
 
 
 
 def createExcel(resp):
     listImageAll = []
     pool = multiprocessing.Pool(6)
-    for model in listdir(pathToBookPrint):
+    for model in listdir(pathToDoneBookImageWithName):
         if '.xlsx' in model:
             continue
         pool.apply_async(createModelExcel, args=(model,))
     pool.close()
     pool.join()
-    for model in listdir(pathToBookPrint):
+    for model in listdir(pathToDoneBookImageWithName):
         if '.xlsx' in model:
             continue
         listModel = []
-        for color in listdir(joinPath(pathToBookPrint, model)):
+        for color in listdir(joinPath(pathToDoneBookImageWithName, model)):
             if '.xlsx' in color:
-                listColor = read_xlsx(joinPath(pathToBookPrint, model, color))
+                listColor = read_xlsx(joinPath(pathToDoneBookImageWithName, model, color))
                 listModel.extend(listColor)
         listModelpd = pandas.DataFrame(listModel)
-        listModelpd.to_excel(joinPath(pathToBookPrint, model) + '.xlsx', index=False)
+        listModelpd.to_excel(joinPath(pathToDoneBookImageWithName, model) + '.xlsx', index=False)
         listImageAll.extend(listModel)
     listImageAllpd = pandas.DataFrame(listImageAll)
-    listImageAllpd.to_excel(pathToBookPrint + '.xlsx', index=False)
+    listImageAllpd.to_excel(pathToDoneBookImageWithName + '.xlsx', index=False)
     resp.put(0)
 
 
@@ -171,48 +186,9 @@ def downSizeScondImage(pathToSecondImages):
                 img.save(pathToSecondImage, quality=75)
 
 
-def CreateImageFolderForWB(dataCumm, barcodBook):
-    try:
-        barcod = barcodBook['Баркод'] if type(barcodBook['Баркод']) == str else str(barcodBook['Баркод'])[0:-2]
-        art = dataCumm[barcod]
-    except:
-        return 0
-    model = barcodBook['Модель'].replace('/','&')
-    try:
-        pathToImage = barcodBook['Путь к файлу']
-    except KeyError:
-        for color, codeColor in bookCaseColorDict.items():
-            if codeColor == barcodBook['Код цвета']:
-                colorBook = color
-                break
-        image = barcodBook['Основная характеристика']
-    pathToImage = joinPath(pathToBookPrint, model, colorBook, image + '.jpg')
-    if not exists(pathToImage):
-        print(model + ' ' + colorBook + ' ' +image + 'не найден!')
-    else:
-        doneFolder = (joinPath(pathToImageWithArt, art, 'photo'))
-        makedirs(doneFolder)
-        copyfile(pathToImage,joinPath(doneFolder,'1.jpg'))
-        for secondImage in listdir(joinPath(pathToSecondImages, model,colorBook)):
-            pathToSecondImage = joinPath(pathToSecondImages, model,colorBook,secondImage)
-            copyfile(pathToSecondImage,joinPath(doneFolder,secondImage))
-
-            
-def CreateImageFolderForWBMain(filePathCumm, pathToBookPrint):
-    downSizeScondImage(pathToSecondImages)
-    dataFromFileCumm = read_xlsx(filePathCumm)
-    dataFromFileBook = read_xlsx(pathToBookPrint + '.xlsx') 
-    pool = multiprocessing.Pool()
-    data = createDictForCumm(dataFromFileCumm)
-    for lineBook in dataFromFileBook:
-        pool.apply_async(CreateImageFolderForWB, args=(data, lineBook,))
-    pool.close()
-    pool.join()
-
-
 def deleteImage():
-    for catalog in listdir(pathToBookPrint):
-        if isdir(joinPath(pathToBookPrint,catalog)):
+    for catalog in listdir(pathToDoneBookImageWithName):
+        if isdir(joinPath(pathToDoneBookImageWithName,catalog)):
             # resp = 0
             # while resp != None:
             #     try:
@@ -220,18 +196,18 @@ def deleteImage():
             #     except OSError:
             #         for image in listdir(joinPath(pathToBookPrint,catalog)):
             #             remove(joinPath(pathToBookPrint,catalog,image))
-            rmtree(joinPath(pathToBookPrint,catalog))
+            rmtree(joinPath(pathToDoneBookImageWithName,catalog))
         else:
-            remove(joinPath(pathToBookPrint,catalog))
-    if exists(pathToBookPrint+'.xlsx'):
-        remove(pathToBookPrint+'.xlsx')
+            remove(joinPath(pathToDoneBookImageWithName,catalog))
+    if exists(pathToDoneBookImageWithName+'.xlsx'):
+        remove(pathToDoneBookImageWithName+'.xlsx')
 
 
 def generate_bar_WB(count):
     listBarcode = []
     countTry = 0
     url = "https://suppliers-api.wildberries.ru/card/getBarcodes"
-    headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImEyNjQwNTAzLTk0NjktNGFkYy04MzVhLWM5MTQzZWU0NDBkYiJ9.UCh5I_5bnet0S2JcV92oDWS3p8RgUP5dsOwglCYu6ZE',
+    headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w',
                'Content-Type': 'application/json',
                'accept': 'application/json'}
 
