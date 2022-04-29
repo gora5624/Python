@@ -6,14 +6,14 @@ import fpdf
 import os
 from os.path import join    as joinpath
 import sys
-sys.path.insert(1, joinpath(__file__, '../..'))
+sys.path.insert(1, joinpath(__file__, '../../..'))
 from my_mod.my_lib import read_xlsx
 
 fpdf.set_global("SYSTEM_TTFONTS", os.path.join(
     os.path.dirname(__file__), r'C:\Windows\Fonts'))
 
-dirForPicWithBarcode = r'E:\MyProduct\Python\GeneraneBarcodeFor1C\barcodes'
-dirForPicWithBarcodePNG = r'E:\MyProduct\Python\GeneraneBarcodeFor1C\barcodes\png'
+dirForPicWithBarcode = r'E:\\'
+dirForPicWithBarcodePNG = r'E:\\'
 listStuff = r'E:\GeneraneBarcodeFor1C\Список сотрудников новая 1С.xlsx'
 
 def create_1C_barcod(bc, name):
@@ -34,7 +34,11 @@ def create_1C_barcod(bc, name):
     pdf.output(joinpath(dirForPicWithBarcode, name + '.pdf'))
 
 
-for line in read_xlsx(listStuff):
-    name = line['Пользователь']
-    bc = str(line['Штрихкод'] )[0:-2]
-    create_1C_barcod(bc, name)
+# for line in read_xlsx(listStuff):
+#     name = 'Макаров Алексей'#line['Пользователь']
+#     bc = '2029943477623'# str(line['Штрихкод'] )[0:-2]
+#     create_1C_barcod(bc, name)
+
+name = 'Чамкаев Марат'#line['Пользователь']
+bc = '2018316578845'# str(line['Штрихкод'] )[0:-2]
+create_1C_barcod(bc, name)

@@ -1,5 +1,5 @@
 class ModelWithAddin:
-    def __init__(self, model, brand,compatibility,name,modelAddin, cameraType, price) -> None:
+    def __init__(self, model, brand,compatibility,name,modelAddin, cameraType, price, caseType) -> None:
         self.colorList = []
         self.cameraType = cameraType
         self.model = model
@@ -15,6 +15,7 @@ class ModelWithAddin:
         self.special = 'защитный чехол#противоударный'
         self.lock = 'нет застежки'
         self.type = 'Накладка'
+        self.caseType = caseType
 
     def setGlobalSiliconAddin(self):
         pass
