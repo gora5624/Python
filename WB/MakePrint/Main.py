@@ -8,8 +8,9 @@ from PyQt5 import QtWidgets
 from ui.MakeBookPrintUi import Ui_Form
 # импортируем дополнительные скрипты
 from Moduls.makeImageBookWithNameModel import makeImageBookWithNameModel
-from Moduls.AddSkriptForMakeBookImage import createExcel, deleteImage
-from Moduls.makeImageSilicon import createAllSiliconImage, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon
+from Moduls.AddSkriptForMakeBookImage import createExcel, deleteImage, copyImage
+from Moduls.makeImageSilicon import createAllSiliconImage
+from Folders import pathToDoneBookImageWithName, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon
 from Moduls.AddSkriptForMakeSiliconImage import createExcelSilicon, markerForAllModel, copyImage, chekImage
 from Moduls.GetCardAsincio import getListCard
 # импортируем дополнительные классы
@@ -24,12 +25,12 @@ start_time = time.time()
 class mameBookPrint(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(mameBookPrint, self).__init__(parent)
+        self.bookName = 'Книжки'
+        self.siliconName = 'Силикон'
         self.listModelForExcel = []
         self.ui = Ui_Form()
         self.ui.setupUi(self)
-        self.ui.CreatePrint.clicked.connect(self.btnMakePrintClicked)
-        self.ui.CreateExcel.clicked.connect(self.btnMakeExcelClicked)
-        self.ui.DeleteImage.clicked.connect(self.btnMakeDeleteIamge)
+        self.ui.CreatePrint.clicked.connect(self.btnMakeBookPrint)
         self.ui.tabWidget.tabBarClicked.connect(self.fillSiliconMaskList)
         self.ui.ChekMask.clicked.connect(self.fillSiliconMaskList)
         self.ui.CreateSiliconImage.clicked.connect(self.btnCreateSiliconImage)
@@ -37,6 +38,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.ChekImage.clicked.connect(self.btnChekImage)
         self.ui.ApplyAddin.clicked.connect(self.btnApplyAddin)
         self.ui.CreateCase.clicked.connect(self.btnCreateCase)
+        self.ui.updateListModel.clicked.connect(self.updateModelList)
         self.updeteListFile()
         self.updateModelList()
 
@@ -111,6 +113,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
                             negFlag = True
                             continue
             if not negFlag:
+                for mask in listdir(pathToMaskFolderSilicon):
+                    self.ui.textSiliconMask.setText(mask + '\n')
                 self.ui.textSiliconMask.setText('Все маски готовы к работе\n')
     
 
@@ -151,16 +155,19 @@ class mameBookPrint(QtWidgets.QMainWindow):
     def updateModelList(self):
         self.ui.ModelSelector.clear()
         self.ui.ModelSelector.addItem(markerForAllModel)
-        listModel = listdir(pathToMaskFolderSilicon)
+        listModel = listdir(pathToDoneSiliconImageSilicon)
         for model in listModel:
             if isdir(joinPath(pathToMaskFolderSilicon,model)):
-                self.ui.ModelSelector.addItem(model)
+                self.ui.ModelSelector.addItem(self.siliconName + ' '  + model)
+        listModel = listdir(pathToDoneBookImageWithName)
+        for model in listModel:
+            if isdir(joinPath(pathToDoneBookImageWithName,model)):
+                self.ui.ModelSelector.addItem(self.bookName + ' ' + model)
 
 
     def btnCreateSiliconImage(self):
         createAllSiliconImage(pathToMaskFolderSilicon,6)
         self.updateModelList()
-        copyImage()
       
 
     def btnApplyAddin(self, curModel = False):
@@ -179,12 +186,21 @@ class mameBookPrint(QtWidgets.QMainWindow):
             modelAddin = self.ui.textSiliconModel.toPlainText()
             cameraType = self.ui.CameraType.currentText()
             price = self.ui.textPrice.toPlainText()
-            for model in listModel:
-                modelWithAddin = ModelWithAddin(model, brand, compability, name, modelAddin, cameraType, price)
+            for modelTMP in listModel:
+                if self.siliconName in modelTMP:
+                    caseType = self.siliconName
+                elif self.bookName in modelTMP:
+                    caseType = self.bookName
+                model = modelTMP.replace(self.siliconName, '').strip()
+                modelWithAddin = ModelWithAddin(model, brand, compability, name, modelAddin, cameraType, price, caseType)
                 modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, model))
                 self.listModelForExcel.append(modelWithAddin)
                 self.ui.textSiliconMask.setText('Все модели из списка записаны\n')
         else:
+            if self.siliconName in modelTMP:
+                    caseType = self.siliconName
+            elif self.bookName in modelTMP:
+                    caseType = self.bookName
             if self.listModelForExcel != []:
                 for i, item in enumerate(self.listModelForExcel):
                     if item.model == curModel:
@@ -195,7 +211,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
                             modelAddin = self.ui.textSiliconModel.toPlainText()
                             cameraType = self.ui.CameraType.currentText()
                             price = self.ui.textPrice.toPlainText()
-                            self.listModelForExcel[i] = ModelWithAddin(curModel, brand, compability, name, modelAddin, cameraType, price)
+                            self.listModelForExcel[i] = ModelWithAddin(curModel, brand, compability, name, modelAddin, cameraType, price, caseType)
                             self.listModelForExcel[i].colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel))
                             self.ui.textSiliconMask.setText(curModel+' перезаписана\n')
                             break
@@ -207,7 +223,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 modelAddin = self.ui.textSiliconModel.toPlainText()
                 cameraType = self.ui.CameraType.currentText()
                 price = self.ui.textPrice.toPlainText()
-                modelWithAddin = ModelWithAddin(curModel, brand, compability, name, modelAddin, cameraType, price)
+                modelWithAddin = ModelWithAddin(curModel, brand, compability, name, modelAddin, cameraType, price, caseType)
                 modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel))
                 self.listModelForExcel.append(modelWithAddin)
                 self.ui.textSiliconMask.setText(curModel+' записан\n')
@@ -219,12 +235,11 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 modelAddin = self.ui.textSiliconModel.toPlainText()
                 cameraType = self.ui.CameraType.currentText()
                 price = self.ui.textPrice.toPlainText()
-                modelWithAddin = ModelWithAddin(curModel, brand, compability, name, modelAddin, cameraType, price)
+                modelWithAddin = ModelWithAddin(curModel, brand, compability, name, modelAddin, cameraType, price, caseType)
                 modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel))
                 self.listModelForExcel.append(modelWithAddin)
                 self.ui.textSiliconMask.setText(curModel+' записан\n')
                 return None
-        pass
         
 
 
@@ -250,16 +265,19 @@ class mameBookPrint(QtWidgets.QMainWindow):
             self.createMSGError('Неизвестная ошибка при создании.')
 
     def btnMakeDeleteIamge(self):
-        deleteImage()
+        # deleteImage()
+        pass
 
 
-    def btnMakePrintClicked(self):
+    def btnMakeBookPrint(self):
         modelBrand = self.ui.textEditBrand.toPlainText()
         if modelBrand == '':
             self.createMSGError('Поле бренд не заполенно!')
+            return 0
         modelModel = self.ui.textEditModel.toPlainText()
         if modelModel == '':
             self.createMSGError('Поле модель не заполенно!')
+            return 0
         colorList = self.checkColorBox()
         if colorList == 0:
             return 0

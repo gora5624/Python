@@ -6,10 +6,11 @@ import sys
 sys.path.append(abspath(joinPath(__file__,'../../../..')))
 import pandas
 from my_mod.my_lib import  read_xlsx, multiReplace
+from shutil import copytree, ignore_patterns
 from PIL import Image
 import time
 import requests
-from Folders import pathToDoneBookImageWithName, pathToCategoryList
+from Folders import pathToDoneBookImageWithName, pathToCategoryList, pathToUploadFolderLocal, pathToSecondImageUploadFolder, pathToSecondImagesBook
 
 
 bookCaseColorDict = {'бордовый': 'VNS',
@@ -78,33 +79,14 @@ def createModelExcel(model):
                     'Любимые герои': art['Любимые герои'],
                     'Модель': modelForExcel,
                     'Путь к файлу': joinPath(pathToDoneBookImageWithName, model,color,art['Принт']+'.jpg')}
-            data = {'Баркод': listBarcodes[i],
-                'Бренд': modelClass.brand,
-                'Наименование': modelClass.name,
-                'Розничная цена': modelClass.price,
-                'Артикул поставщика': '_'.join([model.replace(' ','_'),'PRNT',art['Код цвета'], art['Код камеры'],art['Код категории']]),
-                'Артикул цвета': art['Артикул цвета'],
-                'Описание': modelClass.description,
-                'Тнвэд': modelClass.TNVED,
-                'Комплектация': modelClass.equipment,
-                'Повод': modelClass.reason,
-                'Особенности чехла': modelClass.special,
-                'Вид застежки': modelClass.lock,
-                'Рисунок': art['Рисунок'],
-                'Любимые герои': art['Любимые герои'],
-                'Совместимость': modelClass.compatibility,
-                'Тип чехлов': modelClass.type,
-                'Модель':modelClass.model,
-                'Основная характеристика': art['Принт'],
-                'Название 1С': multiReplace(nameFor1C, reductionDict),
-                'Название полное': nameFor1C,
-                'Название полное с принтом': nameFor1C + ' ' + art['Принт'],
-                'Размер печать': '',
-                'Путь к файлу': '#'.join(imageList)}
             listColor.append(data)
         listColorpd = pandas.DataFrame(listColor)
         listColorpd.to_excel(joinPath(pathToDoneBookImageWithName, model,color)+'.xlsx', index=False)
 
+
+def copyImage():
+    copytree(pathToDoneBookImageWithName, pathToUploadFolderLocal + r'\\Fashion', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
+    copytree(pathToSecondImagesBook, pathToSecondImageUploadFolder + r'\\Fashion', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
 
 
 def createExcel(resp):
