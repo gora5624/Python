@@ -79,9 +79,9 @@ def genArtColor(modelClass, colorCase, pathToImage):
         else:
             artColor_2 = 'UNKNOW_COLOR'
         if modelClass.cameraType == 'с закрытой камерой':
-            artColor_3 = 'OCM'
-        elif modelClass.cameraType == 'с открытой камерой':
             artColor_3 = 'CCM'
+        elif modelClass.cameraType == 'с открытой камерой':
+            artColor_3 = 'OCM'
         else:
             artColor_3 = 'UCM'
         categoryList = read_xlsx(pathToCategoryList)
@@ -164,7 +164,7 @@ def generate_bar_WB(count):
             r = requests.post(url, data=data.format(
                 str(count)).replace('(', '{').replace(')', '}'), headers=headers)
             listBarcode.extend(r.json()['result']['barcodes'])
-            if 'err barcode service' not in r.text:
+            if 'err' not in r.text:
                 break
         except:
             print(
@@ -227,7 +227,8 @@ def createExcelSilicon(modelList):
     pool = multiprocessing.Pool(6)
     for model in modelList:
         for color in model.colorList:
-            pool.apply_async(CreateExcelForFolder, args=(model,color,))
+            if '.xlsx' not in color:
+                pool.apply_async(CreateExcelForFolder, args=(model,color,))
     pool.close()
     pool.join()
     for folder in listdir(pathToDoneSiliconImageSilicon):

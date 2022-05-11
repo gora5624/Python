@@ -121,7 +121,7 @@ def changeCard(cardBody, stuffLine, TmpLIst):
         Token = file.read()
         file.close()
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
-    cardBody['countryProduction'] = 'Китай'
+    # cardBody['countryProduction'] = 'Китай'
     for ad in list(stuffLine.keys())[1:]:
         flag = True
         for addin in cardBody['addin']:
@@ -133,7 +133,7 @@ def changeCard(cardBody, stuffLine, TmpLIst):
                         pars.append({'value': a.strip()})
                 addin['params'] = pars
                 flag = False
-        if flag:
+        if flag:    
             par = stuffLine[ad].split(';')
             pars = []
             for a in par:
