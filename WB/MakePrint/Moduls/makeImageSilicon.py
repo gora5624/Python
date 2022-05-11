@@ -7,7 +7,8 @@ sys.path.append(abspath(joinPath(__file__,'../..')))
 from PIL import Image
 import time
 from copy import copy
-from Folders import pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToPrintImageFolderAll, pathToPrintImageFolderWithOutBack, pathToSecondImagesFolderSilicon
+from shutil import copytree, ignore_patterns
+from Folders import pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToPrintImageFolderAllSil, pathToPrintImageFolderWithOutBackSil, pathToSecondImagesFolderSilicon, pathToUploadFolderLocal, pathToSecondImageUploadFolder
 
 
 maxCPUUse = 6
@@ -93,7 +94,7 @@ def chekPath(path=str):
 
 def createSiliconImage(pathToMaskFolder, countCPU):
     if "проз." in pathToMaskFolder.lower() or "прозрачный" in pathToMaskFolder.lower():
-        pathToPrintFolder = pathToPrintImageFolderAll
+        pathToPrintFolder = pathToPrintImageFolderAllSil
     else:
         try:
             pathToSecondImageFolder = pathToMaskFolder.replace(pathToMaskFolderSilicon,pathToSecondImagesFolderSilicon)
@@ -103,7 +104,7 @@ def createSiliconImage(pathToMaskFolder, countCPU):
             secondImage.save(joinPath(pathToSecondImageFolder, '2.jpg'),"JPEG",optimize=True, progressive=True, quality=70)
         except:
             print('Не удалось скопировать 2е фото для {}'.format(pathToMaskFolder))
-        pathToPrintFolder = pathToPrintImageFolderWithOutBack
+        pathToPrintFolder = pathToPrintImageFolderWithOutBackSil
     chekPath(pathToMaskFolder)
     pathToMask = joinPath(pathToMaskFolder,'mask.png')
     #xLeft, xRight, yTop, yBott = getSizeAndPos(imageMask)
@@ -132,6 +133,11 @@ def createSiliconImage(pathToMaskFolder, countCPU):
             combineImage(imageMask, imagePrintName, imageBack, printsize, printPaste, pathToSave, pathToPrintFolder)
 
 
+def copyImage():
+    copytree(pathToDoneSiliconImageSilicon, pathToUploadFolderLocal + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
+    copytree(pathToSecondImagesFolderSilicon, pathToSecondImageUploadFolder + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
+
+
 def createAllSiliconImage(pathToSiliconMask, maxCPUUse):
     start_time = time.time()
     #i = 0
@@ -152,3 +158,4 @@ def createAllSiliconImage(pathToSiliconMask, maxCPUUse):
     #                 p.join()
     # p.join()
     print("--- %s seconds ---" % (time.time() - start_time))
+    copyImage()

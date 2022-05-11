@@ -191,15 +191,18 @@ class mameBookPrint(QtWidgets.QMainWindow):
                     caseType = self.siliconName
                 elif self.bookName in modelTMP:
                     caseType = self.bookName
-                model = modelTMP.replace(self.siliconName, '').strip()
-                modelWithAddin = ModelWithAddin(model, brand, compability, name, modelAddin, cameraType, price, caseType)
-                modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, model))
+                model = modelTMP.replace(caseType,'').strip()
+                modelWithAddin = ModelWithAddin(model.replace(caseType,'').strip(), brand, compability, name, modelAddin, cameraType, price, caseType)
+                if caseType == self.bookName:
+                    modelWithAddin.colorList = listdir(joinPath(pathToDoneBookImageWithName, model.replace(caseType,'').strip()))
+                else:
+                    modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, model.replace(caseType,'').strip()))
                 self.listModelForExcel.append(modelWithAddin)
                 self.ui.textSiliconMask.setText('Все модели из списка записаны\n')
         else:
-            if self.siliconName in modelTMP:
+            if self.siliconName in curModel:
                     caseType = self.siliconName
-            elif self.bookName in modelTMP:
+            elif self.bookName in curModel:
                     caseType = self.bookName
             if self.listModelForExcel != []:
                 for i, item in enumerate(self.listModelForExcel):
@@ -211,8 +214,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
                             modelAddin = self.ui.textSiliconModel.toPlainText()
                             cameraType = self.ui.CameraType.currentText()
                             price = self.ui.textPrice.toPlainText()
-                            self.listModelForExcel[i] = ModelWithAddin(curModel, brand, compability, name, modelAddin, cameraType, price, caseType)
-                            self.listModelForExcel[i].colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel))
+                            self.listModelForExcel[i] = ModelWithAddin(curModel.replace(caseType,'').strip(), brand, compability, name, modelAddin, cameraType, price, caseType)
+                            self.listModelForExcel[i].colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
                             self.ui.textSiliconMask.setText(curModel+' перезаписана\n')
                             break
                         else:
@@ -223,8 +226,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 modelAddin = self.ui.textSiliconModel.toPlainText()
                 cameraType = self.ui.CameraType.currentText()
                 price = self.ui.textPrice.toPlainText()
-                modelWithAddin = ModelWithAddin(curModel, brand, compability, name, modelAddin, cameraType, price, caseType)
-                modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel))
+                modelWithAddin = ModelWithAddin(curModel.replace(caseType,'').strip(), brand, compability, name, modelAddin, cameraType, price, caseType)
+                modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
                 self.listModelForExcel.append(modelWithAddin)
                 self.ui.textSiliconMask.setText(curModel+' записан\n')
                 return None
@@ -236,7 +239,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 cameraType = self.ui.CameraType.currentText()
                 price = self.ui.textPrice.toPlainText()
                 modelWithAddin = ModelWithAddin(curModel, brand, compability, name, modelAddin, cameraType, price, caseType)
-                modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel))
+                modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
                 self.listModelForExcel.append(modelWithAddin)
                 self.ui.textSiliconMask.setText(curModel+' записан\n')
                 return None
