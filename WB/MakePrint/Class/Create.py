@@ -46,7 +46,7 @@ class WBnomenclaturesCreater:
                 response = requests.post(url=self.mainUrl, headers={
                             'Authorization': '{}'.format(Token)}, json=datajson)
                 if response.status_code != 200:
-                    print('Ошибка ВБ попытка {}'.format(str(countTry))
+                    print('Ошибка ВБ попытка {}'.format(str(countTry)))
                     continue
                 else:
                     print('Номенклатура создана, код {}, текст ответа {}'.format(str(response.status_code), response.text))
