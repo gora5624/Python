@@ -1,14 +1,14 @@
 import sys
 import xlrd
 from os.path import join as joinPath, exists
-from os import listdir, remove
+from os import remove
 
 
 
 # Режим отдалки
 DEBUG = False
 # Неизменяемые настройки из файла конфигурации
-pathToOrder = sys.argv[1].replace('#', ' ') if DEBUG == False else  r'C:\Users\Георгий\Downloads\Выгрузка_Документ производства_000000002_от_11_03_2022_стекла.xlsx'
+pathToOrder = sys.argv[1].replace('#', ' ') if DEBUG == False else  r'C:\Users\Георгий\Downloads\A1_122 от 08.05.2022.xlsx'
 if not DEBUG:
     pathToOrderTXTForCorel = joinPath(r'C:\Users\Public\Documents\CutHelp', 'order_{}.txt')
     pathToConfigFile = joinPath(r'C:\Users\Public\Documents\CutHelp', 'Config.txt')
@@ -20,6 +20,7 @@ else:
 # Изменяемые настройки из файла конфигурации
 # Настройки по умолчанию, если не заданы аналогичные в файле "Config.txt". Парамерты в конфиге считаются главными и будут являться действующими
 pathToMakets = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Макеты для новой программы'
+pathToMaketsFile = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Макеты для новой программы\Сопоставление макетов.xlsx'
 addForOrder = {"Глянцевые": 'clear',
                 "Матовые": 'mate'}
 
@@ -66,26 +67,41 @@ def applyConfig():
                 elif lineConfigList[0].strip() == 'addForOrder':
                     addForOrderConf= {"Глянцевые": lineConfigList[1].split(',')[0].strip(),
                                     "Матовые": lineConfigList[1].split(',')[1].strip()}
+                elif lineConfigList[0].strip() == 'pathToMaketsFile':
+                    pathToMaketsFileConf = lineConfigList[1].strip() 
+
         fileConfig.close()
         # Применяем занчения из временных переменных к глобальным переменным только после полного прочения файла
         # Если при прочтении возникло исключение, настройки будут по умолчанию
-        global pathToMakets, addForOrder
+        global pathToMakets, addForOrder, pathToMaketsFile
         pathToMakets = pathToMaketsConf
         addForOrder = addForOrderConf
+        pathToMaketsFile = pathToMaketsFileConf
     else:
         input('Файл конфигурации по адресу {} не обнаружен. Настройки взяты по умолчанию. Путь к макетам {}. Нажмите Enter чтобы продолжить'.format(pathToConfigFile, pathToMakets))
 
 
 def makeTXTForCorel(dataFromOrder, add):
     listPathToFile = []
-    
+    count = 1
     for lineOrder in dataFromOrder:
+        count = 1
+        if 'Комплект 2' in lineOrder['Название']:
+            count = 2
+        elif 'Комплект 3' in lineOrder['Название']:
+            count = 3
+        elif 'Комплект 4' in lineOrder['Название']:
+            count = 4
+        elif 'Комплект 5' in lineOrder['Название']:
+            count = 5
         flagAdd = False
         barcod = lineOrder['ШК'] if type(lineOrder['ШК']) == str else str(lineOrder['ШК'])[0:-2] if type(lineOrder['ШК']) == float else str(lineOrder['ШК'])
         orderNum  = lineOrder['Номер задания'] if type(lineOrder['Номер задания']) == str else str(lineOrder['Номер задания'])[0:-2] if type(lineOrder['Номер задания']) == float else str(lineOrder['Номер задания'])
-        for nameMaketFile in listdir(pathToMakets):
-            if barcod in nameMaketFile:
-                listPathToFile.append({'Путь к макету': joinPath(pathToMakets, nameMaketFile),
+        a = read_xlsx(pathToMaketsFile)
+        for lineMaketFile in  read_xlsx(pathToMaketsFile):
+            if barcod in (lineMaketFile['ШК'] if type(lineMaketFile['ШК']) == str else str(lineMaketFile['ШК'])[0:-2]):
+                for i in range(count):
+                    listPathToFile.append({'Путь к макету': joinPath(pathToMakets, lineMaketFile['Файл']),
                                        'Номер задания': orderNum})
                 flagAdd = True
                 break

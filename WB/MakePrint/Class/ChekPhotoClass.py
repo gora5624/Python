@@ -42,7 +42,7 @@ class ImageCheker:
             listImages.update(dataTMP)
         return listImages
 
-    def setImageForCards(self):
+    def setImageForCards(self, force):
         self.listCardsForUpdate = []
         for card in self.listCards:
             cardUpdate = True
@@ -56,7 +56,18 @@ class ImageCheker:
                         else:
                             for addin in nomenclature['addin']:
                                 if addin['type'] == 'Фото':
-                                    if len(addin['params']) == len(self.listImages[barcod]):
+                                    # if len(addin['params']) == len(self.listImages[barcod]):
+                                    #     imageUpdate = True
+                                    #     cardUpdate = True * cardUpdate
+                                    #     continue
+                                    if force == 2:
+                                        TMPList = []
+                                        for imageURL in self.listImages[barcod]:
+                                            dataTMP = {'value': imageURL}
+                                            TMPList.append(dataTMP)
+                                            addin['params'] = TMPList
+                                        cardUpdate = False * cardUpdate
+                                    elif len(addin['params']) == len(self.listImages[barcod]):
                                         imageUpdate = True
                                         cardUpdate = True * cardUpdate
                                         continue

@@ -92,16 +92,16 @@ def chekPath(path=str):
         makedirs(fullpathToDoneSiliconImage)
 
 
-def createSiliconImage(pathToMaskFolder, countCPU):
+def createSiliconImage(pathToMaskFolder, countCPU, addImage):
     if "проз." in pathToMaskFolder.lower() or "прозрачный" in pathToMaskFolder.lower():
         pathToPrintFolder = pathToPrintImageFolderAllSil
     else:
         try:
             pathToSecondImageFolder = pathToMaskFolder.replace(pathToMaskFolderSilicon,pathToSecondImagesFolderSilicon)
             chekPath(pathToSecondImageFolder)
-            secondImage = Image.open(joinPath(pathToMaskFolder, '2.jpg'))
+            secondImage = Image.open(joinPath(pathToMaskFolder, addImage))
             secondImage = secondImage.resize((secondImage.size[0]//3, secondImage.size[1]//3))
-            secondImage.save(joinPath(pathToSecondImageFolder, '2.jpg'),"JPEG",optimize=True, progressive=True, quality=70)
+            secondImage.save(joinPath(pathToSecondImageFolder, addImage),"JPEG",optimize=True, progressive=True, quality=70)
         except:
             print('Не удалось скопировать 2е фото для {}'.format(pathToMaskFolder))
         pathToPrintFolder = pathToPrintImageFolderWithOutBackSil
@@ -138,7 +138,7 @@ def copyImage():
     copytree(pathToSecondImagesFolderSilicon, pathToSecondImageUploadFolder + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
 
 
-def createAllSiliconImage(pathToSiliconMask, maxCPUUse):
+def createAllSiliconImage(pathToSiliconMask, maxCPUUse, addImage):
     start_time = time.time()
     #i = 0
     pool = multiprocessing.Pool(maxCPUUse)
@@ -147,7 +147,7 @@ def createAllSiliconImage(pathToSiliconMask, maxCPUUse):
         if isdir(pathToModel):
             for color in listdir(pathToModel):
                 pathToColor = joinPath(pathToModel,color)
-                pool.apply_async(createSiliconImage, args=(pathToColor,1))
+                pool.apply_async(createSiliconImage, args=(pathToColor,1, addImage))
     pool.close()
     pool.join()
     #             p = multiprocessing.Process(target=createSiliconImage, args=(pathToColor,1))

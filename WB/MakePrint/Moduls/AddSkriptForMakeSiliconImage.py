@@ -176,7 +176,7 @@ def generate_bar_WB(count):
     return listBarcode
 
 
-def CreateExcelForFolder(modelClass=ModelWithAddin, color=str):
+def CreateExcelForFolder(modelClass=ModelWithAddin, color=str, addImage=str):
     listColor = []
     model = modelClass.model
     pathToDone = pathToDoneSiliconImageSilicon if modelClass.caseType == 'Силикон' else pathToDoneBookImageWithName
@@ -188,6 +188,8 @@ def CreateExcelForFolder(modelClass=ModelWithAddin, color=str):
         imageList = [art['Путь к картинке'].replace(pathToDone, pathToUploadWeb + '/Силикон').replace('\\','/')]
         if exists(joinPath(pathToSecondImagesFolderSilicon, model, color, '2.jpg')):
             imageList.append(joinPath(pathToSecondImagesFolderSilicon, model, color, '2.jpg').replace(pathToSecondImagesFolderSilicon, pathToUploadSecondWeb + '/Силикон').replace('\\','/'))
+        elif exists(joinPath(pathToSecondImagesFolderSilicon, model, color, '3.jpg')):
+            imageList.append(joinPath(pathToSecondImagesFolderSilicon, model, color, '3.jpg').replace(pathToSecondImagesFolderSilicon, pathToUploadSecondWeb + '/Силикон').replace('\\','/'))    
         data = {'Баркод': listBarcodes[i],
                 'Бренд': modelClass.brand,
                 'Наименование': modelClass.name,
@@ -222,13 +224,13 @@ def copyImage():
 
 
 
-def createExcelSilicon(modelList):
+def createExcelSilicon(modelList, addImage):
     listImageAll = []
     pool = multiprocessing.Pool(6)
     for model in modelList:
         for color in model.colorList:
             if '.xlsx' not in color:
-                pool.apply_async(CreateExcelForFolder, args=(model,color,))
+                pool.apply_async(CreateExcelForFolder, args=(model,color,addImage, ))
     pool.close()
     pool.join()
     for folder in listdir(pathToDoneSiliconImageSilicon):
@@ -239,11 +241,11 @@ def createExcelSilicon(modelList):
     listImageAllpd.to_excel(pathToDoneSiliconImageSilicon + '.xlsx', index=False)
 
 
-def chekImage(fileName, supplier):
+def chekImage(fileName, supplier, force):
     pathToFileForUpload = joinPath(pathToDoneSiliconImageSilicon, fileName)
     listCase = read_xlsx(pathToFileForUpload)
     a = ImageCheker(listCase, supplier)
-    a.setImageForCards()
+    a.setImageForCards(force)
     a.updateCardsStart()
     return a.status
 
