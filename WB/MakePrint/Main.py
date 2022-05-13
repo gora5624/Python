@@ -1,9 +1,11 @@
 import multiprocessing
 import sys
 from os import listdir
-from os.path import join as joinPath, isdir, isfile
+from os.path import join as joinPath, isdir, isfile, abspath, exists
+sys.path.append(abspath(joinPath(__file__,'../../..')))
 import time
 from PyQt5 import QtWidgets
+from my_mod.my_lib import file_exists
 # импортируем интерфейс
 from ui.MakeBookPrintUi import Ui_Form
 # импортируем дополнительные скрипты
@@ -62,7 +64,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
     def btnChekImage(self):
         fileName = self.ui.FileSelector.currentText()
         mode = self.ui.IPSelector.currentText()
-        status = chekImage(fileName, mode)
+        force = self.ui.ForceUpdate.checkState()
+        status = chekImage(fileName, mode, force)
         self.ui.textSiliconMask.setText('{} готов.\nСтатус: {}'.format(fileName, status))
         if status == 'Во всех карточках присутствуют фото.':
             self.ui.textSiliconMask.setStyleSheet("background-color: green;")
@@ -155,18 +158,21 @@ class mameBookPrint(QtWidgets.QMainWindow):
     def updateModelList(self):
         self.ui.ModelSelector.clear()
         self.ui.ModelSelector.addItem(markerForAllModel)
-        listModel = listdir(pathToDoneSiliconImageSilicon)
-        for model in listModel:
-            if isdir(joinPath(pathToMaskFolderSilicon,model)):
-                self.ui.ModelSelector.addItem(self.siliconName + ' '  + model)
-        listModel = listdir(pathToDoneBookImageWithName)
-        for model in listModel:
-            if isdir(joinPath(pathToDoneBookImageWithName,model)):
-                self.ui.ModelSelector.addItem(self.bookName + ' ' + model)
+        if exists(pathToDoneSiliconImageSilicon):
+            listModel = listdir(pathToDoneSiliconImageSilicon)
+            for model in listModel:
+                if isdir(joinPath(pathToMaskFolderSilicon,model)):
+                    self.ui.ModelSelector.addItem(self.siliconName + ' '  + model)
+        if exists(pathToDoneBookImageWithName):
+            listModel = listdir(pathToDoneBookImageWithName)
+            for model in listModel:
+                if isdir(joinPath(pathToDoneBookImageWithName,model)):
+                    self.ui.ModelSelector.addItem(self.bookName + ' ' + model)
 
 
     def btnCreateSiliconImage(self):
-        createAllSiliconImage(pathToMaskFolderSilicon,6)
+        addImage = self.ui.AddPhotoSelector.currentText()
+        createAllSiliconImage(pathToMaskFolderSilicon,6, addImage)
         self.updateModelList()
       
 
@@ -238,7 +244,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 modelAddin = self.ui.textSiliconModel.toPlainText()
                 cameraType = self.ui.CameraType.currentText()
                 price = self.ui.textPrice.toPlainText()
-                modelWithAddin = ModelWithAddin(curModel, brand, compability, name, modelAddin, cameraType, price, caseType)
+                modelWithAddin = ModelWithAddin(curModel.replace(caseType,'').strip(), brand, compability, name, modelAddin, cameraType, price, caseType)
                 modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
                 self.listModelForExcel.append(modelWithAddin)
                 self.ui.textSiliconMask.setText(curModel+' записан\n')
@@ -247,9 +253,10 @@ class mameBookPrint(QtWidgets.QMainWindow):
 
 
     def btnCreateExcelForSilicon(self):
+        addImage = self.ui.AddPhotoSelector.currentText()
         if self.listModelForExcel == []:
             self.btnApplyAddin(True)
-        p = multiprocessing.Process(target=createExcelSilicon, args=(self.listModelForExcel, ))
+        p = multiprocessing.Process(target=createExcelSilicon, args=(self.listModelForExcel, addImage, ))
         p.start()
         p.join()
         self.updeteListFile()

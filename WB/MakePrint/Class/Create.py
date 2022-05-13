@@ -37,9 +37,17 @@ class WBnomenclaturesCreater:
                     nomenclature.SetUUID(id)
                     card.AddNomenklatures(nomenclature.GetStruct())
                     tmpListCard.update({line['Артикул поставщика']:card})
+        countTry = 0
         for item in tmpListCard.values():
-            datajson = item.GetStruct()
-            datajson
-            response = requests.post(url=self.mainUrl, headers={
-                        'Authorization': '{}'.format(Token)}, json=datajson)
-            print('Номенклатура создана, код {}, текст ответа {}'.format(str(response.status_code), response.text))
+            countTry = 0
+            while countTry <100:
+                datajson = item.GetStruct()
+                datajson
+                response = requests.post(url=self.mainUrl, headers={
+                            'Authorization': '{}'.format(Token)}, json=datajson)
+                if response.status_code != 200:
+                    print('Ошибка ВБ попытка {}'.format(str(countTry))
+                    continue
+                else:
+                    print('Номенклатура создана, код {}, текст ответа {}'.format(str(response.status_code), response.text))
+                    break
