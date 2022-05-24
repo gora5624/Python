@@ -92,7 +92,7 @@ def chekPath(path=str):
         makedirs(fullpathToDoneSiliconImage)
 
 
-def createSiliconImage(pathToMaskFolder, countCPU, addImage):
+def createSiliconImage(pathToMaskFolder, countCPU, addImage, mode):
     if "проз." in pathToMaskFolder.lower() or "прозрачный" in pathToMaskFolder.lower():
         pathToPrintFolder = pathToPrintImageFolderAllSil
     else:
@@ -100,19 +100,21 @@ def createSiliconImage(pathToMaskFolder, countCPU, addImage):
             pathToSecondImageFolder = pathToMaskFolder.replace(pathToMaskFolderSilicon,pathToSecondImagesFolderSilicon)
             chekPath(pathToSecondImageFolder)
             secondImage = Image.open(joinPath(pathToMaskFolder, addImage))
-            secondImage = secondImage.resize((secondImage.size[0]//3, secondImage.size[1]//3))
+            sk = int(secondImage.size[0]/900)
+            secondImage = secondImage.resize((secondImage.size[0]//sk, secondImage.size[1]//sk))
             secondImage.save(joinPath(pathToSecondImageFolder, addImage),"JPEG",optimize=True, progressive=True, quality=70)
         except:
             print('Не удалось скопировать 2е фото для {}'.format(pathToMaskFolder))
-        pathToPrintFolder = pathToPrintImageFolderWithOutBackSil
+        pathToPrintFolder = pathToPrintImageFolderWithOutBackSil if mode != 'all' else pathToPrintImageFolderAllSil
     chekPath(pathToMaskFolder)
     pathToMask = joinPath(pathToMaskFolder,'mask.png')
     #xLeft, xRight, yTop, yBott = getSizeAndPos(imageMask)
     imageMask = Image.open(pathToMask).convert('RGBA')
     size = imageMask.size
     pathToBack = pathToMask.replace('mask.png', 'fon.png')
-    imageBack = Image.open(pathToBack).convert('RGBA').resize((size[0]//3, size[1]//3))
-    imageMask = imageMask.resize((size[0]//3, size[1]//3))
+    sk = int(size[0]/900)
+    imageBack = Image.open(pathToBack).convert('RGBA').resize((size[0]//sk, size[1]//sk))
+    imageMask = imageMask.resize((size[0]//sk, size[1]//sk))
     xLeft, xRight, yTop, yBott = getSizeAndPos(imageMask)
     printsize = (xRight-xLeft, yBott-yTop)
     printPaste = (xLeft, yTop)
@@ -138,7 +140,7 @@ def copyImage():
     copytree(pathToSecondImagesFolderSilicon, pathToSecondImageUploadFolder + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
 
 
-def createAllSiliconImage(pathToSiliconMask, maxCPUUse, addImage):
+def createAllSiliconImage(pathToSiliconMask, maxCPUUse, addImage, mode):
     start_time = time.time()
     #i = 0
     pool = multiprocessing.Pool(maxCPUUse)
@@ -146,8 +148,9 @@ def createAllSiliconImage(pathToSiliconMask, maxCPUUse, addImage):
         pathToModel = joinPath(pathToSiliconMask, model)
         if isdir(pathToModel):
             for color in listdir(pathToModel):
-                pathToColor = joinPath(pathToModel,color)
-                pool.apply_async(createSiliconImage, args=(pathToColor,1, addImage))
+                if 'Thumbs.db' not in color:
+                    pathToColor = joinPath(pathToModel,color)
+                    pool.apply_async(createSiliconImage, args=(pathToColor,1, addImage, mode))
     pool.close()
     pool.join()
     #             p = multiprocessing.Process(target=createSiliconImage, args=(pathToColor,1))

@@ -34,6 +34,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.ui.CreatePrint.clicked.connect(self.btnMakeBookPrint)
         self.ui.tabWidget.tabBarClicked.connect(self.fillSiliconMaskList)
+        self.ui.tabWidget.tabBarClicked.connect(self.updeteListFile)
         self.ui.ChekMask.clicked.connect(self.fillSiliconMaskList)
         self.ui.CreateSiliconImage.clicked.connect(self.btnCreateSiliconImage)
         self.ui.CreateExcelForSilicon.clicked.connect(self.btnCreateExcelForSilicon)
@@ -77,7 +78,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.FileSelector.clear()
         for item in listdir(pathToDoneSiliconImageSilicon):
             if isfile(joinPath(pathToDoneSiliconImageSilicon,item)):
-                self.ui.FileSelector.addItem(item)
+                if '~' not in item:
+                    self.ui.FileSelector.addItem(item)
 
 
     def btnCreateCase(self):
@@ -100,21 +102,22 @@ class mameBookPrint(QtWidgets.QMainWindow):
             for mask in listdir(pathToMaskFolderSilicon):
                 if isdir(joinPath(pathToMaskFolderSilicon, mask)):
                     for color in listdir(joinPath(pathToMaskFolderSilicon, mask)):
-                        fileList = listdir(joinPath(pathToMaskFolderSilicon, mask, color))
-                        if 'mask.png' in fileList and 'fon.png' in fileList:
-                            continue
-                        elif 'mask.png' not in fileList and 'fon.png' not in fileList:
-                            self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' ' + color + ' НЕТ МАКСИ И ФОНА\n')
-                            negFlag = True
-                            continue
-                        elif 'mask.png' not in fileList and 'fon.png' in fileList:
-                            self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' ' + color + ' НЕТ МАКСИ\n')
-                            negFlag = True
-                            continue
-                        elif 'mask.png' in fileList and 'fon.png' not in fileList:
-                            self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' ' + color +' НЕТ ФОНА\n')
-                            negFlag = True
-                            continue
+                        if 'Thumbs.db' not in color:
+                            fileList = listdir(joinPath(pathToMaskFolderSilicon, mask, color))
+                            if 'mask.png' in fileList and 'fon.png' in fileList:
+                                continue
+                            elif 'mask.png' not in fileList and 'fon.png' not in fileList:
+                                self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' ' + color + ' НЕТ МАКСИ И ФОНА\n')
+                                negFlag = True
+                                continue
+                            elif 'mask.png' not in fileList and 'fon.png' in fileList:
+                                self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' ' + color + ' НЕТ МАКСИ\n')
+                                negFlag = True
+                                continue
+                            elif 'mask.png' in fileList and 'fon.png' not in fileList:
+                                self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' ' + color +' НЕТ ФОНА\n')
+                                negFlag = True
+                                continue
             if not negFlag:
                 for mask in listdir(pathToMaskFolderSilicon):
                     self.ui.textSiliconMask.setText(mask + '\n')
@@ -172,7 +175,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
 
     def btnCreateSiliconImage(self):
         addImage = self.ui.AddPhotoSelector.currentText()
-        createAllSiliconImage(pathToMaskFolderSilicon,6, addImage)
+        mode = 'all' if self.ui.SiliconeMode.checkState() == 2 else 'withOutBack'
+        createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode)
         self.updateModelList()
       
 

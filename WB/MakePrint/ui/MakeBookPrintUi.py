@@ -92,6 +92,9 @@ class Ui_Form(object):
         self.label_4 = QtWidgets.QLabel(self.tabSilicon)
         self.label_4.setGeometry(QtCore.QRect(190, 100, 61, 20))
         self.label_4.setObjectName("label_4")
+        self.SiliconeMode = QtWidgets.QCheckBox(self.tabSilicon)
+        self.SiliconeMode.setGeometry(QtCore.QRect(0, 130, 131, 17))
+        self.SiliconeMode.setObjectName("SiliconeMode")
         self.tabWidget.addTab(self.tabSilicon, "")
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
@@ -157,7 +160,7 @@ class Ui_Form(object):
         self.label_6.setObjectName("label_6")
 
         self.retranslateUi(Form)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
@@ -182,6 +185,7 @@ class Ui_Form(object):
         self.AddPhotoSelector.setItemText(0, _translate("Form", "2.jpg"))
         self.AddPhotoSelector.setItemText(1, _translate("Form", "3.jpg"))
         self.label_4.setText(_translate("Form", "Доп. фото"))
+        self.SiliconeMode.setText(_translate("Form", "Натянуть все принты"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabSilicon), _translate("Form", "Силикон"))
         self.CreateCase.setText(_translate("Form", "Создать чехлы"))
         self.ChekImage.setText(_translate("Form", "Перезалить фото"))

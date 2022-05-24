@@ -3,7 +3,6 @@ import sys
 sys.path.insert(1, joinpath(sys.path[0], '../..'))
 import requests
 from my_mod.my_lib import read_xlsx
-import pandas
 import json
 import multiprocessing
 
@@ -14,12 +13,8 @@ isChange = 1
 main_path = r'C:\Users\Public\Documents\WBChangeStuff'
 nameListStuff = r'StuffList.xlsx'
 pathToListStuff = joinpath(main_path, nameListStuff)
-#Token_path = joinpath(main_path, r'Token.txt')
-Token_path = joinpath(main_path, r'TokenAbr.txt')
-outListName = 'barcodes and art.xlsx'
-outListName2 = 'barcodes and art2.xlsx'
-outListPath = joinpath(main_path, outListName)
-outListPath2 = joinpath(main_path, outListName2)
+Token_path = joinpath(main_path, r'Token.txt')
+#Token_path = joinpath(main_path, r'TokenAbr.txt')
 
 
 def getIdWithBarcod(barcod):
@@ -116,12 +111,12 @@ def getCardBody(imtID):
         return json.loads(response.text)['result']['card']
 
 
-def changeCard(cardBody, stuffLine, TmpLIst):
+def changeCard(cardBody, stuffLine):
     with open(Token_path, 'r', encoding='UTF-8') as file:
         Token = file.read()
         file.close()
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
-    # cardBody['countryProduction'] = 'Китай'
+    cardBody['countryProduction'] = 'Китай'
     for ad in list(stuffLine.keys())[1:]:
         flag = True
         for addin in cardBody['addin']:
@@ -154,7 +149,9 @@ def changeCard(cardBody, stuffLine, TmpLIst):
             try:
                 response = requests.post(changeCardUrl, headers={
                     'Authorization': '{}'.format(Token)}, json=cardBodyNew)
-                if 'error' not in response.text and 'timeout' not in response.text:
+                if 'connect error' in response.text:
+                    continue
+                if ('error' not in response.text) and ('timeout' not in response.text):
                     break
                 if response.status_code == 200:
                     print(response.text)
@@ -163,13 +160,6 @@ def changeCard(cardBody, stuffLine, TmpLIst):
                     break
             except:
                 print('error changeCard')
-                continue
-    for nomenclature in cardBody['nomenclatures']:
-        for bk in nomenclature['variations'][0]['barcodes']:
-            try:
-                TmpLIst.append({'Артикул WB': nomenclature['nmId'],
-                                'Баркод': bk})
-            except:
                 continue
 
 
@@ -202,7 +192,7 @@ def changeOneCard(cardBody, name):
     print((response.text))
 
 
-def changeBody(stuffLine, TmpLIst, TmpLIst2):
+def changeBody(stuffLine):
     barcod = stuffLine['Баркод'] if type(
         stuffLine['Баркод']) == str else str(stuffLine['Баркод'])[0:-2]
     idStuff = getIdWithBarcod(barcod)
@@ -210,14 +200,14 @@ def changeBody(stuffLine, TmpLIst, TmpLIst2):
         return 0
     cardBody = getCardBody(idStuff)
     # name = stuffLine['Название']
-    changeCard(cardBody, stuffLine, TmpLIst)
+    changeCard(cardBody, stuffLine)
 
 
-def cangeCardFromListStuff(pathToListStuff, TmpLIst, TmpLIst2):
+def cangeCardFromListStuff(pathToListStuff):
     dataFromLIstStuff = read_xlsx(pathToListStuff)
     pool = multiprocessing.Pool(3)
     for stuffLine in dataFromLIstStuff:
-        pool.apply_async(changeBody, args=(stuffLine, TmpLIst, TmpLIst2,))
+        pool.apply_async(changeBody, args=(stuffLine,))
     pool.close()
     pool.join()
 
@@ -234,15 +224,7 @@ def cangeCardFromListStuff(pathToListStuff, TmpLIst, TmpLIst2):
 
 if __name__ == '__main__':
     with multiprocessing.Manager() as manager:
-        TmpLIst = manager.list()
-        TmpLIst2 = manager.list()
-        cangeCardFromListStuff(pathToListStuff, TmpLIst, TmpLIst2)
-        TmpLIst = list(TmpLIst)
-        TmpLIst2 = list(TmpLIst2)
-        TmpLIstpd = pandas.DataFrame(TmpLIst)
-        TmpLIstpd2 = pandas.DataFrame(TmpLIst2)
-        TmpLIstpd.to_excel(outListPath, index=False)
-        TmpLIstpd2.to_excel(outListPath2, index=False)
+        cangeCardFromListStuff(pathToListStuff)
 
 # imtID = getIdWithBarcod('2007341371002')
 # cardBody = getCardBody(imtID)
