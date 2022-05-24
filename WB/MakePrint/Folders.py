@@ -22,6 +22,7 @@ pathToMaskFolderSilicon = r'{}:\Маски силикон'.format(workDisk)
 pathToSecondImagesFolderSilicon = r'{}:\Для загрузки\Вторые картинки\Силикон'.format(workDisk)
 pathToDoneSiliconImageSilicon = r'{}:\Для загрузки\Готовые принты\Силикон'.format(workDisk)
 pathToPrintImageFolderAllSil = r'{}:\Картинки китай\Принты со светом\Все'.format(workDisk)
+#pathToPrintImageFolderWithOutBackSil = r'{}:\Картинки китай\Принты со светом\Все'.format(workDisk)
 pathToPrintImageFolderWithOutBackSil = r'{}:\Картинки китай\Принты со светом\Без фона'.format(workDisk)
 # pathToPrintImageFolderAllSil = r'F:\Картинки китай\натянуть временно'
 # pathToPrintImageFolderWithOutBackSil = r'F:\Картинки китай\натянуть временно'

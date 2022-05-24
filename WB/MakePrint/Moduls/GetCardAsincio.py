@@ -3,6 +3,7 @@ import aiohttp
 import asyncio
 import requests
 import pandas
+from aiohttp import ClientPayloadError, ServerDisconnectedError
 
 main_path = r'C:\Users\Public\Documents\WBUploadImage'
 TokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
@@ -49,7 +50,7 @@ async def main(supplier, filter=None):
     barcodeList = []
     async with aiohttp.ClientSession() as session:
         if filter == None:
-            for offset in range(0,totalCards,100):
+            for offset in range(0,totalCards,10):
                 tasks.append(asyncio.create_task(getCard(session, offset, cardslist, Url, Token, filter)))
             await asyncio.wait(tasks)
         else:
@@ -72,7 +73,7 @@ async def getCard(session, offset, cardslist, Url, Token, filter=None):
                 },
 
                 "query": {
-                    "limit": 100,
+                    "limit": 10,
                     "offset": offset,
                     "total":1000
                 },
@@ -98,7 +99,7 @@ async def getCard(session, offset, cardslist, Url, Token, filter=None):
                 },
 
                 "query": {
-                    "limit": 100,
+                    "limit": 10,
                     "offset": offset,
                     "total":1000
                 },
@@ -106,19 +107,30 @@ async def getCard(session, offset, cardslist, Url, Token, filter=None):
             }
         }
     while True:
-        async with session.post(Url, headers={
-                        'Authorization': '{}'.format(Token)}, json=datajson) as response: 
-                    if response.status != 200:
-                        print(response.status)
-                        print(await response.text())
-                        await asyncio.sleep(2)
-                        continue
-                    else:
-                        jsonCard = await response.json()
-                        if 'error' not in jsonCard.keys():
-                            datajson['params']['query']['offset'] = offset
-                            cardslist.extend(jsonCard['result']['cards'])
-                            break
+        try:
+            async with session.post(Url, headers={
+                            'Authorization': '{}'.format(Token)}, json=datajson) as response: 
+                        if response.status != 200:
+                            print(response.status)
+                            print(await response.text())
+                            await asyncio.sleep(1)
+                            continue
+                        else:
+                            try:
+                                jsonCard = await response.json()
+                            except ClientPayloadError:
+                                await asyncio.sleep(1)
+                                print('error')
+                                continue
+                            if 'error' not in jsonCard.keys():
+                                datajson['params']['query']['offset'] = offset
+                                cardslist.extend(jsonCard['result']['cards'])
+                                break
+        except ServerDisconnectedError:
+            print('error')
+            await asyncio.sleep(1)
+            continue
+
 
 
 def getValue(paramsList):

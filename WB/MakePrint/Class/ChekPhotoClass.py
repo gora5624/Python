@@ -100,9 +100,28 @@ class ImageCheker:
             "params": {
                 "card": card
             }}
-        async with session.post(Url, headers={
-                        'Authorization': '{}'.format(self.token)}, json=json) as response: 
-            print(await response.text())          
+        while True:
+            async with session.post(Url, headers={
+                            'Authorization': '{}'.format(self.token)}, json=json) as response: 
+                if 'Комплектация' in await response.text():
+                    card['addin'].append({'type': 'Комплектация',
+                                            'params':[{'value': 'Чехол 1 шт'}]})
+                    json = {
+                            "id": '1',
+                            "jsonrpc": "2.0",
+                            "params": {
+                                "card": card
+                            }}
+                    continue
+                if 'connect error' in await response.text():
+                    continue
+                if 'error' in await response.text():
+                    print(await response.text())
+                    print(','.join(card["nomenclatures"][0]["variations"][0]['barcodes']))
+                    break
+                print(await response.text())
+                break
+
 
 
     async def updateCardsFromList(self):
