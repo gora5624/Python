@@ -1,3 +1,4 @@
+from audioop import mul
 from os.path import join as joinpath
 import sys
 sys.path.insert(1, joinpath(sys.path[0], '../..'))
@@ -13,12 +14,17 @@ isChange = 1
 main_path = r'C:\Users\Public\Documents\WBChangeStuff'
 nameListStuff = r'StuffList.xlsx'
 pathToListStuff = joinpath(main_path, nameListStuff)
-Token_path = joinpath(main_path, r'Token.txt')
-#Token_path = joinpath(main_path, r'TokenAbr.txt')
+pathToListMultiStuffKar = r'C:\Users\Public\Documents\WBChangeStuff\MultiBrandKar.xlsx'
+pathToListMultiStuffAbr = r'C:\Users\Public\Documents\WBChangeStuff\MultiBrandAbr.xlsx'
+pathToListMobiStuffKar = r'C:\Users\Public\Documents\WBChangeStuff\MultiBrandKar.xlsx'
+pathToListMobiStuffAbr = r'C:\Users\Public\Documents\WBChangeStuff\MultiBrandAbr.xlsx'
+tokenPath_kar = joinpath(main_path, r'Token.txt')
+tokenPath_Arb = joinpath(main_path, r'TokenAbr.txt')
+tokenList = [tokenPath_kar, tokenPath_Arb]
 
 
-def getIdWithBarcod(barcod):
-    with open(Token_path, 'r', encoding='UTF-8') as file:
+def getIdWithBarcod(barcod,tokenPath):
+    with open(tokenPath, 'r', encoding='UTF-8') as file:
         Token = file.read()
         file.close()
     Url = 'https://suppliers-api.wildberries.ru/card/list'
@@ -68,9 +74,9 @@ def getIdWithBarcod(barcod):
     return response.json()['result']['cards'][0]['imtId']
 
 
-def getCardBody(imtID):
+def getCardBody(imtID,tokenPath):
 
-    with open(Token_path, 'r', encoding='UTF-8') as file:
+    with open(tokenPath, 'r', encoding='UTF-8') as file:
         Token = file.read()
         file.close()
     getCardBodyUrl = 'https://suppliers-api.wildberries.ru/card/cardByImtID'
@@ -93,7 +99,6 @@ def getCardBody(imtID):
                 continue
         except:
             continue
-    # print(response.text)
     try:
         return json.loads(response.text)['result']['card']
     except:
@@ -111,8 +116,8 @@ def getCardBody(imtID):
         return json.loads(response.text)['result']['card']
 
 
-def changeCard(cardBody, stuffLine):
-    with open(Token_path, 'r', encoding='UTF-8') as file:
+def changeCard(cardBody, stuffLine,tokenPath):
+    with open(tokenPath, 'r', encoding='UTF-8') as file:
         Token = file.read()
         file.close()
     changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
@@ -128,6 +133,7 @@ def changeCard(cardBody, stuffLine):
                         pars.append({'value': a.strip()})
                 addin['params'] = pars
                 flag = False
+                print(pars)
         if flag:    
             par = stuffLine[ad].split(';')
             pars = []
@@ -163,70 +169,30 @@ def changeCard(cardBody, stuffLine):
                 continue
 
 
-def changeOneCard(cardBody, name):
-    with open(Token_path, 'r', encoding='UTF-8') as file:
-        Token = file.read()
-        file.close()
-    changeCardUrl = 'https://suppliers-api.wildberries.ru/card/update'
-    cardBody['countryProduction'] = 'Китай'
-    for addin in cardBody['addin']:
-        if addin['type'] == 'Бренд':
-            addin['params'] = [
-                {'value': name}]
-    cardBodyNew = {
-        "id": '1',
-        "jsonrpc": "2.0",
-        "params": {
-            "card": cardBody
-        }
-    }
-    while True:
-        try:
-            response = requests.post(changeCardUrl, headers={
-                'Authorization': '{}'.format(Token)}, json=cardBodyNew)
-            if response.status_code == 200 and 'err' not in response.text and 'timeout' not in response.text:
-                break
-        except:
-            print('error changeCard')
-            continue
-    print((response.text))
 
-
-def changeBody(stuffLine):
+def changeBody(stuffLine,tokenPath):
     barcod = stuffLine['Баркод'] if type(
         stuffLine['Баркод']) == str else str(stuffLine['Баркод'])[0:-2]
-    idStuff = getIdWithBarcod(barcod)
+    idStuff = getIdWithBarcod(barcod,tokenPath)
     if idStuff == 0:
         return 0
-    cardBody = getCardBody(idStuff)
-    # name = stuffLine['Название']
-    changeCard(cardBody, stuffLine)
+    cardBody = getCardBody(idStuff,tokenPath)
+    changeCard(cardBody, stuffLine,tokenPath)
 
 
-def cangeCardFromListStuff(pathToListStuff):
+def cangeCardFromListStuff(pathToListStuff,tokenPath):
     dataFromLIstStuff = read_xlsx(pathToListStuff)
     pool = multiprocessing.Pool(3)
     for stuffLine in dataFromLIstStuff:
-        pool.apply_async(changeBody, args=(stuffLine,))
+        pool.apply_async(changeBody, args=(stuffLine,tokenPath,))
     pool.close()
     pool.join()
 
-# def cangeCardFromListStuff(pathToListStuff, TmpLIst, TmpLIst2):
-#     dataFromLIstStuff = read_xlsx(pathToListStuff)
-#     changeBody
-#     pool = multiprocessing.Pool()
-#     for stuffLine in dataFromLIstStuff:
-#         changeBody(stuffLine, TmpLIst, TmpLIst2)
-#         pool.apply_async(changeBody, args=(stuffLine, TmpLIst, TmpLIst2,))
-#     pool.close()
-#     pool.join()
-
 
 if __name__ == '__main__':
-    with multiprocessing.Manager() as manager:
-        cangeCardFromListStuff(pathToListStuff)
-
-# imtID = getIdWithBarcod('2007341371002')
-# cardBody = getCardBody(imtID)
-# name = 'Защитное стекло для Samsung Galaxy M52 (M 52) (5G)|Cтекло Самсунг М52 (М 52) (5G) (не чехол)'
-# changeOneCard(cardBody, name)
+    p1 = multiprocessing.Process(target=cangeCardFromListStuff, args=(pathToListMultiStuffKar,tokenPath_kar,))
+    p2 = multiprocessing.Process(target=cangeCardFromListStuff, args=(pathToListMultiStuffAbr,tokenPath_Arb,))
+    p2.start()
+    p1.start()
+    p1.join()
+    p2.join()

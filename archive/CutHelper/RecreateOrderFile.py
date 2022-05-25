@@ -55,12 +55,15 @@ def readFileWithTable():
 def createFileWithTable(dataTable, dataFromOrder, material):
 
     for table in dataTable.keys():
+        ordersInFile =[]
         dataOrderForExcel = []
         for orderInTable in dataTable[table]:
             for orderLine in dataFromOrder:
                 if orderInTable == orderLine['Номер задания']:
-                    dataOrderForExcel.append(orderLine)
-                    break
+                    if orderLine['Номер задания'] not in ordersInFile:
+                        ordersInFile.append(orderLine['Номер задания'])
+                        dataOrderForExcel.append(orderLine)
+                        break
         dataOrderForExcelpd = pandas.DataFrame(dataOrderForExcel)
         dataOrderForExcelpd.to_excel(pathToOrder.replace('.xlsx','_{}_{}.xlsx'.format(material, table)), index=False)
 
