@@ -6,6 +6,7 @@ import sys
 sys.path.append(abspath(joinPath(__file__,'../..')))
 sys.path.append(abspath(joinPath(__file__,'..')))
 from my_mod.my_lib import  read_xlsx, multiReplace
+from pandas import read_excel
 import requests
 import time
 import pandas
@@ -17,7 +18,7 @@ from shutil import copytree, ignore_patterns
 # from Main import mameBookPrint
 from Folders import pathToCategoryList, pathToUploadFolderLocal, pathToUploadSecondWeb, pathToUploadFolderLocal, pathToSecondImagesFolderSilicon, pathToSecondImageUploadFolder, pathToDoneSiliconImageSilicon, pathToUploadWeb, pathToDoneBookImageWithName
 
-TokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+TokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
 TokenArb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
 markerForAllModel = 'Применить для всех'
 siliconCaseColorDict = {'белый': 'WHT',
@@ -138,7 +139,7 @@ def generate_bar_WB(count):
     listBarcode = []
     countTry = 0
     url = "https://suppliers-api.wildberries.ru/card/getBarcodes"
-    headers = {'Authorization': TokenKar,
+    headers = {'Authorization': TokenArb,
                'Content-Type': 'application/json',
                'accept': 'application/json'}
 
@@ -225,7 +226,7 @@ def copyImage():
 
 
 def createExcelSilicon(modelList, addImage):
-    listImageAll = []
+    listModel = pandas.DataFrame()
     pool = multiprocessing.Pool(6)
     for model in modelList:
         for color in model.colorList:
@@ -235,10 +236,18 @@ def createExcelSilicon(modelList, addImage):
     pool.join()
     for folder in listdir(pathToDoneSiliconImageSilicon):
         if '.xlsx' in folder and '~' not in folder:
-            listModel = read_xlsx(joinPath(pathToDoneSiliconImageSilicon, folder))
-            listImageAll.extend(listModel)
-    listImageAllpd = pandas.DataFrame(listImageAll)
-    listImageAllpd.to_excel(pathToDoneSiliconImageSilicon + '.xlsx', index=False)
+            listModel = pandas.concat([listModel,read_excel(joinPath(pathToDoneSiliconImageSilicon, folder))])
+            #listModel['Путь к файлу']=listModel['Путь к файлу'].astype(str)
+            #listImageAll.extend(listModel)
+    #listImageAllpd = pandas.DataFrame(listImageAll)
+    #listImageAllpd['Путь к файлу']=listImageAllpd['Путь к файлу'].astype(str)
+    #listImageAll  = pandas.concat(listModel)
+    #listImageAll['Путь к файлу']=listImageAll['Путь к файлу'].astype(str)
+    #listModel['Путь к файлу']=listModel['Путь к файлу'].astype(str)
+    writer = pandas.ExcelWriter(pathToDoneSiliconImageSilicon + r'.xlsx', engine='xlsxwriter',options={'strings_to_urls': False})
+    listModel.to_excel(writer, index=False)
+    writer.close()
+    #listModel.to_excel(pathToDoneSiliconImageSilicon + '.xlsx', index=False)
 
 
 def chekImage(fileName, supplier, force):

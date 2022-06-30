@@ -53,9 +53,8 @@ def readFileWithTable():
 
 
 def createFileWithTable(dataTable, dataFromOrder, material):
-
+    ordersInFile =[]
     for table in dataTable.keys():
-        ordersInFile =[]
         dataOrderForExcel = []
         for orderInTable in dataTable[table]:
             for orderLine in dataFromOrder:

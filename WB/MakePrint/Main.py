@@ -65,13 +65,15 @@ class mameBookPrint(QtWidgets.QMainWindow):
     def btnChekImage(self):
         fileName = self.ui.FileSelector.currentText()
         mode = self.ui.IPSelector.currentText()
-        force = self.ui.ForceUpdate.checkState()
-        status = chekImage(fileName, mode, force)
-        self.ui.textSiliconMask.setText('{} готов.\nСтатус: {}'.format(fileName, status))
-        if status == 'Во всех карточках присутствуют фото.':
-            self.ui.textSiliconMask.setStyleSheet("background-color: green;")
-        else:
-            self.ui.textSiliconMask.setStyleSheet("background-color: red;")
+        force = self.ui.ForceUpdate.checkState() 
+        while True:
+            status = chekImage(fileName, mode, force)
+            self.ui.textSiliconMask.setText('{} готов.\nСтатус: {}'.format(fileName, status))
+            if status == 'Во всех карточках присутствуют фото.':
+                self.ui.textSiliconMask.setStyleSheet("background-color: green;")
+                break
+            else:
+                self.ui.textSiliconMask.setStyleSheet("background-color: red;")
 
 
     def updeteListFile(self):
@@ -88,7 +90,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
         create = WBnomenclaturesCreater()
         create.pathToFileForUpload = pathToFileForUpload
         mode = self.ui.IPSelector.currentText()
-        barcodeList = getListCard(mode)
+        #barcodeList = getListCard(mode)
+        barcodeList = []
         create.createNomenclatures(mode, barcodeList)
         self.ui.textSiliconMask.setText('{} готов.'.format(fileName))
         getListCard(mode)

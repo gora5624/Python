@@ -8,6 +8,7 @@ curData = datetime.today().date().strftime(r"%d.%m.%Y")
 curTime = datetime.today().time().strftime(r"%H.%M.%S")
 TokenAbr = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
 TokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+TokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
 
 
 def get_orders(Token, mode, days=3):
@@ -44,18 +45,35 @@ def get_orders(Token, mode, days=3):
     for line in dataorders:
         date = line['dateCreated'].split('T')[0].split('-')
         date = date[2] + '.' + date[1] + '.' + date[0]
-        datatmp = {'Баркод': int(line['barcode']),
+        #barcod = int(line['barcode']) if line['barcode'] != '' else ''
+        datatmp = {'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
                    'Дата': date,
                    'Количество': 1,
                    'Цена': line['totalPrice']/100}
         dataNew.append(datatmp)
     dataNewpd = pandas.DataFrame(dataNew)
+    if mode == 1:
+        ip = 'Караханян'
+    elif mode == 2:
+        ip = 'Абраамян'
+    elif mode == 3:
+        ip = 'Самвел'
+    
     dataNewpd.to_excel((os.path.join(os.path.join(
-        os.environ['USERPROFILE']), 'Desktop', WBOrdersDataFileName.format(curData + '_' + curTime, "Караханян" if mode == 1 else "Абраамян"))), index=False)
+        os.environ['USERPROFILE']), 'Desktop', WBOrdersDataFileName.format(curData + '_' + curTime, ip))), index=False)
 
 
 def getMode():
-    return 1 if int(input('Введите режим работы: "1" - Караханян, "2" - Абраамян: ')) == 1 else 2
+    a = int(input('Введите режим работы: "1" - Караханян, "2" - Абраамян: , "3" - Самвел: '))
+    if a == 1:
+        return 1
+    elif a == 2:
+        return 2
+    elif a == 3:
+        return 3
+    else:
+        print('По умолчанию Караханян.')
+        return 1
 
 
 if __name__ == '__main__':
@@ -65,6 +83,8 @@ if __name__ == '__main__':
             token = TokenKar
         elif mode == 2:
             token = TokenAbr
+        elif mode == 3:
+            token = TokenSam
         else:
             print("Введён некорректный режим, установлен режим Караханян")
             token = TokenKar

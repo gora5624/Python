@@ -16,8 +16,8 @@ nameListStuff = r'StuffList.xlsx'
 pathToListStuff = joinpath(main_path, nameListStuff)
 pathToListMultiStuffKar = r'C:\Users\Public\Documents\WBChangeStuff\MultiBrandKar.xlsx'
 pathToListMultiStuffAbr = r'C:\Users\Public\Documents\WBChangeStuff\MultiBrandAbr.xlsx'
-pathToListMobiStuffKar = r'C:\Users\Public\Documents\WBChangeStuff\MultiBrandKar.xlsx'
-pathToListMobiStuffAbr = r'C:\Users\Public\Documents\WBChangeStuff\MultiBrandAbr.xlsx'
+pathToListMobiStuffKar = r'C:\Users\Public\Documents\WBChangeStuff\Mobi711Kar.xlsx'
+pathToListMobiStuffAbr = r'C:\Users\Public\Documents\WBChangeStuff\Mobi113Abr.xlsx'
 tokenPath_kar = joinpath(main_path, r'Token.txt')
 tokenPath_Arb = joinpath(main_path, r'TokenAbr.txt')
 tokenList = [tokenPath_kar, tokenPath_Arb]
@@ -190,9 +190,9 @@ def cangeCardFromListStuff(pathToListStuff,tokenPath):
 
 
 if __name__ == '__main__':
-    p1 = multiprocessing.Process(target=cangeCardFromListStuff, args=(pathToListMultiStuffKar,tokenPath_kar,))
+   # p1 = multiprocessing.Process(target=cangeCardFromListStuff, args=(pathToListMultiStuffKar,tokenPath_kar,))
     p2 = multiprocessing.Process(target=cangeCardFromListStuff, args=(pathToListMultiStuffAbr,tokenPath_Arb,))
     p2.start()
-    p1.start()
-    p1.join()
+    #p1.start()
+    #p1.join()
     p2.join()

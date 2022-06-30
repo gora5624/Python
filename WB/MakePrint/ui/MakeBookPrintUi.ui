@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="tabBook">
     <attribute name="title">
@@ -480,6 +480,11 @@ p, li { white-space: pre-wrap; }
      <item>
       <property name="text">
        <string>Абраамян</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Самвел</string>
       </property>
      </item>
     </widget>

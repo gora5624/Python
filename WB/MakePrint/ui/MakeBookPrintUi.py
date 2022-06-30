@@ -141,6 +141,7 @@ class Ui_Form(object):
         self.IPSelector.setObjectName("IPSelector")
         self.IPSelector.addItem("")
         self.IPSelector.addItem("")
+        self.IPSelector.addItem("")
         self.FileSelector = QtWidgets.QComboBox(self.tab)
         self.FileSelector.setGeometry(QtCore.QRect(0, 250, 261, 22))
         self.FileSelector.setObjectName("FileSelector")
@@ -160,7 +161,7 @@ class Ui_Form(object):
         self.label_6.setObjectName("label_6")
 
         self.retranslateUi(Form)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
@@ -220,6 +221,7 @@ class Ui_Form(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Цена</p></body></html>"))
         self.IPSelector.setItemText(0, _translate("Form", "Караханян"))
         self.IPSelector.setItemText(1, _translate("Form", "Абраамян"))
+        self.IPSelector.setItemText(2, _translate("Form", "Самвел"))
         self.updateListModel.setText(_translate("Form", "Обновить список"))
         self.ForceUpdate.setText(_translate("Form", "Обновить принудительно"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Form", "Создание товара"))
