@@ -11,11 +11,17 @@ class WBnomenclaturesCreater:
     def __init__(self):
         self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
         self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+        self.tokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
         self.mainUrl = 'https://suppliers-api.wildberries.ru/card/batchCreate'
         self.pathToFileForUpload = ''
 
     def createNomenclatures(self, mode, barcodeList):
-        Token = self.tokenAb if mode == 'Абраамян' else self.tokenKar
+        if mode =='Караханян':
+            Token = self.tokenKar
+        elif mode =='Абраамян':
+            Token = self.tokenAb
+        elif mode =='Самвел':
+            Token = self.tokenSam
         if self.pathToFileForUpload =='':
             print('Путь к файлу не указан')
             return 0

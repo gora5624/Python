@@ -8,13 +8,19 @@ from aiohttp import ClientPayloadError, ServerDisconnectedError
 main_path = r'C:\Users\Public\Documents\WBUploadImage'
 TokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
 TokenArb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
+TokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
 pathToDone = (r'F:\\')
 DoneList = []
 TMP_List = []
 
 
 async def main(supplier, filter=None):
-    Token = TokenKar if supplier =='Караханян' else TokenArb
+    if supplier =='Караханян':
+        Token = TokenKar
+    elif supplier =='Абраамян':
+        Token = TokenArb
+    elif supplier =='Самвел':
+        Token = TokenSam
     Url = 'https://suppliers-api.wildberries.ru/card/list'
     offset = 0
     datajson = {
@@ -54,7 +60,8 @@ async def main(supplier, filter=None):
                 tasks.append(asyncio.create_task(getCard(session, offset, cardslist, Url, Token, filter)))
             await asyncio.wait(tasks)
         else:
-            tasks.append(asyncio.create_task(getCard(session, offset, cardslist, Url, Token, filter)))
+            for i in range(0,len(filter),10):
+                tasks.append(asyncio.create_task(getCard(session, offset, cardslist, Url, Token, filter[i: i+10])))
             await asyncio.wait(tasks)
     return cardslist
 
