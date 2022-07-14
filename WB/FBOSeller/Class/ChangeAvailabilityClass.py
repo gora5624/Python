@@ -29,7 +29,7 @@ class ChangeAvailability:
         for barcod in self.listBarcodes:
             barcod = str(barcod) if type(barcod) == int else str(barcod)[0:-2] if type(barcod) == float else barcod
             self.json.append({"barcode": barcod,
-                            "stock": 1000,
+                            "stock": 10000,
                             "warehouseId": 10237})
             return self.requestsAsyncMain()
 

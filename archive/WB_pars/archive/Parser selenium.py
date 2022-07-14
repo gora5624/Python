@@ -1,5 +1,7 @@
 import os
-from my_lib import write_csv
+import sys
+sys.path.append(os.path.abspath(os.path.join(__file__, '..\..\..\..')))
+from my_mod.my_lib import write_csv
 from bs4 import BeautifulSoup
 import time
 import requests
@@ -15,7 +17,7 @@ def get_html(url, t=0):
 
 
 def PaginationExist(soup):
-    pagination = soup.find('div', class_='pageToInsert').find(
+    pagination = soup.find('div', class_='pageToInsert pagination__wrapper').find(
         'a', class_='pagination-next')
     if pagination == None:
         NextPage = False

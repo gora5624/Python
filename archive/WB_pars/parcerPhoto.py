@@ -37,7 +37,7 @@ def getUrlImage(url):
             return 0, 0
         soup = BeautifulSoup(html, 'lxml')
         mainPhotoUrl = soup.find(
-            'img', class_='photo-zoom__preview j-zoom-preview').get('src')[2:]
+            'img', class_='photo-zoom__preview j-zoom-image hide').get('src')[2:]
         countImage = len(
             soup.find('ul', class_='swiper-wrapper').find_all('li'))
         if len(

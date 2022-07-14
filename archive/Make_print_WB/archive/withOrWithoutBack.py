@@ -2,8 +2,8 @@ from PIL import Image
 import os
 
 
-mainDir = r'F:\Новая папка (2)'
-doneDir = r'F:\Картинки китай\Под натяжку общее\Без фона'
+mainDir = r'E:\принты со светом'
+doneDir = r'E:\Новая папка (2)'
 
 for file in os.listdir(mainDir):
     filePath = os.path.join(mainDir, file)

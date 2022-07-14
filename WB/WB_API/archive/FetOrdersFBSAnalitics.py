@@ -49,7 +49,8 @@ def get_orders(Token, mode, days=3):
         datatmp = {'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
                    'Дата': date,
                    'Количество': 1,
-                   'Цена': line['totalPrice']/100}
+                   'Цена': line['totalPrice']/100,
+                   'Номер заказа':line['orderId']}
         dataNew.append(datatmp)
     dataNewpd = pandas.DataFrame(dataNew)
     if mode == 1:
@@ -63,14 +64,71 @@ def get_orders(Token, mode, days=3):
         os.environ['USERPROFILE']), 'Desktop', WBOrdersDataFileName.format(curData + '_' + curTime, ip))), index=False)
 
 
+def get_ordersAll(days=3):
+    i = 0
+    print("Идёт получение свежих заказов, ожидайте...")
+    Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
+    start_data = ((datetime.today() - timedelta(days=int(days)))).isoformat('T', 'seconds').replace(
+        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+    dataNew = []
+    dataorders = []
+    tmp = []
+    for Token in [TokenKar, TokenAbr, TokenSam]:
+        flag = True
+        count_skip = 0
+        while len(tmp) > 0 or flag:
+            CountTry = 0
+            flag = False
+            while True:
+                CountTry += 1
+                try:
+                    response = requests.get(Url.format(start_data, count_skip), headers={
+                        'Authorization': '{}'.format(Token)})
+                    if response.status_code == 200:
+                        break
+                    elif CountTry > 500:
+                        print("Не удалось достучасться до ВБ")
+                    else:
+                        continue
+                except:
+                    continue
+            count_skip = count_skip+1000
+            tmp = response.json()['orders']
+            dataorders.extend(tmp)
+    for line in dataorders:
+        date = line['dateCreated'].split('T')[0].split('-')
+        date = date[2] + '.' + date[1] + '.' + date[0]
+        #barcod = int(line['barcode']) if line['barcode'] != '' else ''
+        if line['storeId'] == 10237:
+            ip = 'Караханян'
+        elif line['storeId'] == 141069:
+            ip = 'Манвел'
+        elif line['storeId'] == 278784:
+            ip = 'Самвел'
+        else:
+            ip = 'хз'
+        datatmp = {'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
+                'Дата': date,
+                'Количество': 1,
+                'Цена': line['totalPrice']/100,
+                'Номер заказа':line['orderId'],
+                'ИП': ip}
+        dataNew.append(datatmp)
+    dataNewpd = pandas.DataFrame(dataNew)
+    dataNewpd.to_excel((os.path.join(os.path.join(
+        os.environ['USERPROFILE']), 'Desktop', WBOrdersDataFileName.format(curData + '_' + curTime, 'все ИП'))), index=False)
+
+
 def getMode():
-    a = int(input('Введите режим работы: "1" - Караханян, "2" - Абраамян: , "3" - Самвел: '))
+    a = int(input('Введите режим работы: "0" по всем ИП, "1" - Караханян, "2" - Абраамян: , "3" - Самвел: '))
     if a == 1:
         return 1
     elif a == 2:
         return 2
     elif a == 3:
         return 3
+    elif a == 0:
+        return 0
     else:
         print('По умолчанию Караханян.')
         return 1
@@ -85,9 +143,14 @@ if __name__ == '__main__':
             token = TokenAbr
         elif mode == 3:
             token = TokenSam
+        elif mode == 0:
+            token = [TokenKar, TokenAbr, TokenSam]
         else:
             print("Введён некорректный режим, установлен режим Караханян")
             token = TokenKar
         days = int(input("Введите количество дней (по умолчанию 3 дня): "))
-        get_orders(token, mode, days=days)
+        if type(token) == list:
+            get_ordersAll(days=days)
+        else:
+            get_orders(token, mode, days=days)
         input('Готово, нажмите Enter')
