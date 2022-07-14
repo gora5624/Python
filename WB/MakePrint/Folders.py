@@ -2,8 +2,8 @@ from os.path import abspath, join as joinPath
 
 workDisk = 'F'
 # пути общие
-pathToPrintImageFolderAll = r'{}:\Картинки китай\Под натяжку общее\Все'.format(workDisk)
-pathToPrintImageFolderWithOutBack = r'{}:\Картинки китай\Под натяжку общее\Без фона'.format(workDisk)
+# pathToPrintImageFolderAll = r'{}:\Картинки китай\Под натяжку общее\Все'.format(workDisk)
+# pathToPrintImageFolderWithOutBack = r'{}:\Картинки китай\Под натяжку общее\Без фона'.format(workDisk)
 pathToCategoryList = abspath(joinPath(__file__, '..','cat.xlsx'))
 pathToUploadWeb = r'http://80.237.77.44/joomla/images/mobi/Готовые принты'
 pathToUploadFolderLocal = r'\\192.168.0.33\web_packages\joomla\images\mobi\Готовые принты'
@@ -21,9 +21,9 @@ pathToSecondImagesBook = r'{}:\Для загрузки\Вторые картин
 pathToMaskFolderSilicon = r'{}:\Маски силикон'.format(workDisk)
 pathToSecondImagesFolderSilicon = r'{}:\Для загрузки\Вторые картинки\Силикон'.format(workDisk)
 pathToDoneSiliconImageSilicon = r'{}:\Для загрузки\Готовые принты\Силикон'.format(workDisk)
-pathToPrintImageFolderAllSil = r'{}:\Картинки китай\Принты со светом\Все'.format(workDisk)
-#pathToPrintImageFolderWithOutBackSil = r'{}:\Картинки китай\Принты со светом\Все'.format(workDisk)
-pathToPrintImageFolderWithOutBackSil = r'{}:\Картинки китай\Принты со светом\Без фона'.format(workDisk)
+pathToPrintImageFolderAllSil = r'{}:\Принты со светом\Все'.format(workDisk)
+#pathToPrintImageFolderWithOutBackSil = r'{}:\Принты со светом\Все'.format(workDisk)
+pathToPrintImageFolderWithOutBackSil = r'{}:\Принты со светом\Без фона'.format(workDisk)
 # pathToPrintImageFolderAllSil = r'F:\Картинки китай\натянуть временно'
 # pathToPrintImageFolderWithOutBackSil = r'F:\Картинки китай\натянуть временно'
 
