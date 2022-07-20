@@ -26,7 +26,8 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.fileUpdateStokcsName = ''
         self.nomenclature = ''
         self.sellerList = []
-
+        self.cameraTypeList = ['зак.', 'отк.']
+        self.ui.exampleFileToUploadBtn.clicked.connect(self.getExampleFile)
 
     def selectFile(self):
         self.fileUpdateStokcsName = QFileDialog.getOpenFileName(self, ("Выберите файл со списком номенклатуры"), "", ("Excel Files (*.xlsx)"))[0]
@@ -39,6 +40,63 @@ class FBSStoks(QtWidgets.QMainWindow):
 
     def disenableFileSelectButt(self):
         self.ui.selectFileButton.setDisabled(True)
+
+
+    def getExampleFile(self):
+        flag = self.ui.exampleFileToUploadComboBox.currentText()
+        fileExamplePath = QFileDialog.getExistingDirectory(self, ("Выберите место для сохранения образца"))
+        fileName = flag + '.xlsx'
+        if fileExamplePath == '':
+            self.createMSGError('Вы не выбрали папку')
+            return 0
+        if flag == 'Образец файла по наименованию номенклатуры':
+            df = pandas.DataFrame([{'Номенклатура':'Введите название номенклатуры сюда'}, {'Номенклатура':'Введите название номенклатуры сюда'}, {'Номенклатура':'Введите название номенклатуры сюда'}])
+            df.to_excel(joinPath(fileExamplePath, fileName), index=False)
+            self.createMSGSuc('{} создан по пути {}!'.format(fileName, fileExamplePath))
+        elif flag =='Образец файла по наименованию номенклатуры с количеством':
+            df = pandas.DataFrame([{
+                'Номенклатура':'Введите название номенклатуры сюда',
+                'Количество': 'Введите количество сюда, целым числом'
+            },
+            {
+                'Номенклатура':'Введите название номенклатуры сюда',
+                'Количество': 'Введите количество сюда, целым числом'
+            },
+            {
+                'Номенклатура':'Введите название номенклатуры сюда',
+                'Количество': 'Введите количество сюда, целым числом'
+            }])
+            df.to_excel(joinPath(fileExamplePath, fileName), index=False)
+            self.createMSGSuc('{} создан по пути {}!'.format(fileName, fileExamplePath))
+        elif flag =='Образец файла по баркоду':
+            df = pandas.DataFrame([{
+                'Баркод':'Введите баркод номенклатуры сюда'
+            },
+            {
+                'Баркод':'Введите баркод номенклатуры сюда'
+            },
+            {
+                'Баркод':'Введите баркод номенклатуры сюда'
+            }])
+            df.to_excel(joinPath(fileExamplePath, fileName), index=False)
+            self.createMSGSuc('{} создан по пути {}!'.format(fileName, fileExamplePath))
+        elif flag =='Образец файла по баркоду с количеством':
+            df = pandas.DataFrame([{
+                'Баркод':'Введите баркод номенклатуры сюда',
+                'Количество': 'Введите количество сюда, целым числом'
+            }, 
+            {
+                'Баркод':'Введите баркод номенклатуры сюда',
+                'Количество': 'Введите количество сюда, целым числом'
+            },
+            {
+                'Баркод':'Введите баркод номенклатуры сюда',
+                'Количество': 'Введите количество сюда, целым числом'
+            }])
+            df.to_excel(joinPath(fileExamplePath, fileName), index=False)
+            self.createMSGSuc('{} создан по пути {}!'.format(fileName, fileExamplePath))
+        else:
+            pass
 
 
     def getListNom(self):
@@ -66,8 +124,20 @@ class FBSStoks(QtWidgets.QMainWindow):
 
 
     def getListBarcodForComboBox(self):
-        listBarcods = self.data[self.data.Номенклатура == self.ui.selectNomenclatureComboBox.currentText()]['Штрихкод'].values.tolist()
-        return listBarcods
+        if self.ui.glassCheck.isChecked() and ('Бронепленка' in self.ui.selectNomenclatureComboBox.currentText() or 'стекло 3D' in self.ui.selectNomenclatureComboBox.currentText()):
+            try:
+                listBarcods = self.data[self.data.Номенклатура.str.contains(self.ui.selectNomenclatureComboBox.currentText().split(':')[1], regex=False)]['Штрихкод'].values.tolist()
+            except:
+                return self.data[self.data.Номенклатура == self.ui.selectNomenclatureComboBox.currentText()]['Штрихкод'].values.tolist()
+            return listBarcods
+        if self.ui.cameraTypeCheck.isChecked():
+            listBarcods = []
+            for i, cameraType in enumerate(self.cameraTypeList):
+                listBarcods.extend(self.data[self.data.Номенклатура == self.ui.selectNomenclatureComboBox.currentText().replace(self.cameraTypeList[i],self.cameraTypeList[i-1])]['Штрихкод'].values.tolist())
+            return listBarcods
+        else:
+            return self.data[self.data.Номенклатура == self.ui.selectNomenclatureComboBox.currentText()]['Штрихкод'].values.tolist()
+
 
 
     def getSeller(self):
@@ -80,9 +150,27 @@ class FBSStoks(QtWidgets.QMainWindow):
             self.sellerList.append('С.М. Абраамян')
 
 
-    def getListBarcodForFile(self, nom):
-        listBarcods = self.data[self.data.Номенклатура == nom]['Штрихкод'].values.tolist()
-        return listBarcods
+    def getListBarcodForFile(self, nom, count):
+        if not self.ui.cameraTypeCheck.isChecked():
+            listBarcods = []
+            listBarcodsTMP = self.data[self.data.Номенклатура == nom]['Штрихкод'].values.tolist()
+            for barcod in listBarcodsTMP:
+                listBarcods.append({
+                    'barcod':barcod,
+                    'count':count 
+                })
+            return listBarcods
+        else: 
+            listBarcods = []
+            for i, cameraType in enumerate(self.cameraTypeList):
+                listBarcodsTMP = self.data[self.data.Номенклатура == nom.replace(self.cameraTypeList[i],self.cameraTypeList[i-1])]['Штрихкод'].values.tolist()
+                for barcod in listBarcodsTMP:
+                    listBarcods.append({
+                        'barcod':barcod,
+                        'count':count 
+                    })
+            return listBarcods
+
 
 
     def pushFullStocks(self):
@@ -90,10 +178,16 @@ class FBSStoks(QtWidgets.QMainWindow):
         if not self.ui.selectNomenclatureComboBox.isEnabled():
             self.dataForUpdateStocks = pandas.DataFrame(pandas.read_excel(self.fileUpdateStokcsName))
             if 'Номенклатура' in self.dataForUpdateStocks.columns:
-                for nom in self.dataForUpdateStocks.Номенклатура:
-                    listBarcods.extend(self.getListBarcodForFile(nom))
+                for line in self.dataForUpdateStocks.values.tolist():
+                    nom = line[0]
+                    try:
+                        count = line[1]
+                    except:
+                        count = 10000
+                    listBarcods.extend(self.getListBarcodForFile(nom, count))
             elif 'Баркод' in self.dataForUpdateStocks.columns:
-                listBarcods.extend(self.dataForUpdateStocks.Баркод.values.tolist())
+                listBarcods = self.dataForUpdateStocks.rename(columns={'Баркод':'barcod', 'Количество':'stock'}).to_dict('records')
+                #listBarcods.extend(self.dataForUpdateStocks.Баркод.values.tolist())
             else:
                 self.createMSGError("Некорректный файл со списком номенклатуры или ШК.")
                 return 0
@@ -134,7 +228,9 @@ class FBSStoks(QtWidgets.QMainWindow):
                 for nom in self.dataForUpdateStocks.Номенклатура:
                     listBarcods.extend(self.getListBarcodForFile(nom))
             elif 'Баркод' in self.dataForUpdateStocks.columns:
-                listBarcods.extend(self.dataForUpdateStocks.Баркод.values.tolist())
+
+                listBarcods = self.dataForUpdateStocks.rename(columns={'Баркод':'barcod', 'Количество':'stock'}).to_dict('records')
+                #listBarcods.extend(self.dataForUpdateStocks.Баркод.values.tolist())
             else:
                 self.createMSGError("Некорректный файл со списком номенклатуры или ШК.")
                 return 0

@@ -23,21 +23,44 @@ class ChangeAvailability:
 
 
     def takeOff(self):
-        for barcod in self.listBarcodes:
-            barcod = str(barcod) if type(barcod) == int else str(barcod)[0:-2] if type(barcod) == float else barcod
-            self.json.append({"barcode": barcod,
-                            "stock": 0,
-                            "warehouseId": self.warehouseId})
-        return self.requestsAsyncMain()
+        if len(self.listBarcodes)!=0:
+            if type(self.listBarcodes[0]) != dict:
+                for barcod in self.listBarcodes:
+                    barcod = str(barcod) if type(barcod) == int else str(barcod)[0:-2] if type(barcod) == float else barcod
+                    self.json.append({"barcode": barcod,
+                                    "stock": 0,
+                                    "warehouseId": self.warehouseId})
+                return self.requestsAsyncMain()
+            else:
+                tmpList = []
+                for line in self.listBarcodes:
+                    tmpList.append(line['barcod'])
+                self.listBarcodes = tmpList
+                for barcod in self.listBarcodes:
+                    barcod = str(barcod) if type(barcod) == int else str(barcod)[0:-2] if type(barcod) == float else barcod
+                    self.json.append({"barcode": barcod,
+                                    "stock": 0,
+                                    "warehouseId": self.warehouseId})
+                return self.requestsAsyncMain()
         
-        
-    def takeOn(self):
-        for barcod in self.listBarcodes:
-            barcod = str(barcod) if type(barcod) == int else str(barcod)[0:-2] if type(barcod) == float else barcod
-            self.json.append({"barcode": barcod,
-                            "stock": 10000,
-                            "warehouseId": self.warehouseId})
-        return self.requestsAsyncMain()
+    def takeOn(self, count = 10000):
+        if len(self.listBarcodes)!=0:
+            if type(self.listBarcodes[0]) != dict:
+                for barcod in self.listBarcodes:
+                    barcod = str(barcod) if type(barcod) == int else str(barcod)[0:-2] if type(barcod) == float else barcod
+                    self.json.append({"barcode": barcod,
+                                    "stock": count,
+                                    "warehouseId": self.warehouseId})
+                return self.requestsAsyncMain()
+            else:
+                for line in self.listBarcodes:
+                    barcod = line['barcod']
+                    count = int(line['count'])
+                    barcod = str(barcod) if type(barcod) == int else str(barcod)[0:-2] if type(barcod) == float else barcod
+                    self.json.append({"barcode": barcod,
+                                    "stock": count,
+                                    "warehouseId": self.warehouseId})
+                return self.requestsAsyncMain()
 
 
     def requestsAsyncMain(self):
@@ -46,18 +69,23 @@ class ChangeAvailability:
 
 
     async def requestsAsync(self):
+        errors = True
         timerDelay = 5
-        async with aiohttp.ClientSession() as session:
-            while True:
-                async with session.post(self.url, headers={
-                        'Authorization': '{}'.format(self.token)}, json=self.json) as response:
-                        if response.status != 200:
-                            print('Возникла ошибка. STATUS CODE: ' + str(response.status) + ' TEXT: ' + await response.text())
-                            if response.status == 429:
-                                print('Ждём {} секунд.'.format(str(timerDelay)))
-                                await asyncio.sleep(timerDelay)
-                                timerDelay +=1
-                            await asyncio.sleep(5)
-                            continue
-                        else:
-                            return 0
+        for i in range(0,len(self.json),9000):
+            async with aiohttp.ClientSession() as session:
+                while True:
+                    async with session.post(self.url, headers={
+                            'Authorization': '{}'.format(self.token)}, json=self.json[i:i+9000]) as response:
+                            if response.status != 200:
+                                print('Возникла ошибка. STATUS CODE: ' + str(response.status) + ' TEXT: ' + await response.text())
+                                if response.status == 429:
+                                    print('Ждём {} секунд.'.format(str(timerDelay)))
+                                    await asyncio.sleep(timerDelay)
+                                    timerDelay +=1
+                                await asyncio.sleep(5)
+                                continue
+                            else:
+                                errors = False
+                                break
+        if not errors:
+            return 0
