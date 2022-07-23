@@ -152,7 +152,7 @@ class FBSStoks(QtWidgets.QMainWindow):
             self.sellerList.append('С.М. Абраамян')
 
 
-    def getListBarcodForFile(self, nom, count):
+    def getListBarcodForFile(self, nom, count= 0):
         if not self.ui.cameraTypeCheck.isChecked():
             listBarcods = []
             listBarcodsTMP = self.data[self.data.Номенклатура == nom]['Штрихкод'].values.tolist()
@@ -226,7 +226,13 @@ class FBSStoks(QtWidgets.QMainWindow):
 
 
     def getnomenclaturesListForBot(self, listBarcods):
-        return self.data.loc[self.data['Штрихкод'].isin(listBarcods)].Номенклатура.unique().tolist()
+        if type(listBarcods[0]) != dict:
+            return self.data.loc[self.data['Штрихкод'].isin(listBarcods)].Номенклатура.unique().tolist()
+        else:
+            listTMP = []
+            for line in listBarcods:
+                listTMP.append(line['barcod'])
+            return self.data.loc[self.data['Штрихкод'].isin(listTMP)].Номенклатура.unique().tolist()
 
 
     def sendMassageToTelegram(self, action, listBarcods):
@@ -239,7 +245,7 @@ class FBSStoks(QtWidgets.QMainWindow):
             text = 'В {} {} {} следующие позиции: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
         elif len(nomenclaturesListForBot) ==1:
             text = 'В {} {} {} следующая позиция: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
-        #self.bot.send_message(-740230650, text)
+        self.bot.send_message(-740230650, text)
 
 
     def pushEmptyStocks(self):
