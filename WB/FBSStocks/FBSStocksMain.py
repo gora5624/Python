@@ -28,7 +28,8 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.sellerList = []
         self.cameraTypeList = ['зак.', 'отк.']
         self.ui.exampleFileToUploadBtn.clicked.connect(self.getExampleFile)
-        self.bot = telebot.TeleBot('5583996306:AAH1WOjS3MgJkNoaxjtewQQ5QWXIxh-fjpw')
+        self.botToken = open(r'E:\MyProduct\Python\WB\FBSStocks\Class\token', 'r').read()
+        self.bot = telebot.TeleBot(self.botToken)
 
     def selectFile(self):
         self.fileUpdateStokcsName = QFileDialog.getOpenFileName(self, ("Выберите файл со списком номенклатуры"), "", ("Excel Files (*.xlsx)"))[0]
@@ -179,10 +180,10 @@ class FBSStoks(QtWidgets.QMainWindow):
         if not self.ui.selectNomenclatureComboBox.isEnabled():
             self.dataForUpdateStocks = pandas.DataFrame(pandas.read_excel(self.fileUpdateStokcsName))
             if 'Номенклатура' in self.dataForUpdateStocks.columns:
-                for line in self.dataForUpdateStocks.values.tolist():
-                    nom = line[0]
+                for line in self.dataForUpdateStocks.to_dict('records'):
+                    nom = line['Номенклатура']
                     try:
-                        count = line[1]
+                        count = line['Количество']
                     except:
                         count = 10000
                     listBarcods.extend(self.getListBarcodForFile(nom, count))
@@ -238,7 +239,7 @@ class FBSStoks(QtWidgets.QMainWindow):
             text = 'В {} {} {} следующие позиции: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
         elif len(nomenclaturesListForBot) ==1:
             text = 'В {} {} {} следующая позиция: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
-        self.bot.send_message(-740230650, text)
+        #self.bot.send_message(-740230650, text)
 
 
     def pushEmptyStocks(self):
