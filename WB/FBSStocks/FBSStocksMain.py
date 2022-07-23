@@ -1,12 +1,12 @@
 import sys
 import pandas
-from os import listdir
-from os.path import join as joinPath, isdir, isfile, abspath, exists
+from os.path import join as joinPath
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QApplication
 from ChangeAvailabilityClass import ChangeAvailability
 from ui.FBSStocks import Ui_Form
-from itertools import product
+import telebot
+from datetime import datetime
 # pyuic5 E:\MyProduct\Python\WB\FBSStocks\ui\FBSStocks.ui -o E:\MyProduct\Python\WB\FBSStocks\ui\FBSStocks.py
 
 class FBSStoks(QtWidgets.QMainWindow):
@@ -28,6 +28,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.sellerList = []
         self.cameraTypeList = ['зак.', 'отк.']
         self.ui.exampleFileToUploadBtn.clicked.connect(self.getExampleFile)
+        self.bot = telebot.TeleBot('5583996306:AAH1WOjS3MgJkNoaxjtewQQ5QWXIxh-fjpw')
 
     def selectFile(self):
         self.fileUpdateStokcsName = QFileDialog.getOpenFileName(self, ("Выберите файл со списком номенклатуры"), "", ("Excel Files (*.xlsx)"))[0]
@@ -206,11 +207,12 @@ class FBSStoks(QtWidgets.QMainWindow):
                     #self.createMSGError("{}".format(self.fileUpdateStokcsName))                
         else:
             self.getSeller()
+            listBarcods = self.getListBarcodForComboBox()
             if self.sellerList == []:
                 self.createMSGError("Не выбран ни один поставщик")
                 return 0
             for seller in self.sellerList:
-                pusher = ChangeAvailability(seller, self.getListBarcodForComboBox())
+                pusher = ChangeAvailability(seller, listBarcods)
                 resp = pusher.takeOn()
                 if resp == 0:
                     self.ui.pushFullStocks.setStyleSheet('background: rgb(0,255,0);')
@@ -218,6 +220,25 @@ class FBSStoks(QtWidgets.QMainWindow):
                 else:
                     self.ui.pushFullStocks.setStyleSheet('background: rgb(255,0,0);')
                     #self.createMSGError("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
+        action = 'выставились в наличие'
+        self.sendMassageToTelegram(action, listBarcods)
+
+
+    def getnomenclaturesListForBot(self, listBarcods):
+        return self.data.loc[self.data['Штрихкод'].isin(listBarcods)].Номенклатура.unique().tolist()
+
+
+    def sendMassageToTelegram(self, action, listBarcods):
+        nomenclaturesListForBot = self.getnomenclaturesListForBot(listBarcods)
+        curData = datetime.today().date().strftime(r"%d.%m.%Y")
+        curTime = datetime.today().time().strftime(r"%H.%M.%S")
+        if len(nomenclaturesListForBot) ==0:
+            text = 'В {} {} {} неизвестно что('.format(curData, curTime, action)
+        elif len(nomenclaturesListForBot) >1:
+            text = 'В {} {} {} следующие позиции: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
+        elif len(nomenclaturesListForBot) ==1:
+            text = 'В {} {} {} следующая позиция: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
+        self.bot.send_message(-740230650, text)
 
 
     def pushEmptyStocks(self):
@@ -249,11 +270,12 @@ class FBSStoks(QtWidgets.QMainWindow):
                     #self.createMSGError("{}".format(self.fileUpdateStokcsName))
         else:
             self.getSeller()
+            listBarcods = self.getListBarcodForComboBox()
             if self.sellerList == []:
                 self.createMSGError("Не выбран ни один поставщик")
                 return 0
             for seller in self.sellerList:
-                pusher = ChangeAvailability(seller, self.getListBarcodForComboBox())
+                pusher = ChangeAvailability(seller, listBarcods)
                 resp = pusher.takeOff()
                 if resp == 0:
                     self.ui.pushEmptyStocks.setStyleSheet('background: rgb(0,255,0);') 
@@ -261,7 +283,8 @@ class FBSStoks(QtWidgets.QMainWindow):
                 else: 
                     self.ui.pushEmptyStocks.setStyleSheet('background: rgb(255,0,0);')
                     #self.createMSGError("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
-
+        action = 'снялись с наличия'
+        self.sendMassageToTelegram(action, listBarcods)
 
     def createMSGError(self,text):
         msg = QtWidgets.QMessageBox()
