@@ -1,6 +1,6 @@
 import telebot
-
-bot = telebot.TeleBot('5569165380:AAFCW9Ekg1qjrm3LRj1QMUS50jeO-6L6jh0')
+token = open(r'E:\MyProduct\Python\myBot\token' , 'r').read()
+bot = telebot.TeleBot(token)
 @bot.message_handler(content_types=['text'])
 def repeat_all_message(message):
     nadegdaNameList = ['надя', 'надежда', 'надю', 'наде', 'нади', 'надежду', 'надежды', 'надежде', 'надюха']

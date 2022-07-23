@@ -130,3 +130,6 @@ dmypy.json
 .vscode
 
 \c#\ConsoleApp1\.vs
+
+# MyFiles
+token

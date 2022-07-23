@@ -1,7 +1,7 @@
 import telebot
 
-
-bot = telebot.TeleBot('5583996306:AAH1WOjS3MgJkNoaxjtewQQ5QWXIxh-fjpw')
+token = open(r'E:\MyProduct\Python\WB\FBSStocks\Class\token', 'r').read()
+bot = telebot.TeleBot(token)
 #@bot.message_handler(content_types=['text'])
 #@bot.send_message(message.chat.id,'test',)
 #def start_message(message):
