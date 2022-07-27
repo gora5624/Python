@@ -1,6 +1,6 @@
 import sys
 import pandas
-from os.path import join as joinPath
+from os.path import join as joinPath, abspath
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QApplication
 from ChangeAvailabilityClass import ChangeAvailability
@@ -28,7 +28,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.sellerList = []
         self.cameraTypeList = ['зак.', 'отк.']
         self.ui.exampleFileToUploadBtn.clicked.connect(self.getExampleFile)
-        self.botToken = open(r'E:\MyProduct\Python\WB\FBSStocks\Class\token', 'r').read()
+        self.botToken = open(abspath(joinPath(__file__,'..', 'token')), 'r').read()
         self.bot = telebot.TeleBot(self.botToken)
 
     def selectFile(self):
@@ -221,7 +221,7 @@ class FBSStoks(QtWidgets.QMainWindow):
                 else:
                     self.ui.pushFullStocks.setStyleSheet('background: rgb(255,0,0);')
                     #self.createMSGError("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
-        action = 'выставились в наличие'
+        action = 'поставили в наличие'
         self.sendMassageToTelegram(action, listBarcods)
 
 
@@ -244,8 +244,8 @@ class FBSStoks(QtWidgets.QMainWindow):
         elif len(nomenclaturesListForBot) >1:
             text = 'В {} {} {} следующие позиции: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
         elif len(nomenclaturesListForBot) ==1:
-            text = 'В {} {} {} следующая позиция: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
-        self.bot.send_message(-740230650, text)
+            text = 'В {} {} {} следующую позицию: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
+        self.bot.send_message(-1001550015840, text)
 
 
     def pushEmptyStocks(self):
@@ -290,7 +290,7 @@ class FBSStoks(QtWidgets.QMainWindow):
                 else: 
                     self.ui.pushEmptyStocks.setStyleSheet('background: rgb(255,0,0);')
                     #self.createMSGError("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
-        action = 'снялись с наличия'
+        action = 'сняли с наличия'
         self.sendMassageToTelegram(action, listBarcods)
 
     def createMSGError(self,text):

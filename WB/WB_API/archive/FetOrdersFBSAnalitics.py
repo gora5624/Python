@@ -120,7 +120,11 @@ def get_ordersAll(days=3):
 
 
 def getMode():
-    a = int(input('Введите режим работы: "0" по всем ИП, "1" - Караханян, "2" - Абраамян: , "3" - Самвел: '))
+    try:
+        a = int(input('Введите режим работы: "0" по всем ИП, "1" - Караханян, "2" - Абраамян: , "3" - Самвел: '))
+    except ValueError:
+        print('По умолчанию 0.')
+        a = 0
     if a == 1:
         return 1
     elif a == 2:
@@ -148,7 +152,10 @@ if __name__ == '__main__':
         else:
             print("Введён некорректный режим, установлен режим Караханян")
             token = TokenKar
-        days = int(input("Введите количество дней (по умолчанию 3 дня): "))
+        try:
+            days = int(input("Введите количество дней (по умолчанию 3 дня): "))
+        except ValueError:
+            days = 3
         if type(token) == list:
             get_ordersAll(days=days)
         else:

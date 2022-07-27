@@ -3,7 +3,7 @@ token = open(r'E:\MyProduct\Python\myBot\token' , 'r').read()
 bot = telebot.TeleBot(token)
 @bot.message_handler(content_types=['text'])
 def repeat_all_message(message):
-    nadegdaNameList = ['надя', 'надежда', 'надю', 'наде', 'нади', 'надежду', 'надежды', 'надежде', 'надюха']
+    nadegdaNameList = ['надя', 'надежда', 'надю', 'наде', 'нади', 'надежду', 'надежды', 'надежде', 'надюха', 'надь', 'компас земной']
     for name in nadegdaNameList:
         if name in message.text.lower():
             bot.send_voice(message.chat.id,'AwACAgQAAxkBAAMpYtuwHLSqrMaWRyAlSodThLsVjBMAAoIOAAKr1NlSQckaFadIWQ0pBA', reply_to_message_id=message.id)
