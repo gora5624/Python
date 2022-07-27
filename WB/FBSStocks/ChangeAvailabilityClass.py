@@ -23,7 +23,7 @@ class ChangeAvailability:
 
 
     def takeOff(self):
-        return 0
+        #return 0
         if len(self.listBarcodes)!=0:
             if type(self.listBarcodes[0]) != dict:
                 for barcod in self.listBarcodes:
@@ -45,7 +45,7 @@ class ChangeAvailability:
                 return self.requestsAsyncMain()
         
     def takeOn(self, count = 10000):
-        return 0
+        #return 0
         if len(self.listBarcodes)!=0:
             if type(self.listBarcodes[0]) != dict:
                 for barcod in self.listBarcodes:

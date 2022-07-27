@@ -18,6 +18,7 @@ from Moduls.GetCardAsincio import getListCard
 # импортируем дополнительные классы
 from Class.MyClassForMakeImage import ModelWithAddin
 from Class.Create import WBnomenclaturesCreater
+from Class.MakePlastinsClass import MakePlastins
 
 
 start_time = time.time()
@@ -42,6 +43,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.ApplyAddin.clicked.connect(self.btnApplyAddin)
         self.ui.CreateCase.clicked.connect(self.btnCreateCase)
         self.ui.updateListModel.clicked.connect(self.updateModelList)
+        self.ui.makePlastinsBut.clecked.connect(self.makeplastins)
         self.updeteListFile()
         self.updateModelList()
 
@@ -60,6 +62,10 @@ class mameBookPrint(QtWidgets.QMainWindow):
         msg.setText(text)
         msg.setIcon(QtWidgets.QMessageBox.Information)
         msg.exec_()
+
+
+    def makeplastins():
+        MakePlastins.makePlastin()
 
 
     def btnChekImage(self):

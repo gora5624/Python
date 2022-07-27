@@ -14,9 +14,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(311, 576)
+        Form.resize(318, 491)
         self.tabWidget = QtWidgets.QTabWidget(Form)
-        self.tabWidget.setGeometry(QtCore.QRect(0, 30, 271, 461))
+        self.tabWidget.setGeometry(QtCore.QRect(0, 30, 321, 461))
         self.tabWidget.setObjectName("tabWidget")
         self.tabBook = QtWidgets.QWidget()
         self.tabBook.setObjectName("tabBook")
@@ -96,6 +96,12 @@ class Ui_Form(object):
         self.SiliconeMode.setGeometry(QtCore.QRect(0, 130, 131, 17))
         self.SiliconeMode.setObjectName("SiliconeMode")
         self.tabWidget.addTab(self.tabSilicon, "")
+        self.plastins = QtWidgets.QWidget()
+        self.plastins.setObjectName("plastins")
+        self.makePlastinsBut = QtWidgets.QPushButton(self.plastins)
+        self.makePlastinsBut.setGeometry(QtCore.QRect(0, 10, 111, 23))
+        self.makePlastinsBut.setObjectName("makePlastinsBut")
+        self.tabWidget.addTab(self.plastins, "")
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
         self.CreateCase = QtWidgets.QPushButton(self.tab)
@@ -188,6 +194,8 @@ class Ui_Form(object):
         self.label_4.setText(_translate("Form", "Доп. фото"))
         self.SiliconeMode.setText(_translate("Form", "Натянуть все принты"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabSilicon), _translate("Form", "Силикон"))
+        self.makePlastinsBut.setText(_translate("Form", "Создать пластины"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.plastins), _translate("Form", "Пластины"))
         self.CreateCase.setText(_translate("Form", "Создать чехлы"))
         self.ChekImage.setText(_translate("Form", "Перезалить фото"))
         self.textSiliconBrand.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
