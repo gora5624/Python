@@ -268,13 +268,15 @@ class FBSStoks(QtWidgets.QMainWindow):
             self.getSeller()
             for seller in self.sellerList:
                 pusher = ChangeAvailability(seller, listBarcods)
-                resp = pusher.takeOff()
+                #Тестовый метод
+                resp = pusher.takeOffDelet()
+                # resp = pusher.takeOff()
                 if resp == 0:
-                    self.ui.pushEmptyStocks.setStyleSheet('background: rgb(0,255,0);') 
-                    #self.createMSGSuc("{}".format(self.fileUpdateStokcsName))
+                    # self.ui.pushEmptyStocks.setStyleSheet('background: rgb(0,255,0);') 
+                    self.createMSGSuc("{}".format(self.fileUpdateStokcsName))
                 else: 
-                    self.ui.pushEmptyStocks.setStyleSheet('background: rgb(255,0,0);')
-                    #self.createMSGError("{}".format(self.fileUpdateStokcsName))
+                    # self.ui.pushEmptyStocks.setStyleSheet('background: rgb(255,0,0);')
+                    self.createMSGError("{}".format(self.fileUpdateStokcsName))
         else:
             self.getSeller()
             listBarcods = self.getListBarcodForComboBox()
@@ -283,13 +285,15 @@ class FBSStoks(QtWidgets.QMainWindow):
                 return 0
             for seller in self.sellerList:
                 pusher = ChangeAvailability(seller, listBarcods)
-                resp = pusher.takeOff()
+                #Тестовый метод
+                resp = pusher.takeOffDelet()
+                # resp = pusher.takeOff()
                 if resp == 0:
-                    self.ui.pushEmptyStocks.setStyleSheet('background: rgb(0,255,0);') 
-                    #self.createMSGSuc("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
+                    # self.ui.pushEmptyStocks.setStyleSheet('background: rgb(0,255,0);') 
+                    self.createMSGSuc("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
                 else: 
-                    self.ui.pushEmptyStocks.setStyleSheet('background: rgb(255,0,0);')
-                    #self.createMSGError("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
+                    # self.ui.pushEmptyStocks.setStyleSheet('background: rgb(255,0,0);')
+                    self.createMSGError("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
         action = 'сняли с наличия'
         self.sendMassageToTelegram(action, listBarcods)
 

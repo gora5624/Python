@@ -5,7 +5,7 @@ from os import listdir, remove, makedirs
 
 
 pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
-#pathToOrderFile = r'C:\Users\Георгий\Downloads\Выгрузка_Документ_производства_000000001_от_11_03_2022_чехлы.xlsx'
+#pathToOrderFile = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Заказы принты\Караханян Эксель\K_16_2645 от 06.07.2022.xlsx'
 #pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты потерянные 06.11.2021.xlsx'
 mainPath = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper'
 pathToExcelWithSize = r'\\192.168.0.33\shared\Отдел производство\Wildberries\список печати.xlsx'
@@ -13,19 +13,24 @@ pathToPrint = r'\\192.168.0.33\shared\Отдел производство\мак
 pathToSizeFile = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\size.txt'
 pathToBug = r'\\192.168.0.33\shared\Отдел производство\макеты для принтера\Макеты для 6090\Bug\print 0.cdr'
 
+
 # Режим отладки True - да, False - боевой режим
 Debug = True
 
 
 pathToTables = joinpath(mainPath, 'Tables')
-pathToConfig = joinpath(mainPath, 'config.txt')
+pathToFileConfigSmall = joinpath(mainPath, 'configSmall.txt')
+pathToFileConfigMed = joinpath(mainPath, 'configMed.txt')
 pathDebug = joinpath(mainPath, 'debug')
+pathToAlgleDelta = joinpath(mainPath, 'algleDelta.txt')
 listSize = ['13', '13 min', '13 pm', 'L', 'M', 'MS', 'S', 'XL', 'XS', 'Книга']
 dataWithSizePath = {}
 tableSize = ['925', '535']
 startPoint = ['47.569', '92.508']
 XDelta = '83'
 YDelta = '175'
+countCaseInTable = '11'
+anlgeStartPointDelta = ['877.431', '92.508']
 
 
 def file_exists(file_name):
@@ -33,7 +38,11 @@ def file_exists(file_name):
 
     return(exists(file_name))
 
-def applyConfig():
+def applyConfig(mode):
+    if mode == '1':
+        pathToConfig = pathToFileConfigSmall
+    elif mode == '2':
+        pathToConfig = pathToFileConfigMed
     with open(pathToConfig, 'r') as fileConfig:
         dataConfig = fileConfig.readlines()
         for data in dataConfig:
@@ -64,8 +73,8 @@ def applyConfig():
                 tableSize = data[1].strip().split(',')
             elif data[0].strip() == 'startPoint':
                 global startPoint
-                startPoint = [i.strip() for i in data[1].strip().split(';')]
-                startPoint
+                startPoint = [i.strip() for i in data[1].strip().split(',')]
+                # startPoint
             elif data[0].strip() == 'XDelta':
                 global XDelta
                 XDelta = data[1].strip()
@@ -75,10 +84,20 @@ def applyConfig():
             elif data[0].strip() == 'pathToBug':
                 global pathToBug
                 pathToBug = data[1].strip()
+            elif data[0].strip() == 'countCaseInTable':
+                global countCaseInTable
+                countCaseInTable = data[1].strip()
+            elif data[0].strip() == 'anlgeStartPointDelta':
+                global anlgeStartPointDelta
+                anlgeStartPointDelta = [i.strip() for i in data[1].strip().split(',')]
 
 
-def startChek():
+def startChek(mode):
     """Начальная проверка на наличие нужных каталогов"""
+    if mode == '1':
+        pathToConfig = pathToFileConfigSmall
+    elif mode == '2':
+        pathToConfig = pathToFileConfigMed
     errorsDirFlag = False
     errorsSizeFlag = False
     dirList = [mainPath, pathToExcelWithSize,
@@ -258,18 +277,36 @@ def splitOrderTable(dataFromOrderFile):
 
 def makeLocPrint(count):
     YLocation = str(round(float(
-        startPoint[1]) + float(YDelta) * float(count//11), 3))
+        startPoint[1]) + float(YDelta) * float(count//int(countCaseInTable)), 3))
     Xlocation = str(round(float(startPoint[0]) +
-                          float(XDelta) * (10 + count//11 * 11 - count), 3))
+                          float(XDelta) * (int(countCaseInTable)-1 + count//int(countCaseInTable) * int(countCaseInTable) - count), 3))
     return (Xlocation, YLocation)
 
 
+def createStartAngleDeltaFile():
+    xDeltaAngle = float(startPoint[0]) + float(anlgeStartPointDelta[0])
+    yDeltaAngle =  float(startPoint[1]) - float(anlgeStartPointDelta[1])
+    open(pathToAlgleDelta, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
+
+while True:
+    mode = input('Для какого принтера макет? Введите если маленький - "1", если средний - "2". (По умолчанию "1"): ')
+    if mode == '1':
+        break
+    elif mode == '2':
+        break
+    elif mode == '':
+        mode = '1'
+        break
+    else:
+        print('Некорректный ввод!')
+        continue
 try:
-    applyConfig()
+    applyConfig(mode)
 except:
     input('Произошла непредвиденная ошибка при инициализации')
 try:
-    startChek()
+    startChek(mode)
+    createStartAngleDeltaFile()
 except:
     input('Произошла непредвиденная ошибка при первоначальной проверке')
 try:

@@ -91,7 +91,9 @@ class GetStocks:
                                 continue
                             else:
                                 try:
+                                    a=await response.text()
                                     data = await response.json()
+                    
                                 except ClientPayloadError:
                                     print('Возникла ошибка с json. STATUS CODE: ' + str(response.status))
                                     await asyncio.sleep(5)
