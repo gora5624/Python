@@ -44,6 +44,28 @@ class ChangeAvailability:
                                     "warehouseId": self.warehouseId})
                 return self.requestsAsyncMain()
         
+    #Тесовый функционал удаления остатков
+    def takeOffDelet(self):
+        #return 0
+        if len(self.listBarcodes)!=0:
+            if type(self.listBarcodes[0]) != dict:
+                for barcod in self.listBarcodes:
+                    barcod = str(barcod) if type(barcod) == int else str(barcod)[0:-2] if type(barcod) == float else barcod
+                    self.json.append({"barcode": barcod,
+                                    "warehouseId": self.warehouseId})
+                return self.requestsAsyncMain()
+            else:
+                tmpList = []
+                for line in self.listBarcodes:
+                    tmpList.append(line['barcod'])
+                self.listBarcodes = tmpList
+                for barcod in self.listBarcodes:
+                    barcod = str(barcod) if type(barcod) == int else str(barcod)[0:-2] if type(barcod) == float else barcod
+                    self.json.append({"barcode": barcod,
+                                    "warehouseId": self.warehouseId})
+                return self.requestsAsyncMainDelet()
+
+
     def takeOn(self, count = 10000):
         #return 0
         if len(self.listBarcodes)!=0:
@@ -68,6 +90,35 @@ class ChangeAvailability:
     def requestsAsyncMain(self):
         loop = asyncio.get_event_loop()
         return loop.run_until_complete(self.requestsAsync())
+
+    #Тесовый функционал удаления остатков
+    def requestsAsyncMainDelet(self):
+        loop = asyncio.get_event_loop()
+        return loop.run_until_complete(self.requestsAsyncDelet())
+
+
+    #Тесовый функционал удаления остатков
+    async def requestsAsyncDelet(self):
+        errors = True
+        timerDelay = 5
+        for i in range(0,len(self.json),9000):
+            async with aiohttp.ClientSession() as session:
+                while True:
+                    async with session.delete(self.url, headers={
+                            'Authorization': '{}'.format(self.token)}, json=self.json[i:i+9000]) as response:
+                            if response.status != 200:
+                                print('Возникла ошибка. STATUS CODE: ' + str(response.status) + ' TEXT: ' + await response.text())
+                                if response.status == 429:
+                                    print('Ждём {} секунд.'.format(str(timerDelay)))
+                                    await asyncio.sleep(timerDelay)
+                                    timerDelay +=1
+                                await asyncio.sleep(5)
+                                continue
+                            else:
+                                errors = False
+                                break
+        if not errors:
+            return 0
 
 
     async def requestsAsync(self):
