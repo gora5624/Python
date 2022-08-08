@@ -202,10 +202,10 @@ class FBSStoks(QtWidgets.QMainWindow):
                 resp = pusher.takeOn()
                 if resp == 0:
                     self.ui.pushFullStocks.setStyleSheet('background: rgb(0,255,0);') 
-                    #self.createMSGSuc("{}".format(self.fileUpdateStokcsName))
+                    self.createMSGSuc("{} поставлен(ы) в наличие.".format(self.fileUpdateStokcsName), 'Успешно')
                 else: 
                     self.ui.pushFullStocks.setStyleSheet('background: rgb(255,0,0);')
-                    #self.createMSGError("{}".format(self.fileUpdateStokcsName))                
+                    self.createMSGError("{}".format(self.fileUpdateStokcsName))                
         else:
             self.getSeller()
             listBarcods = self.getListBarcodForComboBox()
@@ -217,10 +217,10 @@ class FBSStoks(QtWidgets.QMainWindow):
                 resp = pusher.takeOn()
                 if resp == 0:
                     self.ui.pushFullStocks.setStyleSheet('background: rgb(0,255,0);')
-                    #self.createMSGSuc("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
+                    self.createMSGSuc("{} поставлен(ы) в наличие.".format(self.ui.selectNomenclatureComboBox.currentText()), 'Успешно')
                 else:
                     self.ui.pushFullStocks.setStyleSheet('background: rgb(255,0,0);')
-                    #self.createMSGError("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
+                    self.createMSGError("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
         action = 'поставили в наличие'
         self.sendMassageToTelegram(action, listBarcods)
 
@@ -273,7 +273,7 @@ class FBSStoks(QtWidgets.QMainWindow):
                 # resp = pusher.takeOff()
                 if resp == 0:
                     # self.ui.pushEmptyStocks.setStyleSheet('background: rgb(0,255,0);') 
-                    self.createMSGSuc("{}".format(self.fileUpdateStokcsName))
+                    self.createMSGSuc("{} снят(ы) с ниличия.".format(self.fileUpdateStokcsName), 'Успешно')
                 else: 
                     # self.ui.pushEmptyStocks.setStyleSheet('background: rgb(255,0,0);')
                     self.createMSGError("{}".format(self.fileUpdateStokcsName))
@@ -290,12 +290,12 @@ class FBSStoks(QtWidgets.QMainWindow):
                 # resp = pusher.takeOff()
                 if resp == 0:
                     # self.ui.pushEmptyStocks.setStyleSheet('background: rgb(0,255,0);') 
-                    self.createMSGSuc("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
+                    self.createMSGSuc("{} снят(ы) с ниличия.".format(self.ui.selectNomenclatureComboBox.currentText()), 'Успешно')
                 else: 
                     # self.ui.pushEmptyStocks.setStyleSheet('background: rgb(255,0,0);')
                     self.createMSGError("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
         action = 'сняли с наличия'
-        self.sendMassageToTelegram(action, listBarcods)
+        # self.sendMassageToTelegram(action, listBarcods)
 
     def createMSGError(self,text):
         msg = QtWidgets.QMessageBox()
@@ -305,9 +305,9 @@ class FBSStoks(QtWidgets.QMainWindow):
         msg.exec_()
 
 
-    def createMSGSuc(self,text):
+    def createMSGSuc(self,text, title='Внимание'):
         msg = QtWidgets.QMessageBox()
-        msg.setWindowTitle("Внимание")
+        msg.setWindowTitle(title)
         msg.setText(text)
         msg.setIcon(QtWidgets.QMessageBox.Information)
         msg.exec_()
