@@ -31,7 +31,7 @@ class ChangeAvailability:
                     self.json.append({"barcode": barcod,
                                     "stock": 0,
                                     "warehouseId": self.warehouseId})
-                return self.requestsAsyncMain()
+                return self.requestsAsyncMainDelet()
             else:
                 tmpList = []
                 for line in self.listBarcodes:
@@ -42,7 +42,7 @@ class ChangeAvailability:
                     self.json.append({"barcode": barcod,
                                     "stock": 0,
                                     "warehouseId": self.warehouseId})
-                return self.requestsAsyncMain()
+                return self.requestsAsyncMainDelet()
         
     #Тесовый функционал удаления остатков
     def takeOffDelet(self):
@@ -53,7 +53,7 @@ class ChangeAvailability:
                     barcod = str(barcod) if type(barcod) == int else str(barcod)[0:-2] if type(barcod) == float else barcod
                     self.json.append({"barcode": barcod,
                                     "warehouseId": self.warehouseId})
-                return self.requestsAsyncMain()
+                return self.requestsAsyncMainDelet()
             else:
                 tmpList = []
                 for line in self.listBarcodes:
@@ -118,6 +118,7 @@ class ChangeAvailability:
                                 errors = False
                                 break
         if not errors:
+            # await response.text()
             return 0
 
 
