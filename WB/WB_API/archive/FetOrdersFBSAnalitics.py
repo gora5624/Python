@@ -70,6 +70,8 @@ def get_ordersAll(days=3):
     Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
     start_data = ((datetime.today() - timedelta(days=int(days)))).isoformat('T', 'seconds').replace(
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+    end_data = ((datetime.today() - timedelta(days=int(days)))).isoformat('T', 'seconds').replace(
+        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
     dataNew = []
     dataorders = []
     tmp = []
