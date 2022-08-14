@@ -136,45 +136,47 @@ def genArtColor(modelClass, colorCase, pathToImage):
 
 
 def generate_bar_WB(count):
-    listBarcode = []
-    countTry = 0
-    url = "https://suppliers-api.wildberries.ru/card/getBarcodes"
-    headers = {'Authorization': TokenArb,
-               'Content-Type': 'application/json',
-               'accept': 'application/json'}
+    # listBarcode = []
+    # countTry = 0
+    # url = "https://suppliers-api.wildberries.ru/card/getBarcodes"
+    # headers = {'Authorization': TokenArb,
+    #            'Content-Type': 'application/json',
+    #            'accept': 'application/json'}
 
-    while count > 5000:
-        count -= 5000
-        while True and countTry < 10:
-            data = "{\"id\":1,\"jsonrpc\":\"2.0\",\"params\":{\"quantity\":5000,\"supplierID\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\"}}"
-            try:
-                r = requests.post(url, data=str(data), headers=headers)
-                listBarcode.extend(r.json()['result']['barcodes'])
-                if 'err barcode service' not in r.text:
-                    break
-            except:
-                print(
-                    'Ошибка получения ШК. count = {}, пытаюсь повторно получить.'.format(count))
-                print(r.rext)
-                countTry += 1
-                time.sleep(10)
-                continue
-    while True and countTry < 10:
-        data = '(\"id\":1,\"jsonrpc\":\"2.0\",\"params\":(\"quantity\":{},\"supplierID\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\"))'
-        try:
-            r = requests.post(url, data=data.format(
-                str(count)).replace('(', '{').replace(')', '}'), headers=headers)
-            listBarcode.extend(r.json()['result']['barcodes'])
-            if 'err' not in r.text:
-                break
-        except:
-            print(
-                'Ошибка получения ШК. count = {}, пытаюсь повторно получить.'.format(count))
-            countTry += 1
-            time.sleep(10)
-            continue
-
+    # while count > 5000:
+    #     count -= 5000
+    #     while True and countTry < 10:
+    #         data = "{\"id\":1,\"jsonrpc\":\"2.0\",\"params\":{\"quantity\":5000,\"supplierID\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\"}}"
+    #         try:
+    #             r = requests.post(url, data=str(data), headers=headers)
+    #             listBarcode.extend(r.json()['result']['barcodes'])
+    #             if 'err barcode service' not in r.text:
+    #                 break
+    #         except:
+    #             print(
+    #                 'Ошибка получения ШК. count = {}, пытаюсь повторно получить.'.format(count))
+    #             print(r.rext)
+    #             countTry += 1
+    #             time.sleep(10)
+    #             continue
+    # while True and countTry < 10:
+    #     data = '(\"id\":1,\"jsonrpc\":\"2.0\",\"params\":(\"quantity\":{},\"supplierID\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\"))'
+    #     try:
+    #         r = requests.post(url, data=data.format(
+    #             str(count)).replace('(', '{').replace(')', '}'), headers=headers)
+    #         listBarcode.extend(r.json()['result']['barcodes'])
+    #         if 'err' not in r.text:
+    #             break
+    #     except:
+    #         print(
+    #             'Ошибка получения ШК. count = {}, пытаюсь повторно получить.'.format(count))
+    #         countTry += 1
+    #         time.sleep(10)
+    #         continue
+    listBarcode = read_excel(r'C:\Users\Георгий\Downloads\Список штрихкодов.xlsx')
+    listBarcode = listBarcode['Штрихкод товара'].to_list()
     return listBarcode
+
 
 
 def CreateExcelForFolder(modelClass=ModelWithAddin, color=str, addImage=str):
@@ -237,17 +239,17 @@ def createExcelSilicon(modelList, addImage):
     for folder in listdir(pathToDoneSiliconImageSilicon):
         if '.xlsx' in folder and '~' not in folder:
             listModel = pandas.concat([listModel,read_excel(joinPath(pathToDoneSiliconImageSilicon, folder))])
-            #listModel['Путь к файлу']=listModel['Путь к файлу'].astype(str)
-            #listImageAll.extend(listModel)
-    #listImageAllpd = pandas.DataFrame(listImageAll)
-    #listImageAllpd['Путь к файлу']=listImageAllpd['Путь к файлу'].astype(str)
-    #listImageAll  = pandas.concat(listModel)
-    #listImageAll['Путь к файлу']=listImageAll['Путь к файлу'].astype(str)
-    #listModel['Путь к файлу']=listModel['Путь к файлу'].astype(str)
+            listModel['Путь к файлу']=listModel['Путь к файлу'].astype(str)
+            listImageAll.extend(listModel)
+    listImageAllpd = pandas.DataFrame(listImageAll)
+    listImageAllpd['Путь к файлу']=listImageAllpd['Путь к файлу'].astype(str)
+    listImageAll  = pandas.concat(listModel)
+    listImageAll['Путь к файлу']=listImageAll['Путь к файлу'].astype(str)
+    listModel['Путь к файлу']=listModel['Путь к файлу'].astype(str)
     writer = pandas.ExcelWriter(pathToDoneSiliconImageSilicon + r'.xlsx', engine='xlsxwriter',options={'strings_to_urls': False})
     listModel.to_excel(writer, index=False)
     writer.close()
-    #listModel.to_excel(pathToDoneSiliconImageSilicon + '.xlsx', index=False)
+    listModel.to_excel(pathToDoneSiliconImageSilicon + '.xlsx', index=False)
 
 
 def chekImage(fileName, supplier, force):

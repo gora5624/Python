@@ -1,3 +1,4 @@
+from pickletools import optimize
 from PIL import Image, ImageFile
 from os import listdir
 from os.path import join as joinPath, basename
@@ -13,15 +14,15 @@ class MakePlastins():
         self.pathToLogoPrint = r'F:\Принты пластины смешанные\лого'
         self.pathToFullPrint = r'F:\Принты пластины смешанные\полные'
         self.pathToDonePlastins = r'F:\Пластины принты готовые'
-        self.leftPointToRect = 162
-        self.rightPointToRect = 496
-        self.topPointToRect = 34
-        self.bottPointToRect = 490
-        self.centerCircleX = 329
-        self.centerCircleY = 689
-        self.radiusCircle = 145
+        self.leftPointToRect = 256
+        self.rightPointToRect = 1384
+        self.topPointToRect = 1093
+        self.bottPointToRect = 2707
+        self.centerCircleX = 2036
+        self.centerCircleY = 2140
+        self.radiusCircle = 560
     
-
+    
     def makePlastin(self):
         pool = multiprocessing.Pool()
         rectangleMaskImg = Image.open(self.pathToPlastinRetangleMask)
@@ -59,7 +60,7 @@ class MakePlastins():
             mainImg.paste(mainImgTMP, (0, 0), circleMaskImg)
             #mainImg.show()
             #mainImg.paste(circleMaskImg, (0,0), circleMaskImg)
-            mainImg.save(joinPath(self.pathToDonePlastins, basename(printPath)))
+            mainImg.save(joinPath(self.pathToDonePlastins, basename(printPath.replace('png','jpg'))), optimize=True)
         else:
             printImgRet = printImg.resize(self.returnSizePrintForRect(printImg, flag))
             #mainImg.show()
@@ -75,7 +76,8 @@ class MakePlastins():
             mainImg.paste(mainImgTMP, (0, 0), circleMaskImg)
             #mainImg.show()
             #mainImg.paste(circleMaskImg, (0,0), circleMaskImg)
-            mainImg.save(joinPath(self.pathToDonePlastins, basename(printPath)))
+            mainImg = mainImg.resize((749,1000))
+            mainImg.save(joinPath(self.pathToDonePlastins, basename(printPath.replace('png','jpg'))), optimize=True)
 
 
     def returnSizePrintForCirc(self, printImgCirc, flag):
