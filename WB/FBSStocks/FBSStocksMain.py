@@ -245,7 +245,8 @@ class FBSStoks(QtWidgets.QMainWindow):
             text = 'В {} {} {} следующие позиции: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
         elif len(nomenclaturesListForBot) ==1:
             text = 'В {} {} {} следующую позицию: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
-        self.bot.send_message(-1001550015840, text)
+        for peace in range(0, len(text), 1000):
+            self.bot.send_message(-1001550015840, text[peace:peace+1000])
 
 
     def pushEmptyStocks(self):
@@ -295,7 +296,7 @@ class FBSStoks(QtWidgets.QMainWindow):
                     # self.ui.pushEmptyStocks.setStyleSheet('background: rgb(255,0,0);')
                     self.createMSGError("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
         action = 'сняли с наличия'
-        # self.sendMassageToTelegram(action, listBarcods)
+        self.sendMassageToTelegram(action, listBarcods)
 
     def createMSGError(self,text):
         msg = QtWidgets.QMessageBox()

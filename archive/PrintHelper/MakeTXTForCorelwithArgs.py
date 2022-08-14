@@ -5,10 +5,9 @@ from os import listdir, remove, makedirs
 
 
 pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
-#pathToOrderFile = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Заказы принты\Караханян Эксель\K_16_2645 от 06.07.2022.xlsx'
-#pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты потерянные 06.11.2021.xlsx'
+# pathToOrderFile = r'F:\15_4775_планки от 14.08.2022.xlsx'
+# pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты потерянные 06.11.2021.xlsx'
 mainPath = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper'
-pathToExcelWithSize = r'\\192.168.0.33\shared\Отдел производство\Wildberries\список печати.xlsx'
 pathToPrint = r'\\192.168.0.33\shared\Отдел производство\макеты для принтера\Макеты для 6090'
 pathToSizeFile = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\size.txt'
 pathToBug = r'\\192.168.0.33\shared\Отдел производство\макеты для принтера\Макеты для 6090\Bug\print 0.cdr'
@@ -21,6 +20,7 @@ Debug = True
 pathToTables = joinpath(mainPath, 'Tables')
 pathToFileConfigSmall = joinpath(mainPath, 'configSmall.txt')
 pathToFileConfigMed = joinpath(mainPath, 'configMed.txt')
+pathToFileConfigPlanks   = joinpath(mainPath, 'configPlank.txt')
 pathDebug = joinpath(mainPath, 'debug')
 pathToAlgleDelta = joinpath(mainPath, 'algleDelta.txt')
 listSize = ['13', '13 min', '13 pm', 'L', 'M', 'MS', 'S', 'XL', 'XS', 'Книга']
@@ -43,6 +43,8 @@ def applyConfig(mode):
         pathToConfig = pathToFileConfigSmall
     elif mode == '2':
         pathToConfig = pathToFileConfigMed
+    elif mode =='3':
+        pathToConfig = pathToFileConfigPlanks
     with open(pathToConfig, 'r') as fileConfig:
         dataConfig = fileConfig.readlines()
         for data in dataConfig:
@@ -98,10 +100,11 @@ def startChek(mode):
         pathToConfig = pathToFileConfigSmall
     elif mode == '2':
         pathToConfig = pathToFileConfigMed
+    elif mode =='3':
+        pathToConfig = pathToFileConfigPlanks
     errorsDirFlag = False
     errorsSizeFlag = False
-    dirList = [mainPath, pathToExcelWithSize,
-               pathToPrint, pathToTables, pathToConfig, pathDebug, pathToSizeFile]
+    dirList = [mainPath,pathToPrint, pathToTables, pathToConfig, pathDebug, pathToSizeFile]
     if Debug:
         print('ВНИМАНИЕ, ВКЛЮЧЁН РЕЖИМ ОТЛАДКИ')
     for dir_ in dirList:
@@ -172,7 +175,7 @@ def getDataFromOrderFile(pathToOrderFile):
     return dataFromOrderFile
 
 
-def detectPtintFronName(name):
+def detectPtintFronName(name, mode):
     if Debug:
         with open(joinpath(pathDebug, 'detectPtintFronName.txt'), 'a', encoding='utf-8') as file:
             if 'прозрачный' in name.lower():
@@ -213,6 +216,8 @@ def detectPtintFronName(name):
             return name.lower().split('fashion')[1].strip()
         elif 'df' in name.lower():
             return name.lower().split('df')[1].strip()
+        elif 'пластина' in name.lower():
+            return name.lower().split('прямоугольная черная')[1].strip()
 
 
 def detectSizeFromOrder(orderSize, orderNum, table):
@@ -242,7 +247,7 @@ def createpathToFile(printNameAll, size):
     return fullPath
 
 
-def splitOrderTable(dataFromOrderFile):
+def splitOrderTable(dataFromOrderFile, mode):
     numTable = 1
     count = 0
     nameTable = 'Table_{}'
@@ -261,7 +266,7 @@ def splitOrderTable(dataFromOrderFile):
                 continue
             X, Y = makeLocPrint(count)
             count += 1
-            printName = detectPtintFronName(line['Название'])
+            printName = detectPtintFronName(line['Название'], mode)
             size = detectSizeFromOrder(str(line['Размер'])[0:-2] if type(
                 line['Размер']) == float else line['Размер'], orderNum, str(numTable))
             if size != None:
@@ -289,10 +294,12 @@ def createStartAngleDeltaFile():
     open(pathToAlgleDelta, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
 
 while True:
-    mode = input('Для какого принтера макет? Введите если маленький - "1", если средний - "2". (По умолчанию "1"): ')
+    mode = input('Для какого принтера макет? Введите если маленький - "1", если средний - "2", если планки - "3" (По умолчанию "1"): ')
     if mode == '1':
         break
     elif mode == '2':
+        break
+    elif mode == '3':
         break
     elif mode == '':
         mode = '1'
@@ -315,6 +322,6 @@ except:
     input('Произошла непредвиденная ошибка при получении информации из файла заказа {}'.format(
         pathToOrderFile))
 try:
-    splitOrderTable(dataFromOrderFile)
+    splitOrderTable(dataFromOrderFile, mode)
 except:
     input('Произошла непредвиденная ошибка при работе программы')
