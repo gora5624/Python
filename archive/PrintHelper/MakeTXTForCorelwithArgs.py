@@ -1,10 +1,72 @@
 import sys
+from turtle import goto
 import xlrd
 from os.path import join as joinpath , exists
 from os import listdir, remove, makedirs
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QFileDialog, QApplication
+from ui.printHelperUI import Ui_Form
+
+# pyuic5 D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.ui -o D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.py
+
+pathToOrderFile = ''
+mode = ''
+w = QtWidgets.QWidget
+class PritHelper(QtWidgets.QMainWindow):
+    def __init__(self,parent=None):
+        super(PritHelper, self).__init__(parent)
+        self.ui = Ui_Form()
+        self.ui.setupUi(self)
+        self.ui.selectFileButt.clicked.connect(self.selectFile)
+        self.ui.bigButt.clicked.connect(self.bigMode)
+        self.ui.medButt.clicked.connect(self.medMode)
+        self.ui.smallButt.clicked.connect(self.smallMode)
+        self.ui.smallButtBooks.clicked.connect(self.smallBookMode)
+        self.ui.smallButtPlastins.clicked.connect(self.smallPlastinMode)
+
+    def bigMode(self):
+        global mode
+        mode = 'bigMode'
+        w.close(self)
+
+    def medMode(self):
+        global mode
+        mode = 'medMode'
+        w.close(self)
+
+    def smallMode(self):
+        global mode
+        mode = 'smallMode'
+        w.close(self)
+
+    def smallBookMode(self):
+        global mode
+        mode = 'smallBookMode'
+        w.close(self)
+
+    def smallPlastinMode(self):
+        global mode
+        mode = 'smallPlastinMode'
+        w.close(self)
+
+    def selectFile(self):
+        global pathToOrderFile
+        pathToOrderFile = QFileDialog.getOpenFileName(self, ("Выберите файл с заказом"), "", ("Excel Files (*.xlsx)"))[0]
+        if pathToOrderFile == '':
+            self.createMSGError("Вы не выбрали файл с заказом.")
+            return 0
+
+    def createMSGError(self,text):
+        msg = QtWidgets.QMessageBox()
+        msg.setWindowTitle("Ошибка")
+        msg.setText(text)
+        msg.setIcon(QtWidgets.QMessageBox.Warning)
+        msg.exec_()
+        
 
 
-pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
+
+#pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
 #pathToOrderFile = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Заказы принты\Караханян Эксель\K_16_2645 от 06.07.2022.xlsx'
 #pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты потерянные 06.11.2021.xlsx'
 mainPath = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper'
@@ -39,9 +101,9 @@ def file_exists(file_name):
     return(exists(file_name))
 
 def applyConfig(mode):
-    if mode == '1':
+    if mode == 'smallMode':
         pathToConfig = pathToFileConfigSmall
-    elif mode == '2':
+    elif mode == 'medMode':
         pathToConfig = pathToFileConfigMed
     with open(pathToConfig, 'r') as fileConfig:
         dataConfig = fileConfig.readlines()
@@ -288,33 +350,43 @@ def createStartAngleDeltaFile():
     yDeltaAngle =  float(startPoint[1]) - float(anlgeStartPointDelta[1])
     open(pathToAlgleDelta, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
 
-while True:
-    mode = input('Для какого принтера макет? Введите если маленький - "1", если средний - "2". (По умолчанию "1"): ')
-    if mode == '1':
-        break
-    elif mode == '2':
-        break
-    elif mode == '':
-        mode = '1'
-        break
-    else:
-        print('Некорректный ввод!')
-        continue
-try:
-    applyConfig(mode)
-except:
-    input('Произошла непредвиденная ошибка при инициализации')
-try:
-    startChek(mode)
-    createStartAngleDeltaFile()
-except:
-    input('Произошла непредвиденная ошибка при первоначальной проверке')
-try:
-    dataFromOrderFile = getDataFromOrderFile(pathToOrderFile)
-except:
-    input('Произошла непредвиденная ошибка при получении информации из файла заказа {}'.format(
-        pathToOrderFile))
-try:
-    splitOrderTable(dataFromOrderFile)
-except:
-    input('Произошла непредвиденная ошибка при работе программы')
+
+def startPrintHelper():
+    # while True:
+        # mode = input('Для какого принтера макет? Введите если маленький - "1", если средний - "2". (По умолчанию "1"): ')
+        # if mode == '1':
+        #     break
+        # elif mode == '2':
+        #     break
+        # elif mode == '':
+        #     mode = '1'
+        #     break
+        # else:
+        #     print('Некорректный ввод!')
+        #     continue
+    try:
+        applyConfig(mode)
+    except:
+        input('Произошла непредвиденная ошибка при инициализации')
+    try:
+        startChek(mode)
+        createStartAngleDeltaFile()
+    except:
+        input('Произошла непредвиденная ошибка при первоначальной проверке')
+    try:
+        dataFromOrderFile = getDataFromOrderFile(pathToOrderFile)
+    except:
+        input('Произошла непредвиденная ошибка при получении информации из файла заказа {}'.format(
+            pathToOrderFile))
+    try:
+        splitOrderTable(dataFromOrderFile)
+    except:
+        input('Произошла непредвиденная ошибка при работе программы')
+
+
+if __name__ =='__main__':
+    app = QtWidgets.QApplication([])
+    application = PritHelper()
+    application.show()
+    app.exec()
+    startPrintHelper()
