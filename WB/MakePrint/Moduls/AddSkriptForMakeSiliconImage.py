@@ -173,7 +173,7 @@ def generate_bar_WB(count):
     #         countTry += 1
     #         time.sleep(10)
     #         continue
-    listBarcode = read_excel(r'C:\Users\Георгий\Downloads\Список штрихкодов.xlsx')
+    listBarcode = read_excel(r'C:\Users\Георгий\Downloads\Новая папка\tmp.xlsx')
     listBarcode = listBarcode['Штрихкод товара'].to_list()
     return listBarcode
 
@@ -229,6 +229,7 @@ def copyImage():
 
 def createExcelSilicon(modelList, addImage):
     listModel = pandas.DataFrame()
+    listImageAll = []
     pool = multiprocessing.Pool(6)
     for model in modelList:
         for color in model.colorList:

@@ -39,6 +39,6 @@ def create_1C_barcod(bc, name):
 #     bc = '2029943477623'# str(line['Штрихкод'] )[0:-2]
 #     create_1C_barcod(bc, name)
 
-name = 'Джарлыгасов Тагир'#line['Пользователь']
-bc = '2018353454321'# str(line['Штрихкод'] )[0:-2]
+name = 'Крупин Владислав'#line['Пользователь']
+bc = '2042143769626'# str(line['Штрихкод'] )[0:-2]
 create_1C_barcod(bc, name)
