@@ -29,7 +29,9 @@ class Ui_Form(object):
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
         self.bigButt = QtWidgets.QPushButton(Form)
+        self.bigButt.setEnabled(False)
         self.bigButt.setGeometry(QtCore.QRect(20, 80, 171, 41))
+        self.bigButt.setFlat(False)
         self.bigButt.setObjectName("bigButt")
         self.medButt = QtWidgets.QPushButton(Form)
         self.medButt.setGeometry(QtCore.QRect(210, 80, 171, 41))
@@ -41,6 +43,7 @@ class Ui_Form(object):
         self.smallButtPlastins.setGeometry(QtCore.QRect(210, 140, 171, 41))
         self.smallButtPlastins.setObjectName("smallButtPlastins")
         self.smallButtBooks = QtWidgets.QPushButton(Form)
+        self.smallButtBooks.setEnabled(False)
         self.smallButtBooks.setGeometry(QtCore.QRect(20, 200, 171, 41))
         self.smallButtBooks.setObjectName("smallButtBooks")
 
