@@ -2,9 +2,69 @@ import sys
 import xlrd
 from os.path import join as joinpath , exists
 from os import listdir, remove, makedirs
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QFileDialog, QApplication
+from ui.printHelperUI import Ui_Form
+# pyuic5 D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.ui -o D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.py
+pathToOrderFile = ''
+mode = ''
+w = QtWidgets.QWidget
+class FBSStoks(QtWidgets.QMainWindow):
+    def __init__(self,parent=None):
+        super(FBSStoks, self).__init__(parent)
+        self.ui = Ui_Form()
+        self.ui.setupUi(self)
+        self.ui.selectFileButt.clicked.connect(self.selectFile)
+        self.ui.bigButt.clicked.connect(self.bigMode)
+        self.ui.medButt.clicked.connect(self.medMode)
+        self.ui.smallButt.clicked.connect(self.smallMode)
+        self.ui.smallButtBooks.clicked.connect(self.smallBookMode)
+        self.ui.smallButtPlastins.clicked.connect(self.smallPlastinMode)
+
+    def bigMode(self):
+        global mode
+        mode = 'bigMode'
+        w.close(self)
+
+    def medMode(self):
+        global mode
+        mode = 'medMode'
+        w.close(self)
+
+    def smallMode(self):
+        global mode
+        mode = 'smallMode'
+        w.close(self)
+
+    def smallBookMode(self):
+        global mode
+        mode = 'smallBookMode'
+        w.close(self)
+
+    def smallPlastinMode(self):
+        global mode
+        mode = 'smallPlastinMode'
+        w.close(self)
 
 
-pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
+    def selectFile(self):
+        global pathToOrderFile
+        pathToOrderFile = QFileDialog.getOpenFileName(self, ("Выберите файл со списком номенклатуры"), "", ("Excel Files (*.xlsx)"))[0]
+        if pathToOrderFile == '':
+            self.createMSGError("Вы не выбрали файл номенклатурой для загрузки.")
+            return 0
+
+    def createMSGError(self,text):
+        msg = QtWidgets.QMessageBox()
+        msg.setWindowTitle("Ошибка")
+        msg.setText(text)
+        msg.setIcon(QtWidgets.QMessageBox.Warning)
+        msg.exec_()
+
+
+
+
+
 # pathToOrderFile = r'F:\15_4775_планки от 14.08.2022.xlsx'
 # pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты потерянные 06.11.2021.xlsx'
 mainPath = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper'
@@ -13,7 +73,6 @@ pathToSizeFile = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\size.txt'
 pathToBug = r'\\192.168.0.33\shared\Отдел производство\макеты для принтера\Макеты для 6090\Bug\print 0.cdr'
 
 
-# Режим отладки True - да, False - боевой режим
 Debug = True
 
 
@@ -39,11 +98,11 @@ def file_exists(file_name):
     return(exists(file_name))
 
 def applyConfig(mode):
-    if mode == '1':
+    if mode == 'smallMode':
         pathToConfig = pathToFileConfigSmall
-    elif mode == '2':
+    elif mode == 'medMode':
         pathToConfig = pathToFileConfigMed
-    elif mode =='3':
+    elif mode =='smallPlastinMode':
         pathToConfig = pathToFileConfigPlanks
     with open(pathToConfig, 'r') as fileConfig:
         dataConfig = fileConfig.readlines()
@@ -96,11 +155,11 @@ def applyConfig(mode):
 
 def startChek(mode):
     """Начальная проверка на наличие нужных каталогов"""
-    if mode == '1':
+    if mode == 'smallMode':
         pathToConfig = pathToFileConfigSmall
-    elif mode == '2':
+    elif mode == 'medMode':
         pathToConfig = pathToFileConfigMed
-    elif mode =='3':
+    elif mode =='smallPlastinMode':
         pathToConfig = pathToFileConfigPlanks
     errorsDirFlag = False
     errorsSizeFlag = False
@@ -293,36 +352,44 @@ def createStartAngleDeltaFile():
     yDeltaAngle =  float(startPoint[1]) - float(anlgeStartPointDelta[1])
     open(pathToAlgleDelta, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
 
+def startPrintHelper():
+    # while True:
+    #     mode = input('Для какого принтера макет? Введите если маленький  "1", если средний - "2", если планки - "3" (По умолчанию "1"): ')
+    #     if mode == '1':
+    #         break
+    #     elif mode == '2':
+    #         break
+    #     elif mode == '3':
+    #         break
+    #     elif mode == '':
+    #         mode = '1'
+    #         break
+    #     else:
+    #         print('Некорректный ввод!')
+    #         continue
+    try:
+        applyConfig(mode)
+    except:
+        input('Произошла непредвиденная ошибка при инициализации')
+    try:
+        startChek(mode)
+        createStartAngleDeltaFile()
+    except:
+        input('Произошла непредвиденная ошибка при первоначальной проверке')
+    try:
+        dataFromOrderFile = getDataFromOrderFile(pathToOrderFile)
+    except:
+        input('Произошла непредвиденная ошибка при получении информации из файла заказа {}'.format(
+            pathToOrderFile))
+    try:
+        splitOrderTable(dataFromOrderFile, mode)
+    except:
+        input('Произошла непредвиденная ошибка при работе программы')
 
-while True:
-    mode = input('Для какого принтера макет? Введите если маленький  "1", если средний - "2", если планки - "3" (По умолчанию "1"): ')
-    if mode == '1':
-        break
-    elif mode == '2':
-        break
-    elif mode == '3':
-        break
-    elif mode == '':
-        mode = '1'
-        break
-    else:
-        print('Некорректный ввод!')
-        continue
-try:
-    applyConfig(mode)
-except:
-    input('Произошла непредвиденная ошибка при инициализации')
-try:
-    startChek(mode)
-    createStartAngleDeltaFile()
-except:
-    input('Произошла непредвиденная ошибка при первоначальной проверке')
-try:
-    dataFromOrderFile = getDataFromOrderFile(pathToOrderFile)
-except:
-    input('Произошла непредвиденная ошибка при получении информации из файла заказа {}'.format(
-        pathToOrderFile))
-try:
-    splitOrderTable(dataFromOrderFile, mode)
-except:
-    input('Произошла непредвиденная ошибка при работе программы')
+
+if __name__ =='__main__':
+    app = QtWidgets.QApplication([])
+    application = FBSStoks()
+    application.show()
+    app.exec()
+    startPrintHelper()
