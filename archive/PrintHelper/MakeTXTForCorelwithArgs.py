@@ -1,76 +1,13 @@
 import sys
-from turtle import goto
 import xlrd
 from os.path import join as joinpath , exists
 from os import listdir, remove, makedirs
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog, QApplication
-from ui.printHelperUI import Ui_Form
-
-# pyuic5 D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.ui -o D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.py
-
-pathToOrderFile = ''
-mode = ''
-w = QtWidgets.QWidget
-class PritHelper(QtWidgets.QMainWindow):
-    def __init__(self,parent=None):
-        super(PritHelper, self).__init__(parent)
-        self.ui = Ui_Form()
-        self.ui.setupUi(self)
-        self.ui.selectFileButt.clicked.connect(self.selectFile)
-        self.ui.bigButt.clicked.connect(self.bigMode)
-        self.ui.medButt.clicked.connect(self.medMode)
-        self.ui.smallButt.clicked.connect(self.smallMode)
-        self.ui.smallButtBooks.clicked.connect(self.smallBookMode)
-        self.ui.smallButtPlastins.clicked.connect(self.smallPlastinMode)
-
-    def bigMode(self):
-        global mode
-        mode = 'bigMode'
-        w.close(self)
-
-    def medMode(self):
-        global mode
-        mode = 'medMode'
-        w.close(self)
-
-    def smallMode(self):
-        global mode
-        mode = 'smallMode'
-        w.close(self)
-
-    def smallBookMode(self):
-        global mode
-        mode = 'smallBookMode'
-        w.close(self)
-
-    def smallPlastinMode(self):
-        global mode
-        mode = 'smallPlastinMode'
-        w.close(self)
-
-    def selectFile(self):
-        global pathToOrderFile
-        pathToOrderFile = QFileDialog.getOpenFileName(self, ("Выберите файл с заказом"), "", ("Excel Files (*.xlsx)"))[0]
-        if pathToOrderFile == '':
-            self.createMSGError("Вы не выбрали файл с заказом.")
-            return 0
-
-    def createMSGError(self,text):
-        msg = QtWidgets.QMessageBox()
-        msg.setWindowTitle("Ошибка")
-        msg.setText(text)
-        msg.setIcon(QtWidgets.QMessageBox.Warning)
-        msg.exec_()
-        
 
 
-
-#pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
-#pathToOrderFile = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Заказы принты\Караханян Эксель\K_16_2645 от 06.07.2022.xlsx'
-#pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты потерянные 06.11.2021.xlsx'
+pathToOrderFile = sys.argv[1:][0].replace('#', ' ')
+# pathToOrderFile = r'F:\15_4775_планки от 14.08.2022.xlsx'
+# pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты потерянные 06.11.2021.xlsx'
 mainPath = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper'
-pathToExcelWithSize = r'\\192.168.0.33\shared\Отдел производство\Wildberries\список печати.xlsx'
 pathToPrint = r'\\192.168.0.33\shared\Отдел производство\макеты для принтера\Макеты для 6090'
 pathToSizeFile = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\size.txt'
 pathToBug = r'\\192.168.0.33\shared\Отдел производство\макеты для принтера\Макеты для 6090\Bug\print 0.cdr'
@@ -83,6 +20,7 @@ Debug = True
 pathToTables = joinpath(mainPath, 'Tables')
 pathToFileConfigSmall = joinpath(mainPath, 'configSmall.txt')
 pathToFileConfigMed = joinpath(mainPath, 'configMed.txt')
+pathToFileConfigPlanks   = joinpath(mainPath, 'configPlank.txt')
 pathDebug = joinpath(mainPath, 'debug')
 pathToAlgleDelta = joinpath(mainPath, 'algleDelta.txt')
 listSize = ['13', '13 min', '13 pm', 'L', 'M', 'MS', 'S', 'XL', 'XS', 'Книга']
@@ -101,10 +39,12 @@ def file_exists(file_name):
     return(exists(file_name))
 
 def applyConfig(mode):
-    if mode == 'smallMode':
+    if mode == '1':
         pathToConfig = pathToFileConfigSmall
-    elif mode == 'medMode':
+    elif mode == '2':
         pathToConfig = pathToFileConfigMed
+    elif mode =='3':
+        pathToConfig = pathToFileConfigPlanks
     with open(pathToConfig, 'r') as fileConfig:
         dataConfig = fileConfig.readlines()
         for data in dataConfig:
@@ -160,10 +100,11 @@ def startChek(mode):
         pathToConfig = pathToFileConfigSmall
     elif mode == '2':
         pathToConfig = pathToFileConfigMed
+    elif mode =='3':
+        pathToConfig = pathToFileConfigPlanks
     errorsDirFlag = False
     errorsSizeFlag = False
-    dirList = [mainPath, pathToExcelWithSize,
-               pathToPrint, pathToTables, pathToConfig, pathDebug, pathToSizeFile]
+    dirList = [mainPath,pathToPrint, pathToTables, pathToConfig, pathDebug, pathToSizeFile]
     if Debug:
         print('ВНИМАНИЕ, ВКЛЮЧЁН РЕЖИМ ОТЛАДКИ')
     for dir_ in dirList:
@@ -234,7 +175,7 @@ def getDataFromOrderFile(pathToOrderFile):
     return dataFromOrderFile
 
 
-def detectPtintFronName(name):
+def detectPtintFronName(name, mode):
     if Debug:
         with open(joinpath(pathDebug, 'detectPtintFronName.txt'), 'a', encoding='utf-8') as file:
             if 'прозрачный' in name.lower():
@@ -275,6 +216,8 @@ def detectPtintFronName(name):
             return name.lower().split('fashion')[1].strip()
         elif 'df' in name.lower():
             return name.lower().split('df')[1].strip()
+        elif 'пластина' in name.lower():
+            return name.lower().split('прямоугольная черная')[1].strip()
 
 
 def detectSizeFromOrder(orderSize, orderNum, table):
@@ -304,7 +247,7 @@ def createpathToFile(printNameAll, size):
     return fullPath
 
 
-def splitOrderTable(dataFromOrderFile):
+def splitOrderTable(dataFromOrderFile, mode):
     numTable = 1
     count = 0
     nameTable = 'Table_{}'
@@ -323,7 +266,7 @@ def splitOrderTable(dataFromOrderFile):
                 continue
             X, Y = makeLocPrint(count)
             count += 1
-            printName = detectPtintFronName(line['Название'])
+            printName = detectPtintFronName(line['Название'], mode)
             size = detectSizeFromOrder(str(line['Размер'])[0:-2] if type(
                 line['Размер']) == float else line['Размер'], orderNum, str(numTable))
             if size != None:
@@ -351,42 +294,35 @@ def createStartAngleDeltaFile():
     open(pathToAlgleDelta, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
 
 
-def startPrintHelper():
-    # while True:
-        # mode = input('Для какого принтера макет? Введите если маленький - "1", если средний - "2". (По умолчанию "1"): ')
-        # if mode == '1':
-        #     break
-        # elif mode == '2':
-        #     break
-        # elif mode == '':
-        #     mode = '1'
-        #     break
-        # else:
-        #     print('Некорректный ввод!')
-        #     continue
-    try:
-        applyConfig(mode)
-    except:
-        input('Произошла непредвиденная ошибка при инициализации')
-    try:
-        startChek(mode)
-        createStartAngleDeltaFile()
-    except:
-        input('Произошла непредвиденная ошибка при первоначальной проверке')
-    try:
-        dataFromOrderFile = getDataFromOrderFile(pathToOrderFile)
-    except:
-        input('Произошла непредвиденная ошибка при получении информации из файла заказа {}'.format(
-            pathToOrderFile))
-    try:
-        splitOrderTable(dataFromOrderFile)
-    except:
-        input('Произошла непредвиденная ошибка при работе программы')
-
-
-if __name__ =='__main__':
-    app = QtWidgets.QApplication([])
-    application = PritHelper()
-    application.show()
-    app.exec()
-    startPrintHelper()
+while True:
+    mode = input('Для какого принтера макет? Введите если маленький  "1", если средний - "2", если планки - "3" (По умолчанию "1"): ')
+    if mode == '1':
+        break
+    elif mode == '2':
+        break
+    elif mode == '3':
+        break
+    elif mode == '':
+        mode = '1'
+        break
+    else:
+        print('Некорректный ввод!')
+        continue
+try:
+    applyConfig(mode)
+except:
+    input('Произошла непредвиденная ошибка при инициализации')
+try:
+    startChek(mode)
+    createStartAngleDeltaFile()
+except:
+    input('Произошла непредвиденная ошибка при первоначальной проверке')
+try:
+    dataFromOrderFile = getDataFromOrderFile(pathToOrderFile)
+except:
+    input('Произошла непредвиденная ошибка при получении информации из файла заказа {}'.format(
+        pathToOrderFile))
+try:
+    splitOrderTable(dataFromOrderFile, mode)
+except:
+    input('Произошла непредвиденная ошибка при работе программы')
