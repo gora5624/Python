@@ -43,7 +43,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.ApplyAddin.clicked.connect(self.btnApplyAddin)
         self.ui.CreateCase.clicked.connect(self.btnCreateCase)
         self.ui.updateListModel.clicked.connect(self.updateModelList)
-        self.ui.makePlastinsBut.clecked.connect(self.makeplastins)
+        self.ui.makePlastinsBut.clicked.connect(self.makeplastins)
         self.updeteListFile()
         self.updateModelList()
 
