@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.ui'
+# Form implementation generated from reading ui file 'E:\MyProduct\Python\archive\PrintHelper\ui\printHelperUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -43,7 +43,7 @@ class Ui_Form(object):
         self.smallButtPlastins.setGeometry(QtCore.QRect(210, 140, 171, 41))
         self.smallButtPlastins.setObjectName("smallButtPlastins")
         self.smallButtBooks = QtWidgets.QPushButton(Form)
-        self.smallButtBooks.setEnabled(False)
+        self.smallButtBooks.setEnabled(True)
         self.smallButtBooks.setGeometry(QtCore.QRect(20, 200, 171, 41))
         self.smallButtBooks.setObjectName("smallButtBooks")
 

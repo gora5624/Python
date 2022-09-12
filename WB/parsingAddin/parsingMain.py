@@ -41,7 +41,7 @@ class ParsingUI(QtWidgets.QMainWindow):
         # Получаем все свойства из юи
         self.searchRequests = []
         tmpList = self.ui.searchRequestsList.toPlainText().split(';')
-        self.searchRequests = [i for i in range(len(tmpList)) if tmpList[i] != '']
+        self.searchRequests = [tmpList[i] for i in range(len(tmpList)) if tmpList[i] != '']
         if not self.ui.allPageCheckBox.isChecked():
             try:
                 self.countPage = int(self.ui.countPage.toPlainText())

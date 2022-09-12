@@ -6,9 +6,9 @@ workDisk = 'F'
 # pathToPrintImageFolderWithOutBack = r'{}:\Картинки китай\Под натяжку общее\Без фона'.format(workDisk)
 pathToCategoryList = abspath(joinPath(__file__, '..','cat.xlsx'))
 pathToUploadWeb = r'http://80.237.77.44/joomla/images/mobi/Готовые принты'
-pathToUploadFolderLocal = r'\\192.168.0.33\web_packages\joomla\images\mobi\Готовые принты'
+pathToUploadFolderLocal = r'D:\OpenServer\domains\wordpress\wp-content\uploads\Готовые принты'
 pathToUploadSecondWeb = r'http://80.237.77.44/joomla/images/mobi/Вторые картинки'
-pathToSecondImageUploadFolder = r'\\192.168.0.33\web_packages\joomla\images\mobi\Вторые картинки'
+pathToSecondImageUploadFolder = r'D:\OpenServer\domains\wordpress\wp-content\uploads\Вторые картинки'
 # пути для книжек
 pathToBookImageWithOutModel = r'{}:\Готовые принты книжки Fashion'.format(workDisk)
 pathToBookEffect = abspath(joinPath(__file__, '..', r'MakeBookImage',r'Effect',r'light.png'))

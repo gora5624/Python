@@ -191,7 +191,7 @@ def CreateExcelForFolder(modelClass=ModelWithAddin, color=str, addImage=str):
             imageList.append(joinPath(pathToSecondImagesFolderSilicon, model, color, '2.jpg').replace(pathToSecondImagesFolderSilicon, pathToUploadSecondWeb + '/Силикон').replace('\\','/'))
         elif exists(joinPath(pathToSecondImagesFolderSilicon, model, color, '3.jpg')):
             imageList.append(joinPath(pathToSecondImagesFolderSilicon, model, color, '3.jpg').replace(pathToSecondImagesFolderSilicon, pathToUploadSecondWeb + '/Силикон').replace('\\','/'))    
-        data = {'Баркод': listBarcodes[i],
+        data = {'Баркод': '',
                 'Бренд': modelClass.brand,
                 'Наименование': modelClass.name,
                 'Розничная цена': modelClass.price,
