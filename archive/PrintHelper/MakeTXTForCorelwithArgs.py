@@ -68,9 +68,10 @@ class FBSStoks(QtWidgets.QMainWindow):
 # pathToOrderFile = r'F:\15_4775_планки от 14.08.2022.xlsx'
 # pathToOrderFile = r'\\192.168.0.33\shared\_Общие документы_\Заказы вайлд\Новые\ФБС принты потерянные 06.11.2021.xlsx'
 mainPath = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper'
-pathToPrint = r'\\192.168.0.33\shared\Отдел производство\макеты для принтера\Макеты для 6090'
+pathToPrint = r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090'
 pathToSizeFile = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\size.txt'
-pathToBug = r'\\192.168.0.33\shared\Отдел производство\макеты для принтера\Макеты для 6090\Bug\print 0.cdr'
+pathToBug = r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\Bug\print 0.cdr'
+pathToModeFile = r"C:\Users\Public\Documents\WBHelpTools\PrintHelper\mode.txt"
 
 
 Debug = True
@@ -79,7 +80,8 @@ Debug = True
 pathToTables = joinpath(mainPath, 'Tables')
 pathToFileConfigSmall = joinpath(mainPath, 'configSmall.txt')
 pathToFileConfigMed = joinpath(mainPath, 'configMed.txt')
-pathToFileConfigPlanks   = joinpath(mainPath, 'configPlank.txt')
+pathToFileConfigPlanks  = joinpath(mainPath, 'configPlank.txt')
+pathToFileConfigSmallBook = joinpath(mainPath, 'configSmallBook.txt')
 pathDebug = joinpath(mainPath, 'debug')
 pathToAlgleDelta = joinpath(mainPath, 'algleDelta.txt')
 listSize = ['13', '13 min', '13 pm', 'L', 'M', 'MS', 'S', 'XL', 'XS', 'Книга']
@@ -100,10 +102,24 @@ def file_exists(file_name):
 def applyConfig(mode):
     if mode == 'smallMode':
         pathToConfig = pathToFileConfigSmall
+        with open(pathToModeFile, 'w') as fileMode:
+            fileMode.write('sil')
+            fileMode.close()
     elif mode == 'medMode':
         pathToConfig = pathToFileConfigMed
+        with open(pathToModeFile, 'w') as fileMode:
+            fileMode.write('sil')
+            fileMode.close()        
     elif mode =='smallPlastinMode':
         pathToConfig = pathToFileConfigPlanks
+        with open(pathToModeFile, 'w') as fileMode:
+            fileMode.write('plastin')
+            fileMode.close()
+    elif mode == 'smallBookMode':
+        pathToConfig = pathToFileConfigSmallBook
+        with open(pathToModeFile, 'w') as fileMode:
+            fileMode.write('book')
+            fileMode.close()
     with open(pathToConfig, 'r') as fileConfig:
         dataConfig = fileConfig.readlines()
         for data in dataConfig:
@@ -161,6 +177,8 @@ def startChek(mode):
         pathToConfig = pathToFileConfigMed
     elif mode =='smallPlastinMode':
         pathToConfig = pathToFileConfigPlanks
+    elif mode == 'smallBookMode':
+        pathToConfig = pathToFileConfigSmallBook
     errorsDirFlag = False
     errorsSizeFlag = False
     dirList = [mainPath,pathToPrint, pathToTables, pathToConfig, pathDebug, pathToSizeFile]

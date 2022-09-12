@@ -9,8 +9,10 @@ sem = asyncio.Semaphore(3)
 
 async def parser(stufList, url):
     async with sem:
-        # browser = webdriver.PhantomJS(r'C:\Users\Георгий\Downloads\phantomjs-2.1.1-windows\bin\phantomjs.exe')
-        browser = webdriver.Chrome('E:\MyProduct\Python\WB\parsingAddin\chromedriver.exe')
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
+        options.add_argument('window-size=1920x935')
+        browser = webdriver.Chrome(r'E:\MyProduct\Python\WB\parsingAddin\chromedriver.exe', chrome_options=options)
         browser.get(url)
         #ищем имя
         await asyncio.sleep(5)

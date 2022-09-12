@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'E:\MyProduct\Python\archive\PrintHelper\ui\printHelperUI.ui'
+# Form implementation generated from reading ui file 'e:\MyProduct\Python\.git-rewrite\t\archive\PrintHelper\ui\printHelperUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
