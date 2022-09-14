@@ -116,6 +116,7 @@ def get_ordersAll(days=3):
                 'Номер заказа':line['orderId'],
                 'ИП': ip}
         dataNew.append(datatmp)
+        #dataNew.append(line)
     dataNewpd = pandas.DataFrame(dataNew)
     dataNewpd.to_excel((os.path.join(os.path.join(
         os.environ['USERPROFILE']), 'Desktop', WBOrdersDataFileName.format(curData + '_' + curTime, 'все ИП'))), index=False)
