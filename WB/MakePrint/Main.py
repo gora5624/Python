@@ -91,7 +91,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         mode = self.ui.IPSelector.currentText()
         #barcodeList = getListCard(mode)
         # barcodeList = []
-        create.createNomenclatures(mode)
+        create.createNomenclaturesMultiporocessing(mode)
         # self.ui.textSiliconMask.setText('{} готов.'.format(fileName))
         # getListCard(mode)
 
