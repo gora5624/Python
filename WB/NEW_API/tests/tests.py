@@ -3,34 +3,35 @@ import pandas
 
 
 # # создать товар
-# requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/cards/upload'
+# requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/cards/upload/add'
 # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
+# # jsonRequest = {
+# #   "vendorCode": "Infinix_Hot_12_Play_BP_CCM_CLR_PTT_PRNT_1080",
+# #   "cards": [
+# #     {
+# #       "vendorCode": "Infinix_Hot_12_Play_BP_CCM_CLR_PTT_PRNT_1080_3",
+# #       "mediaFiles": ['http://95.78.233.163:8001/wp-content/uploads/Готовые принты/Силикон/Realme C35/прозрачный/(Принт 1017).jpg'],
+# #       "characteristics": [
+# #         {
+# #             'Предмет': 'Чехлы для телефонов'
+# #         }
+# #       ],
+# #       "sizes": [
+# #         {
+# #           "price": 399,
+# #           "skus": [
+# #             "2045030458629"
+# #           ]
+# #         }
+# #       ]
+# #     }
+# #   ]
+# # }
 # jsonRequest = {
 #   "vendorCode": "Infinix_Hot_12_Play_BP_CCM_CLR_PTT_PRNT_1080",
 #   "cards": [
 #     {
-#       "vendorCode": "Infinix_Hot_12_Play_BP_CCM_CLR_PTT_PRNT_1080_3",
-#       "mediaFiles": ['http://95.78.233.163:8001/wp-content/uploads/Готовые принты/Силикон/Realme C35/прозрачный/(Принт 1017).jpg'],
-#       "characteristics": [
-#         {
-#             'Предмет': 'Чехлы для телефонов'
-#         }
-#       ],
-#       "sizes": [
-#         {
-#           "price": 399,
-#           "skus": [
-#             "2045030458629"
-#           ]
-#         }
-#       ]
-#     }
-#   ]
-# }
-# jsonRequest = [
-#   [
-#     {
-#       "vendorCode": "Infinix_Hot_12_Play_BP_CCM_CLR_PTT_PRNT_1080_4",
+#       "vendorCode": "Infinix_Hot_12_Play_BP_CCM_CLR_PTT_PRNT_1080_8",
 #       'mediaFiles': ['http://95.78.233.163:8001/wp-content/uploads/Готовые принты/Силикон/Realme C35/прозрачный/(Принт 1017).jpg'],
 #       "characteristics": [
 #         {
@@ -52,6 +53,10 @@ import pandas
 #           {'Наименование': 'Защитный чехол Infinix Hot 12 Play'},
 #           {'Предмет':'Чехлы для телефонов'},
 #           {'Цвет': ['прозрачный']},
+#           {'Медиафайлы':['http://95.78.233.163:8001/wp-content/uploads/Готовые принты/Силикон/Realme C35/прозрачный/(Принт 1017).jpg']},
+#           {'Высота упаковки': 18.5},
+#           {'Ширина упаковки': 11},
+#           {'Глубина упаковки': 1.5},
 #           {'Описание': 'Прозрачная силиконовая накладка на Infinix Hot 12 Play отлично смотрится на смартфоне и надежно защищает Ваш смартфон от последствий после падений / трений. Чехол накладка не скользит в руке, бампер легко снять и надеть, совместим со всеми стеклами. Все технические отверстия идеально выверены по размерам и положению телефона. Плотное облегание телефона. Влагоотталкивающие, амортизирующие свойства материала силиконового чехла защитят телефон от влаги, пыли и механических повреждений. Аксессуар выполнен из плотного бесшовного силикона, который отличается высокой износостойкостью и практичностью.1'}
 #       ],
 #       "sizes": [
@@ -59,13 +64,13 @@ import pandas
 #           'techSize': '0',
 #           "price": 199,
 #           "skus": [
-#             "2045030458630"
+#             "2045030458552"
 #           ]
 #         }
 #       ]
 #     }
 #   ]
-# ]
+# }
 # headersRequest = {'Authorization': '{}'.format(token)}
 # responce = requests.post(requestUrl, json=jsonRequest, headers=headersRequest)
 # a = responce.json()
@@ -76,10 +81,12 @@ import pandas
 requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/cards/filter'
 token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
 jsonRequest = {
-    "vendorCodes": "Infinix_Hot_12_Play_BP_CCM_CLR_PTT_PRNT_1080_4"
+  "vendorCodes": [
+    "iPhone_14_Plus_BP_CCM_CLR_HLD_CAC_PRNT_1269"
+  ]
 }
 headersRequest = {'Authorization': '{}'.format(token)}
-responce = requests.get(requestUrl, params=jsonRequest, headers=headersRequest)
+responce = requests.post(requestUrl, json=jsonRequest, headers=headersRequest)
 card = responce.json()
 nmID = card['data'][0]['nmID']
 chrtID = card['data'][0]['sizes'][0]['chrtID']
@@ -88,14 +95,15 @@ chrtID = card['data'][0]['sizes'][0]['chrtID']
 # requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/media/save'
 # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
 # jsonRequest = {
-#   "vendorCode": "Infinix_Hot_12_Play_BP_CCM_CLR_PTT_PRNT_1080_4",
+#   "vendorCode": 'Infinix_Hot_12_Play_BP_CCM_CLR_PTT_PRNT_1080_8',
 #   "data": [
-#     "http://95.78.233.163:8001/wp-content/uploads/Готовые принты/Силикон/Realme C35/прозрачный/(Принт 1017).jpg"
+#     "http://95.78.233.163:8001/wp-content/uploads/Готовые принты/Силикон/Чехол iPhone 14 Plus силикон с зак.кам. проз. под карту/(Принт 1002).jpg"
 #   ]
 # }
-# headersRequest = {'Authorization': '{}'.format(token), 'X-Vendor-Code': 'Infinix_Hot_12_Play_BP_CCM_CLR_PTT_PRNT_1080_4'}
+# headersRequest = {'Authorization': '{}'.format(token), 'X-Vendor-Code': 'Infinix_Hot_12_Play_BP_CCM_CLR_PTT_PRNT_1080_8'}
 # responce = requests.post(requestUrl, json=jsonRequest, headers=headersRequest)
 # a = responce.json()
+# print(responce.text)
 # a
 
 
