@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\MyProduct\Python\.git-rewrite\t\WB\MakePrint\ui\MakeBookPrintUi.ui'
+# Form implementation generated from reading ui file 'e:\MyProduct\Python\WB\MakePrint\ui\MakeBookPrintUi.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #

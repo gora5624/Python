@@ -9,6 +9,8 @@ import requests
 import pandas
 import time
 import multiprocessing
+import asyncio
+import aiohttp
 
 
 class WBnomenclaturesCreater:
@@ -42,7 +44,7 @@ class WBnomenclaturesCreater:
             responce = requests.post(requestUrl, json=jsonRequest, headers=headersRequest)
             responce
 
-    def createNomenclatures(self, mode):
+    def createNomenclaturesMultiporocessing(self, mode):
         nomenclature = []
         if mode =='Караханян':
             token = self.tokenKar
@@ -103,7 +105,7 @@ class WBnomenclaturesCreater:
         # self.modelForUploads
         pool = multiprocessing.Pool()
         for model in self.modelForUploads:
-            pool.apply_async(self.createTMP, args=(model, headersRequest,))
+            pool.apply_async(self.createNomenclatureSingleProcess, args=(model, headersRequest,))
         pool.close()
         pool.join()
 
@@ -128,23 +130,59 @@ class WBnomenclaturesCreater:
             #         print(vendorCodeMain + ' ошибка при создании, проверь ВБ')
 
 
-    def createTMP(self, model, headersRequest):
-        vendorCodeMain = model[0]['vendorCode']
-        jsonCard = [[model[0]]]
+    def createNomenclatureSingleProcess(self, modelListCard, headersRequest):
+        vendorCodeMain = modelListCard[0]['vendorCode']
+        jsonCard = [[modelListCard[0]]]
         responce = requests.post(self.urlCreate, json=jsonCard, headers=headersRequest)
         if responce.status_code == 200:
             print(vendorCodeMain + ' успешно создана')
         else:
             print(responce.text)
             print(vendorCodeMain + ' ошибка при создании, проверь ВБ')
-        for i in range(1,len(model),1):
-            jsonNomenclature = {
+        # for i in range(1,len(modelListCard),1):
+        #     jsonNomenclature = {
+        #         'vendorCode': vendorCodeMain,
+        #         'cards': modelListCard[i:i+10]
+        #     }
+        self.startCeateNomenclaturesAsyncio(modelListCard[1:], headersRequest, vendorCodeMain)
+            #responce = requests.post(self.urlAdd, json=jsonNomenclature, headers=headersRequest)
+            # if responce.status_code == 200:
+            #     print(vendorCodeMain + ' успешно создана')
+            # else:
+            #     print(responce.text)
+            #     print(vendorCodeMain + ' ошибка при создании, проверь ВБ')
+
+
+
+    async def createNomenclaturesGetRequests(self, session, jsonNomenclature, headersRequest):
+        async with session.post(self.urlAdd, headers=headersRequest, json=jsonNomenclature) as response: 
+                            if response.status != 200:
+                                print(response.status)
+                                print(await response.text())
+                            else:
+                                print(await response.text())
+                                #await asyncio.sleep(5)
+                                #continue
+
+
+
+    async def createNomenclaturesAsyncioCreateTasks(self, modelListCard, headersRequest, vendorCodeMain):
+        tasks = []
+        async with aiohttp.ClientSession() as session:
+            #for offset in range(0,totalCards,10):
+            for i in range(len(modelListCard)):
+                jsonNomenclature = {
                 'vendorCode': vendorCodeMain,
-                'cards': model[i:i+1]
+                'cards': [modelListCard[i]]
             }
-            responce = requests.post(self.urlAdd, json=jsonNomenclature, headers=headersRequest)
-            if responce.status_code == 200:
-                print(vendorCodeMain + ' успешно создана')
-            else:
-                print(responce.text)
-                print(vendorCodeMain + ' ошибка при создании, проверь ВБ')
+                tasks.append(asyncio.create_task(self.createNomenclaturesGetRequests(session, jsonNomenclature, headersRequest)))
+            await asyncio.wait(tasks)
+        #return self.cardslist
+
+
+    def startCeateNomenclaturesAsyncio(self, modelListCard, headersRequest, vendorCodeMain):
+        loop = asyncio.get_event_loop()
+        result =  loop.run_until_complete(self.createNomenclaturesAsyncioCreateTasks(modelListCard, headersRequest, vendorCodeMain))
+        #return result
+
+    
