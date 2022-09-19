@@ -13,7 +13,7 @@ from Moduls.makeImageBookWithNameModel import makeImageBookWithNameModel
 from Moduls.AddSkriptForMakeBookImage import createExcel, deleteImage, copyImage
 from Moduls.makeImageSilicon import createAllSiliconImage
 from Folders import pathToDoneBookImageWithName, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon
-from Moduls.AddSkriptForMakeSiliconImage import createExcelSilicon, markerForAllModel, copyImage, chekImage
+from Moduls.AddSkriptForMakeSiliconImage import createExcelSilicon, markerForAllModel, copyImage, chekImage, siliconCaseColorDict, CreateExcelForFolder
 from Moduls.GetCardAsincio import getListCard
 # импортируем дополнительные классы
 from Class.MyClassForMakeImage import ModelWithAddin
@@ -72,14 +72,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         fileName = self.ui.FileSelector.currentText()
         mode = self.ui.IPSelector.currentText()
         force = self.ui.ForceUpdate.checkState() 
-        while True:
-            status = chekImage(fileName, mode, force)
-            self.ui.textSiliconMask.setText('{} готов.\nСтатус: {}'.format(fileName, status))
-            if status == 'Во всех карточках присутствуют фото.':
-                self.ui.textSiliconMask.setStyleSheet("background-color: green;")
-                break
-            else:
-                self.ui.textSiliconMask.setStyleSheet("background-color: red;")
+        WBnomenclaturesCreater.uploadsImage(mode, joinPath(pathToDoneSiliconImageSilicon, fileName))
 
 
     def updeteListFile(self):
@@ -97,11 +90,17 @@ class mameBookPrint(QtWidgets.QMainWindow):
         create.pathToFileForUpload = pathToFileForUpload
         mode = self.ui.IPSelector.currentText()
         #barcodeList = getListCard(mode)
-        barcodeList = []
-        create.createNomenclatures(mode, barcodeList)
-        self.ui.textSiliconMask.setText('{} готов.'.format(fileName))
-        getListCard(mode)
+        # barcodeList = []
+        create.createNomenclatures(mode)
+        # self.ui.textSiliconMask.setText('{} готов.'.format(fileName))
+        # getListCard(mode)
 
+    # def detectColor(self, path):
+    #     for color, code in siliconCaseColorDict.items():
+    #         if color in path:
+    #             if color == 'проз':
+    #                 return 'прозрачный'
+    #             return color
 
 
     def fillSiliconMaskList(self, tabIndex):
@@ -110,23 +109,23 @@ class mameBookPrint(QtWidgets.QMainWindow):
             negFlag = False
             for mask in listdir(pathToMaskFolderSilicon):
                 if isdir(joinPath(pathToMaskFolderSilicon, mask)):
-                    for color in listdir(joinPath(pathToMaskFolderSilicon, mask)):
-                        if 'Thumbs.db' not in color:
-                            fileList = listdir(joinPath(pathToMaskFolderSilicon, mask, color))
-                            if 'mask.png' in fileList and 'fon.png' in fileList:
-                                continue
-                            elif 'mask.png' not in fileList and 'fon.png' not in fileList:
-                                self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' ' + color + ' НЕТ МАКСИ И ФОНА\n')
-                                negFlag = True
-                                continue
-                            elif 'mask.png' not in fileList and 'fon.png' in fileList:
-                                self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' ' + color + ' НЕТ МАКСИ\n')
-                                negFlag = True
-                                continue
-                            elif 'mask.png' in fileList and 'fon.png' not in fileList:
-                                self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' ' + color +' НЕТ ФОНА\n')
-                                negFlag = True
-                                continue
+                    #color = self.detectColor(mask)
+                    #if 'Thumbs.db' not in color:
+                    fileList = listdir(joinPath(pathToMaskFolderSilicon, mask))
+                    if 'mask.png' in fileList and 'fon.png' in fileList:
+                        continue
+                    elif 'mask.png' not in fileList and 'fon.png' not in fileList:
+                        self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ МАКСИ И ФОНА\n')
+                        negFlag = True
+                        continue
+                    elif 'mask.png' not in fileList and 'fon.png' in fileList:
+                        self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ МАКСИ\n')
+                        negFlag = True
+                        continue
+                    elif 'mask.png' in fileList and 'fon.png' not in fileList:
+                        self.ui.textSiliconMask.setText(self.ui.textSiliconMask.toPlainText() + mask + ' НЕТ ФОНА\n')
+                        negFlag = True
+                        continue
             if not negFlag:
                 for mask in listdir(pathToMaskFolderSilicon):
                     self.ui.textSiliconMask.setText(mask + '\n')
@@ -173,13 +172,16 @@ class mameBookPrint(QtWidgets.QMainWindow):
         if exists(pathToDoneSiliconImageSilicon):
             listModel = listdir(pathToDoneSiliconImageSilicon)
             for model in listModel:
-                if isdir(joinPath(pathToMaskFolderSilicon,model)):
-                    self.ui.ModelSelector.addItem(self.siliconName + ' '  + model)
+                for maskFolder in listdir(pathToMaskFolderSilicon):
+                    if isdir(joinPath(pathToMaskFolderSilicon, maskFolder)):
+                        if model in maskFolder:
+                            if isdir(joinPath(pathToMaskFolderSilicon,model)):
+                                self.ui.ModelSelector.addItem(model)
         if exists(pathToDoneBookImageWithName):
             listModel = listdir(pathToDoneBookImageWithName)
             for model in listModel:
                 if isdir(joinPath(pathToDoneBookImageWithName,model)):
-                    self.ui.ModelSelector.addItem(self.bookName + ' ' + model)
+                    self.ui.ModelSelector.addItem(model)
 
 
     def btnCreateSiliconImage(self):
@@ -201,21 +203,21 @@ class mameBookPrint(QtWidgets.QMainWindow):
             self.listModelForExcel = []
             brand = self.ui.textSiliconBrand.toPlainText()
             compability = self.ui.textSiliconCompability.toPlainText()
-            name = self.ui.textSiliconName.toPlainText()
+            # name = self.ui.textSiliconName.toPlainText()
             modelAddin = self.ui.textSiliconModel.toPlainText()
-            cameraType = self.ui.CameraType.currentText()
+            # cameraType = self.ui.CameraType.currentText()
             price = self.ui.textPrice.toPlainText()
             for modelTMP in listModel:
                 if self.siliconName in modelTMP:
                     caseType = self.siliconName
                 elif self.bookName in modelTMP:
                     caseType = self.bookName
-                model = modelTMP.replace(caseType,'').strip()
-                modelWithAddin = ModelWithAddin(model.replace(caseType,'').strip(), brand, compability, name, modelAddin, cameraType, price, caseType)
-                if caseType == self.bookName:
-                    modelWithAddin.colorList = listdir(joinPath(pathToDoneBookImageWithName, model.replace(caseType,'').strip()))
-                else:
-                    modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, model.replace(caseType,'').strip()))
+                # model = modelTMP.replace(caseType,'').strip()
+                modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, modelTMP, pathToDoneSiliconImageSilicon, siliconCaseColorDict)
+                # if caseType == self.bookName:
+                #     modelWithAddin.colorList = listdir(joinPath(pathToDoneBookImageWithName, model.replace(caseType,'').strip()))
+                # else:
+                #     modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, model.replace(caseType,'').strip()))
                 self.listModelForExcel.append(modelWithAddin)
                 self.ui.textSiliconMask.setText('Все модели из списка записаны\n')
         else:
@@ -225,28 +227,29 @@ class mameBookPrint(QtWidgets.QMainWindow):
                     caseType = self.bookName
             if self.listModelForExcel != []:
                 for i, item in enumerate(self.listModelForExcel):
-                    if item.model == curModel:
-                        if self.acceptEvent("Свойства для {} уже записаны, перезаписать?".format(item.model)):
-                            brand = self.ui.textSiliconBrand.toPlainText()
-                            compability = self.ui.textSiliconCompability.toPlainText()
-                            name = self.ui.textSiliconName.toPlainText()
-                            modelAddin = self.ui.textSiliconModel.toPlainText()
-                            cameraType = self.ui.CameraType.currentText()
-                            price = self.ui.textPrice.toPlainText()
-                            self.listModelForExcel[i] = ModelWithAddin(curModel.replace(caseType,'').strip(), brand, compability, name, modelAddin, cameraType, price, caseType)
-                            self.listModelForExcel[i].colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
-                            self.ui.textSiliconMask.setText(curModel+' перезаписана\n')
-                            break
-                        else:
-                            return None
+                    # if item.model == curModel:
+                        # if self.acceptEvent("Свойства для {} уже записаны, перезаписать?".format(item.model)):
+                    brand = self.ui.textSiliconBrand.toPlainText()
+                    compability = self.ui.textSiliconCompability.toPlainText()
+                    name = self.ui.textSiliconName.toPlainText()
+                    modelAddin = self.ui.textSiliconModel.toPlainText()
+                    cameraType = self.ui.CameraType.currentText()
+                    price = self.ui.textPrice.toPlainText()
+                    self.listModelForExcel[i] = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict)
+
+                    # self.listModelForExcel[i].colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
+                    self.ui.textSiliconMask.setText(curModel+' перезаписана\n')
+                    break
+                        # else:
+                        #     return None
                 brand = self.ui.textSiliconBrand.toPlainText()
                 compability = self.ui.textSiliconCompability.toPlainText()
                 name = self.ui.textSiliconName.toPlainText()
                 modelAddin = self.ui.textSiliconModel.toPlainText()
                 cameraType = self.ui.CameraType.currentText()
                 price = self.ui.textPrice.toPlainText()
-                modelWithAddin = ModelWithAddin(curModel.replace(caseType,'').strip(), brand, compability, name, modelAddin, cameraType, price, caseType)
-                modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
+                modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict)
+                # modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
                 self.listModelForExcel.append(modelWithAddin)
                 self.ui.textSiliconMask.setText(curModel+' записан\n')
                 return None
@@ -257,8 +260,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 modelAddin = self.ui.textSiliconModel.toPlainText()
                 cameraType = self.ui.CameraType.currentText()
                 price = self.ui.textPrice.toPlainText()
-                modelWithAddin = ModelWithAddin(curModel.replace(caseType,'').strip(), brand, compability, name, modelAddin, cameraType, price, caseType)
-                modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
+                modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict)
+                # modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
                 self.listModelForExcel.append(modelWithAddin)
                 self.ui.textSiliconMask.setText(curModel+' записан\n')
                 return None
@@ -269,9 +272,10 @@ class mameBookPrint(QtWidgets.QMainWindow):
         addImage = self.ui.AddPhotoSelector.currentText()
         if self.listModelForExcel == []:
             self.btnApplyAddin(True)
-        p = multiprocessing.Process(target=createExcelSilicon, args=(self.listModelForExcel, addImage, ))
-        p.start()
-        p.join()
+        for item in self.listModelForExcel:
+            p = multiprocessing.Process(target=CreateExcelForFolder, args=(item, addImage, ))
+            p.start()
+            p.join()
         self.updeteListFile()
 
 

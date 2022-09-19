@@ -93,7 +93,7 @@ def chekPath(path=str):
 
 
 def createSiliconImage(pathToMaskFolder, countCPU, addImage, mode):
-    if "проз." in pathToMaskFolder.lower() or "прозрачный" in pathToMaskFolder.lower():
+    if "проз" in pathToMaskFolder.lower():
         pathToPrintFolder = pathToPrintImageFolderAllSil
     else:
         try:
@@ -144,13 +144,13 @@ def createAllSiliconImage(pathToSiliconMask, maxCPUUse, addImage, mode):
     start_time = time.time()
     #i = 0
     pool = multiprocessing.Pool(maxCPUUse)
-    for  model in listdir(pathToSiliconMask):
+    for model in listdir(pathToSiliconMask):
         pathToModel = joinPath(pathToSiliconMask, model)
         if isdir(pathToModel):
-            for color in listdir(pathToModel):
-                if 'Thumbs.db' not in color:
-                    pathToColor = joinPath(pathToModel,color)
-                    pool.apply_async(createSiliconImage, args=(pathToColor,1, addImage, mode))
+            # for color in listdir(pathToModel):
+                # if 'Thumbs.db' not in color:
+                # pathToColor = joinPath(pathToModel,color)
+                pool.apply_async(createSiliconImage, args=(pathToModel,1, addImage, mode))
     pool.close()
     pool.join()
     #             p = multiprocessing.Process(target=createSiliconImage, args=(pathToColor,1))
