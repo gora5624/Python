@@ -1,7 +1,7 @@
-from operator import imod
-from os.path import join as joinPath, abspath
+from os.path import join as joinPath, abspath,exists
 from os import listdir
-import re
+import requests
+import time
 from sqlitedict import SqliteDict
 import pandas
 import multiprocessing
@@ -24,10 +24,19 @@ class ModelWithAddin:
         self.listJsonForUpdateToWB = []
         self.siliconCaseColorDict = siliconCaseColorDict
         self.maskFolderName = maskFolderName
-        self.dfAddinFromFile = pandas.DataFrame(pandas.read_excel(r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.xlsx'))
-        self.dfCategoryPrint = pandas.DataFrame(pandas.read_excel(r'E:\MyProduct\Python\WB\MakePrint\cat.xlsx'))
+        self.pathToSiliconAddin = r'E:\MyProduct\Python\WB\MakePrint\Характеристики силикон.txt'
+        self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.txt'
+        self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\Список принтов.txt'
+        self.pathToCategoryPrint = r'E:\MyProduct\Python\WB\MakePrint\cat.txt'
+        if 'под карту' in maskFolderName:
+            self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToCardhonlderAddin,sep='\t'))
+        else:
+            self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToPrintAddin,sep='\t'))
+        self.dfAddinForPrint = pandas.DataFrame(pandas.read_csv(self.pathToPrintAddin,sep='\t'))
+        self.dfCategoryPrint = pandas.DataFrame(pandas.read_csv(self.pathToCategoryPrint,sep='\t'))
         self.data = []
         self.countValueInField ={
+                'Цвет': 1,
                 'Вид застежки': 2,
                 'Рисунок': 1,
                 'Любимые герои': 1,
@@ -40,7 +49,69 @@ class ModelWithAddin:
                 'Повод': 3,
             }
 
-        self.applyAddin()
+        self.applyAddin(price)
+
+    def chekDB(self):
+        listChek = [self.pathToSiliconAddin, self.pathToCardhonlderAddin, self.pathToPrintAddin, self.pathToCategory ]
+        for i in listChek:
+             if not exists(i):
+                self.crateDB()
+                break
+
+    def crateDB(self):
+        pdSilsiconAddin = pandas.DataFrame(pandas.read_excel(self.pathToSiliconAddin.replace('txt','xlsx')))
+        pdCardhonlderAddin = pandas.DataFrame(pandas.read_excel(self.pathToCardhonlderAddin.replace('txt','xlsx')))
+        pdPrintAddin = pandas.DataFrame(pandas.read_excel(self.pathToPrintAddin.replace('txt','xlsx')))
+        pdCategoryPrint = pandas.DataFrame(pandas.read_excel(self.pathToCategoryPrint.replace('txt','xlsx')))
+        pdSilsiconAddin.to_csv(self.pathToSiliconAddin,index=None,sep='\t')
+        pdCardhonlderAddin.to_csv(self.pathToCardhonlderAddin,index=None,sep='\t')
+        pdPrintAddin.to_csv(self.pathToPrintAddin,index=None,sep='\t')
+        pdCategoryPrint.to_csv(self.pathToCategoryPrint,index=None,sep='\t')
+
+
+    @staticmethod
+    def generate_bar_WB(count):
+        listBarcode = []
+        countTry = 0
+        url = "https://suppliers-api.wildberries.ru/content/v1/barcodes"
+        headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'}
+
+        while count > 5000:
+            
+            while True and countTry < 10:
+                json = {
+                        "count": 5000
+                        }
+                try:
+                    r = requests.post(url, json=json, headers=headers)
+                    listBarcode.extend(r.json()['data'])
+                    if not r.json()['error']:
+                        count -= 5000
+                        break
+                except:
+                    print(
+                        'Ошибка получения ШК. count = {}, пытаюсь повторно получить.'.format(count))
+                    print(r.rext)
+                    countTry += 1
+                    time.sleep(10)
+                    continue
+        while True and countTry < 10:
+            json = {
+                        "count": count
+                        }
+            try:
+                r = requests.post(url, json=json, headers=headers)
+                listBarcode.extend(r.json()['data'])
+                if not r.json()['error']:
+                    break
+            except:
+                print(
+                    'Ошибка получения ШК. count = {}, пытаюсь повторно получить.'.format(count))
+                countTry += 1
+                time.sleep(10)
+                continue
+
+        return listBarcode
 
 
     def getColor(self):
@@ -118,15 +189,23 @@ class ModelWithAddin:
         return ';'.join(valueList)
 
 
+    def getPrintAddin(self, printName, field, category):
+        try:
+            #a = self.dfAddinForPrint[self.dfAddinForPrint.Принт == printName][field].values.tolist()[0]
+            return self.chekCountField(field, self.dfAddinForPrint[self.dfAddinForPrint.Принт == printName][field].values.tolist()[0])
+        except:
+            try:
+                return self.getRandomValue(category, field)
+            except:
+                return 0
+
+
     def chekCountField(self, field, values):
         maxCount = self.countValueInField[field]
         return ';'.join(values.split(';')[0:maxCount])
 
 
-
-
-
-    def applyAddin(self):
+    def applyAddin(self, price):
         # def getAddinFromFile():
         #     dfAddinFromFile = multiprocessing.Process(target=pandas.read_excel, args=(r'E:\MyProduct\Python\WB\MakePrint\Характеристики.xlsx',))
 
@@ -137,6 +216,7 @@ class ModelWithAddin:
         # dfCategoryPrint = pandas.DataFrame(pandas.read_excel(r'E:\MyProduct\Python\WB\MakePrint\cat.xlsx'))
         # data = []
         listCategory = self.dfCategoryPrint['Категория'].unique().tolist()
+
         for pictures in listdir(self.pathToMask):
             printName = pictures[0:-4]
             currentPictureCategoryList = self.dfCategoryPrint[self.dfCategoryPrint.Принт == printName]#['Категория'].values.tolist()
@@ -147,26 +227,26 @@ class ModelWithAddin:
                 datapicture = {
                             'Номер карточки': listCategory.index(category),
                             'Категория': category,
-                            'Цвет': color,
+                            'Цвет': color if (colorAddin:=self.getPrintAddin(printName, 'Цвет', category)) == 0 else colorAddin,# color,
                             'Баркод товара': '',
                             'Бренд': 'Mobi711',
                             'Наименование': self.getName(category),
-                            'Цена': '399',
+                            'Цена': price,
                             'Артикул товара': self.getVendorCode(color, categoryCode, printName),
                             'Описание': self.getDescription(category),
-                            'Производитель телефона': 'Apple',
-                            'Назначение подарка': self.getRandomValue(category, 'Назначение подарка'),
+                            'Производитель телефона': self.modelAddin.split(' ')[0],
+                            'Назначение подарка': self.getPrintAddin(printName, 'Назначение подарка', category), # self.getRandomValue(category, 'Назначение подарка'),
                             'Комплектация': self.getEquipmentCase(category),
                             'Особенности чехла': self.getRandomValue(category, 'Особенности чехла'),
                             'Вид застежки': self.getRandomValue(category, 'Вид застежки'),
-                            'Рисунок': self.getRandomValue(category, 'Рисунок'),
-                            'Любимые герои': self.getRandomValue(category, 'Любимые герои'),
+                            'Рисунок': self.getPrintAddin(printName, 'Рисунок', category), # self.getRandomValue(category, 'Рисунок'),
+                            'Любимые герои': self.getPrintAddin(printName, 'Любимые герои', category), # self.getRandomValue(category, 'Любимые герои'),
                             'Совместимость': self.chekCountField('Совместимость',self.compatibility),
                             'Тип чехлов': self.getRandomValue(category, 'Тип чехлов'),
                             'Модель': self.chekCountField('Модель',self.modelAddin),
-                            'Повод': self.getRandomValue(category, 'Повод'),
+                            'Повод': self.getPrintAddin(printName, 'Повод', category), # self.getRandomValue(category, 'Повод'),
                             'Страна производства': 'Китай',
-                            'Декоративные элементы': self.getRandomValue(category, 'Декоративные элементы'),
+                            'Декоративные элементы': self.getPrintAddin(printName, 'Декоративные элементы', category), # self.getRandomValue(category, 'Декоративные элементы'),
                             'Материал изделия': 'Силикон; ТПУ; Полиуретан',
                             'Высота упаковки': 18.5,
                             'Ширина упаковки': 11,
@@ -176,6 +256,10 @@ class ModelWithAddin:
                 
 
                 self.data.append(datapicture)
+        countBarcods = len(self.data)
+        listBarcods = self.generate_bar_WB(countBarcods)
+        for i, case in enumerate(self.data):
+            self.data[i]['Баркод товара'] = listBarcods[i]
 
 
     # def setDescriptionCase(seft, dfAddinFromFile):
@@ -228,5 +312,7 @@ class ModelWithAddin:
             #     'Медиафайлы': pictureURLCase
             # }
 if __name__ == '__main__':
-    pass
+    pd = pandas.DataFrame(ModelWithAddin.generate_bar_WB(2))
+    pd.to_excel(r'E:\barcodes.xlsx')
+
     # ModelWithAddin.pushToDB(r'C:\Users\Георгий\Downloads\Характеристики.xlsx')

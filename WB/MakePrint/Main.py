@@ -11,7 +11,7 @@ from ui.MakeBookPrintUi import Ui_Form
 # импортируем дополнительные скрипты
 from Moduls.makeImageBookWithNameModel import makeImageBookWithNameModel
 from Moduls.AddSkriptForMakeBookImage import createExcel, deleteImage, copyImage
-from Moduls.makeImageSilicon import createAllSiliconImage
+from Moduls.makeImageSilicon import createAllSiliconImage, fakecreateAllSiliconImage
 from Folders import pathToDoneBookImageWithName, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon
 from Moduls.AddSkriptForMakeSiliconImage import createExcelSilicon, markerForAllModel, copyImage, chekImage, siliconCaseColorDict, CreateExcelForFolder
 from Moduls.GetCardAsincio import getListCard
@@ -19,6 +19,7 @@ from Moduls.GetCardAsincio import getListCard
 from Class.MyClassForMakeImage import ModelWithAddin
 from Class.Create import WBnomenclaturesCreater
 from Class.MakePlastinsClass import MakePlastins
+import pandas
 
 
 start_time = time.time()
@@ -44,8 +45,25 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.CreateCase.clicked.connect(self.btnCreateCase)
         self.ui.updateListModel.clicked.connect(self.updateModelList)
         self.ui.makePlastinsBut.clicked.connect(self.makeplastins)
+        self.ui.ClearAddin.clicked.connect(self.crearAdiin)
+        self.ui.CreateDB.clicked.connect(self.crateDB)
+        self.pathToSiliconAddin = r'E:\MyProduct\Python\WB\MakePrint\Характеристики силикон.xlsx'
+        self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.xlsx'
+        self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\Список принтов.xlsx'
+        self.pathToCategoryPrint = r'E:\MyProduct\Python\WB\MakePrint\cat.xlsx'
         self.updeteListFile()
         self.updateModelList()
+
+
+    def crateDB(self):
+        pdSilsiconAddin = pandas.DataFrame(pandas.read_excel(self.pathToSiliconAddin))
+        pdCardhonlderAddin = pandas.DataFrame(pandas.read_excel(self.pathToCardhonlderAddin))
+        pdPrintAddin = pandas.DataFrame(pandas.read_excel(self.pathToPrintAddin))
+        pdCategoryPrint = pandas.DataFrame(pandas.read_excel(self.pathToCategoryPrint))
+        pdSilsiconAddin.to_csv(self.pathToSiliconAddin.replace('xlsx','txt'),index=None,sep='\t')
+        pdCardhonlderAddin.to_csv(self.pathToCardhonlderAddin.replace('xlsx','txt'),index=None,sep='\t')
+        pdPrintAddin.to_csv(self.pathToPrintAddin.replace('xlsx','txt'),index=None,sep='\t')
+        pdCategoryPrint.to_csv(self.pathToCategoryPrint.replace('xlsx','txt'),index=None,sep='\t')
 
 
     def createMSGError(self,text):
@@ -66,6 +84,10 @@ class mameBookPrint(QtWidgets.QMainWindow):
 
     def makeplastins():
         MakePlastins.makePlastin()
+
+
+    def crearAdiin(self):
+        self.listModelForExcel = []
 
 
     def btnChekImage(self):
@@ -187,7 +209,10 @@ class mameBookPrint(QtWidgets.QMainWindow):
     def btnCreateSiliconImage(self):
         addImage = self.ui.AddPhotoSelector.currentText()
         mode = 'all' if self.ui.SiliconeMode.checkState() == 2 else 'withOutBack'
-        createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode)
+        if self.ui.FakeModeChekBox.checkState() == 2:
+            fakecreateAllSiliconImage(pathToMaskFolderSilicon, mode)
+        else:
+            createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode)
         self.updateModelList()
       
 
