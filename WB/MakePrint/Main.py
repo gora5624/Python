@@ -47,6 +47,9 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.makePlastinsBut.clicked.connect(self.makeplastins)
         self.ui.ClearAddin.clicked.connect(self.crearAdiin)
         self.ui.CreateDB.clicked.connect(self.crateDB)
+        self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
+        self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+        self.tokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
         self.pathToSiliconAddin = r'E:\MyProduct\Python\WB\MakePrint\Характеристики силикон.xlsx'
         self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.xlsx'
         self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\Список принтов.xlsx'
@@ -93,8 +96,14 @@ class mameBookPrint(QtWidgets.QMainWindow):
     def btnChekImage(self):
         fileName = self.ui.FileSelector.currentText()
         mode = self.ui.IPSelector.currentText()
-        force = self.ui.ForceUpdate.checkState() 
-        WBnomenclaturesCreater.uploadsImage(mode, joinPath(pathToDoneSiliconImageSilicon, fileName))
+        # force = self.ui.ForceUpdate.checkState() 
+        if mode =='Караханян':
+            token = self.tokenKar
+        elif mode =='Абраамян':
+            token = self.tokenAb
+        elif mode =='Самвел':
+            token = self.tokenSam
+        WBnomenclaturesCreater.uplaodImage(joinPath(pathToDoneSiliconImageSilicon,fileName), token)
 
 
     def updeteListFile(self):
