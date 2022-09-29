@@ -31,6 +31,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.botToken = open(abspath(joinPath(__file__,'..', 'token')), 'r').read()
         self.bot = telebot.TeleBot(self.botToken)
 
+
     def selectFile(self):
         self.fileUpdateStokcsName = QFileDialog.getOpenFileName(self, ("Выберите файл со списком номенклатуры"), "", ("Excel Files (*.xlsx)"))[0]
         if self.fileUpdateStokcsName == '':
@@ -102,7 +103,7 @@ class FBSStoks(QtWidgets.QMainWindow):
 
 
     def getListNom(self):
-        self.nomenclature = QFileDialog.getOpenFileName(self, ("Выберите список ШК"), "", ("Excel Files (*.xlsx)"))[0]
+        self.nomenclature = QFileDialog.getOpenFileName(self, ("Выберите список ШК"), "", ("TXT files (*.txt)"))[0]
         self.ui.getNomList.setText("Идёт получение списка номенклатур...")
         #self.ui.getNomList.setDisabled(True)
         QApplication.processEvents()
@@ -110,7 +111,7 @@ class FBSStoks(QtWidgets.QMainWindow):
             self.createMSGError("Вы не выбрали файл с базой, работа невозможна.")
             return 0
         self.ui.getNomList.setText(self.nomenclature)
-        self.data = pandas.DataFrame(pandas.read_excel(self.nomenclature)).sort_values(by='Номенклатура')
+        self.data = pandas.DataFrame(pandas.read_table(self.nomenclature)).sort_values(by='Номенклатура')
         self.ui.selectNomenclatureComboBox.addItems(self.data['Номенклатура'].unique())
         self.ui.selectFileButton.setText("Выберите файл с номенклатурой")
         self.ui.selectNomenclatureComboBox.setDisabled(False)
@@ -182,6 +183,8 @@ class FBSStoks(QtWidgets.QMainWindow):
             if 'Номенклатура' in self.dataForUpdateStocks.columns:
                 for line in self.dataForUpdateStocks.to_dict('records'):
                     nom = line['Номенклатура']
+                    if nom == 'Чехол Samsung Galaxy Z Fold 4 силикон с отк.кам. с усил.угл. проз':
+                        pass
                     try:
                         count = line['Количество']
                     except:
@@ -199,6 +202,8 @@ class FBSStoks(QtWidgets.QMainWindow):
             self.getSeller()
             for seller in self.sellerList:
                 pusher = ChangeAvailability(seller, listBarcods)
+                # df = pandas.DataFrame(listBarcods)
+                # df.to_excel(r'E:\tmp.xlsx')
                 resp = pusher.takeOn()
                 if resp == 0:
                     self.ui.pushFullStocks.setStyleSheet('background: rgb(0,255,0);') 
@@ -242,7 +247,8 @@ class FBSStoks(QtWidgets.QMainWindow):
         if len(nomenclaturesListForBot) ==0:
             text = 'В {} {} {} неизвестно что('.format(curData, curTime, action)
         elif len(nomenclaturesListForBot) >1:
-            text = 'В {} {} {} следующие позиции: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
+            for i in range(0,len(nomenclaturesListForBot),20):
+                text = 'В {} {} {} следующие позиции: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot[i:i+20]))
         elif len(nomenclaturesListForBot) ==1:
             text = 'В {} {} {} следующую позицию: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
         self.bot.send_message(-1001550015840, text)
@@ -295,7 +301,7 @@ class FBSStoks(QtWidgets.QMainWindow):
                     # self.ui.pushEmptyStocks.setStyleSheet('background: rgb(255,0,0);')
                     self.createMSGError("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
         action = 'сняли с наличия'
-        # self.sendMassageToTelegram(action, listBarcods)
+        self.sendMassageToTelegram(action, listBarcods)
 
     def createMSGError(self,text):
         msg = QtWidgets.QMessageBox()

@@ -99,6 +99,7 @@ def get_ordersAll(days=3):
             dataorders.extend(tmp)
     for line in dataorders:
         date = line['dateCreated'].split('T')[0].split('-')
+        time = ':'.join(line['dateCreated'].split('T')[1].split(':')[0:2])
         date = date[2] + '.' + date[1] + '.' + date[0]
         #barcod = int(line['barcode']) if line['barcode'] != '' else ''
         if line['storeId'] == 10237:
@@ -111,8 +112,9 @@ def get_ordersAll(days=3):
             ip = 'хз'
         datatmp = {'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
                 'Дата': date,
+                'Время': time,
                 'Количество': 1,
-                'Цена': line['totalPrice']/100,
+                'Цена': line['convertedPrice']/100,
                 'Номер заказа':line['orderId'],
                 'ИП': ip}
         dataNew.append(datatmp)

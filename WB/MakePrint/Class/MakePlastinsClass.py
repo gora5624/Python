@@ -13,13 +13,13 @@ class MakePlastins():
         self.pathToLogoPrint = r'F:\Принты пластины смешанные\лого'
         self.pathToFullPrint = r'F:\Принты пластины смешанные\полные'
         self.pathToDonePlastins = r'F:\Пластины принты готовые'
-        self.leftPointToRect = 162
-        self.rightPointToRect = 496
-        self.topPointToRect = 34
-        self.bottPointToRect = 490
-        self.centerCircleX = 329
-        self.centerCircleY = 689
-        self.radiusCircle = 145
+        self.leftPointToRect = 54
+        self.rightPointToRect = 297
+        self.topPointToRect = 234
+        self.bottPointToRect = 579
+        self.centerCircleX = 437
+        self.centerCircleY = 457
+        self.radiusCircle = 243
     
 
     def makePlastin(self):
@@ -41,18 +41,21 @@ class MakePlastins():
 
     def combineImage(self, printPath, rectangleMaskImg, circleMaskImg, backgroundImg, flag):
         printImg = Image.open(printPath)
+        #printImg.show()
         sizeImg = backgroundImg.size
         mainImg = Image.new('RGB', sizeImg)
         mainImg.paste(backgroundImg, (0,0))
+        # mainImg.show()
         if flag == 'full':
             printImgRet = printImg.resize(self.returnSizePrintForRect(printImg, flag))
-            #mainImg.show()
+            # mainImg.show()
             mainImgTMP = Image.new('RGBA', sizeImg)
             mainImgTMP.paste(printImgRet, self.returnCoordForPasteRectangleImage(printImgRet))
+            # mainImgTMP.show()
             mainImg.paste(mainImgTMP, (0, 0), rectangleMaskImg)
-            #mainImg.show()
+            # mainImg.show()
             #mainImg.paste(rectangleMaskImg, (0,0), rectangleMaskImg)
-            #mainImg.show()
+            # mainImg.show()
             printImgCirc = printImg.resize(self.returnSizePrintForCirc(printImg, flag))
             mainImgTMP = Image.new('RGBA', sizeImg)
             mainImgTMP.paste(printImgCirc, self.returnCoordForPasteCircleImage(printImgCirc))

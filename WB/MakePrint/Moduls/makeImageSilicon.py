@@ -135,9 +135,67 @@ def createSiliconImage(pathToMaskFolder, countCPU, addImage, mode):
             combineImage(imageMask, imagePrintName, imageBack, printsize, printPaste, pathToSave, pathToPrintFolder)
 
 
+def fakeCreateSiliconImage(pathToMaskFolder, mode):
+    if "проз" in pathToMaskFolder.lower():
+        pathToPrintFolder = pathToPrintImageFolderAllSil
+    else:
+        # try:
+        #     pathToSecondImageFolder = pathToMaskFolder.replace(pathToMaskFolderSilicon,pathToSecondImagesFolderSilicon)
+        #     # chekPath(pathToSecondImageFolder)
+        #     # secondImage = Image.open(joinPath(pathToMaskFolder, addImage))
+        #     # sk = int(secondImage.size[0]/900)
+        #     # secondImage = secondImage.resize((secondImage.size[0]//sk, secondImage.size[1]//sk))
+        #     # secondImage.save(joinPath(pathToSecondImageFolder, addImage),"JPEG",optimize=True, progressive=True, quality=70)
+        # except:
+        #     print('Не удалось скопировать 2е фото для {}'.format(pathToMaskFolder))
+        pathToPrintFolder = pathToPrintImageFolderWithOutBackSil if mode != 'all' else pathToPrintImageFolderAllSil
+    chekPath(pathToMaskFolder)
+    # pathToMask = joinPath(pathToMaskFolder,'mask.png')
+    #xLeft, xRight, yTop, yBott = getSizeAndPos(imageMask)
+    # imageMask = Image.open(pathToMask).convert('RGBA')
+    # size = imageMask.size
+    # pathToBack = pathToMask.replace('mask.png', 'fon.png')
+    # sk = int(size[0]/900)
+    # imageBack = Image.open(pathToBack).convert('RGBA').resize((size[0]//sk, size[1]//sk))
+    # imageMask = imageMask.resize((size[0]//sk, size[1]//sk))
+    # xLeft, xRight, yTop, yBott = getSizeAndPos(imageMask)
+    # printsize = (xRight-xLeft, yBott-yTop)
+    # printPaste = (xLeft, yTop)
+    pathToSave = pathToMaskFolder.replace(pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon)
+    # pool = multiprocessing.Pool()
+    # for imagePrintName in listdir(pathToPrintFolder):
+    #     pool.apply_async(FakeCombineImage, args=(imagePrintName, pathToSave, ))
+    #     #combineImage(imageMask, imagePrint, imageBack, printsize, printPaste, pathToSave, pathToPrintFolder)
+    # # imageMask.close()
+    # # imageBack.close()
+    # pool.close()
+    # pool.join()
+    # else:
+    for imagePrintName in listdir(pathToPrintFolder):
+        FakeCombineImage(imagePrintName, pathToSave)
+
+
+def FakeCombineImage(imagePrintName, pathToSave):
+    with open(joinPath(pathToSave,imagePrintName.replace('print','(Принт').replace('.png',').jpg')), 'w') as file:
+        # file.write('0')
+        file.close()
+
+
+
 def copyImage():
     copytree(pathToDoneSiliconImageSilicon, pathToUploadFolderLocal + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
     copytree(pathToSecondImagesFolderSilicon, pathToSecondImageUploadFolder + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
+
+
+def fakecreateAllSiliconImage(pathToSiliconMask, mode):
+    pool = multiprocessing.Pool()
+    for model in listdir(pathToSiliconMask):
+        pathToModel = joinPath(pathToSiliconMask, model)
+        if isdir(pathToModel):
+            pool.apply_async(fakeCreateSiliconImage, args=(pathToModel, mode,))
+    pool.close()
+    pool.join()
+    copyImage()
 
 
 def createAllSiliconImage(pathToSiliconMask, maxCPUUse, addImage, mode):

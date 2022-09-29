@@ -133,9 +133,7 @@ def generate_bar_WB(count):
     listBarcode = []
     countTry = 0
     url = "https://suppliers-api.wildberries.ru/content/v1/barcodes"
-    headers = {'Authorization': TokenArb,
-               'Content-Type': 'application/json',
-               'accept': 'application/json'}
+    headers = {'Authorization': TokenArb}
 
     while count > 5000:
         count -= 5000
