@@ -1,9 +1,11 @@
 from cProfile import label
+import imp
 from unicodedata import category
 from urllib import response
 from Class.CardBodyClass import CardCase, Nomenclature
 import sys
 from os.path import join as joinPath
+from os import system
 sys.path.insert(1, joinPath(sys.path[0], '../..'))
 from my_mod.my_lib import read_xlsx
 import requests
@@ -13,8 +15,12 @@ import multiprocessing
 import asyncio
 import aiohttp
 from aiohttp import ClientConnectorError
-from requests import ConnectionError
-class WBnomenclaturesCreater:
+import subprocess
+# from requests import ConnectionError
+
+
+
+class WBnomenclaturesCreater:    
     def __init__(self):
         self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
         self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
@@ -45,20 +51,10 @@ class WBnomenclaturesCreater:
     #         responce = requests.post(requestUrl, json=jsonRequest, headers=headersRequest)
     #         responce
 
-
-    def uplaodImage(self, vendorCode, urlsList, token):
-        requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/media/save'
-        jsonRequest = {
-        "vendorCode": vendorCode,
-        "data": urlsList
-        }
-        headersRequest = {'Authorization': '{}'.format(token), 'X-Vendor-Code': vendorCode}
-        try:
-            r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest)  
-            print(r.text)
-        except requests.ConnectionError:
-            r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest) 
-            print(r.text)
+    @staticmethod
+    def uplaodImage(path, token):
+        args = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\udatePhoto.py', path.replace(' ', '#'), token]
+        subprocess.Popen(args, shell=True)
 
 
     def createNomenclaturesMultiporocessing(self, mode):
@@ -170,7 +166,6 @@ class WBnomenclaturesCreater:
             if responce.status_code == 200:
                 print(vendorCodeMain + ' успешно создана')
                 #time.sleep(1)
-                self.uplaodImage(vendorCodeMain, urlsList, token)
                 # p = multiprocessing.Process(target=self.uplaodImage, args=(vendorCodeMain, urlsList, token,))
                 # p.start()
             # else:
@@ -199,20 +194,21 @@ class WBnomenclaturesCreater:
                     # p = multiprocessing.Process(target=self.uplaodImage, args=(vendorCode, urlsList, token,))
                     # p.start()
                     #time.sleep(1)
-                    self.uplaodImage(vendorCode, urlsList, token)
-                else:
+                    # self.uplaodImage(vendorCode, urlsList, token)
+                # else:
                     #print(responce.text)
                     # p = multiprocessing.Process(target=self.uplaodImage, args=(vendorCode, urlsList, token,))
                     # p.start()
                     #time.sleep(1)
-                    self.uplaodImage(vendorCode, urlsList, token)
+                    # self.uplaodImage(vendorCode, urlsList, token)
                     # print(vendorCodeMain + ' ошибка при создании, проверь ВБ')
+        self.uplaodImage(self.pathToFileForUpload, token)
 
     def getListNomenclatures(self, token, modelListCard):
         requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/cards/list'
         headersRequest = {'Authorization': '{}'.format(token)}
         dataCard = []
-        for i in range(0,len(modelListCard)*10,1000):
+        for i in range(0,len(modelListCard)*20,1000):
             jsonRequest = {
                     "sort": {
                     "limit": 1000,
