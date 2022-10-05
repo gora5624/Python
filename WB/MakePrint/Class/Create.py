@@ -126,8 +126,9 @@ class WBnomenclaturesCreater:
             pool.close()
             pool.join()
             listDoneVendorCode = self.getListNomenclatures(token, self.modelForUploads)
+            self.uplaodImage(self.pathToFileForUpload, token)
             # time.sleep(20)
-            print("--- %s seconds ---" % (time.time() - start_time))
+        print("--- %s seconds ---" % (time.time() - start_time))
 
             # vendorCodeMain = model[0]['vendorCode']
             # jsonCard = [[model[0]]]
@@ -191,18 +192,10 @@ class WBnomenclaturesCreater:
                         break
                 if responce.status_code == 200:
                     print(vendorCodeMain + ' успешно создана')
-                    # p = multiprocessing.Process(target=self.uplaodImage, args=(vendorCode, urlsList, token,))
-                    # p.start()
-                    #time.sleep(1)
-                    # self.uplaodImage(vendorCode, urlsList, token)
-                # else:
-                    #print(responce.text)
-                    # p = multiprocessing.Process(target=self.uplaodImage, args=(vendorCode, urlsList, token,))
-                    # p.start()
-                    #time.sleep(1)
-                    # self.uplaodImage(vendorCode, urlsList, token)
+                else:
+                    print(responce.text)
                     # print(vendorCodeMain + ' ошибка при создании, проверь ВБ')
-        self.uplaodImage(self.pathToFileForUpload, token)
+        
 
     def getListNomenclatures(self, token, modelListCard):
         requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/cards/list'

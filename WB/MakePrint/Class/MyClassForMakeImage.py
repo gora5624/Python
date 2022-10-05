@@ -24,14 +24,14 @@ class ModelWithAddin:
         self.listJsonForUpdateToWB = []
         self.siliconCaseColorDict = siliconCaseColorDict
         self.maskFolderName = maskFolderName
-        self.pathToSiliconAddin = r'E:\MyProduct\Python\WB\MakePrint\Характеристики силикон.txt'
+        self.pathToSiliconAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликон.txt'
         self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.txt'
-        self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\Список принтов.txt'
+        self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПринтов.txt'
         self.pathToCategoryPrint = r'E:\MyProduct\Python\WB\MakePrint\cat.txt'
         if 'под карту' in maskFolderName:
             self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToCardhonlderAddin,sep='\t'))
         else:
-            self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToPrintAddin,sep='\t'))
+            self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToSiliconAddin,sep='\t'))
         self.dfAddinForPrint = pandas.DataFrame(pandas.read_csv(self.pathToPrintAddin,sep='\t'))
         self.dfCategoryPrint = pandas.DataFrame(pandas.read_csv(self.pathToCategoryPrint,sep='\t'))
         self.data = []
@@ -137,12 +137,12 @@ class ModelWithAddin:
     def getVendorCode(self, colorCase, categoryCode, printName):
         if 'силикон с' in self.maskFolderName:
             vendorCode1 = self.maskFolderName.replace('Чехол','').split('силикон')[0].strip().replace(' ','_') + '_BP'
-            if 'с зак.кам.' in self.maskFolderName:
-                vendorCode2 = 'CCM'
-            elif 'с отк.кам.' in self.maskFolderName:
-                vendorCode2 = 'OCM'
-            else:
-                vendorCode2 = 'UCM'
+            # if 'с зак.кам.' in self.maskFolderName:
+            #     vendorCode2 = 'CCM'
+            # elif 'с отк.кам.' in self.maskFolderName:
+            #     vendorCode2 = 'OCM'
+            # else:
+            #     vendorCode2 = 'UCM'
             for color, codeColor in self.siliconCaseColorDict.items():
                 if color == colorCase:
                     vendorCode3 = codeColor
@@ -151,7 +151,7 @@ class ModelWithAddin:
                 vendorCode3 = 'UNKNOW_COLOR'
             if 'под карту' in self.maskFolderName:
                 vendorCode3 += '_HLD'
-            return '_'.join([vendorCode1, vendorCode2, vendorCode3,
+            return '_'.join([vendorCode1, vendorCode3,#.join([vendorCode1, vendorCode2, vendorCode3,
                         categoryCode, 'PRNT',printName.replace('(Принт ','').replace(')','')])
 
 

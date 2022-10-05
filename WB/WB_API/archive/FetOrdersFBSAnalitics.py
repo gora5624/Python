@@ -52,7 +52,7 @@ def get_orders(Token, mode, days=3):
                    'Цена': line['totalPrice']/100,
                    'Номер заказа':line['orderId']}
         dataNew.append(datatmp)
-    dataNewpd = pandas.DataFrame(dataNew)
+    dataNewpd = pandas.DataFrame(dataorders)
     if mode == 1:
         ip = 'Караханян'
     elif mode == 2:
