@@ -36,6 +36,7 @@ while True:
             size = 'Неизвестно, проверьте базу'
         try:
             cod = dfNomenclatures[dfNomenclatures.Наименование == nomenclaturesName[0]]['Код'].values.tolist()[0]
+            nomenclaturesNameFull = dfNomenclatures[dfNomenclatures.Наименование == nomenclaturesName[0]]['Наименование для печати'].values.tolist()[0]
         except:    
             print('Не удалось определить код для {}'.format(nomenclaturesName[0]))
             cod = 'Неизвестно, проверьте базу'
@@ -44,7 +45,7 @@ while True:
             'Количество':'1',
             'Этикетка':'1',
             'ШК': barcod,
-            'Название': nomenclaturesName[0] + ' ' + printName[0],
+            'Название': nomenclaturesNameFull + ' ' + printName[0],
             'Размер': size,
             'Код': cod
         }

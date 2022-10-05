@@ -46,4 +46,5 @@ def pushPhoto(line, token, requestUrl):
         print(r.text)
 if __name__ == '__main__':
     uplaodImage(token, pathToFile)
+    print('Done')
 # uplaodImage(token, pathToFile)
