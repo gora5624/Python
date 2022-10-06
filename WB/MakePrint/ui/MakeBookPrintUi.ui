@@ -336,7 +336,7 @@
      <property name="geometry">
       <rect>
        <x>170</x>
-       <y>360</y>
+       <y>370</y>
        <width>141</width>
        <height>23</height>
       </rect>
@@ -466,7 +466,7 @@ p, li { white-space: pre-wrap; }
        <x>0</x>
        <y>120</y>
        <width>311</width>
-       <height>41</height>
+       <height>21</height>
       </rect>
      </property>
      <property name="verticalScrollBarPolicy">
@@ -562,7 +562,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>360</y>
+       <y>370</y>
        <width>161</width>
        <height>21</height>
       </rect>
@@ -611,6 +611,19 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="text">
       <string>Создать базу данных</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="CreateCaseAll">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>347</y>
+       <width>151</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Создать все</string>
      </property>
     </widget>
    </widget>

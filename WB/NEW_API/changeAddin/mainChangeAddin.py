@@ -1,4 +1,5 @@
 from cmath import nan
+from itertools import count
 from os.path import abspath, join as joinPath, dirname
 import pandas
 import multiprocessing
@@ -86,12 +87,12 @@ class AddinChanger():
         # pool.close()
         # pool.join()
 
-        self.dfSiliconAddin = pandas.DataFrame(pandas.read_csv(self.pathToSiliconAddin,sep='\t'))
-        self.dfSiliconHolderAddin = pandas.DataFrame(pandas.read_csv(self.pathToSiliconHolderAddin,sep='\t'))
-        self.dfPrintAddin = pandas.DataFrame(pandas.read_csv(self.pathToPrintAddin,sep='\t'))
-        self.dfBarcod = pandas.DataFrame(pandas.read_csv(self.pathToBarcodeList,sep='\t'))
-        self.dfNomenclatures = pandas.DataFrame(pandas.read_csv(self.pathToNumenclatures,sep='\t'))
-        self.dfCategories = pandas.DataFrame(pandas.read_csv(self.pathToCategories,sep='\t'))        
+        self.dfSiliconAddin = pandas.DataFrame(pandas.read_csv(self.pathToSiliconAddin,sep='\t',na_values=''))
+        self.dfSiliconHolderAddin = pandas.DataFrame(pandas.read_csv(self.pathToSiliconHolderAddin,sep='\t',na_values=''))
+        self.dfPrintAddin = pandas.DataFrame(pandas.read_csv(self.pathToPrintAddin,sep='\t',na_values=''))
+        self.dfBarcod = pandas.DataFrame(pandas.read_csv(self.pathToBarcodeList,sep='\t',na_values=''))
+        self.dfNomenclatures = pandas.DataFrame(pandas.read_csv(self.pathToNumenclatures,sep='\t',na_values=''))
+        self.dfCategories = pandas.DataFrame(pandas.read_csv(self.pathToCategories,sep='\t',na_values=''))        
 
 
     def sortNomenclatures(self):
@@ -106,7 +107,8 @@ class AddinChanger():
         self.listForChange = pandas.merge(self.listForChange, self.dfCategories, how='inner',left_on='Принт',right_on='Принт')
         # self.listForChange = pandas.merge(self.listForChange, self.dfPrintAddin, how='left',left_on='Категория',right_on='Категория')
         self.listForChange.sort_values('Номенклатура',inplace=True)
-        self.listForChange.to_excel(r'E:\listForChange.xlsx')
+        self.listForChange.fillna('')
+        # self.listForChange.to_excel(r'E:\listForChange.xlsx')
         
 
 
@@ -115,8 +117,23 @@ class AddinChanger():
           "vendorCodes": listVendorCodeForGet
         }
         headersRequest = {'Authorization': '{}'.format(self.token)}
-        responce = requests.post(self.urlGetCards, json=jsonRequest, headers=headersRequest)
-        return responce.json()['data']
+        countTry = 0
+        while True and countTry < 10:
+            try:
+                responce = requests.post(self.urlGetCards, json=jsonRequest, headers=headersRequest)
+            except ConnectionError:
+                countTry+=1
+                continue
+
+            if responce.status_code == 200:
+                return responce.json()['data']
+            else:
+                countTry+=1
+                continue
+        print('errors getCard')
+        with open(joinPath(dirname(__file__),'errors.txt'), 'a') as errorsFile:
+                for i in listVendorCodeForGet:
+                    errorsFile.write(i['vendorCode'] + '\n')
 
 
     def getRandomValue(self, category, field, caseName):
@@ -236,12 +253,32 @@ class AddinChanger():
         self.listChangedCardsForUploads = listCardForCanges
 
 
-    def pushChanges(self, listVendorCodeForCanges):
+    def pushChanges(self):
         headersRequest = {'Authorization': '{}'.format(self.token)}
-        responce = requests.post(self.urlChangeCards, json=self.listChangedCardsForUploads, headers=headersRequest)
-        self.listChangedCards.extend(listVendorCodeForCanges)
+        countTry = 0
+        try:
+            while True and countTry < 10:
+                responce = requests.post(self.urlChangeCards, json=self.listChangedCardsForUploads, headers=headersRequest)
+                if responce.status_code == 200:
+                    break
+                else:
+                    countTry+=1
+                    continue
+        except ConnectionError:
+            responce = requests.post(self.urlChangeCards, json=self.listChangedCardsForUploads, headers=headersRequest)
+        except requests.exceptions.InvalidJSONError:
+            print('ValeuError')
+            pd = pandas.DataFrame(self.listChangedCardsForUploads)
+            pd.to_excel(joinPath(dirname(__file__),'erreos.xlsx'))
+        # except:
+        #     with open(joinPath(dirname(__file__),'erreos.txt'), 'a') as errorsFile:
+        #         for i in self.listChangedCardsForUploads:
+        #             errorsFile.write(i['vendorCode'] + '\n')
+        # self.listChangedCards.extend(listVendorCodeForCanges)
         with open(self.listChangedCardsPath, 'a') as listChangedCardsFile:
-            listChangedCardsFile.write(';'.join(self.listChangedCards))
+            for card in self.listChangedCardsForUploads:
+                listChangedCardsFile.write(card['vendorCode'] + '\n')
+                self.listChangedCards.append(card['vendorCode'])
             listChangedCardsFile.close()
         a = responce.json()
         # a
@@ -255,12 +292,18 @@ class AddinChanger():
             if vendorCode not in self.listChangedCards:
                 listVendorCodeForCanges.append(vendorCode)
                 if len(listVendorCodeForCanges)>90:
-                    start_time = time.time()
                     listCardForCanges = self.getCardsNumenclatures(listVendorCodeForCanges)
-                    self.changelistCard(listCardForCanges)
-                    self.pushChanges(listVendorCodeForCanges)
+                    listCardForCangesNew = []
+                    for card in listCardForCanges:
+                        if card['vendorCode'] not in self.listChangedCards:
+                            listCardForCangesNew.append(card)
+                    for i in range(0,len(listCardForCangesNew), 100):
+                        start_time = time.time()
+                        self.changelistCard(listCardForCangesNew[i:i+100])
+                        self.pushChanges()
+                        print("--- %s seconds ---" % (time.time() - start_time))
                     listVendorCodeForCanges = []
-                    print("--- %s seconds ---" % (time.time() - start_time))
+                    
             #listCardForCanges = self.getCardsNumenclatures(self.listForChange['Артикул поставщика'].values.tolist()[i:i+100])
             # start_time = time.time()
         listCardForCanges = self.getCardsNumenclatures(listVendorCodeForCanges)

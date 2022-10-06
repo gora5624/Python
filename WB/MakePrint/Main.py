@@ -1,10 +1,12 @@
 import multiprocessing
+from re import L
 import sys
 from os import listdir
 from os.path import join as joinPath, isdir, isfile, abspath, exists
 sys.path.append(abspath(joinPath(__file__,'../../..')))
 import time
 from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QFileDialog, QApplication
 from my_mod.my_lib import file_exists
 # импортируем интерфейс
 from ui.MakeBookPrintUi import Ui_Form
@@ -42,7 +44,9 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.CreateExcelForSilicon.clicked.connect(self.btnCreateExcelForSilicon)
         self.ui.ChekImage.clicked.connect(self.btnChekImage)
         self.ui.ApplyAddin.clicked.connect(self.btnApplyAddin)
+        self.ui.ApplyAddinFromFile.clicked.connect(self.btnApplyAddinFromFile)
         self.ui.CreateCase.clicked.connect(self.btnCreateCase)
+        self.ui.CreateCaseAll.clicked.connect(self.btnCreateCaseAll)
         self.ui.updateListModel.clicked.connect(self.updateModelList)
         self.ui.makePlastinsBut.clicked.connect(self.makeplastins)
         self.ui.ClearAddin.clicked.connect(self.crearAdiin)
@@ -54,6 +58,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.xlsx'
         self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПринтов.xlsx'
         self.pathToCategoryPrint = r'E:\MyProduct\Python\WB\MakePrint\cat.xlsx'
+        self.pathToAddinFile = ''
         self.updeteListFile()
         self.updateModelList()
 
@@ -112,6 +117,16 @@ class mameBookPrint(QtWidgets.QMainWindow):
             if isfile(joinPath(pathToDoneSiliconImageSilicon,item)):
                 if '~' not in item:
                     self.ui.FileSelector.addItem(item)
+
+
+    def btnCreateCaseAll(self):
+        for file in listdir(pathToDoneSiliconImageSilicon):
+            if not isdir(joinPath(pathToDoneSiliconImageSilicon, file)):
+                create = WBnomenclaturesCreater()
+                pathToFileForUpload = joinPath(pathToDoneSiliconImageSilicon, file)
+                create.pathToFileForUpload = pathToFileForUpload
+                mode = self.ui.IPSelector.currentText()
+                create.createNomenclaturesMultiporocessing(mode)
 
 
     def btnCreateCase(self):
@@ -224,6 +239,24 @@ class mameBookPrint(QtWidgets.QMainWindow):
             createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode)
         self.updateModelList()
       
+
+    def btnApplyAddinFromFile(self):
+        print('tst')
+        self.pathToAddinFile = QFileDialog.getOpenFileName(self, ("Выберите файл свойств"), "", ("xlsx files (*.xlsx)"))[0]
+        dfAddinFile = pandas.DataFrame(pandas.read_excel(self.pathToAddinFile))
+        for mask in listdir(pathToMaskFolderSilicon):
+            try:
+                if isdir(joinPath(pathToMaskFolderSilicon, mask)):
+                    compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == mask]['Совместимость'].values.tolist()[0]
+                    brand = 'Mobi711'
+                    price = dfAddinFile[dfAddinFile['Номенклатура'] == mask]['Цена'].values.tolist()[0]
+                    modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, mask, pathToDoneSiliconImageSilicon, siliconCaseColorDict)
+                    self.listModelForExcel.append(modelWithAddin)
+            except:
+                print('Для {} не удалось получить свойства.'.format(mask))
+
+
+
 
     def btnApplyAddin(self, curModel = False):
         if curModel == False:

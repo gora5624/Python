@@ -1,4 +1,5 @@
 import os
+from pickletools import long4
 import requests
 import pandas
 from datetime import datetime, timedelta
@@ -42,15 +43,22 @@ def get_orders(Token, mode, days=3):
         tmp = response.json()['orders']
         dataorders.extend(tmp)
     dataNew = []
-    for line in dataorders:
+    dfdataorders = pandas.DataFrame(dataorders)
+    dfdataorders['barcode'] = dfdataorders['barcode'].astype(pandas.Int64Dtype)
+    dfBarcodes = pandas.DataFrame(pandas.read_table(r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'))
+    dfdataordersMerge = pandas.merge(dfdataorders, dfBarcodes, how='left',left_on='barcode',right_on='Штрихкод')
+    for line in dfdataordersMerge.to_dict('recodrs'):
         date = line['dateCreated'].split('T')[0].split('-')
         date = date[2] + '.' + date[1] + '.' + date[0]
         #barcod = int(line['barcode']) if line['barcode'] != '' else ''
-        datatmp = {'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
-                   'Дата': date,
-                   'Количество': 1,
-                   'Цена': line['totalPrice']/100,
-                   'Номер заказа':line['orderId']}
+        datatmp = {
+            'Номенклатура': line['Номенклатура'],
+            # 'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
+            'Дата': date,
+            'Количество': 1,
+            'Цена': line['totalPrice']/100,
+            'Номер заказа':line['orderId']
+                   }
         dataNew.append(datatmp)
     dataNewpd = pandas.DataFrame(dataorders)
     if mode == 1:
@@ -97,7 +105,12 @@ def get_ordersAll(days=3):
             count_skip = count_skip+1000
             tmp = response.json()['orders']
             dataorders.extend(tmp)
-    for line in dataorders:
+    dfdataorders = pandas.DataFrame(dataorders)
+    dfdataorders['barcode'] = dfdataorders['barcode'].astype(str)
+    dfBarcodes = pandas.DataFrame(pandas.read_table(r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'))
+    dfBarcodes['Штрихкод'] = dfBarcodes['Штрихкод'].astype(str)
+    dfdataordersMerge = pandas.merge(dfdataorders, dfBarcodes, how='left',left_on='barcode',right_on='Штрихкод')
+    for line in dfdataordersMerge.to_dict('records'):
         date = line['dateCreated'].split('T')[0].split('-')
         time = ':'.join(line['dateCreated'].split('T')[1].split(':')[0:2])
         date = date[2] + '.' + date[1] + '.' + date[0]
@@ -110,13 +123,16 @@ def get_ordersAll(days=3):
             ip = 'Самвел'
         else:
             ip = 'хз'
-        datatmp = {'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
-                'Дата': date,
-                'Время': time,
-                'Количество': 1,
-                'Цена': line['convertedPrice']/100,
-                'Номер заказа':line['orderId'],
-                'ИП': ip}
+
+        datatmp = {
+            'Номенклатура': line['Номенклатура'],
+            # 'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
+            'Дата': date,
+            'Время': time,
+            'Количество': 1,
+            'Цена': line['convertedPrice']/100,
+            'Номер заказа':line['orderId'],
+            'ИП': ip}
         dataNew.append(datatmp)
         #dataNew.append(line)
     dataNewpd = pandas.DataFrame(dataNew)
