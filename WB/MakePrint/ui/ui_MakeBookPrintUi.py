@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\MyProduct\Python\WB\MakePrint\ui\MakeBookPrintUi.ui'
+# Form implementation generated from reading ui file 'e:\MyProduct\Python\.git-rewrite\t\WB\MakePrint\ui\MakeBookPrintUi.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -111,7 +111,7 @@ class Ui_Form(object):
         self.CreateCase.setGeometry(QtCore.QRect(160, 320, 151, 23))
         self.CreateCase.setObjectName("CreateCase")
         self.ChekImage = QtWidgets.QPushButton(self.tab)
-        self.ChekImage.setGeometry(QtCore.QRect(170, 360, 141, 23))
+        self.ChekImage.setGeometry(QtCore.QRect(170, 370, 141, 23))
         self.ChekImage.setObjectName("ChekImage")
         self.textSiliconBrand = QtWidgets.QTextEdit(self.tab)
         self.textSiliconBrand.setGeometry(QtCore.QRect(0, 40, 51, 21))
@@ -140,7 +140,7 @@ class Ui_Form(object):
         self.CreateExcelForSilicon.setGeometry(QtCore.QRect(0, 220, 311, 23))
         self.CreateExcelForSilicon.setObjectName("CreateExcelForSilicon")
         self.textSiliconModel = QtWidgets.QTextEdit(self.tab)
-        self.textSiliconModel.setGeometry(QtCore.QRect(0, 120, 311, 41))
+        self.textSiliconModel.setGeometry(QtCore.QRect(0, 120, 311, 21))
         self.textSiliconModel.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.textSiliconModel.setObjectName("textSiliconModel")
         self.textPrice = QtWidgets.QTextEdit(self.tab)
@@ -163,7 +163,7 @@ class Ui_Form(object):
         self.updateListModel.setGeometry(QtCore.QRect(210, 40, 101, 23))
         self.updateListModel.setObjectName("updateListModel")
         self.ForceUpdate = QtWidgets.QCheckBox(self.tab)
-        self.ForceUpdate.setGeometry(QtCore.QRect(0, 360, 161, 21))
+        self.ForceUpdate.setGeometry(QtCore.QRect(0, 370, 161, 21))
         self.ForceUpdate.setLayoutDirection(QtCore.Qt.RightToLeft)
         self.ForceUpdate.setObjectName("ForceUpdate")
         self.ApplyAddinFromFile = QtWidgets.QPushButton(self.tab)
@@ -175,6 +175,9 @@ class Ui_Form(object):
         self.CreateDB = QtWidgets.QPushButton(self.tab)
         self.CreateDB.setGeometry(QtCore.QRect(150, 195, 161, 21))
         self.CreateDB.setObjectName("CreateDB")
+        self.CreateCaseAll = QtWidgets.QPushButton(self.tab)
+        self.CreateCaseAll.setGeometry(QtCore.QRect(160, 347, 151, 21))
+        self.CreateCaseAll.setObjectName("CreateCaseAll")
         self.tabWidget.addTab(self.tab, "")
 
         self.retranslateUi(Form)
@@ -247,4 +250,5 @@ class Ui_Form(object):
         self.ApplyAddinFromFile.setText(_translate("Form", "Выбрать файл со свойсвами"))
         self.ClearAddin.setText(_translate("Form", "Очистить список свойств"))
         self.CreateDB.setText(_translate("Form", "Создать базу данных"))
+        self.CreateCaseAll.setText(_translate("Form", "Создать все"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Form", "Создание товара"))
