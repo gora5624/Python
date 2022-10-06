@@ -29,6 +29,7 @@ class WBnomenclaturesCreater:
         self.urlAdd = 'https://suppliers-api.wildberries.ru/content/v1/cards/upload/add'
         self.pathToFileForUpload = ''
         self.modelForUploads = []
+        self.listDoneVendorCode = []
 
 
     # @staticmethod
@@ -58,7 +59,6 @@ class WBnomenclaturesCreater:
 
 
     def createNomenclaturesMultiporocessing(self, mode):
-        listDoneVendorCode = []
         start_time = time.time()
         nomenclature = []
         if mode =='Караханян':
@@ -122,10 +122,10 @@ class WBnomenclaturesCreater:
             pool = multiprocessing.Pool()
             for model in self.modelForUploads:
                 # if model[''] not in listDoneVendorCode:
-                pool.apply_async(self.createNomenclatureSingleProcess, args=(model, headersRequest,token,listDoneVendorCode, ))
+                pool.apply_async(self.createNomenclatureSingleProcess, args=(model, headersRequest,token, ))
             pool.close()
             pool.join()
-            listDoneVendorCode = self.getListNomenclatures(token, self.modelForUploads)
+            self.listDoneVendorCode = self.getListNomenclatures(token, self.modelForUploads)
             self.uplaodImage(self.pathToFileForUpload, token)
             # time.sleep(20)
         print("--- %s seconds ---" % (time.time() - start_time))
@@ -151,15 +151,15 @@ class WBnomenclaturesCreater:
             #         print(vendorCodeMain + ' ошибка при создании, проверь ВБ')
 
 
-    def createNomenclatureSingleProcess(self, modelListCard, headersRequest,token, listDoneVendorCode):
+    def createNomenclatureSingleProcess(self, modelListCard, headersRequest,token):
         vendorCodeMain = modelListCard[0]['vendorCode']
         jsonCard = [[modelListCard[0]]]
-        for i in jsonCard[0][0]['characteristics']:
-                j = list(i.items())[0]
-                if j[0] == 'Медиафайлы':
-                    urlsList = j[1]
-                    break
-        if vendorCodeMain not in listDoneVendorCode:
+        # for i in jsonCard[0][0]['characteristics']:
+        #         j = list(i.items())[0]
+        #         if j[0] == 'Медиафайлы':
+        #             urlsList = j[1]
+        #             break
+        if vendorCodeMain not in self.listDoneVendorCode:
             try:
                 responce = requests.post(self.urlCreate, json=jsonCard, headers=headersRequest)
             except requests.ConnectionError:
@@ -179,17 +179,17 @@ class WBnomenclaturesCreater:
                 
             }
         # self.startCeateNomenclaturesAsyncio(modelListCard[1:], headersRequest, vendorCodeMain)
-            if modelListCard[i]['vendorCode'] not in listDoneVendorCode:
+            if modelListCard[i]['vendorCode'] not in self.listDoneVendorCode:
                 try:
                     responce = requests.post(self.urlAdd, json=jsonNomenclature, headers=headersRequest)
                 except requests.ConnectionError:
                     responce = requests.post(self.urlAdd, json=jsonNomenclature, headers=headersRequest)
-                vendorCode = jsonNomenclature['cards'][0]['vendorCode']
-                for i in jsonNomenclature['cards'][0]['characteristics']:
-                    j = list(i.items())[0]
-                    if j[0] == 'Медиафайлы':
-                        urlsList = j[1]
-                        break
+                # vendorCode = jsonNomenclature['cards'][0]['vendorCode']
+                # for i in jsonNomenclature['cards'][0]['characteristics']:
+                #     j = list(i.items())[0]
+                #     if j[0] == 'Медиафайлы':
+                #         urlsList = j[1]
+                #         break
                 if responce.status_code == 200:
                     print(vendorCodeMain + ' успешно создана')
                 else:
@@ -201,7 +201,7 @@ class WBnomenclaturesCreater:
         requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/cards/list'
         headersRequest = {'Authorization': '{}'.format(token)}
         dataCard = []
-        for i in range(0,len(modelListCard)*20,1000):
+        for i in range(0,len(modelListCard)*2,1000):
             jsonRequest = {
                     "sort": {
                     "limit": 1000,
