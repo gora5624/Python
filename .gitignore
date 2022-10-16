@@ -133,3 +133,5 @@ dmypy.json
 
 # MyFiles
 token
+tmp.txt
+tmp.xlsx
