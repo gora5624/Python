@@ -85,7 +85,8 @@ pathToFileConfigBig = joinpath(mainPath, 'configBig.txt')
 pathToFileConfigPlanks  = joinpath(mainPath, 'configPlank.txt')
 pathToFileConfigSmallBook = joinpath(mainPath, 'configSmallBook.txt')
 pathDebug = joinpath(mainPath, 'debug')
-pathToAlgleDelta = joinpath(mainPath, 'algleDelta.txt')
+pathToAlgleDeltaLeft= joinpath(mainPath, 'algleDeltaLeft.txt')
+pathToAlgleDeltaRight= joinpath(mainPath, 'algleDeltaRight.txt')
 listSize = ['13', '13 min', '13 pm', 'L', 'M', 'MS', 'S', 'XL', 'XS', 'Книга']
 dataWithSizePath = {}
 tableSize = ['925', '535']
@@ -377,8 +378,8 @@ def makeLocPrint(count):
 def createStartAngleDeltaFile():
     xDeltaAngle = float(startPoint[0]) + float(anlgeStartPointDelta[0])
     yDeltaAngle =  float(startPoint[1]) - float(anlgeStartPointDelta[1])
-    open(pathToAlgleDelta, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
-    open(pathToAlgleDelta, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
+    open(pathToAlgleDeltaRight, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
+    open(pathToAlgleDeltaLeft, 'w').write(','.join([str(xDeltaAngle - tableSize[0]), str(yDeltaAngle)]))
 
 def startPrintHelper():
     # while True:
