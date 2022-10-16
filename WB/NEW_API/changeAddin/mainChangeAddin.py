@@ -8,6 +8,7 @@ import requests
 import random
 import copy
 import time
+import sys
 
 
 class AddinChanger():
@@ -27,7 +28,7 @@ class AddinChanger():
         self.listForChange = pandas.DataFrame()
         self.dfCategories = pandas.DataFrame()
         self.barcodeForChange =[]
-        self.listChangedCardsPath = joinPath(dirname(__file__),'listChangedCards')
+        self.listChangedCardsPath = joinPath(dirname(__file__),'listChangedCards.txt')
         self.listChangedCards = self.getlistChangedCardsFromFile()
         self.listChangedCardsForUploads = []
         self.createDataFrame()
@@ -60,11 +61,11 @@ class AddinChanger():
 
 
     def getlistChangedCardsFromFile(self):
-        try:
-            with open(self.listChangedCardsPath, 'r') as listChangedCardsFile:
-                return listChangedCardsFile.read().split(';')
-        except:
-            return []
+        # try:
+            with open(self.listChangedCardsPath, 'r', encoding='utf-8') as listChangedCardsFile:
+                return listChangedCardsFile.read().split('\n')
+        # except:
+        #     return []
 
 
     # def applySelf(self, addin):
@@ -91,7 +92,10 @@ class AddinChanger():
         self.dfSiliconHolderAddin = pandas.DataFrame(pandas.read_csv(self.pathToSiliconHolderAddin,sep='\t',na_values=''))
         self.dfPrintAddin = pandas.DataFrame(pandas.read_csv(self.pathToPrintAddin,sep='\t',na_values=''))
         self.dfBarcod = pandas.DataFrame(pandas.read_csv(self.pathToBarcodeList,sep='\t',na_values=''))
-        self.dfNomenclatures = pandas.DataFrame(pandas.read_csv(self.pathToNumenclatures,sep='\t',na_values=''))
+        try:
+            self.dfNomenclatures = pandas.DataFrame(pandas.read_csv(self.pathToNumenclatures,sep='\t',na_values=''))
+        except:
+            self.dfNomenclatures = pandas.DataFrame(pandas.read_excel(self.pathToNumenclatures,na_values=''))
         self.dfCategories = pandas.DataFrame(pandas.read_csv(self.pathToCategories,sep='\t',na_values=''))        
 
 
@@ -120,11 +124,13 @@ class AddinChanger():
         countTry = 0
         while True and countTry < 10:
             try:
-                responce = requests.post(self.urlGetCards, json=jsonRequest, headers=headersRequest)
+                responce = requests.post(self.urlGetCards, json=jsonRequest, headers=headersRequest, timeout=30)
             except ConnectionError:
                 countTry+=1
                 continue
-
+            except:
+                countTry+=1
+                continue
             if responce.status_code == 200:
                 return responce.json()['data']
             else:
@@ -133,7 +139,7 @@ class AddinChanger():
         print('errors getCard')
         with open(joinPath(dirname(__file__),'errors.txt'), 'a') as errorsFile:
                 for i in listVendorCodeForGet:
-                    errorsFile.write(i['vendorCode'] + '\n')
+                    errorsFile.write(i + '\n')
 
 
     def getRandomValue(self, category, field, caseName):
@@ -171,19 +177,19 @@ class AddinChanger():
 
     def getName(self, category, caseName, model, countTry=0):
         if 'под карту' in caseName:
-            nameCasePrefix = random.choice(self.dfSiliconHolderAddin[self.dfSiliconHolderAddin.Категория == category]['Наименование (префикс)'].values.tolist()[0].split(';')).strip()
+            nameCasePrefix = random.choice(self.dfSiliconHolderAddin[self.dfSiliconHolderAddin.Категория == category]['Наименование (префикс)'].values.tolist()[0].split(';')[0:2]).strip()
         else:
-            nameCasePrefix = random.choice(self.dfSiliconAddin[self.dfSiliconAddin.Категория == category]['Наименование (префикс)'].values.tolist()[0].split(';')).strip()
+            nameCasePrefix = random.choice(self.dfSiliconAddin[self.dfSiliconAddin.Категория == category]['Наименование (префикс)'].values.tolist()[0].split(';')[0:2]).strip()
         #nameCasePrefix = random.choice(self.dfAddinFromFile[self.dfAddinFromFile.Категория == category]['Наименование (префикс)'].values.tolist()[0].split(';')).strip()
         if model != '':
             nameCase = nameCasePrefix + ' ' + random.choice(model)
         else:
             return 'Чехол для телефона'
-        if countTry > 50:
+        if countTry > 10:
             return 'Чехол для телефона'
         if len(nameCase) > 40:
             countTry+=1
-            return self.getName(category, caseName, model)
+            return self.getName(category, caseName, model,countTry)
         else:
              return nameCase
 
@@ -225,6 +231,16 @@ class AddinChanger():
                     compatibility = char['Совместимость']
             if model != '':
                 fabric = model[0].split(' ')[0]
+            # model = 'Vivo Y35;Виво У35;Виво Y35'.split(';')
+            # compatibility = 'Vivo Y35;Виво У35;Виво Y35;У35;У 35;Y35;Y 35'.split(';')
+            # fabric = 'Vivo'
+            # for char in card['characteristics']:
+            #     if 'Модель' in char:
+            #         model = char['Модель']
+            #     if 'Совместимость' in char:
+            #         compatibility = char['Совместимость']
+            # if model != '':
+            #     fabric = model[0].split(' ')[0]
             card['characteristics'] =[
                             {'Рисунок': [self.listForChange[self.listForChange['Артикул поставщика'] == card['vendorCode']]['Рисунок'].values.tolist()[0]]},
                             {'Цвет': [self.listForChange[self.listForChange['Артикул поставщика'] == card['vendorCode']]['Цвет'].values.tolist()[0]]},
@@ -256,31 +272,37 @@ class AddinChanger():
     def pushChanges(self):
         headersRequest = {'Authorization': '{}'.format(self.token)}
         countTry = 0
-        try:
-            while True and countTry < 10:
-                responce = requests.post(self.urlChangeCards, json=self.listChangedCardsForUploads, headers=headersRequest)
+        
+        while True and countTry < 10:
+            try:
+                responce = requests.post(self.urlChangeCards, json=self.listChangedCardsForUploads, headers=headersRequest, timeout=3)
                 if responce.status_code == 200:
                     break
                 else:
                     countTry+=1
                     continue
-        except ConnectionError:
-            responce = requests.post(self.urlChangeCards, json=self.listChangedCardsForUploads, headers=headersRequest)
-        except requests.exceptions.InvalidJSONError:
-            print('ValeuError')
-            pd = pandas.DataFrame(self.listChangedCardsForUploads)
-            pd.to_excel(joinPath(dirname(__file__),'erreos.xlsx'))
+            except ConnectionError:
+                time.sleep(5)
+                responce = requests.post(self.urlChangeCards, json=self.listChangedCardsForUploads, headers=headersRequest, timeout=3)
+            except requests.exceptions.InvalidJSONError:
+                print('ValeuError')
+                pd = pandas.DataFrame(self.listChangedCardsForUploads)
+                pd.to_excel(joinPath(dirname(__file__),'errors.xlsx'))
+            except:
+                time.sleep(5)
+                countTry+=1
+                continue
         # except:
         #     with open(joinPath(dirname(__file__),'erreos.txt'), 'a') as errorsFile:
         #         for i in self.listChangedCardsForUploads:
         #             errorsFile.write(i['vendorCode'] + '\n')
         # self.listChangedCards.extend(listVendorCodeForCanges)
-        with open(self.listChangedCardsPath, 'a') as listChangedCardsFile:
+        with open(self.listChangedCardsPath, 'a', encoding='utf-8') as listChangedCardsFile:
             for card in self.listChangedCardsForUploads:
                 listChangedCardsFile.write(card['vendorCode'] + '\n')
                 self.listChangedCards.append(card['vendorCode'])
             listChangedCardsFile.close()
-        a = responce.json()
+        # a = responce.json()
         # a
 
 
@@ -308,7 +330,7 @@ class AddinChanger():
             # start_time = time.time()
         listCardForCanges = self.getCardsNumenclatures(listVendorCodeForCanges)
         self.changelistCard(listCardForCanges)
-        self.pushChanges(listVendorCodeForCanges)
+        self.pushChanges()
         print("--- %s seconds ---" % (time.time() - start_time))
 
 
@@ -317,5 +339,7 @@ class AddinChanger():
 
 
 if __name__=='__main__':
-    changer = AddinChanger('Караханян')
+    ip = 'Абраамян' #sys.argv[1]
+    path = r'E:\MyProduct\dist\mainChangeAddinАбр\db\tmp.txt'#sys.argv[2]
+    changer = AddinChanger(ip, path)
     changer.cangeCardsNumenclatures()

@@ -29,7 +29,7 @@ class Ui_Form(object):
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_2.setObjectName("label_2")
         self.bigButt = QtWidgets.QPushButton(Form)
-        self.bigButt.setEnabled(False)
+        # self.bigButt.setEnabled(False)
         self.bigButt.setGeometry(QtCore.QRect(20, 80, 171, 41))
         self.bigButt.setFlat(False)
         self.bigButt.setObjectName("bigButt")

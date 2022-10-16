@@ -153,10 +153,10 @@ class FBSStoks(QtWidgets.QMainWindow):
             self.sellerList.append('С.М. Абраамян')
 
 
-    def getListBarcodForFile(self, nom, count= 0):
+    def getListBarcodForFile(self, nom, fieldName, count= 0):
         if not self.ui.cameraTypeCheck.isChecked():
             listBarcods = []
-            listBarcodsTMP = self.data[self.data.Номенклатура == nom]['Штрихкод'].values.tolist()
+            listBarcodsTMP = self.data[self.data[fieldName] == nom]['Штрихкод'].values.tolist()
             for barcod in listBarcodsTMP:
                 listBarcods.append({
                     'barcod':barcod,
@@ -166,7 +166,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         else: 
             listBarcods = []
             for i, cameraType in enumerate(self.cameraTypeList):
-                listBarcodsTMP = self.data[self.data.Номенклатура == nom.replace(self.cameraTypeList[i],self.cameraTypeList[i-1])]['Штрихкод'].values.tolist()
+                listBarcodsTMP = self.data[self.data[fieldName] == nom.replace(self.cameraTypeList[i],self.cameraTypeList[i-1])]['Штрихкод'].values.tolist()
                 for barcod in listBarcodsTMP:
                     listBarcods.append({
                         'barcod':barcod,
@@ -183,16 +183,24 @@ class FBSStoks(QtWidgets.QMainWindow):
             if 'Номенклатура' in self.dataForUpdateStocks.columns:
                 for line in self.dataForUpdateStocks.to_dict('records'):
                     nom = line['Номенклатура']
-                    if nom == 'Чехол Samsung Galaxy Z Fold 4 силикон с отк.кам. с усил.угл. проз':
-                        pass
                     try:
                         count = line['Количество']
                     except:
                         count = 10000
-                    listBarcods.extend(self.getListBarcodForFile(nom, count))
+                    fieldName = 'Номенклатура'
+                    listBarcods.extend(self.getListBarcodForFile(nom, count, fieldName))
             elif 'Баркод' in self.dataForUpdateStocks.columns:
                 listBarcods = self.dataForUpdateStocks.rename(columns={'Баркод':'barcod', 'Количество':'stock'}).to_dict('records')
                 #listBarcods.extend(self.dataForUpdateStocks.Баркод.values.tolist())
+            elif 'Название 1С' in self.dataForUpdateStocks.columns:
+                for line in self.dataForUpdateStocks.to_dict('records'):
+                    nom = line['Название 1С']
+                    try:
+                        count = line['Количество']
+                    except:
+                        count = 10000
+                    fieldName = 'Название 1С'
+                    listBarcods.extend(self.getListBarcodForFile(nom, count, fieldName))
             else:
                 self.createMSGError("Некорректный файл со списком номенклатуры или ШК.")
                 return 0

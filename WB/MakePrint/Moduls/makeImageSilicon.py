@@ -76,6 +76,8 @@ def getSizeAndPos(image):
 
 
 def combineImage(imageMask, imagePrintPath, imageBack, printsize, printPaste, pathToSave, pathToPrintFolder):
+    if 'Thumbs.db' in imagePrintPath:
+        return 0
     imagePrint = Image.open(joinPath(pathToPrintFolder, imagePrintPath)).convert('RGBA').resize(printsize)
     imageBackNew = copy(imageBack)
     # size = imageMask.size
@@ -195,7 +197,7 @@ def fakecreateAllSiliconImage(pathToSiliconMask, mode):
             pool.apply_async(fakeCreateSiliconImage, args=(pathToModel, mode,))
     pool.close()
     pool.join()
-    copyImage()
+    # copyImage()
 
 
 def createAllSiliconImage(pathToSiliconMask, maxCPUUse, addImage, mode):

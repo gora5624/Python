@@ -18,6 +18,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.bigButt.clicked.connect(self.bigMode)
         self.ui.medButt.clicked.connect(self.medMode)
         self.ui.smallButt.clicked.connect(self.smallMode)
+        #self.ui.bigButt.clicked.connect(self.smallMode)
         self.ui.smallButtBooks.clicked.connect(self.smallBookMode)
         self.ui.smallButtPlastins.clicked.connect(self.smallPlastinMode)
 
@@ -80,6 +81,7 @@ Debug = True
 pathToTables = joinpath(mainPath, 'Tables')
 pathToFileConfigSmall = joinpath(mainPath, 'configSmall.txt')
 pathToFileConfigMed = joinpath(mainPath, 'configMed.txt')
+pathToFileConfigBig = joinpath(mainPath, 'configBig.txt')
 pathToFileConfigPlanks  = joinpath(mainPath, 'configPlank.txt')
 pathToFileConfigSmallBook = joinpath(mainPath, 'configSmallBook.txt')
 pathDebug = joinpath(mainPath, 'debug')
@@ -109,7 +111,12 @@ def applyConfig(mode):
         pathToConfig = pathToFileConfigMed
         with open(pathToModeFile, 'w') as fileMode:
             fileMode.write('sil')
-            fileMode.close()        
+            fileMode.close() 
+    elif mode == 'bigMode':
+        pathToConfig = pathToFileConfigBig
+        with open(pathToModeFile, 'w') as fileMode:
+            fileMode.write('sil')
+            fileMode.close()         
     elif mode =='smallPlastinMode':
         pathToConfig = pathToFileConfigPlanks
         with open(pathToModeFile, 'w') as fileMode:
@@ -175,6 +182,8 @@ def startChek(mode):
         pathToConfig = pathToFileConfigSmall
     elif mode == 'medMode':
         pathToConfig = pathToFileConfigMed
+    elif mode == 'bigMode':
+        pathToConfig = pathToFileConfigBig
     elif mode =='smallPlastinMode':
         pathToConfig = pathToFileConfigPlanks
     elif mode == 'smallBookMode':
@@ -368,6 +377,7 @@ def makeLocPrint(count):
 def createStartAngleDeltaFile():
     xDeltaAngle = float(startPoint[0]) + float(anlgeStartPointDelta[0])
     yDeltaAngle =  float(startPoint[1]) - float(anlgeStartPointDelta[1])
+    open(pathToAlgleDelta, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
     open(pathToAlgleDelta, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
 
 def startPrintHelper():

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>318</width>
-    <height>427</height>
+    <height>447</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>0</x>
      <y>0</y>
      <width>321</width>
-     <height>431</height>
+     <height>451</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -624,6 +624,19 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="text">
       <string>Создать все</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="ChekImageAll">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>400</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Перезалить фото</string>
      </property>
     </widget>
    </widget>

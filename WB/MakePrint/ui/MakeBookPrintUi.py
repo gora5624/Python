@@ -14,9 +14,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(318, 427)
+        Form.resize(318, 447)
         self.tabWidget = QtWidgets.QTabWidget(Form)
-        self.tabWidget.setGeometry(QtCore.QRect(0, 0, 321, 431))
+        self.tabWidget.setGeometry(QtCore.QRect(0, 0, 321, 451))
         self.tabWidget.setObjectName("tabWidget")
         self.tabBook = QtWidgets.QWidget()
         self.tabBook.setObjectName("tabBook")
@@ -178,6 +178,9 @@ class Ui_Form(object):
         self.CreateCaseAll = QtWidgets.QPushButton(self.tab)
         self.CreateCaseAll.setGeometry(QtCore.QRect(160, 347, 151, 21))
         self.CreateCaseAll.setObjectName("CreateCaseAll")
+        self.ChekImageAll = QtWidgets.QPushButton(self.tab)
+        self.ChekImageAll.setGeometry(QtCore.QRect(170, 400, 141, 23))
+        self.ChekImageAll.setObjectName("ChekImageAll")
         self.tabWidget.addTab(self.tab, "")
 
         self.retranslateUi(Form)
@@ -251,4 +254,5 @@ class Ui_Form(object):
         self.ClearAddin.setText(_translate("Form", "Очистить список свойств"))
         self.CreateDB.setText(_translate("Form", "Создать базу данных"))
         self.CreateCaseAll.setText(_translate("Form", "Создать все"))
+        self.ChekImageAll.setText(_translate("Form", "Перезалить фото"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Form", "Создание товара"))

@@ -79,7 +79,10 @@ class ChangeAvailability:
             else:
                 for line in self.listBarcodes:
                     barcod = line['barcod']
-                    count = int(line['count'])
+                    try:
+                        count = int(line['count'])
+                    except:
+                        count = 10000
                     barcod = str(barcod) if type(barcod) == int else str(barcod)[0:-2] if type(barcod) == float else barcod
                     self.json.append({"barcode": barcod,
                                     "stock": count,

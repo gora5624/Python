@@ -43,6 +43,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.CreateSiliconImage.clicked.connect(self.btnCreateSiliconImage)
         self.ui.CreateExcelForSilicon.clicked.connect(self.btnCreateExcelForSilicon)
         self.ui.ChekImage.clicked.connect(self.btnChekImage)
+        self.ui.ChekImageAll.clicked.connect(self.ChekImageAll)
         self.ui.ApplyAddin.clicked.connect(self.btnApplyAddin)
         self.ui.ApplyAddinFromFile.clicked.connect(self.btnApplyAddinFromFile)
         self.ui.CreateCase.clicked.connect(self.btnCreateCase)
@@ -97,6 +98,21 @@ class mameBookPrint(QtWidgets.QMainWindow):
     def crearAdiin(self):
         self.listModelForExcel = []
 
+    def ChekImageAll(self):
+        pathToDoneFilesForUplaodsPhoto = QFileDialog.getExistingDirectory(self, ("Выберите папку с файлами"))
+        # fileName = self.ui.FileSelector.currentText()
+        mode = self.ui.IPSelector.currentText()
+        for file in listdir(pathToDoneFilesForUplaodsPhoto):
+        # force = self.ui.ForceUpdate.checkState() 
+            if not isdir(joinPath(pathToDoneFilesForUplaodsPhoto,file)):
+                if mode =='Караханян':
+                    token = self.tokenKar
+                elif mode =='Абраамян':
+                    token = self.tokenAb
+                elif mode =='Самвел':
+                    token = self.tokenSam
+                WBnomenclaturesCreater.uplaodImage(joinPath(pathToDoneFilesForUplaodsPhoto,file), token)
+
 
     def btnChekImage(self):
         fileName = self.ui.FileSelector.currentText()
@@ -120,6 +136,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
 
 
     def btnCreateCaseAll(self):
+        pathToDoneSiliconImageSilicon = QFileDialog.getExistingDirectory(self, ("Выберите папку с файлами"))
         for file in listdir(pathToDoneSiliconImageSilicon):
             if not isdir(joinPath(pathToDoneSiliconImageSilicon, file)):
                 create = WBnomenclaturesCreater()
@@ -245,6 +262,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.pathToAddinFile = QFileDialog.getOpenFileName(self, ("Выберите файл свойств"), "", ("xlsx files (*.xlsx)"))[0]
         dfAddinFile = pandas.DataFrame(pandas.read_excel(self.pathToAddinFile))
         for mask in listdir(pathToMaskFolderSilicon):
+            if 'проз.' not in mask:
+                mask = mask.replace('проз', 'проз.')
             try:
                 if isdir(joinPath(pathToMaskFolderSilicon, mask)):
                     compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == mask]['Совместимость'].values.tolist()[0]
