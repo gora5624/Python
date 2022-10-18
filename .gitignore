@@ -133,4 +133,6 @@ dmypy.json
 
 # MyFiles
 token
-tmp
+tmp.txt
+.WB/NEW_API/changeAddin/db/tmp.txt
+/WB/NEW_API/changeAddin/db/tmp.txt
