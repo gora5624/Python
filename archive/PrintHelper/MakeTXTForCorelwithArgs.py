@@ -22,29 +22,42 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.smallButtBooks.clicked.connect(self.smallBookMode)
         self.ui.smallButtPlastins.clicked.connect(self.smallPlastinMode)
 
+    def saveModePrinter(self, printer):
+        with open(pathToPrinterMode, 'w') as file:
+            if printer == 'bigMode':
+                file.write('1')
+            else:
+                file.write('0')
+
+
     def bigMode(self):
         global mode
         mode = 'bigMode'
+        self.saveModePrinter(mode)
         w.close(self)
 
     def medMode(self):
         global mode
         mode = 'medMode'
+        self.saveModePrinter(mode)
         w.close(self)
 
     def smallMode(self):
         global mode
         mode = 'smallMode'
+        self.saveModePrinter(mode)
         w.close(self)
 
     def smallBookMode(self):
         global mode
         mode = 'smallBookMode'
+        self.saveModePrinter(mode)
         w.close(self)
 
     def smallPlastinMode(self):
         global mode
         mode = 'smallPlastinMode'
+        self.saveModePrinter(mode)
         w.close(self)
 
 
@@ -85,7 +98,9 @@ pathToFileConfigBig = joinpath(mainPath, 'configBig.txt')
 pathToFileConfigPlanks  = joinpath(mainPath, 'configPlank.txt')
 pathToFileConfigSmallBook = joinpath(mainPath, 'configSmallBook.txt')
 pathDebug = joinpath(mainPath, 'debug')
-pathToAlgleDelta = joinpath(mainPath, 'algleDelta.txt')
+pathToPrinterMode= joinpath(mainPath, 'printerMode.txt')
+pathToAlgleDeltaLeft= joinpath(mainPath, 'algleDeltaLeft.txt')
+pathToAlgleDeltaRight= joinpath(mainPath, 'algleDeltaRight.txt')
 listSize = ['13', '13 min', '13 pm', 'L', 'M', 'MS', 'S', 'XL', 'XS', 'Книга']
 dataWithSizePath = {}
 tableSize = ['925', '535']
@@ -377,8 +392,8 @@ def makeLocPrint(count):
 def createStartAngleDeltaFile():
     xDeltaAngle = float(startPoint[0]) + float(anlgeStartPointDelta[0])
     yDeltaAngle =  float(startPoint[1]) - float(anlgeStartPointDelta[1])
-    open(pathToAlgleDelta, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
-    open(pathToAlgleDelta, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
+    open(pathToAlgleDeltaRight, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
+    open(pathToAlgleDeltaLeft, 'w').write(','.join([str(xDeltaAngle - float(tableSize[0])), str(yDeltaAngle)]))
 
 def startPrintHelper():
     # while True:
