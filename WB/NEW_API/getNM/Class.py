@@ -124,4 +124,4 @@ class nomenclatures():
 if __name__ == '__main__':
     nom = nomenclatures()
     nom.getListNomenclatures()
-    nom.getListCharacteristics()
+    # nom.getListCharacteristics()
