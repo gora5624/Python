@@ -105,7 +105,7 @@ class WBnomenclaturesCreater:
                             {'Описание': case['Описание']},
                             {'Высота упаковки': 18.5},
                             {'Ширина упаковки': 11},
-                            {'Глубина упаковки': 1.5},
+                            {'Длина упаковки': 1.5},
                             {'Медиафайлы': case['Медиафайлы'].split(';')}
                         ],
                         "sizes": [
@@ -122,7 +122,7 @@ class WBnomenclaturesCreater:
             self.modelForUploads.append(nomenclature)
         headersRequest = {'Authorization': '{}'.format(token)}
         # self.modelForUploads
-        self.listDoneVendorCode = self.getListNomenclatures(token, self.modelForUploads)
+        # self.listDoneVendorCode = self.getListNomenclatures(token, self.modelForUploads)
         for i in range(5):
             pool = multiprocessing.Pool()
             for model in self.modelForUploads:
@@ -130,7 +130,7 @@ class WBnomenclaturesCreater:
                 pool.apply_async(self.createNomenclatureSingleProcess, args=(model, headersRequest,token, ))
             pool.close()
             pool.join()
-            self.listDoneVendorCode = self.getListNomenclatures(token, self.modelForUploads)
+            # self.listDoneVendorCode = self.getListNomenclatures(token, self.modelForUploads)
             # self.uplaodImage(self.pathToFileForUpload, token)
             # time.sleep(20)
         print("--- %s seconds ---" % (time.time() - start_time))
@@ -280,9 +280,12 @@ class WBnomenclaturesCreater:
             LogMaker.logAction('getListNomenclatures', 'Получает {} карточек из {}'.format(str(i),len(modelListCard)*2))
             if countTry>=10:
                 return []
-            for j in response['data']['cards']:
-                dataCard.append(j['vendorCode'])
+            try:
+                for j in response['data']['cards']:
+                    dataCard.append(j['vendorCode'])
                 # dataCard.extend(response['data']['cards'])
+            except:
+                pass
         LogMaker.metodEnd('getListNomenclatures', 'получены {} карточек'.format(len(dataCard)))
         return dataCard
 

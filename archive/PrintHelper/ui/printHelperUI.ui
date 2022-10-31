@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>251</height>
+    <height>313</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -66,13 +66,13 @@
   </widget>
   <widget class="QPushButton" name="bigButt">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>80</y>
-     <width>171</width>
+     <width>361</width>
      <height>41</height>
     </rect>
    </property>
@@ -86,9 +86,9 @@
   <widget class="QPushButton" name="medButt">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>80</y>
-     <width>171</width>
+     <x>20</x>
+     <y>140</y>
+     <width>361</width>
      <height>41</height>
     </rect>
    </property>
@@ -100,26 +100,26 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>140</y>
+     <y>200</y>
      <width>171</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>Маленький принтер силикон</string>
+    <string>Силикон маленький</string>
    </property>
   </widget>
   <widget class="QPushButton" name="smallButtPlastins">
    <property name="geometry">
     <rect>
      <x>210</x>
-     <y>140</y>
+     <y>200</y>
      <width>171</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>Маленький принтер планки</string>
+    <string>Планки маленкий</string>
    </property>
   </widget>
   <widget class="QPushButton" name="smallButtBooks">
@@ -129,13 +129,29 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>200</y>
+     <y>260</y>
      <width>171</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>Маленький принтер книжки</string>
+    <string>Книжки маленький</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="smallButtCartholders">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>260</y>
+     <width>171</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Картхолдеры маленький</string>
    </property>
   </widget>
  </widget>

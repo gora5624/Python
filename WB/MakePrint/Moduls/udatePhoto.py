@@ -15,7 +15,7 @@ def pushPhoto(line, token, requestUrl):
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=1)  
         if '"Неверный запрос: по данному артикулу не нашлось карточки товара","additionalErrors' in r.text:
             print('Не нашлось карточки товара '+jsonRequest['vendorCode'])
-        #print(r.text)
+        print(r.text + ' ' + jsonRequest['vendorCode'])
     except requests.ConnectionError:
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=1) 
         print(r.text)

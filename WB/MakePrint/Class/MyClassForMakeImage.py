@@ -312,7 +312,7 @@ class ModelWithAddin:
             #     'Медиафайлы': pictureURLCase
             # }
 if __name__ == '__main__':
-    pd = pandas.DataFrame(ModelWithAddin.generate_bar_WB(2))
+    pd = pandas.DataFrame(ModelWithAddin.generate_bar_WB(12135))
     pd.to_excel(r'E:\barcodes.xlsx')
 
     # ModelWithAddin.pushToDB(r'C:\Users\Георгий\Downloads\Характеристики.xlsx')

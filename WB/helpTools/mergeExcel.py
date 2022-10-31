@@ -1,7 +1,7 @@
 import os
 import pandas
 
-mainPath = r'F:\Downloads\Абр'
+mainPath = r'F:\Downloads\report_2022_10_26'
 df = pandas.DataFrame()
 for file in os.listdir(mainPath):
     tmp = pandas.DataFrame(pandas.read_excel(os.path.join(mainPath, file)))

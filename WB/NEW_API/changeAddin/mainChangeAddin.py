@@ -12,7 +12,7 @@ import sys
 
 
 class AddinChanger():
-    def __init__(self,ip, pathToNumenclatures = r'E:\MyProduct\Python\WB\NEW_API\changeAddin\db\tmp.txt') -> None:
+    def __init__(self,ip, pathToNumenclatures = r'F:\Downloads\report_2022_10_26\tmp.xlsx') -> None:
         self.ip = ip
         self.pathToNumenclatures = pathToNumenclatures
         self.pathToSiliconAddin = joinPath(dirname(__file__),'db',r'ХарактеристикиСиликон.txt')
@@ -122,7 +122,7 @@ class AddinChanger():
         }
         headersRequest = {'Authorization': '{}'.format(self.token)}
         countTry = 0
-        while True and countTry < 10:
+        while True and countTry < 100:
             try:
                 responce = requests.post(self.urlGetCards, json=jsonRequest, headers=headersRequest, timeout=30)
             except ConnectionError:
@@ -132,7 +132,11 @@ class AddinChanger():
                 countTry+=1
                 continue
             if responce.status_code == 200:
-                return responce.json()['data']
+                data = responce.json()['data']
+                if len(data) ==0:
+                    countTry +=1
+                    continue
+                return data
             else:
                 countTry+=1
                 continue
@@ -213,7 +217,7 @@ class AddinChanger():
 
 
     def changelistCard(self, listCardForCanges):
-        for card in listCardForCanges:
+        for i, card in enumerate(listCardForCanges):
             print(card['vendorCode'])
             try:
                 category = self.listForChange[self.listForChange['Артикул поставщика'] == card['vendorCode']]['Категория'].values.tolist()[0]
@@ -224,16 +228,16 @@ class AddinChanger():
             model = ''
             compatibility = ''
             fabric = ''
-            for char in card['characteristics']:
-                if 'Модель' in char:
-                    model = char['Модель']
-                if 'Совместимость' in char:
-                    compatibility = char['Совместимость']
-            if model != '':
-                fabric = model[0].split(' ')[0]
-            # model = 'Vivo Y35;Виво У35;Виво Y35'.split(';')
-            # compatibility = 'Vivo Y35;Виво У35;Виво Y35;У35;У 35;Y35;Y 35'.split(';')
-            # fabric = 'Vivo'
+            # for char in card['characteristics']:
+            #     if 'Модель' in char:
+            #         model = char['Модель']
+            #     if 'Совместимость' in char:
+            #         compatibility = char['Совместимость']
+            # if model != '':
+            #     fabric = model[0].split(' ')[0]
+            model = 'Tecno Camon 19 Neo;Camon 19 Neo;Техно Камон 19 Нео'.split(';')
+            compatibility = 'Tecno Camon 19 Neo;Camon 19 Neo;Техно Камон 19 Нео;Камон 19 Нео'.split(';')
+            fabric = 'Tecno'
             # for char in card['characteristics']:
             #     if 'Модель' in char:
             #         model = char['Модель']
@@ -263,7 +267,7 @@ class AddinChanger():
                             {'Описание': self.getDescription(category, caseName, compatibility)},
                             {'Высота упаковки': 18.5},
                             {'Ширина упаковки': 11},
-                            {'Глубина упаковки': 1.5}
+                            {'Длина упаковки': 1.5}
                         ]
             card
         self.listChangedCardsForUploads = listCardForCanges
@@ -275,7 +279,7 @@ class AddinChanger():
         
         while True and countTry < 10:
             try:
-                responce = requests.post(self.urlChangeCards, json=self.listChangedCardsForUploads, headers=headersRequest, timeout=3)
+                responce = requests.post(self.urlChangeCards, json=self.listChangedCardsForUploads, headers=headersRequest, timeout=50)
                 if responce.status_code == 200:
                     break
                 else:
@@ -340,6 +344,6 @@ class AddinChanger():
 
 if __name__=='__main__':
     ip = 'Абраамян' #sys.argv[1]
-    path = r'E:\MyProduct\dist\mainChangeAddinАбр\db\tmp.txt'#sys.argv[2]
+    path = r'F:\Downloads\report_2022_10_26\Tecno_Camon_19_Neo.xlsx'#sys.argv[2]
     changer = AddinChanger(ip, path)
     changer.cangeCardsNumenclatures()

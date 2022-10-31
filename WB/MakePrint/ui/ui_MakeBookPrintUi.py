@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'e:\MyProduct\Python\.git-rewrite\t\WB\MakePrint\ui\MakeBookPrintUi.ui'
+# Form implementation generated from reading ui file 'e:\MyProduct\Python\WB\MakePrint\ui\MakeBookPrintUi.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -105,6 +105,12 @@ class Ui_Form(object):
         self.makePlastinsBut.setGeometry(QtCore.QRect(0, 10, 111, 23))
         self.makePlastinsBut.setObjectName("makePlastinsBut")
         self.tabWidget.addTab(self.plastins, "")
+        self.tab_2 = QtWidgets.QWidget()
+        self.tab_2.setObjectName("tab_2")
+        self.makeCartholdersButt = QtWidgets.QPushButton(self.tab_2)
+        self.makeCartholdersButt.setGeometry(QtCore.QRect(10, 10, 111, 23))
+        self.makeCartholdersButt.setObjectName("makeCartholdersButt")
+        self.tabWidget.addTab(self.tab_2, "")
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
         self.CreateCase = QtWidgets.QPushButton(self.tab)
@@ -214,6 +220,8 @@ class Ui_Form(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabSilicon), _translate("Form", "Силикон"))
         self.makePlastinsBut.setText(_translate("Form", "Создать пластины"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.plastins), _translate("Form", "Пластины"))
+        self.makeCartholdersButt.setText(_translate("Form", "Создать пластины"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Form", "Картхолдеры"))
         self.CreateCase.setText(_translate("Form", "Создать чехлы"))
         self.ChekImage.setText(_translate("Form", "Перезалить фото"))
         self.textSiliconBrand.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"

@@ -21,6 +21,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         #self.ui.bigButt.clicked.connect(self.smallMode)
         self.ui.smallButtBooks.clicked.connect(self.smallBookMode)
         self.ui.smallButtPlastins.clicked.connect(self.smallPlastinMode)
+        self.ui.smallButtCartholders.clicked.connect(self.smallCartholderMode)
 
     def saveModePrinter(self, printer):
         with open(pathToPrinterMode, 'w') as file:
@@ -35,6 +36,14 @@ class FBSStoks(QtWidgets.QMainWindow):
         mode = 'bigMode'
         self.saveModePrinter(mode)
         w.close(self)
+
+
+    def smallCartholderMode(self):
+        global mode
+        mode = 'smallCartholderMode'
+        self.saveModePrinter(mode)
+        w.close(self)
+    
 
     def medMode(self):
         global mode
@@ -97,6 +106,8 @@ pathToFileConfigMed = joinpath(mainPath, 'configMed.txt')
 pathToFileConfigBig = joinpath(mainPath, 'configBig.txt')
 pathToFileConfigPlanks  = joinpath(mainPath, 'configPlank.txt')
 pathToFileConfigSmallBook = joinpath(mainPath, 'configSmallBook.txt')
+pathToFileConfigCartholder = joinpath(mainPath, 'configCartholder.txt')
+
 pathDebug = joinpath(mainPath, 'debug')
 pathToPrinterMode= joinpath(mainPath, 'printerMode.txt')
 pathToAlgleDeltaLeft= joinpath(mainPath, 'algleDeltaLeft.txt')
@@ -122,6 +133,11 @@ def applyConfig(mode):
         with open(pathToModeFile, 'w') as fileMode:
             fileMode.write('sil')
             fileMode.close()
+    elif mode == 'smallCartholderMode':
+        pathToConfig = pathToFileConfigCartholder
+        with open(pathToModeFile, 'w') as fileMode:
+            fileMode.write('cartholder')
+            fileMode.close() 
     elif mode == 'medMode':
         pathToConfig = pathToFileConfigMed
         with open(pathToModeFile, 'w') as fileMode:
@@ -195,6 +211,8 @@ def startChek(mode):
     """Начальная проверка на наличие нужных каталогов"""
     if mode == 'smallMode':
         pathToConfig = pathToFileConfigSmall
+    elif mode == 'smallCartholderMode':
+        pathToConfig = pathToFileConfigCartholder
     elif mode == 'medMode':
         pathToConfig = pathToFileConfigMed
     elif mode == 'bigMode':

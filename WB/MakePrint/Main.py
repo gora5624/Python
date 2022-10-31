@@ -20,6 +20,7 @@ from Moduls.GetCardAsincio import getListCard
 # импортируем дополнительные классы
 from Class.MyClassForMakeImage import ModelWithAddin
 from Class.Create import WBnomenclaturesCreater
+from Class.CreateCartholders import WBnomenclaturesCreaterHolders
 from Class.MakePlastinsClass import MakePlastins
 import pandas
 
@@ -52,6 +53,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.makePlastinsBut.clicked.connect(self.makeplastins)
         self.ui.ClearAddin.clicked.connect(self.crearAdiin)
         self.ui.CreateDB.clicked.connect(self.crateDB)
+        self.ui.makeCartholdersButt.clicked.connect(self.btnCreateCartholders)
         self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
         self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
         self.tokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
@@ -144,6 +146,15 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 create.pathToFileForUpload = pathToFileForUpload
                 mode = self.ui.IPSelector.currentText()
                 create.createNomenclaturesMultiporocessing(mode)
+
+
+    def btnCreateCartholders(self):
+            pathToFile = QFileDialog.getOpenFileName(self, ("Выберите файл свойств"), "", ("xlsx files (*.xlsx)"))[0]
+            create = WBnomenclaturesCreaterHolders()
+            pathToFileForUpload = joinPath(pathToFile)
+            create.pathToFileForUpload = pathToFileForUpload
+            mode = self.ui.IPSelector.currentText()
+            create.createNomenclaturesMultiporocessing(mode)
 
 
     def btnCreateCase(self):
@@ -264,6 +275,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
         for mask in listdir(pathToMaskFolderSilicon):
             if 'проз.' not in mask:
                 mask = mask.replace('проз', 'проз.')
+            if 'мат.' not in mask:
+                mask = mask.replace('мат', 'мат.')
             try:
                 if isdir(joinPath(pathToMaskFolderSilicon, mask)):
                     compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == mask]['Совместимость'].values.tolist()[0]
