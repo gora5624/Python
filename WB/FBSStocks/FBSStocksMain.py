@@ -188,7 +188,7 @@ class FBSStoks(QtWidgets.QMainWindow):
                     except:
                         count = 10000
                     fieldName = 'Номенклатура'
-                    listBarcods.extend(self.getListBarcodForFile(nom, count, fieldName))
+                    listBarcods.extend(self.getListBarcodForFile(nom, fieldName, count))
             elif 'Баркод' in self.dataForUpdateStocks.columns:
                 listBarcods = self.dataForUpdateStocks.rename(columns={'Баркод':'barcod', 'Количество':'stock'}).to_dict('records')
                 #listBarcods.extend(self.dataForUpdateStocks.Баркод.values.tolist())
@@ -200,7 +200,7 @@ class FBSStoks(QtWidgets.QMainWindow):
                     except:
                         count = 10000
                     fieldName = 'Название 1С'
-                    listBarcods.extend(self.getListBarcodForFile(nom, count, fieldName))
+                    listBarcods.extend(self.getListBarcodForFile(nom, fieldName, count))
             else:
                 self.createMSGError("Некорректный файл со списком номенклатуры или ШК.")
                 return 0
@@ -268,7 +268,10 @@ class FBSStoks(QtWidgets.QMainWindow):
             self.dataForUpdateStocks = pandas.DataFrame(pandas.read_excel(self.fileUpdateStokcsName))
             if 'Номенклатура' in self.dataForUpdateStocks.columns:
                 for nom in self.dataForUpdateStocks.Номенклатура:
-                    listBarcods.extend(self.getListBarcodForFile(nom))
+                    listBarcods.extend(self.getListBarcodForFile(nom, 'Номенклатура'))
+            elif 'Название 1С' in self.dataForUpdateStocks.columns:
+                for nom in self.dataForUpdateStocks.Номенклатура:
+                    listBarcods.extend(self.getListBarcodForFile(nom, 'Название 1С'))
             elif 'Баркод' in self.dataForUpdateStocks.columns:
 
                 listBarcods = self.dataForUpdateStocks.rename(columns={'Баркод':'barcod', 'Количество':'stock'}).to_dict('records')

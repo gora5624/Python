@@ -15,11 +15,12 @@ def pushPhoto(line, token, requestUrl):
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=1)  
         if '"Неверный запрос: по данному артикулу не нашлось карточки товара","additionalErrors' in r.text:
             print('Не нашлось карточки товара '+jsonRequest['vendorCode'])
-        #print(r.text)
+        print(r.text + ' ' + jsonRequest['vendorCode'])
     except requests.ConnectionError:
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=1) 
         print(r.text)
     except TimeoutError:
+        
         pass
 
 
@@ -28,7 +29,7 @@ pathToFile = sys.argv[1:][0].replace('#', ' ')
 token = sys.argv[1:][1].replace('#', ' ')
 # pathToFile = r'F:\Для загрузки\Готовые принты\Силикон\Чехол iPhone 6 силикон с отк.кам. проз. под карту.xlsx'
 # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
-#pathToFile = sys.argv[1:][0].replace('#', ' ')
+# pathToFile = sys.argv[1:][0].replace('#', ' ')
 df = pandas.DataFrame(pandas.read_excel(pathToFile))
 requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/media/save'
 if __name__ == '__main__':

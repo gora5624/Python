@@ -2,7 +2,7 @@ from genericpath import isdir
 import os
 import pandas
 
-mainPath = r'F:\Для загрузки\Готовые принты\Силикон — копия'
+mainPath = r'F:\Для загрузки\Готовые принты\Силикон'
 df = pandas.DataFrame()
 dbNodenclatures = pandas.DataFrame(pandas.read_table(r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\Список стандартный поиск номенклатура.txt'))
 data = []
@@ -12,8 +12,10 @@ for file in os.listdir(mainPath):
         # print(file[len(file.replace('.xlsx',''))-4:].replace('.xlsx',''))
         for line in tmp.to_dict('records'):
             if file[len(file.replace('.xlsx',''))-4:].replace('.xlsx','') == 'проз':
+                # a = file.replace('.xlsx','').replace('проз','проз.')
+                # a = a.replace('проз','проз.')
                 name = file.replace('.xlsx','').replace('проз','проз.')
-            if file[len(file.replace('.xlsx',''))-3:].replace('.xlsx','') == 'мат':
+            elif file[len(file.replace('.xlsx',''))-3:].replace('.xlsx','') == 'мат':
                 name = file.replace('.xlsx','').replace('мат','мат.')
             else:
                 name = file.replace('.xlsx','')
