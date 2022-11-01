@@ -92,9 +92,9 @@ class AddinChanger():
         self.dfSiliconHolderAddin = pandas.DataFrame(pandas.read_csv(self.pathToSiliconHolderAddin,sep='\t',na_values=''))
         self.dfPrintAddin = pandas.DataFrame(pandas.read_csv(self.pathToPrintAddin,sep='\t',na_values=''))
         self.dfBarcod = pandas.DataFrame(pandas.read_csv(self.pathToBarcodeList,sep='\t',na_values=''))
-        try:
+        if '.xlsx' not in self.pathToNumenclatures:
             self.dfNomenclatures = pandas.DataFrame(pandas.read_csv(self.pathToNumenclatures,sep='\t',na_values=''))
-        except:
+        else:
             self.dfNomenclatures = pandas.DataFrame(pandas.read_excel(self.pathToNumenclatures,na_values=''))
         self.dfCategories = pandas.DataFrame(pandas.read_csv(self.pathToCategories,sep='\t',na_values=''))        
 
@@ -112,6 +112,7 @@ class AddinChanger():
         # self.listForChange = pandas.merge(self.listForChange, self.dfPrintAddin, how='left',left_on='Категория',right_on='Категория')
         self.listForChange.sort_values('Номенклатура',inplace=True)
         self.listForChange.fillna('')
+        self.listForChangeDict = self.listForChange.to_dict('records')
         # self.listForChange.to_excel(r'E:\listForChange.xlsx')
         
 
@@ -235,8 +236,8 @@ class AddinChanger():
             #         compatibility = char['Совместимость']
             # if model != '':
             #     fabric = model[0].split(' ')[0]
-            model = 'Tecno Camon 19 Neo;Camon 19 Neo;Техно Камон 19 Нео'.split(';')
-            compatibility = 'Tecno Camon 19 Neo;Camon 19 Neo;Техно Камон 19 Нео;Камон 19 Нео'.split(';')
+            model = 'Tecno Pova Neo 2;Pova neo 2;Пова нео 2'.split(';')
+            compatibility = 'Tecno Pova Neo 2;Pova neo 2;Пова нео 2;Техно Пова нео 2'.split(';')
             fabric = 'Tecno'
             # for char in card['characteristics']:
             #     if 'Модель' in char:
@@ -344,6 +345,6 @@ class AddinChanger():
 
 if __name__=='__main__':
     ip = 'Абраамян' #sys.argv[1]
-    path = r'F:\Downloads\report_2022_10_26\Tecno_Camon_19_Neo.xlsx'#sys.argv[2]
+    path = r'F:\Downloads\report_2022_10_26\pova neo 2.xlsx'#sys.argv[2]
     changer = AddinChanger(ip, path)
     changer.cangeCardsNumenclatures()
