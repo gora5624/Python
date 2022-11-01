@@ -51,6 +51,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.makePlastinsBut.clicked.connect(self.makeplastins)
         self.ui.ClearAddin.clicked.connect(self.crearAdiin)
         self.ui.CreateDB.clicked.connect(self.crateDB)
+        self.ui.makeCartholdersButt.clicked.connect(self.btnCreateCartholder)
         self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
         self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
         self.tokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
@@ -120,6 +121,16 @@ class mameBookPrint(QtWidgets.QMainWindow):
 
 
     def btnCreateCaseAll(self):
+        for file in listdir(pathToDoneSiliconImageSilicon):
+            if not isdir(joinPath(pathToDoneSiliconImageSilicon, file)):
+                create = WBnomenclaturesCreater()
+                pathToFileForUpload = joinPath(pathToDoneSiliconImageSilicon, file)
+                create.pathToFileForUpload = pathToFileForUpload
+                mode = self.ui.IPSelector.currentText()
+                create.createNomenclaturesMultiporocessing(mode)
+
+
+    def btnCreateCartholder(self):
         for file in listdir(pathToDoneSiliconImageSilicon):
             if not isdir(joinPath(pathToDoneSiliconImageSilicon, file)):
                 create = WBnomenclaturesCreater()
