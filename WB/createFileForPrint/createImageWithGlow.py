@@ -25,11 +25,11 @@ def combineImage(pathToImg, pathToImgLight):
         # Совмещаем текстуру и полученное изображение
         imgMain = Image.alpha_composite(imgMain,imgMaskForTexture2)
         # Вставляем поверх всего закрывающую маску чехла
-        pathToSave = r'E:\принты со светом'
+        pathToSave = r'F:\Цвета свет'
         imgMain.save(os.path.join(pathToSave, os.path.basename(imagePrint)), quality=70)
 
         #img = Image.open(os.path.join(pathToImg, imagePrint)).convert('RGBA')
 
-pathToImg = r'E:\Новая папка'
+pathToImg = r'F:\Цвета — копия'
 pathToImgLight = r'F:\Маски силикон\light3.png'
 combineImage(pathToImg, pathToImgLight)

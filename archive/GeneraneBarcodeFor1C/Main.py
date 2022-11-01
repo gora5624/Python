@@ -1,4 +1,3 @@
-import imp
 from barcode.writer import ImageWriter
 import barcode
 from fpdf import FPDF
@@ -39,6 +38,6 @@ def create_1C_barcod(bc, name):
 #     bc = '2029943477623'# str(line['Штрихкод'] )[0:-2]
 #     create_1C_barcod(bc, name)
 
-name = 'Джарлыгасов Тагир'#line['Пользователь']
-bc = '2018353454321'# str(line['Штрихкод'] )[0:-2]
+name = 'Ковригин Антон'#line['Пользователь']
+bc = '2018316678781'# str(line['Штрихкод'] )[0:-2]
 create_1C_barcod(bc, name)

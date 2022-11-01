@@ -1,4 +1,5 @@
 import os
+from pickletools import long4
 import requests
 import pandas
 from datetime import datetime, timedelta
@@ -14,10 +15,23 @@ TokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTY
 def get_orders(Token, mode, days=3):
     i = 0
     print("Идёт получение свежих заказов, ожидайте...")
-    Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
-    tmp = []
-    start_data = ((datetime.today() - timedelta(days=int(days)))).isoformat('T', 'seconds').replace(
+    # Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
+    if '.' not in days:
+        days = int(days)
+        Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
+        start_data = ((datetime.today() - timedelta(days=int(days)))).isoformat('T', 'seconds').replace(
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+        end_data = ((datetime.today() - timedelta(days=int(days)))).isoformat('T', 'seconds').replace(
+        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+    else:
+        Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B00%3A00&take=1000&skip={}&date_end={}%2B00%3A00'
+        start_data = datetime.strptime(days, '%d.%m.%Y').isoformat('T', 'seconds').replace(
+        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+        end_data = (datetime.strptime(days, '%d.%m.%Y') + timedelta(days=1)).isoformat('T', 'seconds').replace(
+        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+    tmp = []
+    #start_data = ((datetime.today() - timedelta(days=int(days)))).isoformat('T', 'seconds').replace(
+        #':', '%3A').replace('+', '%2B').replace('.', '%2E')
     count_skip = 0
     tmp = []
     dataorders = []
@@ -28,7 +42,11 @@ def get_orders(Token, mode, days=3):
         while True:
             CountTry += 1
             try:
-                response = requests.get(Url.format(start_data, count_skip), headers={
+                if type(days) == int:
+                    response = requests.get(Url.format(start_data, count_skip), headers={
+                    'Authorization': '{}'.format(Token)})
+                else:
+                    response = requests.get(Url.format(start_data, count_skip, end_data), headers={
                     'Authorization': '{}'.format(Token)})
                 if response.status_code == 200:
                     break
@@ -42,35 +60,56 @@ def get_orders(Token, mode, days=3):
         tmp = response.json()['orders']
         dataorders.extend(tmp)
     dataNew = []
-    for line in dataorders:
+    dfdataorders = pandas.DataFrame(dataorders)
+    dfdataorders['barcode'] = dfdataorders['barcode'].astype(str)
+    dfBarcodes = pandas.DataFrame(pandas.read_table(r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'))
+    dfBarcodes['Штрихкод'] = dfBarcodes['Штрихкод'].astype(str)
+    dfdataordersMerge = pandas.merge(dfdataorders, dfBarcodes, how='left',left_on='barcode',right_on='Штрихкод')
+    for line in dfdataordersMerge.to_dict('recodrs'):
         date = line['dateCreated'].split('T')[0].split('-')
+        time = ':'.join(line['dateCreated'].split('T')[1].split(':')[0:2])
         date = date[2] + '.' + date[1] + '.' + date[0]
         #barcod = int(line['barcode']) if line['barcode'] != '' else ''
-        datatmp = {'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
-                   'Дата': date,
-                   'Количество': 1,
-                   'Цена': line['totalPrice']/100,
-                   'Номер заказа':line['orderId']}
+        if line['storeId'] == 10237:
+            ip = 'Караханян'
+        elif line['storeId'] == 141069:
+            ip = 'Манвел'
+        elif line['storeId'] == 278784:
+            ip = 'Самвел'
+        else:
+            ip = 'хз'
+
+        datatmp = {
+            'Номенклатура': line['Номенклатура'],
+            # 'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
+            'Дата': date,
+            'Время': time,
+            'Количество': 1,
+            'Цена': line['convertedPrice']/100,
+            'Номер заказа':line['orderId'],
+            'ИП': ip}
         dataNew.append(datatmp)
+        #dataNew.append(line)
     dataNewpd = pandas.DataFrame(dataNew)
-    if mode == 1:
-        ip = 'Караханян'
-    elif mode == 2:
-        ip = 'Абраамян'
-    elif mode == 3:
-        ip = 'Самвел'
-    
     dataNewpd.to_excel((os.path.join(os.path.join(
-        os.environ['USERPROFILE']), 'Desktop', WBOrdersDataFileName.format(curData + '_' + curTime, ip))), index=False)
+        os.environ['USERPROFILE']), 'Desktop', WBOrdersDataFileName.format(curData + '_' + curTime, 'все ИП'))), index=False)
 
 
 def get_ordersAll(days=3):
     i = 0
     print("Идёт получение свежих заказов, ожидайте...")
-    Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
-    start_data = ((datetime.today() - timedelta(days=int(days)))).isoformat('T', 'seconds').replace(
+    if '.' not in days:
+        days = int(days)
+        Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B03%3A00&take=1000&skip={}'
+        start_data = ((datetime.today() - timedelta(days=int(days)))).isoformat('T', 'seconds').replace(
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
-    end_data = ((datetime.today() - timedelta(days=int(days)))).isoformat('T', 'seconds').replace(
+        end_data = ((datetime.today() - timedelta(days=int(days)))).isoformat('T', 'seconds').replace(
+        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+    else:
+        Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B00%3A00&take=1000&skip={}&date_end={}%2B00%3A00'
+        start_data = datetime.strptime(days, '%d.%m.%Y').isoformat('T', 'seconds').replace(
+        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+        end_data = (datetime.strptime(days, '%d.%m.%Y') + timedelta(days=1)).isoformat('T', 'seconds').replace(
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
     dataNew = []
     dataorders = []
@@ -84,7 +123,11 @@ def get_ordersAll(days=3):
             while True:
                 CountTry += 1
                 try:
-                    response = requests.get(Url.format(start_data, count_skip), headers={
+                    if type(days) == int:
+                        response = requests.get(Url.format(start_data, count_skip), headers={
+                        'Authorization': '{}'.format(Token)})
+                    else:
+                        response = requests.get(Url.format(start_data, count_skip, end_data), headers={
                         'Authorization': '{}'.format(Token)})
                     if response.status_code == 200:
                         break
@@ -97,8 +140,14 @@ def get_ordersAll(days=3):
             count_skip = count_skip+1000
             tmp = response.json()['orders']
             dataorders.extend(tmp)
-    for line in dataorders:
+    dfdataorders = pandas.DataFrame(dataorders)
+    dfdataorders['barcode'] = dfdataorders['barcode'].astype(str)
+    dfBarcodes = pandas.DataFrame(pandas.read_table(r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'))
+    dfBarcodes['Штрихкод'] = dfBarcodes['Штрихкод'].astype(str)
+    dfdataordersMerge = pandas.merge(dfdataorders, dfBarcodes, how='left',left_on='barcode',right_on='Штрихкод')
+    for line in dfdataordersMerge.to_dict('records'):
         date = line['dateCreated'].split('T')[0].split('-')
+        time = ':'.join(line['dateCreated'].split('T')[1].split(':')[0:2])
         date = date[2] + '.' + date[1] + '.' + date[0]
         #barcod = int(line['barcode']) if line['barcode'] != '' else ''
         if line['storeId'] == 10237:
@@ -109,13 +158,18 @@ def get_ordersAll(days=3):
             ip = 'Самвел'
         else:
             ip = 'хз'
-        datatmp = {'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
-                'Дата': date,
-                'Количество': 1,
-                'Цена': line['totalPrice']/100,
-                'Номер заказа':line['orderId'],
-                'ИП': ip}
+
+        datatmp = {
+            'Номенклатура': line['Номенклатура'],
+            # 'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
+            'Дата': date,
+            'Время': time,
+            'Количество': 1,
+            'Цена': line['convertedPrice']/100,
+            'Номер заказа':line['orderId'],
+            'ИП': ip}
         dataNew.append(datatmp)
+        #dataNew.append(line)
     dataNewpd = pandas.DataFrame(dataNew)
     dataNewpd.to_excel((os.path.join(os.path.join(
         os.environ['USERPROFILE']), 'Desktop', WBOrdersDataFileName.format(curData + '_' + curTime, 'все ИП'))), index=False)
@@ -155,7 +209,7 @@ if __name__ == '__main__':
             print("Введён некорректный режим, установлен режим Караханян")
             token = TokenKar
         try:
-            days = int(input("Введите количество дней (по умолчанию 3 дня): "))
+            days = input("Введите количество дней (по умолчанию 3 дня) или дату в фомате ДД.ММ.ГГГГ: ")
         except ValueError:
             days = 3
         if type(token) == list:

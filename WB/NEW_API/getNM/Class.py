@@ -20,7 +20,9 @@ class nomenclatures():
 
             ]
         self.pathToFileWithNom = 'E:\\nomenclatures.xlsx'
+        self.pathToFileWithNomChar = 'E:\\nomenclaturesChar.xlsx'
         self.dataNomenclatures = []
+        self.dataNomenclaturesWithChar = []
 
 
     # получить список всех номенклатур по всем ИП
@@ -69,11 +71,57 @@ class nomenclatures():
             self.dataNomenclatures = dataNomenclatures
 
 
-    
+
     def getListCharacteristics(self):
-        pass
+        getListCharacteristicsUrl = 'https://suppliers-api.wildberries.ru/content/v1/cards/filter'
+        dataNomenclaturesWithChar = []
+        vendorCodelist = []
+        for token in self.tokens:
+            headersRequest = {'Authorization': '{}'.format(token['token'])}
+            for nomenclature in self.dataNomenclatures:
+                if nomenclature['vendorCode'] not in vendorCodelist:
+                    params = {
+                                "vendorCodes":nomenclature['vendorCode']
+                                }
+                    countTry = 0
+                    while countTry <10:
+                        try:
+                            responce = requests.get(getListCharacteristicsUrl, params=params, headers=headersRequest)
+                            break
+                        except ConnectionError:
+                            time.sleep(2)
+                            countTry +=1
+                            continue
+                    if responce.status_code == 200:
+                        responceJson = responce.json()
+                        if responceJson['error']:
+                            print(responceJson['errorText'])
+                            print(responceJson['additionalErrors'])
+                        else:
+                            for nomenclaturesWithChar in responceJson['data']:
+                                # if nomenclaturesWithChar['vendorCode'] not in vendorCodelist:
+                                vendorCodelist.append(nomenclaturesWithChar['vendorCode'])
+                                chars = nomenclaturesWithChar['characteristics']
+                                nomenclaturesWithChar.pop('characteristics')
+                                for char in chars:
+                                    nomenclaturesWithChar.update(char)
+                                sizes = nomenclaturesWithChar['sizes']
+                                nomenclaturesWithChar.pop('sizes')
+                                for size in sizes:
+                                    nomenclaturesWithChar.update(size)
+                                dataNomenclaturesWithChar.append(nomenclaturesWithChar)
+                                print(nomenclaturesWithChar['vendorCode'])
+                else:
+                    continue
+        if __name__ == '__main__':
+            df = pandas.DataFrame(dataNomenclaturesWithChar)
+            df.to_excel(self.pathToFileWithNomChar, index=False)
+            self.dataNomenclaturesWithChar = dataNomenclaturesWithChar
+        else:
+            self.dataNomenclaturesWithChar = dataNomenclaturesWithChar
 
 
 if __name__ == '__main__':
     nom = nomenclatures()
     nom.getListNomenclatures()
+    nom.getListCharacteristics()

@@ -18,32 +18,55 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.bigButt.clicked.connect(self.bigMode)
         self.ui.medButt.clicked.connect(self.medMode)
         self.ui.smallButt.clicked.connect(self.smallMode)
+        #self.ui.bigButt.clicked.connect(self.smallMode)
         self.ui.smallButtBooks.clicked.connect(self.smallBookMode)
         self.ui.smallButtPlastins.clicked.connect(self.smallPlastinMode)
+        self.ui.smallButtCartholders.clicked.connect(self.smallCartholderMode)
+
+    def saveModePrinter(self, printer):
+        with open(pathToPrinterMode, 'w') as file:
+            if printer == 'bigMode':
+                file.write('1')
+            else:
+                file.write('0')
+
 
     def bigMode(self):
         global mode
         mode = 'bigMode'
+        self.saveModePrinter(mode)
         w.close(self)
+
+
+    def smallCartholderMode(self):
+        global mode
+        mode = 'smallCartholderMode'
+        self.saveModePrinter(mode)
+        w.close(self)
+    
 
     def medMode(self):
         global mode
         mode = 'medMode'
+        self.saveModePrinter(mode)
         w.close(self)
 
     def smallMode(self):
         global mode
         mode = 'smallMode'
+        self.saveModePrinter(mode)
         w.close(self)
 
     def smallBookMode(self):
         global mode
         mode = 'smallBookMode'
+        self.saveModePrinter(mode)
         w.close(self)
 
     def smallPlastinMode(self):
         global mode
         mode = 'smallPlastinMode'
+        self.saveModePrinter(mode)
         w.close(self)
 
 
@@ -80,10 +103,15 @@ Debug = True
 pathToTables = joinpath(mainPath, 'Tables')
 pathToFileConfigSmall = joinpath(mainPath, 'configSmall.txt')
 pathToFileConfigMed = joinpath(mainPath, 'configMed.txt')
+pathToFileConfigBig = joinpath(mainPath, 'configBig.txt')
 pathToFileConfigPlanks  = joinpath(mainPath, 'configPlank.txt')
 pathToFileConfigSmallBook = joinpath(mainPath, 'configSmallBook.txt')
+pathToFileConfigCartholder = joinpath(mainPath, 'configCartholder.txt')
+
 pathDebug = joinpath(mainPath, 'debug')
-pathToAlgleDelta = joinpath(mainPath, 'algleDelta.txt')
+pathToPrinterMode= joinpath(mainPath, 'printerMode.txt')
+pathToAlgleDeltaLeft= joinpath(mainPath, 'algleDeltaLeft.txt')
+pathToAlgleDeltaRight= joinpath(mainPath, 'algleDeltaRight.txt')
 listSize = ['13', '13 min', '13 pm', 'L', 'M', 'MS', 'S', 'XL', 'XS', 'Книга']
 dataWithSizePath = {}
 tableSize = ['925', '535']
@@ -105,11 +133,21 @@ def applyConfig(mode):
         with open(pathToModeFile, 'w') as fileMode:
             fileMode.write('sil')
             fileMode.close()
+    elif mode == 'smallCartholderMode':
+        pathToConfig = pathToFileConfigCartholder
+        with open(pathToModeFile, 'w') as fileMode:
+            fileMode.write('cartholder')
+            fileMode.close() 
     elif mode == 'medMode':
         pathToConfig = pathToFileConfigMed
         with open(pathToModeFile, 'w') as fileMode:
             fileMode.write('sil')
-            fileMode.close()        
+            fileMode.close() 
+    elif mode == 'bigMode':
+        pathToConfig = pathToFileConfigBig
+        with open(pathToModeFile, 'w') as fileMode:
+            fileMode.write('sil')
+            fileMode.close()         
     elif mode =='smallPlastinMode':
         pathToConfig = pathToFileConfigPlanks
         with open(pathToModeFile, 'w') as fileMode:
@@ -173,8 +211,12 @@ def startChek(mode):
     """Начальная проверка на наличие нужных каталогов"""
     if mode == 'smallMode':
         pathToConfig = pathToFileConfigSmall
+    elif mode == 'smallCartholderMode':
+        pathToConfig = pathToFileConfigCartholder
     elif mode == 'medMode':
         pathToConfig = pathToFileConfigMed
+    elif mode == 'bigMode':
+        pathToConfig = pathToFileConfigBig
     elif mode =='smallPlastinMode':
         pathToConfig = pathToFileConfigPlanks
     elif mode == 'smallBookMode':
@@ -368,7 +410,8 @@ def makeLocPrint(count):
 def createStartAngleDeltaFile():
     xDeltaAngle = float(startPoint[0]) + float(anlgeStartPointDelta[0])
     yDeltaAngle =  float(startPoint[1]) - float(anlgeStartPointDelta[1])
-    open(pathToAlgleDelta, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
+    open(pathToAlgleDeltaRight, 'w').write(','.join([str(xDeltaAngle), str(yDeltaAngle)]))
+    open(pathToAlgleDeltaLeft, 'w').write(','.join([str(xDeltaAngle - float(tableSize[0])), str(yDeltaAngle)]))
 
 def startPrintHelper():
     # while True:

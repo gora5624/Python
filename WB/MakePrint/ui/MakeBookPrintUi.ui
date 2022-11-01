@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>318</width>
-    <height>491</height>
+    <height>447</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,13 +17,13 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>30</y>
+     <y>0</y>
      <width>321</width>
-     <height>461</height>
+     <height>451</height>
     </rect>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>3</number>
    </property>
    <widget class="QWidget" name="tabBook">
     <attribute name="title">
@@ -206,7 +206,7 @@
       <rect>
        <x>0</x>
        <y>10</y>
-       <width>261</width>
+       <width>311</width>
        <height>81</height>
       </rect>
      </property>
@@ -214,9 +214,9 @@
     <widget class="QPushButton" name="CreateSiliconImage">
      <property name="geometry">
       <rect>
-       <x>180</x>
+       <x>230</x>
        <y>160</y>
-       <width>75</width>
+       <width>81</width>
        <height>23</height>
       </rect>
      </property>
@@ -240,9 +240,9 @@
     <widget class="QComboBox" name="AddPhotoSelector">
      <property name="geometry">
       <rect>
-       <x>180</x>
+       <x>228</x>
        <y>130</y>
-       <width>69</width>
+       <width>81</width>
        <height>22</height>
       </rect>
      </property>
@@ -260,7 +260,7 @@
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>190</x>
+       <x>250</x>
        <y>100</y>
        <width>61</width>
        <height>20</height>
@@ -283,6 +283,19 @@
       <string>Натянуть все принты</string>
      </property>
     </widget>
+    <widget class="QCheckBox" name="FakeModeChekBox">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>100</y>
+       <width>151</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Симулировать натяжку</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="plastins">
     <attribute name="title">
@@ -302,6 +315,24 @@
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="tab_2">
+    <attribute name="title">
+     <string>Картхолдеры</string>
+    </attribute>
+    <widget class="QPushButton" name="makeCartholdersButt">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>111</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Создать пластины</string>
+     </property>
+    </widget>
+   </widget>
    <widget class="QWidget" name="tab">
     <attribute name="title">
      <string>Создание товара</string>
@@ -309,9 +340,9 @@
     <widget class="QPushButton" name="CreateCase">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>410</y>
-       <width>91</width>
+       <x>160</x>
+       <y>320</y>
+       <width>151</width>
        <height>23</height>
       </rect>
      </property>
@@ -322,9 +353,9 @@
     <widget class="QPushButton" name="ChekImage">
      <property name="geometry">
       <rect>
-       <x>160</x>
-       <y>410</y>
-       <width>101</width>
+       <x>170</x>
+       <y>370</y>
+       <width>141</width>
        <height>23</height>
       </rect>
      </property>
@@ -353,12 +384,15 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
     <widget class="QTextEdit" name="textSiliconName">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>70</y>
-       <width>261</width>
-       <height>41</height>
+       <x>120</x>
+       <y>260</y>
+       <width>111</width>
+       <height>21</height>
       </rect>
      </property>
      <property name="verticalScrollBarPolicy">
@@ -376,10 +410,13 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
     <widget class="QComboBox" name="CameraType">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>220</y>
+       <y>260</y>
        <width>121</width>
        <height>22</height>
       </rect>
@@ -399,8 +436,8 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>120</y>
-       <width>261</width>
+       <y>70</y>
+       <width>311</width>
        <height>41</height>
       </rect>
      </property>
@@ -418,9 +455,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="ApplyAddin">
      <property name="geometry">
       <rect>
-       <x>194</x>
-       <y>220</y>
-       <width>71</width>
+       <x>0</x>
+       <y>170</y>
+       <width>141</width>
        <height>21</height>
       </rect>
      </property>
@@ -431,9 +468,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="CreateExcelForSilicon">
      <property name="geometry">
       <rect>
-       <x>160</x>
-       <y>280</y>
-       <width>101</width>
+       <x>0</x>
+       <y>220</y>
+       <width>311</width>
        <height>23</height>
       </rect>
      </property>
@@ -445,9 +482,9 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>170</y>
-       <width>261</width>
-       <height>41</height>
+       <y>120</y>
+       <width>311</width>
+       <height>21</height>
       </rect>
      </property>
      <property name="verticalScrollBarPolicy">
@@ -485,8 +522,8 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>280</y>
-       <width>91</width>
+       <y>320</y>
+       <width>141</width>
        <height>22</height>
       </rect>
      </property>
@@ -510,8 +547,8 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>250</y>
-       <width>261</width>
+       <y>290</y>
+       <width>311</width>
        <height>22</height>
       </rect>
      </property>
@@ -521,7 +558,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>0</x>
        <y>10</y>
-       <width>261</width>
+       <width>311</width>
        <height>22</height>
       </rect>
      </property>
@@ -529,7 +566,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="updateListModel">
      <property name="geometry">
       <rect>
-       <x>164</x>
+       <x>210</x>
        <y>40</y>
        <width>101</width>
        <height>23</height>
@@ -542,10 +579,10 @@ p, li { white-space: pre-wrap; }
     <widget class="QCheckBox" name="ForceUpdate">
      <property name="geometry">
       <rect>
-       <x>100</x>
-       <y>380</y>
+       <x>0</x>
+       <y>370</y>
        <width>161</width>
-       <height>17</height>
+       <height>21</height>
       </rect>
      </property>
      <property name="layoutDirection">
@@ -555,20 +592,72 @@ p, li { white-space: pre-wrap; }
       <string>Обновить принудительно</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="ApplyAddinFromFile">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>170</y>
+       <width>161</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Выбрать файл со свойсвами</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="ClearAddin">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>196</y>
+       <width>141</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Очистить список свойств</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="CreateDB">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>195</y>
+       <width>161</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Создать базу данных</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="CreateCaseAll">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>347</y>
+       <width>151</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Создать все</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="ChekImageAll">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>400</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Перезалить фото</string>
+     </property>
+    </widget>
    </widget>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>111</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Создание принтов</string>
-   </property>
   </widget>
  </widget>
  <resources/>

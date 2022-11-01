@@ -31,6 +31,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.botToken = open(abspath(joinPath(__file__,'..', 'token')), 'r').read()
         self.bot = telebot.TeleBot(self.botToken)
 
+
     def selectFile(self):
         self.fileUpdateStokcsName = QFileDialog.getOpenFileName(self, ("Выберите файл со списком номенклатуры"), "", ("Excel Files (*.xlsx)"))[0]
         if self.fileUpdateStokcsName == '':
@@ -102,7 +103,7 @@ class FBSStoks(QtWidgets.QMainWindow):
 
 
     def getListNom(self):
-        self.nomenclature = QFileDialog.getOpenFileName(self, ("Выберите список ШК"), "", ("Excel Files (*.xlsx)"))[0]
+        self.nomenclature = QFileDialog.getOpenFileName(self, ("Выберите список ШК"), "", ("TXT files (*.txt)"))[0]
         self.ui.getNomList.setText("Идёт получение списка номенклатур...")
         #self.ui.getNomList.setDisabled(True)
         QApplication.processEvents()
@@ -110,7 +111,7 @@ class FBSStoks(QtWidgets.QMainWindow):
             self.createMSGError("Вы не выбрали файл с базой, работа невозможна.")
             return 0
         self.ui.getNomList.setText(self.nomenclature)
-        self.data = pandas.DataFrame(pandas.read_excel(self.nomenclature)).sort_values(by='Номенклатура')
+        self.data = pandas.DataFrame(pandas.read_table(self.nomenclature)).sort_values(by='Номенклатура')
         self.ui.selectNomenclatureComboBox.addItems(self.data['Номенклатура'].unique())
         self.ui.selectFileButton.setText("Выберите файл с номенклатурой")
         self.ui.selectNomenclatureComboBox.setDisabled(False)
@@ -152,10 +153,10 @@ class FBSStoks(QtWidgets.QMainWindow):
             self.sellerList.append('С.М. Абраамян')
 
 
-    def getListBarcodForFile(self, nom, count= 0):
+    def getListBarcodForFile(self, nom, fieldName, count= 0):
         if not self.ui.cameraTypeCheck.isChecked():
             listBarcods = []
-            listBarcodsTMP = self.data[self.data.Номенклатура == nom]['Штрихкод'].values.tolist()
+            listBarcodsTMP = self.data[self.data[fieldName] == nom]['Штрихкод'].values.tolist()
             for barcod in listBarcodsTMP:
                 listBarcods.append({
                     'barcod':barcod,
@@ -165,7 +166,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         else: 
             listBarcods = []
             for i, cameraType in enumerate(self.cameraTypeList):
-                listBarcodsTMP = self.data[self.data.Номенклатура == nom.replace(self.cameraTypeList[i],self.cameraTypeList[i-1])]['Штрихкод'].values.tolist()
+                listBarcodsTMP = self.data[self.data[fieldName] == nom.replace(self.cameraTypeList[i],self.cameraTypeList[i-1])]['Штрихкод'].values.tolist()
                 for barcod in listBarcodsTMP:
                     listBarcods.append({
                         'barcod':barcod,
@@ -186,10 +187,20 @@ class FBSStoks(QtWidgets.QMainWindow):
                         count = line['Количество']
                     except:
                         count = 10000
-                    listBarcods.extend(self.getListBarcodForFile(nom, count))
+                    fieldName = 'Номенклатура'
+                    listBarcods.extend(self.getListBarcodForFile(nom, fieldName, count))
             elif 'Баркод' in self.dataForUpdateStocks.columns:
                 listBarcods = self.dataForUpdateStocks.rename(columns={'Баркод':'barcod', 'Количество':'stock'}).to_dict('records')
                 #listBarcods.extend(self.dataForUpdateStocks.Баркод.values.tolist())
+            elif 'Название 1С' in self.dataForUpdateStocks.columns:
+                for line in self.dataForUpdateStocks.to_dict('records'):
+                    nom = line['Название 1С']
+                    try:
+                        count = line['Количество']
+                    except:
+                        count = 10000
+                    fieldName = 'Название 1С'
+                    listBarcods.extend(self.getListBarcodForFile(nom, fieldName, count))
             else:
                 self.createMSGError("Некорректный файл со списком номенклатуры или ШК.")
                 return 0
@@ -199,6 +210,8 @@ class FBSStoks(QtWidgets.QMainWindow):
             self.getSeller()
             for seller in self.sellerList:
                 pusher = ChangeAvailability(seller, listBarcods)
+                # df = pandas.DataFrame(listBarcods)
+                # df.to_excel(r'E:\tmp.xlsx')
                 resp = pusher.takeOn()
                 if resp == 0:
                     self.ui.pushFullStocks.setStyleSheet('background: rgb(0,255,0);') 
@@ -242,7 +255,8 @@ class FBSStoks(QtWidgets.QMainWindow):
         if len(nomenclaturesListForBot) ==0:
             text = 'В {} {} {} неизвестно что('.format(curData, curTime, action)
         elif len(nomenclaturesListForBot) >1:
-            text = 'В {} {} {} следующие позиции: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
+            for i in range(0,len(nomenclaturesListForBot),20):
+                text = 'В {} {} {} следующие позиции: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot[i:i+20]))
         elif len(nomenclaturesListForBot) ==1:
             text = 'В {} {} {} следующую позицию: {}'.format(curData, curTime, action,','.join(nomenclaturesListForBot))
         self.bot.send_message(-1001550015840, text)
@@ -254,7 +268,10 @@ class FBSStoks(QtWidgets.QMainWindow):
             self.dataForUpdateStocks = pandas.DataFrame(pandas.read_excel(self.fileUpdateStokcsName))
             if 'Номенклатура' in self.dataForUpdateStocks.columns:
                 for nom in self.dataForUpdateStocks.Номенклатура:
-                    listBarcods.extend(self.getListBarcodForFile(nom))
+                    listBarcods.extend(self.getListBarcodForFile(nom, 'Номенклатура'))
+            elif 'Название 1С' in self.dataForUpdateStocks.columns:
+                for nom in self.dataForUpdateStocks.Номенклатура:
+                    listBarcods.extend(self.getListBarcodForFile(nom, 'Название 1С'))
             elif 'Баркод' in self.dataForUpdateStocks.columns:
 
                 listBarcods = self.dataForUpdateStocks.rename(columns={'Баркод':'barcod', 'Количество':'stock'}).to_dict('records')
@@ -295,7 +312,7 @@ class FBSStoks(QtWidgets.QMainWindow):
                     # self.ui.pushEmptyStocks.setStyleSheet('background: rgb(255,0,0);')
                     self.createMSGError("{}".format(self.ui.selectNomenclatureComboBox.currentText()))
         action = 'сняли с наличия'
-        # self.sendMassageToTelegram(action, listBarcods)
+        self.sendMassageToTelegram(action, listBarcods)
 
     def createMSGError(self,text):
         msg = QtWidgets.QMessageBox()

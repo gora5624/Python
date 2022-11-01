@@ -68,66 +68,60 @@ reductionDict = {'закрытой камерой': 'зак.кам.',
 reductionDict2 = {'Чехол для': 'Чехол'}
 
 
-def genArtColor(modelClass, colorCase, pathToImage):
+def generateVendorCode(modelClass, colorCase, pathToImage):
     listImage = listdir(pathToImage)
     listCase = []
     if modelClass.caseType == 'Силикон':
-        artColor_1 = 'BP'
+        vendorCode1 = modelClass.model.replace(' ','_') + '_BP'
+        if modelClass.cameraType == 'с закрытой камерой':
+            vendorCode2 = 'CCM'
+        elif modelClass.cameraType == 'с открытой камерой':
+            vendorCode2 = 'OCM'
+        else:
+            vendorCode2 = 'UCM'
         for color, codeColor in siliconCaseColorDict.items():
             if color == colorCase.lower():
-                artColor_2 = codeColor
+                vendorCode3 = codeColor
                 break
         else:
-            artColor_2 = 'UNKNOW_COLOR'
-        if modelClass.cameraType == 'с закрытой камерой':
-            artColor_3 = 'CCM'
-        elif modelClass.cameraType == 'с открытой камерой':
-            artColor_3 = 'OCM'
-        else:
-            artColor_3 = 'UCM'
+            vendorCode3 = 'UNKNOW_COLOR'
         categoryList = read_xlsx(pathToCategoryList)
         for namePrint in listImage:
             for category in categoryList:
                 if category['Принт'] == namePrint[0:-4]:
                     printNum = namePrint[0:-4].split(' ')[1][0:-1]
                     printNum = '0'*(4-len(printNum)) + printNum
-                    artColor = [artColor_1, artColor_2,
+                    vendorCode = [vendorCode1, vendorCode2, vendorCode3,
                                 category['Код категории'], 'PRNT', printNum]
                     dataTMP = {'Принт': namePrint[0:-4],
                             'Категория': category['Категория'],
                             'Код категории': category['Код категории'],
-                            'Артикул цвета': ('_').join(artColor),
-                            'Код товара': artColor_1,
-                            'Код цвета': artColor_2,
-                            'Код камеры': artColor_3,
+                            'Артикул поставщика': '_'.join(vendorCode),
                             'Рисунок':category['Рисунок'],
                             'Любимые герои': category['Любимые герои'],
                             'Путь к картинке': joinPath(pathToImage,namePrint)}
                     listCase.append(dataTMP)
     elif modelClass.caseType == 'Книжки':
-        artColor_1 = 'BK'
+        vendorCode1 = modelClass.model.replace(' ','_') + '_BK'
+        vendorCode2 = 'NTU'
         for color, codeColor in bookCaseColorDict.items():
             if color == colorCase.lower():
-                artColor_2 = codeColor
+                vendorCode3 = codeColor
                 break
         else:
-            artColor_2 = 'UNKNOW_COLOR'
-        artColor_3 = 'NTU'
+            vendorCode3 = 'UNKNOW_COLOR'        
         categoryList = read_xlsx(pathToCategoryList)
         for namePrint in listImage:
             for category in categoryList:
                 if category['Принт'] == namePrint[0:-4]:
                     printNum = namePrint[0:-4].split(' ')[1][0:-1]
                     printNum = '0'*(4-len(printNum)) + printNum
-                    artColor = [artColor_1, artColor_2,
+                    vendorCode = [vendorCode1, vendorCode2, vendorCode3,
                                 category['Код категории'], 'PRNT', printNum]
                     dataTMP = {'Принт': namePrint[0:-4],
                             'Категория': category['Категория'],
                             'Код категории': category['Код категории'],
-                            'Артикул цвета': ('_').join(artColor),
-                            'Код товара': artColor_1,
-                            'Код цвета': artColor_2,
-                            'Код камеры': artColor_3,
+                            'Артикул поставщика': vendorCode,
                             'Рисунок':category['Рисунок'],
                             'Любимые герои': category['Любимые герои'],
                             'Путь к картинке': joinPath(pathToImage,namePrint)}
@@ -138,19 +132,19 @@ def genArtColor(modelClass, colorCase, pathToImage):
 def generate_bar_WB(count):
     listBarcode = []
     countTry = 0
-    url = "https://suppliers-api.wildberries.ru/card/getBarcodes"
-    headers = {'Authorization': TokenArb,
-               'Content-Type': 'application/json',
-               'accept': 'application/json'}
+    url = "https://suppliers-api.wildberries.ru/content/v1/barcodes"
+    headers = {'Authorization': TokenArb}
 
     while count > 5000:
         count -= 5000
         while True and countTry < 10:
-            data = "{\"id\":1,\"jsonrpc\":\"2.0\",\"params\":{\"quantity\":5000,\"supplierID\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\"}}"
+            json = {
+                    "count": count
+                    }
             try:
-                r = requests.post(url, data=str(data), headers=headers)
-                listBarcode.extend(r.json()['result']['barcodes'])
-                if 'err barcode service' not in r.text:
+                r = requests.post(url, json=json, headers=headers)
+                listBarcode.extend(r.json()['data'])
+                if not r.json()['error']:
                     break
             except:
                 print(
@@ -160,12 +154,13 @@ def generate_bar_WB(count):
                 time.sleep(10)
                 continue
     while True and countTry < 10:
-        data = '(\"id\":1,\"jsonrpc\":\"2.0\",\"params\":(\"quantity\":{},\"supplierID\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\"))'
+        json = {
+                    "count": count
+                    }
         try:
-            r = requests.post(url, data=data.format(
-                str(count)).replace('(', '{').replace(')', '}'), headers=headers)
-            listBarcode.extend(r.json()['result']['barcodes'])
-            if 'err' not in r.text:
+            r = requests.post(url, json=json, headers=headers)
+            listBarcode.extend(r.json()['data'])
+            if not r.json()['error']:
                 break
         except:
             print(
@@ -179,39 +174,130 @@ def generate_bar_WB(count):
 
 def CreateExcelForFolder(modelClass=ModelWithAddin, color=str, addImage=str):
     listColor = []
+    # model = modelClass.model
+    pathToDone = pathToDoneSiliconImageSilicon # if modelClass.caseType == 'Силикон' else pathToDoneBookImageWithName
+    #listVendorCode = generateVendorCode(modelClass, color, joinPath(pathToDone, model, color))
+    #listBarcodes = generate_bar_WB(len(listVendorCode))
+    #colorCase = color if color == 'прозрачный' else color + ' матовый'
+    #nameFor1C = 'Чехол {} силикон {} {}'.format(model, modelClass.cameraType, colorCase)
+    # for i, VendorCode in enumerate(listVendorCode):
+    #     imageList = [VendorCode['Путь к картинке'].replace(pathToDone, pathToUploadWeb + '/Силикон').replace('\\','/')]
+    #     if exists(joinPath(pathToSecondImagesFolderSilicon, model, color, '2.jpg')):
+    #         imageList.append(joinPath(pathToSecondImagesFolderSilicon, model, color, '2.jpg').replace(pathToSecondImagesFolderSilicon, pathToUploadSecondWeb + '/Силикон').replace('\\','/'))
+    #     elif exists(joinPath(pathToSecondImagesFolderSilicon, model, color, '3.jpg')):
+    #         imageList.append(joinPath(pathToSecondImagesFolderSilicon, model, color, '3.jpg').replace(pathToSecondImagesFolderSilicon, pathToUploadSecondWeb + '/Силикон').replace('\\','/'))    
+    #         data = {
+    #             'Баркод': listBarcodes[i],
+    #             'Бренд': modelClass.brand,
+    #             'Наименование': modelClass.name,
+    #             'Розничная цена': modelClass.price,
+    #             'Артикул поставщика': VendorCode['Артикул поставщика'],
+    #             'Описание': modelClass.description,
+    #             'Тнвэд': modelClass.TNVED,
+    #             'Комплектация': modelClass.equipment,
+    #             'Повод': modelClass.reason,
+    #             'Особенности чехла': modelClass.special,
+    #             'Вид застежки': modelClass.lock,
+    #             'Рисунок': VendorCode['Рисунок'],
+    #             'Любимые герои': VendorCode['Любимые герои'],
+    #             'Совместимость': modelClass.compatibility,
+    #             'Тип чехлов': modelClass.type,
+    #             'Модель':modelClass.model,
+    #             'Основная характеристика': VendorCode['Принт'],
+    #             'Название 1С': multiReplace(nameFor1C, reductionDict),
+    #             'Название полное': nameFor1C,
+    #             'Название полное с принтом': nameFor1C + ' ' + VendorCode['Принт'],
+    #             'Размер печать': '',
+    #             'Путь к файлу': '#'.join(imageList)
+    #                 }
+        # data = {'Баркод': listBarcodes[i],
+        #         'Бренд': modelClass.brand,
+        #         'Наименование': modelClass.name,
+        #         'Розничная цена': modelClass.price,
+        #         'Артикул поставщика': VendorCode['Артикул поставщика'],
+        #         'Описание': modelClass.description,
+        #         'Тнвэд': modelClass.TNVED,
+        #         'Комплектация': modelClass.equipment,
+        #         'Повод': modelClass.reason,
+        #         'Особенности чехла': modelClass.special,
+        #         'Вид застежки': modelClass.lock,
+        #         'Рисунок': VendorCode['Рисунок'],
+        #         'Любимые герои': VendorCode['Любимые герои'],
+        #         'Совместимость': modelClass.compatibility,
+        #         'Тип чехлов': modelClass.type,
+        #         'Модель':modelClass.model,
+        #         'Основная характеристика': VendorCode['Принт'],
+        #         'Название 1С': multiReplace(nameFor1C, reductionDict),
+        #         'Название полное': nameFor1C,
+        #         'Название полное с принтом': nameFor1C + ' ' + VendorCode['Принт'],
+        #         'Размер печать': '',
+        #         'Путь к файлу': '#'.join(imageList)}
+        #listColor.append(data)
+    # for data in modelClass.data:
+    listColorpd = pandas.DataFrame(modelClass.data)
+    listColorpd.to_excel(joinPath(pathToDoneSiliconImageSilicon, modelClass.maskFolderName)+'.xlsx', index=False)
+
+
+def CreateExcelForFolderNew(modelClass=ModelWithAddin, color=str, addImage=str):
+    listColor = []
     model = modelClass.model
     pathToDone = pathToDoneSiliconImageSilicon if modelClass.caseType == 'Силикон' else pathToDoneBookImageWithName
-    listArt = genArtColor(modelClass, color, joinPath(pathToDone, model, color))
-    listBarcodes = generate_bar_WB(len(listArt))
+    listVendorCode = generateVendorCode(modelClass, color, joinPath(pathToDone, model, color))
+    listBarcodes = generate_bar_WB(len(listVendorCode))
     colorCase = color if color == 'прозрачный' else color + ' матовый'
     nameFor1C = 'Чехол {} силикон {} {}'.format(model, modelClass.cameraType, colorCase)
-    for i, art in enumerate(listArt):
-        imageList = [art['Путь к картинке'].replace(pathToDone, pathToUploadWeb + '/Силикон').replace('\\','/')]
+    for i, VendorCode in enumerate(listVendorCode):
+        imageList = [VendorCode['Путь к картинке'].replace(pathToDone, pathToUploadWeb + '/Силикон').replace('\\','/')]
         if exists(joinPath(pathToSecondImagesFolderSilicon, model, color, '2.jpg')):
             imageList.append(joinPath(pathToSecondImagesFolderSilicon, model, color, '2.jpg').replace(pathToSecondImagesFolderSilicon, pathToUploadSecondWeb + '/Силикон').replace('\\','/'))
         elif exists(joinPath(pathToSecondImagesFolderSilicon, model, color, '3.jpg')):
             imageList.append(joinPath(pathToSecondImagesFolderSilicon, model, color, '3.jpg').replace(pathToSecondImagesFolderSilicon, pathToUploadSecondWeb + '/Силикон').replace('\\','/'))    
-        data = {'Баркод': '',
+            # data = {
+            #     'Номер карточки': cardNumber,
+            #     'Категория': categoryCase,
+            #     'Цвет': colorCase,
+            #     'Баркод товара': barcodeCase,
+            #     'Бренд': brandCase,
+            #     'Наименование': nameCaseCase,
+            #     'Цена': priceCase,
+            #     'Артикул товара': articleCase,
+            #     'Описание': descriptionCase,
+            #     'Производитель телефона': madeByCase,
+            #     'Назначение подарка': destenitionGiftCase,
+            #     'Комплектация': equipmentCase,
+            #     'Особенности чехла': specialCase,
+            #     'Вид застежки': claspCase,
+            #     'Рисунок': pictureCase,
+            #     'Любимые герои': heroesCase,
+            #     'Совместимость': compatibilityCase,
+            #     'Тип чехлов': typeCase,
+            #     'Модель': modelCase,
+            #     'Повод': occasinCase,
+            #     'Страна производства': countryManufactureCase,
+            #     'Декоративные элементы': decorationCase,
+            #     'Материал изделия': materialsCase,
+            #     'Медиафайлы': pictureURLCase
+            # }
+        data = {'Баркод': listBarcodes[i],
                 'Бренд': modelClass.brand,
                 'Наименование': modelClass.name,
                 'Розничная цена': modelClass.price,
-                'Артикул поставщика': '_'.join([model.replace(' ','_'),'PRNT',art['Код цвета'], art['Код камеры'],art['Код категории']]),
-                'Артикул цвета': art['Артикул цвета'],
+                'Артикул поставщика': VendorCode['Артикул поставщика'],
                 'Описание': modelClass.description,
                 'Тнвэд': modelClass.TNVED,
                 'Комплектация': modelClass.equipment,
                 'Повод': modelClass.reason,
                 'Особенности чехла': modelClass.special,
                 'Вид застежки': modelClass.lock,
-                'Рисунок': art['Рисунок'],
-                'Любимые герои': art['Любимые герои'],
+                'Рисунок': VendorCode['Рисунок'],
+                'Любимые герои': VendorCode['Любимые герои'],
                 'Совместимость': modelClass.compatibility,
                 'Тип чехлов': modelClass.type,
                 'Модель':modelClass.model,
-                'Основная характеристика': art['Принт'],
+                'Основная характеристика': VendorCode['Принт'],
                 'Название 1С': multiReplace(nameFor1C, reductionDict),
                 'Название полное': nameFor1C,
-                'Название полное с принтом': nameFor1C + ' ' + art['Принт'],
+                'Название полное с принтом': nameFor1C + ' ' + VendorCode['Принт'],
                 'Размер печать': '',
                 'Путь к файлу': '#'.join(imageList)}
         listColor.append(data)
@@ -232,6 +318,31 @@ def createExcelSilicon(modelList, addImage):
         for color in model.colorList:
             if '.xlsx' not in color:
                 pool.apply_async(CreateExcelForFolder, args=(model,color,addImage, ))
+    pool.close()
+    pool.join()
+    for folder in listdir(pathToDoneSiliconImageSilicon):
+        if '.xlsx' in folder and '~' not in folder:
+            listModel = pandas.concat([listModel,read_excel(joinPath(pathToDoneSiliconImageSilicon, folder))])
+            #listModel['Путь к файлу']=listModel['Путь к файлу'].astype(str)
+            #listImageAll.extend(listModel)
+    #listImageAllpd = pandas.DataFrame(listImageAll)
+    #listImageAllpd['Путь к файлу']=listImageAllpd['Путь к файлу'].astype(str)
+    #listImageAll  = pandas.concat(listModel)
+    #listImageAll['Путь к файлу']=listImageAll['Путь к файлу'].astype(str)
+    #listModel['Путь к файлу']=listModel['Путь к файлу'].astype(str)
+    writer = pandas.ExcelWriter(pathToDoneSiliconImageSilicon + r'.xlsx', engine='xlsxwriter',options={'strings_to_urls': False})
+    listModel.to_excel(writer, index=False)
+    writer.close()
+    #listModel.to_excel(pathToDoneSiliconImageSilicon + '.xlsx', index=False)
+
+
+def createExcelSiliconNew(modelList, addImage):
+    listModel = pandas.DataFrame()
+    pool = multiprocessing.Pool(6)
+    for model in modelList:
+        for color in model.colorList:
+            if '.xlsx' not in color:
+                pool.apply_async(CreateExcelForFolderNew, args=(model,color,addImage, ))
     pool.close()
     pool.join()
     for folder in listdir(pathToDoneSiliconImageSilicon):
