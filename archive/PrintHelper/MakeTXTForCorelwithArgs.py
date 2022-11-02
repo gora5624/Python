@@ -343,7 +343,7 @@ def detectPtintFronName(name, mode):
         else:
             # a = '(Принт' + name.lower().split(' (принт')[1].strip()
             # print(a)
-            return '(Принт ' + name.lower().split(' (принт')[1].strip()
+            return '(принт ' + name.lower().split(' (принт')[1].strip()
 
 
 def detectSizeFromOrder(orderSize, orderNum, table):
