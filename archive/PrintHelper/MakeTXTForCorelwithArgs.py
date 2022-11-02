@@ -283,7 +283,7 @@ def read_xlsx(file_path, nameList):
 
 
 def getDataFromOrderFile(pathToOrderFile):
-    print(pathToOrderFile)
+    # print(pathToOrderFile)
     dataFromOrderFile = read_xlsx(pathToOrderFile, 'Столы')
     if Debug:
         with open(joinpath(pathDebug, 'getDataFromOrderFile-dataFromOrderFile.txt'), 'w', encoding='utf-8') as file:
@@ -341,9 +341,9 @@ def detectPtintFronName(name, mode):
         elif 'пластина' in name.lower():
             return name.lower().split('прямоугольная черная')[1].strip()
         else:
-            a = '(Принт' + name.lower().split(' (принт')[1].strip()
-            print(a)
-            return '(Принт' + name.lower().split(' (принт')[1].strip()
+            # a = '(Принт' + name.lower().split(' (принт')[1].strip()
+            # print(a)
+            return '(Принт ' + name.lower().split(' (принт')[1].strip()
 
 
 def detectSizeFromOrder(orderSize, orderNum, table):
