@@ -14,6 +14,7 @@ class AddinChanger():
         self.ip = ip
         self.pathToNumenclatures = pathToNumenclatures
         self.pathToSiliconAddin = joinPath(dirname(__file__),'db',r'ХарактеристикиСиликон.txt')
+        self.pathToBookAddin = joinPath(dirname(__file__),'db',r'ХарактеристикиКнижки.txt')
         self.pathToSiliconHolderAddin = joinPath(dirname(__file__),'db',r'ХарактеристикиКардхолдер.txt')
         self.pathToPrintAddin = joinPath(dirname(__file__),'db',r'ХарактеристикиПринтов.txt')
         self.pathToBarcodeList = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'
@@ -89,6 +90,8 @@ class AddinChanger():
 
         self.dfSiliconAddin = pandas.DataFrame(pandas.read_csv(self.pathToSiliconAddin,sep='\t',na_values=''))
         self.dfSiliconAddinDict = self.dfSiliconAddin.to_dict('records')
+        self.dfBookAddin = pandas.DataFrame(pandas.read_csv(self.pathToBookAddin,sep='\t',na_values=''))
+        self.dfBookAddinDict = self.dfBookAddin.to_dict('records')
         self.dfSiliconHolderAddin = pandas.DataFrame(pandas.read_csv(self.pathToSiliconHolderAddin,sep='\t',na_values=''))
         self.dfSiliconHolderAddinDict = self.dfSiliconHolderAddin.to_dict('records')
         self.dfPrintAddin = pandas.DataFrame(pandas.read_csv(self.pathToPrintAddin,sep='\t',na_values=''))
@@ -159,6 +162,10 @@ class AddinChanger():
                 if line['Категория'] == category:
                     listVariation = line[field].split(';')
             # listVariation = self.dfSiliconHolderAddin[self.dfSiliconHolderAddin.Категория == category][field].values.tolist()[0].split(';')
+        elif 'книга' in caseName:
+            for line in self.dfBookAddinDict:
+                if line['Категория'] == category:
+                    listVariation = line[field].split(';')
         else:
             for line in self.dfSiliconAddinDict:
                 if line['Категория'] == category:
@@ -184,6 +191,10 @@ class AddinChanger():
                 if line['Категория'] == category:
                     equipmentCasePrefix = random.choice(line['Комплектация (префикс)'].split(';')).strip()
             # equipmentCasePrefix = random.choice(self.dfSiliconHolderAddin[self.dfSiliconHolderAddin.Категория == category]['Комплектация (префикс)'].values.tolist()[0].split(';')).strip()
+        elif 'книга' in caseName:
+            for line in self.dfBookAddinDict:
+                if line['Категория'] == category:
+                    equipmentCasePrefix = random.choice(line['Комплектация (префикс)'].split(';')).strip()
         else:
             for line in self.dfSiliconAddinDict:
                 if line['Категория'] == category:
@@ -203,6 +214,10 @@ class AddinChanger():
                 if line['Категория'] == category:
                     nameCasePrefix = random.choice(line['Наименование (префикс)'].split(';')).strip()
             # nameCasePrefix = random.choice(self.dfSiliconHolderAddin[self.dfSiliconHolderAddin.Категория == category]['Наименование (префикс)'].values.tolist()[0].split(';')[0:2]).strip()
+        if 'книга' in caseName:
+            for line in self.dfBookAddinDict:
+                if line['Категория'] == category:
+                    nameCasePrefix = random.choice(line['Наименование (префикс)'].split(';')).strip()
         else:
             for line in self.dfSiliconAddinDict:
                 if line['Категория'] == category:
@@ -348,7 +363,7 @@ class AddinChanger():
         
         while True and countTry < 10:
             try:
-                responce = requests.post(self.urlChangeCards, json=listChangedCardsForUploads, headers=headersRequest, timeout=50)
+                responce = requests.post(self.urlChangeCards, json=listChangedCardsForUploads, headers=headersRequest, timeout=10)
                 if responce.status_code == 200:
                     break
                 else:
@@ -425,7 +440,7 @@ class AddinChanger():
 
 
 if __name__=='__main__':
-    ip = 'Абраамян' #sys.argv[1]
-    path = r'F:\Downloads\report_2022_11_1\tmp.txt'#sys.argv[2]
+    ip = sys.argv[1]
+    path = sys.argv[2]
     changer = AddinChanger(ip, path)
     changer.cangeCardsNumenclatures()
