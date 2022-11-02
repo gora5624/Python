@@ -46,5 +46,5 @@ def generate_bar_WB(count):
         return listBarcode
 
 
-pd = pandas.DataFrame(generate_bar_WB(610))
+pd = pandas.DataFrame(generate_bar_WB(1))
 pd.to_excel(r'E:\barcodes.xlsx')
