@@ -22,11 +22,17 @@ def get_orders(Token, mode, days=3):
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
         end_data = ((datetime.today() - timedelta(days=int(days)))).isoformat('T', 'seconds').replace(
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
-    else:
+    elif '-' not in days and '.' in days:
         Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B00%3A00&take=1000&skip={}&date_end={}%2B00%3A00'
         start_data = datetime.strptime(days, '%d.%m.%Y').isoformat('T', 'seconds').replace(
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
         end_data = (datetime.strptime(days, '%d.%m.%Y') + timedelta(days=1)).isoformat('T', 'seconds').replace(
+        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+    elif '-' in days:
+        Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B00%3A00&take=1000&skip={}&date_end={}%2B00%3A00'
+        start_data = datetime.strptime(days.split('-')[0], '%d.%m.%Y').isoformat('T', 'seconds').replace(
+        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+        end_data = (datetime.strptime(days.split('-')[1], '%d.%m.%Y')).isoformat('T', 'seconds').replace(
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
     tmp = []
     #start_data = ((datetime.today() - timedelta(days=int(days)))).isoformat('T', 'seconds').replace(
@@ -59,6 +65,7 @@ def get_orders(Token, mode, days=3):
         tmp = response.json()['orders']
         dataorders.extend(tmp)
     dataNew = []
+    dataNew2 = []
     dfdataorders = pandas.DataFrame(dataorders)
     dfdataorders['barcode'] = dfdataorders['barcode'].astype(str)
     dfBarcodes = pandas.DataFrame(pandas.read_table(r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'))
@@ -87,11 +94,25 @@ def get_orders(Token, mode, days=3):
             'Цена': line['convertedPrice']/100,
             'Номер заказа':line['orderId'],
             'ИП': ip}
+        datatmp2 = {
+            'Номенклатура': line['Номенклатура'],
+            # 'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
+            'Дата': date,
+            'Время': time,
+            'Количество': 1,
+            'Цена': line['convertedPrice']/100,
+            'Номер заказа':line['orderId'],
+            'ИП': ip}
         dataNew.append(datatmp)
+        dataNew2.append(datatmp2)
         #dataNew.append(line)
     dataNewpd = pandas.DataFrame(dataNew)
+    dataNewpd2 = pandas.DataFrame(dataNew2)
     dataNewpd.to_excel((os.path.join(os.path.join(
         os.environ['USERPROFILE']), 'Desktop', WBOrdersDataFileName.format(curData + '_' + curTime, 'все ИП'))), index=False)
+    dataNewpd2.to_excel((os.path.join(os.path.join(
+        os.environ['USERPROFILE']), 'Desktop', WBOrdersDataFileName.format(curData + '_' + curTime, 'все ИП баркоды'))), index=False)
+
 
 
 def get_ordersAll(days=3):
@@ -104,13 +125,20 @@ def get_ordersAll(days=3):
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
         end_data = ((datetime.today() - timedelta(days=int(days)))).isoformat('T', 'seconds').replace(
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
-    else:
+    elif '-' not in days and '.' in days:
         Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B00%3A00&take=1000&skip={}&date_end={}%2B00%3A00'
         start_data = datetime.strptime(days, '%d.%m.%Y').isoformat('T', 'seconds').replace(
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
         end_data = (datetime.strptime(days, '%d.%m.%Y') + timedelta(days=1)).isoformat('T', 'seconds').replace(
         ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+    elif '-' in days:
+        Url = 'https://suppliers-api.wildberries.ru/api/v2/orders?date_start={}%2B00%3A00&take=1000&skip={}&date_end={}%2B00%3A00'
+        start_data = datetime.strptime(days.split('-')[0], '%d.%m.%Y').isoformat('T', 'seconds').replace(
+        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
+        end_data = (datetime.strptime(days.split('-')[1], '%d.%m.%Y')).isoformat('T', 'seconds').replace(
+        ':', '%3A').replace('+', '%2B').replace('.', '%2E')
     dataNew = []
+    dataNew2 = []
     dataorders = []
     tmp = []
     for Token in [TokenKar, TokenAbr, TokenSam]:
@@ -167,11 +195,25 @@ def get_ordersAll(days=3):
             'Цена': line['convertedPrice']/100,
             'Номер заказа':line['orderId'],
             'ИП': ip}
+        datatmp2 = {
+            # 'Номенклатура': line['Номенклатура'],
+            'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
+            'Дата': date,
+            'Время': time,
+            'Количество': 1,
+            'Цена': line['convertedPrice']/100,
+            'Номер заказа':line['orderId'],
+            'ИП': ip}
         dataNew.append(datatmp)
+        dataNew2.append(datatmp2)
+
         #dataNew.append(line)
     dataNewpd = pandas.DataFrame(dataNew)
+    dataNewpd2 = pandas.DataFrame(dataNew2)
     dataNewpd.to_excel((os.path.join(os.path.join(
         os.environ['USERPROFILE']), 'Desktop', WBOrdersDataFileName.format(curData + '_' + curTime, 'все ИП'))), index=False)
+    dataNewpd2.to_excel((os.path.join(os.path.join(
+        os.environ['USERPROFILE']), 'Desktop', WBOrdersDataFileName.format(curData + '_' + curTime, 'все ИП баркоды'))), index=False)
 
 
 def getMode():
@@ -208,7 +250,7 @@ if __name__ == '__main__':
             print("Введён некорректный режим, установлен режим Караханян")
             token = TokenKar
         try:
-            days = input("Введите количество дней (по умолчанию 3 дня) или дату в фомате ДД.ММ.ГГГГ: ")
+            days = input("Введите количество дней (по умолчанию 3 дня) или дату в фомате ДД.ММ.ГГГГ или период в формате ДД.ММ.ГГГГ-ДД.ММ.ГГГГ: ")
         except ValueError:
             days = 3
         if type(token) == list:

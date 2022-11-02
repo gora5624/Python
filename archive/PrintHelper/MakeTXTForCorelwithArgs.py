@@ -97,7 +97,7 @@ pathToBug = r'\\192.168.0.111\shared\Отдел производство\мак�
 pathToModeFile = r"C:\Users\Public\Documents\WBHelpTools\PrintHelper\mode.txt"
 
 
-Debug = True
+Debug = False
 
 
 pathToTables = joinpath(mainPath, 'Tables')
@@ -283,6 +283,7 @@ def read_xlsx(file_path, nameList):
 
 
 def getDataFromOrderFile(pathToOrderFile):
+    print(pathToOrderFile)
     dataFromOrderFile = read_xlsx(pathToOrderFile, 'Столы')
     if Debug:
         with open(joinpath(pathDebug, 'getDataFromOrderFile-dataFromOrderFile.txt'), 'w', encoding='utf-8') as file:
@@ -337,6 +338,12 @@ def detectPtintFronName(name, mode):
             return name.lower().split('df')[1].strip()
         elif 'пластина' in name.lower():
             return name.lower().split('прямоугольная черная')[1].strip()
+        elif 'пластина' in name.lower():
+            return name.lower().split('прямоугольная черная')[1].strip()
+        else:
+            a = '(Принт' + name.lower().split(' (принт')[1].strip()
+            print(a)
+            return '(Принт' + name.lower().split(' (принт')[1].strip()
 
 
 def detectSizeFromOrder(orderSize, orderNum, table):
