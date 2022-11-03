@@ -1,39 +1,45 @@
-from encodings import utf_8
-from itertools import count
-from multiprocessing import pool
 import requests
 import pandas
 import multiprocessing
+import time
+import json
 # -*- coding: utf-8 -*-
 
 
 class ImageDeleter():
     def __init__(self,pathToPrintList ,pathToDB = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt') -> None:
-        #self.printList = pandas.DataFrame(pandas.read_excel(pathToPrintList)).to_dict('list')['Принты']
-        #self.db = pandas.DataFrame(pandas.read_table(pathToDB)).to_dict('records')
+        self.printList = pandas.DataFrame(pandas.read_excel(pathToPrintList)).to_dict('list')['Принты']
+        # start_time = time.time()
+        self.db = pandas.DataFrame(pandas.read_table(pathToDB, low_memory=False)).to_dict('records')
+        # print("--- %s seconds ---" % (time.time() - start_time))
+
         self.barcodesList = []
         self.tokens = [
                 {
                     'IPName': 'Караханян',
-                    'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+                    'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
+
+                    #'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
                 },
                 {
                     'IPName': 'Манвел',
                     'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
                 },
                 {
+                    #'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
                     'IPName': 'Самвел',
-                    'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
+                    'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
+                    #'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
                 }
 
             ]
         # self.vendorCodeManager = multiprocessing.Manager()
-        self.vendorCodelist = pandas.DataFrame(pandas.read_table(r'E:\\tmp.csv',sep=';')).to_dict('records')
-        # self.timeout = 2
-        # self.findBarcodesList()
-        # self.findVedorCodesForAllIP()
-        # a = pandas.DataFrame(self.vendorCodelist)
-        # a.to_excel(r'E:\\tmp.xlsx')
+        # self.vendorCodelist = pandas.DataFrame(pandas.read_table(r'E:\\tmp.csv',sep=';')).to_dict('records')
+        self.timeout = 2
+        self.findBarcodesList()
+        self.findVedorCodesForAllIP()
+        a = pandas.DataFrame(self.vendorCodelist)
+        a.to_excel(r'E:\\tmp.xlsx')
         self.deletPhoto()
 
 
@@ -89,7 +95,7 @@ class ImageDeleter():
                     "limit": 1000
                     },
                     "filter": {
-                    "textSearch": str(barcode),
+                    "textSearch": 'CARTHOLDER_2_RING_ANI_PRNT_2976',
                     "withPhoto": -1
                     },
                     "sort": {
@@ -115,6 +121,9 @@ class ImageDeleter():
                     except requests.ReadTimeout:
                         countTry +=1
                         continue
+                    except requests.exceptions.SSLError:
+                        countTry +=1
+                        continue
                     except requests.ConnectTimeout:
                         countTry +=1
                         continue
@@ -137,9 +146,9 @@ class ImageDeleter():
             "vendorCode": line['vendorCode'],
             "data": ['']
             }
-        headersRequest = {'Authorization': '{}'.format(line['token']), 'X-Vendor-Code': line['vendorCode']}
+        headersRequest = {'Authorization': '{}'.format(line['token'])}
         try:
-            r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest)  
+            r = requests.post(requestUrl, data=json.dumps(jsonRequest, ensure_ascii=False).encode('utf-8'), headers=headersRequest)  
             print(r.text)
         except requests.ConnectionError:
             r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest) 
