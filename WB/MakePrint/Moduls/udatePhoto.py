@@ -8,7 +8,7 @@ import pandas
 def pushPhoto(line, token, requestUrl):
     jsonRequest = {
         "vendorCode": line['Артикул товара'],
-        "data": [line['Медиафайлы']]
+        "data": line['Медиафайлы'].split(';')
         }
     headersRequest = {'Authorization': '{}'.format(token), 'X-Vendor-Code': line['Артикул товара']}
     try:
