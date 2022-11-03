@@ -465,7 +465,12 @@ class AddinChanger():
 
 
 if __name__=='__main__':
-    ip = 'Караханян' # sys.argv[1]
-    path = r'F:\Downloads\Караханян\tmp.txt' # sys.argv[2]
-    changer = AddinChanger(ip, path)
-    changer.cangeCardsNumenclatures()
+    # ip = sys.argv[1]
+    # path = sys.argv[2]
+    # changer = AddinChanger(ip, path)
+    # changer.cangeCardsNumenclatures()
+    for item in [('Караханян', r'F:\Downloads\Караханян\tmp.txt'), ('Самвел', r'F:\Downloads\Самвел\tmp.txt'), ('Абраамян',r'F:\Downloads\report_2022_11_1\tmp.txt')]:
+        ip = item[0]
+        path = item[1]
+        changer = AddinChanger(ip, path)
+        changer.cangeCardsNumenclatures()
