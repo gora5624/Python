@@ -13,14 +13,16 @@ class AddinChanger():
     def __init__(self,ip, pathToNumenclatures = r'F:\Downloads\report_2022_10_26\tmp.xlsx') -> None:
         self.ip = ip
         self.pathToNumenclatures = pathToNumenclatures
-        self.pathToSiliconAddin = joinPath(dirname(__file__),'db',r'ХарактеристикиСиликон.txt')
+        self.pathToSiliconCLRAddin = joinPath(dirname(__file__),'db',r'ХарактеристикиСиликонПроз.txt')
+        self.pathToSiliconMTAddin = joinPath(dirname(__file__),'db',r'ХарактеристикиСиликонМат.txt')
         self.pathToBookAddin = joinPath(dirname(__file__),'db',r'ХарактеристикиКнижки.txt')
         self.pathToSiliconHolderAddin = joinPath(dirname(__file__),'db',r'ХарактеристикиКардхолдер.txt')
         self.pathToPrintAddin = joinPath(dirname(__file__),'db',r'ХарактеристикиПринтов.txt')
         self.pathToBarcodeList = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'
         self.pathToCategories = r'E:\MyProduct\Python\WB\NEW_API\changeAddin\db\cat.txt'
         self.dfNomenclatures = pandas.DataFrame()
-        self.dfSiliconAddin = pandas.DataFrame()
+        self.dfSiliconCLRAddin = pandas.DataFrame()
+        self.dfSiliconMTAddin = pandas.DataFrame()
         self.dfSiliconHolderAddin = pandas.DataFrame()
         self.dfPrintAddin = pandas.DataFrame()
         self.dfBarcod = pandas.DataFrame()
@@ -88,8 +90,10 @@ class AddinChanger():
         # pool.close()
         # pool.join()
 
-        self.dfSiliconAddin = pandas.DataFrame(pandas.read_csv(self.pathToSiliconAddin,sep='\t',na_values=''))
-        self.dfSiliconAddinDict = self.dfSiliconAddin.to_dict('records')
+        self.dfSiliconCLRAddin = pandas.DataFrame(pandas.read_csv(self.pathToSiliconCLRAddin,sep='\t',na_values=''))
+        self.dfSiliconMTAddin = pandas.DataFrame(pandas.read_csv(self.pathToSiliconMTAddin,sep='\t',na_values=''))
+        self.dfSiliconCLRAddinDict = self.dfSiliconCLRAddin.to_dict('records')
+        self.dfSiliconMTAddinDict = self.dfSiliconMTAddin.to_dict('records')
         self.dfBookAddin = pandas.DataFrame(pandas.read_csv(self.pathToBookAddin,sep='\t',na_values=''))
         self.dfBookAddinDict = self.dfBookAddin.to_dict('records')
         self.dfSiliconHolderAddin = pandas.DataFrame(pandas.read_csv(self.pathToSiliconHolderAddin,sep='\t',na_values=''))
@@ -118,8 +122,9 @@ class AddinChanger():
         self.listForChange.fillna('')
         self.listForChangeDictTMP = self.listForChange.to_dict('records')
         for line in self.listForChangeDictTMP:
-            tmp = {line['Артикул поставщика']:line}
-            self.listForChangeDict.update(tmp)
+            if line['Артикул поставщика'] not in self.listChangedCards:
+                tmp = {line['Артикул поставщика']:line}
+                self.listForChangeDict.update(tmp)
         self.listForChangeDict
         # self.listForChange.to_excel(r'E:\listForChange.xlsx')
         
@@ -166,8 +171,12 @@ class AddinChanger():
             for line in self.dfBookAddinDict:
                 if line['Категория'] == category:
                     listVariation = line[field].split(';')
-        else:
-            for line in self.dfSiliconAddinDict:
+        elif 'силикон ' in caseName and 'проз' in caseName:
+            for line in self.dfSiliconCLRAddinDict:
+                if line['Категория'] == category:
+                    listVariation = line[field].split(';')
+        elif 'силикон ' in caseName and 'мат' in caseName:
+            for line in self.dfSiliconMTAddinDict:
                 if line['Категория'] == category:
                     listVariation = line[field].split(';')
            #  listVariation = self.dfSiliconAddin[self.dfSiliconAddin.Категория == category][field].values.tolist()[0].split(';')
@@ -195,8 +204,12 @@ class AddinChanger():
             for line in self.dfBookAddinDict:
                 if line['Категория'] == category:
                     equipmentCasePrefix = random.choice(line['Комплектация (префикс)'].split(';')).strip()
-        else:
-            for line in self.dfSiliconAddinDict:
+        elif 'силикон ' in caseName and 'проз' in caseName:
+            for line in self.dfSiliconCLRAddinDict:
+                if line['Категория'] == category:
+                    equipmentCasePrefix = random.choice(line['Комплектация (префикс)'].split(';')).strip()
+        elif 'силикон ' in caseName and 'мат' in caseName:
+            for line in self.dfSiliconMTAddinDict:
                 if line['Категория'] == category:
                     equipmentCasePrefix = random.choice(line['Комплектация (префикс)'].split(';')).strip()
             # equipmentCasePrefix = random.choice(self.dfSiliconAddin[self.dfSiliconAddin.Категория == category]['Комплектация (префикс)'].values.tolist()[0].split(';')).strip()
@@ -218,8 +231,12 @@ class AddinChanger():
             for line in self.dfBookAddinDict:
                 if line['Категория'] == category:
                     nameCasePrefix = random.choice(line['Наименование (префикс)'].split(';')).strip()
-        else:
-            for line in self.dfSiliconAddinDict:
+        elif 'силикон ' in caseName and 'проз' in caseName:
+            for line in self.dfSiliconCLRAddinDict:
+                if line['Категория'] == category:
+                    nameCasePrefix = random.choice(line['Наименование (префикс)'].split(';')).strip()
+        elif 'силикон ' in caseName and 'мат' in caseName:
+            for line in self.dfSiliconMTAddinDict:
                 if line['Категория'] == category:
                     nameCasePrefix = random.choice(line['Наименование (префикс)'].split(';')).strip()
             # nameCasePrefix = random.choice(self.dfSiliconAddin[self.dfSiliconAddin.Категория == category]['Наименование (префикс)'].values.tolist()[0].split(';')[0:2]).strip()
@@ -249,8 +266,16 @@ class AddinChanger():
                 if line['Категория'] == category:
                     description = random.choice(line['Описание'].split(';')).strip()
             # description = random.choice(self.dfSiliconHolderAddin[self.dfSiliconHolderAddin.Категория == category]['Описание'].values.tolist()).strip()
-        else:
-            for line in self.dfSiliconAddinDict:
+        if 'книга' in caseName:
+            for line in self.dfBookAddinDict:
+                if line['Категория'] == category:
+                    description = random.choice(line['Описание'].split(';')).strip()
+        elif 'силикон ' in caseName and 'проз' in caseName:
+            for line in self.dfSiliconCLRAddinDict:
+                if line['Категория'] == category:
+                    description = random.choice(line['Описание'].split(';')).strip()
+        elif 'силикон ' in caseName and 'мат' in caseName:
+            for line in self.dfSiliconMTAddinDict:
                 if line['Категория'] == category:
                     description = random.choice(line['Описание'].split(';')).strip()
             # description = random.choice(self.dfSiliconAddin[self.dfSiliconAddin.Категория == category]['Описание'].values.tolist()).strip()
@@ -440,7 +465,7 @@ class AddinChanger():
 
 
 if __name__=='__main__':
-    ip = sys.argv[1]
-    path = sys.argv[2]
+    ip = 'Караханян' # sys.argv[1]
+    path = r'F:\Downloads\Караханян\tmp.txt' # sys.argv[2]
     changer = AddinChanger(ip, path)
     changer.cangeCardsNumenclatures()

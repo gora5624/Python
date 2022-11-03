@@ -24,14 +24,20 @@ class ModelWithAddin:
         self.listJsonForUpdateToWB = []
         self.siliconCaseColorDict = siliconCaseColorDict
         self.maskFolderName = maskFolderName
-        self.pathToSiliconAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликон.txt'
+        self.pathToSiliconMTAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликонМат.txt'
+        self.pathToSiliconCLRAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликонПроз.txt'
+        self.pathToBookAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКнижки.xlsx'
         self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.txt'
         self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПринтов.txt'
         self.pathToCategoryPrint = r'E:\MyProduct\Python\WB\MakePrint\cat.txt'
         if 'под карту' in maskFolderName:
             self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToCardhonlderAddin,sep='\t'))
-        else:
-            self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToSiliconAddin,sep='\t'))
+        elif 'книга' in maskFolderName:
+            self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToBookAddin,sep='\t'))
+        elif 'силикон ' in maskFolderName and 'мат' in maskFolderName:
+            self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToSiliconMTAddin,sep='\t'))
+        elif 'силикон ' in maskFolderName and 'проз' in maskFolderName:
+            self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToSiliconCLRAddin,sep='\t'))
         self.dfAddinForPrint = pandas.DataFrame(pandas.read_csv(self.pathToPrintAddin,sep='\t'))
         self.dfCategoryPrint = pandas.DataFrame(pandas.read_csv(self.pathToCategoryPrint,sep='\t'))
         self.data = []
@@ -59,11 +65,15 @@ class ModelWithAddin:
                 break
 
     def crateDB(self):
-        pdSilsiconAddin = pandas.DataFrame(pandas.read_excel(self.pathToSiliconAddin.replace('txt','xlsx')))
+        pdSilsiconCLRAddin = pandas.DataFrame(pandas.read_excel(self.pathToSiliconCLRAddin.replace('txt','xlsx')))
+        pdSilsiconMTAddin = pandas.DataFrame(pandas.read_excel(self.pathToSiliconMTAddin.replace('txt','xlsx')))
+        pdBookAddin = pandas.DataFrame(pandas.read_excel(self.pathToBookAddin.replace('txt','xlsx')))
         pdCardhonlderAddin = pandas.DataFrame(pandas.read_excel(self.pathToCardhonlderAddin.replace('txt','xlsx')))
         pdPrintAddin = pandas.DataFrame(pandas.read_excel(self.pathToPrintAddin.replace('txt','xlsx')))
         pdCategoryPrint = pandas.DataFrame(pandas.read_excel(self.pathToCategoryPrint.replace('txt','xlsx')))
-        pdSilsiconAddin.to_csv(self.pathToSiliconAddin,index=None,sep='\t')
+        pdSilsiconCLRAddin.to_csv(self.pathToSiliconCLRAddin,index=None,sep='\t')
+        pdBookAddin.to_csv(self.pathToBookAddin,index=None,sep='\t')
+        pdSilsiconMTAddin.to_csv(self.pathToSiliconMTAddin,index=None,sep='\t')
         pdCardhonlderAddin.to_csv(self.pathToCardhonlderAddin,index=None,sep='\t')
         pdPrintAddin.to_csv(self.pathToPrintAddin,index=None,sep='\t')
         pdCategoryPrint.to_csv(self.pathToCategoryPrint,index=None,sep='\t')
