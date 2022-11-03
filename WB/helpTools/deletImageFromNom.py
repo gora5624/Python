@@ -1,7 +1,7 @@
 import requests
 import pandas
 import multiprocessing
-import os
+import time
 import json
 # -*- coding: utf-8 -*-
 
@@ -9,7 +9,10 @@ import json
 class ImageDeleter():
     def __init__(self,pathToPrintList ,pathToDB = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt') -> None:
         self.printList = pandas.DataFrame(pandas.read_excel(pathToPrintList)).to_dict('list')['Принты']
-        self.db = pandas.DataFrame(pandas.read_table(pathToDB)).to_dict('records')
+        # start_time = time.time()
+        self.db = pandas.DataFrame(pandas.read_table(pathToDB, low_memory=False)).to_dict('records')
+        # print("--- %s seconds ---" % (time.time() - start_time))
+
         self.barcodesList = []
         self.tokens = [
                 {
@@ -114,6 +117,9 @@ class ImageDeleter():
                     except requests.ReadTimeout:
                         countTry +=1
                         continue
+                    except requests.exceptions.SSLError:
+                        countTry +=1
+                        continue
                     except requests.ConnectTimeout:
                         countTry +=1
                         continue
@@ -136,7 +142,7 @@ class ImageDeleter():
             "vendorCode": line['vendorCode'],
             "data": ['']
             }
-        headersRequest = {'Authorization': '{}'.format(line['token']), 'X-Vendor-Code': line['vendorCode']}
+        headersRequest = {'Authorization': '{}'.format(line['token'])}
         try:
             r = requests.post(requestUrl, data=json.dumps(jsonRequest, ensure_ascii=False).encode('utf-8'), headers=headersRequest)  
             print(r.text)
