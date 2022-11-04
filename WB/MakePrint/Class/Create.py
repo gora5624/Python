@@ -59,6 +59,8 @@ class WBnomenclaturesCreater:
     def uplaodImage(path, token):
         args = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\udatePhoto.py', path.replace(' ', '#'), token]
         subprocess.Popen(args, shell=True).wait()
+        args2 = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\chekUdatePhoto.py', path.replace(' ', '#'), token]
+        subprocess.Popen(args2, shell=True)
 
 
     def createNomenclaturesMultiporocessing(self, mode):
