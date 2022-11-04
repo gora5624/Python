@@ -19,7 +19,7 @@ class AddinChanger():
         self.pathToSiliconHolderAddin = joinPath(dirname(__file__),'db',r'ХарактеристикиКардхолдер.txt')
         self.pathToPrintAddin = joinPath(dirname(__file__),'db',r'ХарактеристикиПринтов.txt')
         self.pathToBarcodeList = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'
-        self.pathToCategories = r'E:\MyProduct\Python\WB\NEW_API\changeAddin\db\cat.txt'
+        self.pathToCategories = joinPath(dirname(__file__),'db' r'\cat.txt')
         self.dfNomenclatures = pandas.DataFrame()
         self.dfSiliconCLRAddin = pandas.DataFrame()
         self.dfSiliconMTAddin = pandas.DataFrame()
@@ -469,7 +469,7 @@ if __name__=='__main__':
     # path = sys.argv[2]
     # changer = AddinChanger(ip, path)
     # changer.cangeCardsNumenclatures()
-    for item in [('Караханян', r'F:\Downloads\Караханян\tmp.txt'), ('Самвел', r'F:\Downloads\Самвел\tmp.txt'), ('Абраамян',r'F:\Downloads\report_2022_11_1\tmp.txt')]:
+    for item in [('Караханян', r'E:\Downloads\Караханян\tmp.txt'), ('Самвел', r'E:\Downloads\Самвел\tmp.txt'), ('Абраамян',r'E:\Downloads\report_2022_11_1\tmp.txt')]:
         ip = item[0]
         path = item[1]
         changer = AddinChanger(ip, path)
