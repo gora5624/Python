@@ -8,9 +8,9 @@ import json
 
 class ImageDeleter():
     def __init__(self,pathToPrintList ,pathToDB = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt') -> None:
-        self.printList = pandas.DataFrame(pandas.read_excel(pathToPrintList)).to_dict('list')['Принты']
+        # self.printList = pandas.DataFrame(pandas.read_excel(pathToPrintList)).to_dict('list')['Принты']
         # start_time = time.time()
-        self.db = pandas.DataFrame(pandas.read_table(pathToDB, low_memory=False)).to_dict('records')
+        # self.db = pandas.DataFrame(pandas.read_table(pathToDB, low_memory=False)).to_dict('records')
         # print("--- %s seconds ---" % (time.time() - start_time))
 
         self.barcodesList = []
@@ -30,12 +30,12 @@ class ImageDeleter():
 
             ]
         # self.vendorCodeManager = multiprocessing.Manager()
-        # self.vendorCodelist = pandas.DataFrame(pandas.read_table(r'E:\\tmp.csv',sep=';')).to_dict('records')
-        self.timeout = 2
-        self.findBarcodesList()
-        self.findVedorCodesForAllIP()
-        a = pandas.DataFrame(self.vendorCodelist)
-        a.to_excel(r'E:\\tmp.xlsx')
+        self.vendorCodelist = pandas.DataFrame(pandas.read_excel(r'E:\\tmp.xlsx')).to_dict('records')
+        # self.timeout = 2
+        # self.findBarcodesList()
+        # self.findVedorCodesForAllIP()
+        # a = pandas.DataFrame(self.vendorCodelist)
+        # a.to_excel(r'E:\\tmp.xlsx')
         self.deletPhoto()
 
 

@@ -21,8 +21,11 @@ def pushPhoto(line, token, requestUrl, countTry=0):
     except requests.ConnectionError:
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=1) 
         print(r.text)
+    except requests.exceptions.SSLError:
+        print('requests.ReadTimeout')
     except requests.exceptions.ReadTimeout:
         print('requests.ReadTimeout')
+
     except:
         print('TimeoutError')
     if requestsVendorCode(line['Артикул товара']) != 0 and countTry < 5:
@@ -58,7 +61,7 @@ def requestsVendorCode(vendoreCode):
 
 
 print('work')
-pathToFile = r'F:\Бейджи.xlsx' # sys.argv[1:][0].replace('#', ' ')
+pathToFile = r'E:\Бейджи.xlsx' # sys.argv[1:][0].replace('#', ' ')
 token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'# sys.argv[1:][1].replace('#', ' ')
 # pathToFile = r'F:\Для загрузки\Готовые принты\Силикон\Чехол iPhone 6 силикон с отк.кам. проз. под карту.xlsx'
 # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
