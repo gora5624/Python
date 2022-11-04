@@ -5,14 +5,19 @@ import pandas
 # import time
 
 
-def pushPhoto(line, token, requestUrl, countTry=0):
+def pushPhoto(line, token, requestUrl, countTry):
+    # if requestsVendorCode(line['Артикул товара']) != 0 and countTry < 5:
+    #     countTry +=1
+    #     pushPhoto(line, token, requestUrl, countTry)
+    # else:
+    #     return 0
     jsonRequest = {
         "vendorCode": line['Артикул товара'],
         "data": line['Медиафайлы'].split(';')
         }
     headersRequest = {'Authorization': '{}'.format(token), 'X-Vendor-Code': line['Артикул товара']}
     try:
-        r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=2)  
+        r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=10)  
         if '"Неверный запрос: по данному артикулу не нашлось карточки товара","additionalErrors' in r.text:
             print('Не нашлось карточки товара '+jsonRequest['vendorCode'])
         if '"Внутренняя ошибка сервиса","additionalErrors' in r.text:
@@ -21,17 +26,17 @@ def pushPhoto(line, token, requestUrl, countTry=0):
     except requests.ConnectionError:
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=1) 
         print(r.text)
-    except requests.exceptions.SSLError:
-        print('requests.ReadTimeout')
     except requests.exceptions.ReadTimeout:
         print('requests.ReadTimeout')
-
     except:
         print('TimeoutError')
-    # if requestsVendorCode(line['Артикул товара']) != 0 and countTry < 5:
-    #     countTry +=1
-    #     pushPhoto(line, token, requestUrl, countTry)
+    chekImage(line, token, requestUrl, countTry)
 
+
+def chekImage(line, token, requestUrl, countTry=0):
+    if requestsVendorCode(line['Артикул товара']) != 0 and countTry < 5:
+        countTry +=1
+        pushPhoto(line, token, requestUrl, countTry)
 
 
 def requestsVendorCode(vendoreCode):        
@@ -44,7 +49,7 @@ def requestsVendorCode(vendoreCode):
     countTry = 0
     while countTry <6 :
         try:
-            response = requests.post(url=url, headers=headersRequest, json=json, timeout=2)
+            response = requests.post(url=url, headers=headersRequest, json=json, timeout=15)
             if response.status_code == 200:
                 for card in response.json()['data']:
                     if card['vendorCode'] == vendoreCode:
@@ -68,13 +73,12 @@ def main():
     # pathToFile = sys.argv[1:][0].replace('#', ' ')
     df = pandas.DataFrame(pandas.read_excel(pathToFile))
     requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/media/save'
-    if __name__ == '__main__':
-        pool = multiprocessing.Pool()
-        for line in df.to_dict('records'):
-        #     pushPhoto(line, token, requestUrl)
-            pool.apply_async(pushPhoto, args=(line, token, requestUrl,))
-        pool.close()
-        pool.join()
+    pool = multiprocessing.Pool()
+    for line in df.to_dict('records'):
+    #     pushPhoto(line, token, requestUrl)
+        pool.apply_async(chekImage, args=(line, token, requestUrl,))
+    pool.close()
+    pool.join()
         # jsonRequest = {
         # "vendorCode": line['Артикул товара'],
         # "data": line['Медиафайлы']
@@ -86,6 +90,8 @@ def main():
         # except requests.ConnectionError:
         #     r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest) 
         #     print(r.text)
+
+    # uplaodImage(token, pathToFile)
 
 if __name__ == '__main__':
     main()

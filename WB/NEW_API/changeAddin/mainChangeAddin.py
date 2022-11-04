@@ -179,6 +179,10 @@ class AddinChanger():
             for line in self.dfSiliconMTAddinDict:
                 if line['Категория'] == category:
                     listVariation = line[field].split(';')
+        elif 'силикон ' in caseName and 'блестки' in caseName:
+             for line in self.dfSiliconCLRAddinDict:
+                if line['Категория'] == category:
+                    listVariation = line[field].split(';')
            #  listVariation = self.dfSiliconAddin[self.dfSiliconAddin.Категория == category][field].values.tolist()[0].split(';')
         try:
             listVariation.remove('').remove(' ')
@@ -371,7 +375,7 @@ class AddinChanger():
                             {'Бренд': 'Mobi711'},
                             {'Страна производства': 'Китай'},
                             {'Наименование': self.getName(category, caseName, model)},
-                            {'Предмет':'Чехлы для телефонов'},
+                            {'Предмет':'Чехлы-книжки для телефонов'},
                             {'Описание': self.getDescription(category, caseName, compatibility)},
                             {'Высота упаковки': 18.5},
                             {'Ширина упаковки': 11},
