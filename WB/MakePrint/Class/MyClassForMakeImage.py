@@ -26,7 +26,7 @@ class ModelWithAddin:
         self.maskFolderName = maskFolderName
         self.pathToSiliconMTAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликонМат.txt'
         self.pathToSiliconCLRAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликонПроз.txt'
-        self.pathToBookAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКнижки.xlsx'
+        self.pathToBookAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКнижки.txt'
         self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.txt'
         self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПринтов.txt'
         self.pathToCategoryPrint = r'E:\MyProduct\Python\WB\MakePrint\cat.txt'
@@ -257,7 +257,7 @@ class ModelWithAddin:
                             'Повод': self.getPrintAddin(printName, 'Повод', category), # self.getRandomValue(category, 'Повод'),
                             'Страна производства': 'Китай',
                             'Декоративные элементы': self.getPrintAddin(printName, 'Декоративные элементы', category), # self.getRandomValue(category, 'Декоративные элементы'),
-                            'Материал изделия': 'Силикон; ТПУ; Полиуретан',
+                            'Материал изделия': 'Текстиль;Силикон;Экокожа',
                             'Высота упаковки': 18.5,
                             'Ширина упаковки': 11,
                             'Глубина упаковки': 1.5,

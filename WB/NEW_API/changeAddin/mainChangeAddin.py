@@ -126,7 +126,15 @@ class AddinChanger():
                 tmp = {line['Артикул поставщика']:line}
                 self.listForChangeDict.update(tmp)
         self.listForChangeDict
-        # self.listForChange.to_excel(r'E:\listForChange.xlsx')
+        i = 0
+        # filepath = input('Введите пусть к файлу: ')
+        # df = pandas.DataFrame(pandas.read_excel(filepath))
+        # for j in numpy.array_split(self.listForChange, len(self.listForChange)//500000):
+        #     j.to_excel('E:\listForChange{}.xlsx'.format(i), index=False)
+        #     i+=1
+        self.listForChange.to_excel(r'E:\listForChange.xlsx')
+
+        self.listForChange
         
 
 
@@ -342,9 +350,9 @@ class AddinChanger():
             #         compatibility = char['Совместимость']
             # if model != '':
             #     fabric = model[0].split(' ')[0]
-            # model = 'Tecno Pova Neo 2;Pova neo 2;Пова нео 2'.split(';')
-            # compatibility = 'Tecno Pova Neo 2;Pova neo 2;Пова нео 2;Техно Пова нео 2'.split(';')
-            # fabric = 'Tecno'
+            # model = 'Realme C30; Реалми С30; Реалме ц30'.split(';')
+            # compatibility = 'Realme c30; Реалми ц30; Реалме ц30; Realme С30;Реалми с30;Реалми С 30;Реалме С30;Реалме С 30'.split(';')
+            # fabric = 'Realme'
             for char in card['characteristics']:
                 if 'Модель' in char:
                     model = char['Модель']
@@ -357,6 +365,12 @@ class AddinChanger():
             if model != '':
                 fabric = model[0].split(' ')[0]
             addChar = self.getCharForlistCardForCangesDict(card['vendorCode'])
+            if 'книга' in caseName:
+                stuff = 'Чехлы-книжки для телефонов'
+            else:
+                stuff = 'Чехлы для телефонов'
+            # if card['vendorCode'] == 'Realmi_C30_BP_CCM_CLR_FRT_PRNT_1333':
+            #     print('i')
             card['characteristics'] =[
                             {'Рисунок': addChar['Рисунок']},
                             {'Цвет': addChar['Цвет']},
@@ -375,11 +389,11 @@ class AddinChanger():
                             {'Бренд': 'Mobi711'},
                             {'Страна производства': 'Китай'},
                             {'Наименование': self.getName(category, caseName, model)},
-                            {'Предмет':'Чехлы-книжки для телефонов'},
+                            {'Предмет': stuff},
                             {'Описание': self.getDescription(category, caseName, compatibility)},
                             {'Высота упаковки': 18.5},
                             {'Ширина упаковки': 11},
-                            {'Длина упаковки': 1.5}
+                            {'Длина упаковки': 1.4}
                         ]
             card
         return listCardForCanges
@@ -473,7 +487,7 @@ if __name__=='__main__':
     # path = sys.argv[2]
     # changer = AddinChanger(ip, path)
     # changer.cangeCardsNumenclatures()
-    for item in [('Караханян', r'F:\Downloads\Караханян\tmp.txt'), ('Самвел', r'F:\Downloads\Самвел\tmp.txt'), ('Абраамян',r'F:\Downloads\report_2022_11_1\tmp.txt')]:
+    for item in [('Абраамян',r'F:\Downloads\realme.xlsx')]:
         ip = item[0]
         path = item[1]
         changer = AddinChanger(ip, path)
