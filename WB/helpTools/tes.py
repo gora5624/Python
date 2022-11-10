@@ -1,13 +1,23 @@
-from urllib import response
-import requests
+import os
+import shutil
 
-token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
-url = 'https://suppliers-api.wildberries.ru/api/v2/orders/stickers'
-json = {
-  "orderIds": [
-    479776624
-  ]
-}
-headers = {'Authorization': token}
-responce = requests.post(url=url, json=json, headers=headers)
-responce
+
+with open(r'F:\printspdf.txt', 'r', encoding='utf-8') as file:
+  listFile = file.readlines()
+  for i, line in enumerate(listFile):
+    listFile[i] = line[0:-1]
+  listFile
+for file in listFile:
+  try:
+    if os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\Принты под пластины PDF\полные', file) not in os.listdir(r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\Принты под пластины PDF'):
+      shutil.copy(os.path.join(r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\XXL',file),os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\Принты под пластины PDF\полные', file) )
+  except:
+    pass
+  try:
+    if os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\Принты под пластины PDF\полные', file.replace('pdf','cdr')) not in os.listdir(r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\Принты под пластины PDF'):
+      shutil.copy(os.path.join(r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\XXL',file.replace('pdf','cdr')),os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\Принты под пластины PDF\полные', file.replace('pdf','cdr')) )
+  except:
+    pass
+
+
+

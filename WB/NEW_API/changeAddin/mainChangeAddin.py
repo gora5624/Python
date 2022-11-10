@@ -138,6 +138,16 @@ class AddinChanger():
         #         tmp = {line['Артикул поставщика']:line}
         #         self.listForChangeDict.update(tmp)
 
+        self.listForChangeDict
+        i = 0
+        # filepath = input('Введите пусть к файлу: ')
+        # df = pandas.DataFrame(pandas.read_excel(filepath))
+        # for j in numpy.array_split(self.listForChange, len(self.listForChange)//500000):
+        #     j.to_excel('E:\listForChange{}.xlsx'.format(i), index=False)
+        #     i+=1
+        self.listForChange.to_excel(r'E:\listForChange.xlsx')
+
+        self.listForChange
         
 
 
@@ -385,9 +395,9 @@ class AddinChanger():
             #         compatibility = char['Совместимость']
             # if model != '':
             #     fabric = model[0].split(' ')[0]
-            # model = 'Tecno Pova Neo 2;Pova neo 2;Пова нео 2'.split(';')
-            # compatibility = 'Tecno Pova Neo 2;Pova neo 2;Пова нео 2;Техно Пова нео 2'.split(';')
-            # fabric = 'Tecno'
+            # model = 'Realme C30; Реалми С30; Реалме ц30'.split(';')
+            # compatibility = 'Realme c30; Реалми ц30; Реалме ц30; Realme С30;Реалми с30;Реалми С 30;Реалме С30;Реалме С 30'.split(';')
+            # fabric = 'Realme'
             for char in card['characteristics']:
                 if 'Модель' in char:
                     model = char['Модель']
@@ -409,6 +419,12 @@ class AddinChanger():
             # fabric = addChar['Совместимость'][0].split(' ')[0]
             # if 'Tecno_Camon_19_Neo_BP_CCM_CLR_ART_PRNT_1160' == card['vendorCode']:
             #     print('i')
+            if 'книга' in caseName:
+                stuff = 'Чехлы-книжки для телефонов'
+            else:
+                stuff = 'Чехлы для телефонов'
+            # if card['vendorCode'] == 'Realmi_C30_BP_CCM_CLR_FRT_PRNT_1333':
+            #     print('i')
             card['characteristics'] =[
                             {'Рисунок': addChar['Рисунок']},
                             {'Цвет': addChar['Цвет']},
@@ -428,9 +444,12 @@ class AddinChanger():
                             {'Страна производства': 'Китай'},
                             {'Наименование': self.getName(category, caseName, model)},
                             {'Предмет':stuff},
+                            {'Предмет': stuff},
                             {'Описание': self.getDescription(category, caseName, compatibility)},
                             {'Высота упаковки': 18.5},
                             {'Ширина упаковки': 12},
+                            {'Длина упаковки': 1.4}
+                            {'Ширина упаковки': 11},
                             {'Длина упаковки': 1.4}
                         ]
             card

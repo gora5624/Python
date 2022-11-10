@@ -6,11 +6,18 @@ import pandas
 
 
 def pushPhoto(line, token, requestUrl, countTry=0):
-    jsonRequest = {
-        "vendorCode": line['Артикул товара'],
-        "data": line['Медиафайлы'].split(';')
-        }
-    headersRequest = {'Authorization': '{}'.format(token), 'X-Vendor-Code': line['Артикул товара']}
+    if 'Артикул товара' in list(line.keys()):
+        jsonRequest = {
+            "vendorCode": line['Артикул товара'],
+            "data": line['Медиафайлы'].split(';')
+            }
+        headersRequest = {'Authorization': '{}'.format(token), 'X-Vendor-Code': line['Артикул товара']}
+    else:
+        jsonRequest = {
+            "vendorCode": line['Артикул поставщика'],
+            "data": line['Медиафайлы'].split(';')
+            }
+        headersRequest = {'Authorization': '{}'.format(token), 'X-Vendor-Code': line['Артикул поставщика']}
     try:
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=2)  
         if '"Неверный запрос: по данному артикулу не нашлось карточки товара","additionalErrors' in r.text:
