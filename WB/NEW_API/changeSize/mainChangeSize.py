@@ -17,7 +17,7 @@ class changerSize():
         filterNom.filterNomenclatures('Чехол;силикон')
         self.listNomenclatures = filterNom.getNom()
         for token in self.tokenList:
-            pool = multiprocessing.Pool()
+            pool = multiprocessing.Pool(30)
             for nomenclature in  self.listNomenclatures:
                 pool.apply_async(self.changeSize, args=(nomenclature['Штрихкод'], token,))
             pool.close()
