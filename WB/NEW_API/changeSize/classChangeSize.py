@@ -217,7 +217,7 @@ class changeSize():
     
 
     def changeSizeMain(self):
-        with open (os.path.abspath(__file__).replace(os.path.basename(__file__,'log.txt')), 'a', encoding='utf-8') as fileLog:
+        with open (os.path.abspath(__file__).replace(os.path.basename(__file__),'log.txt'), 'a', encoding='utf-8') as fileLog:
             self.nomenclature[0]['characteristics'].extend(self.sizeData)
             countTry = 0
             timeout=self.timeout
