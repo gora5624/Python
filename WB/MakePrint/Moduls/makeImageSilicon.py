@@ -96,6 +96,8 @@ def chekPath(path=str):
 
 def createSiliconImage(pathToMaskFolder, countCPU, addImage, mode):
     if "проз" in pathToMaskFolder.lower():
+        pathToPrintFolder = pathToPrintImageFolderAllSil    
+    elif 'книга' in pathToMaskFolder.lower():
         pathToPrintFolder = pathToPrintImageFolderAllSil
     else:
         try:
@@ -139,6 +141,8 @@ def createSiliconImage(pathToMaskFolder, countCPU, addImage, mode):
 
 def fakeCreateSiliconImage(pathToMaskFolder, mode):
     if "проз" in pathToMaskFolder.lower():
+        pathToPrintFolder = pathToPrintImageFolderAllSil
+    elif 'книга' in pathToMaskFolder.lower():
         pathToPrintFolder = pathToPrintImageFolderAllSil
     else:
         # try:
