@@ -1,10 +1,10 @@
 import requests
 import pandas
-import numpy
+import os
 
 class filterNomenclatures1CForChange():
     def __init__(self) -> None:
-        self.pathToNomenclaturesListFrom1C = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'
+        self.pathToNomenclaturesListFrom1C = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК — копия.txt'
         self.listNomenclaturesFrom1CDF = ''
         self.listNomenclaturesFromChangeSizeDF = ''
         self.listNomenclaturesFromChangeSizeDict = {}
@@ -217,20 +217,23 @@ class changeSize():
     
 
     def changeSizeMain(self):
-        self.nomenclature[0]['characteristics'].extend(self.sizeData)
-        countTry = 0
-        timeout=self.timeout
-        while countTry < self.countTryMax:
-            try:
-                responce = requests.post(self.urlChangeSize, json=self.nomenclature, headers=self.headersRequest, timeout=timeout)
-                if responce.status_code == 200:
-                    print(self.nomenclature[0]['vendorCode'])
-                    break
-                else:
+        with open (os.path.abspath(__file__).replace(os.path.basename(__file__,'log.txt')), 'a', encoding='utf-8') as fileLog:
+            self.nomenclature[0]['characteristics'].extend(self.sizeData)
+            countTry = 0
+            timeout=self.timeout
+            while countTry < self.countTryMax:
+                try:
+                    responce = requests.post(self.urlChangeSize, json=self.nomenclature, headers=self.headersRequest, timeout=timeout)
+                    if responce.status_code == 200:
+                        fileLog.readline(self.nomenclature[0]['vendorCode'])
+                        print(self.nomenclature[0]['vendorCode'])
+                        break
+                    else:
+                        countTry+=1
+                        continue
+                except:
+                    timeout+=2
                     countTry+=1
                     continue
-            except:
-                timeout+=2
-                countTry+=1
-                continue
+            fileLog.close()
         # return 0

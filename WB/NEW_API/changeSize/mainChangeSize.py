@@ -1,5 +1,6 @@
 import multiprocessing
 from classChangeSize import filterNomenclatures1CForChange, getNomenclaturesFromWB, changeSize
+import os
 
 
 class changerSize():
@@ -17,19 +18,19 @@ class changerSize():
         # self.listNomenclatures = filterNom.getNom()
         listNomenclatures= filterNom.getNom()
         for token in self.tokenList:
-            # pool = multiprocessing.Pool(30)
+            pool = multiprocessing.Pool()
             # self.listNomenclatures = listNomenclatures
             listProcess = []
-            for i in  range(0,len(listNomenclatures),25):
-                for j in listNomenclatures[i:i+25]:
-                    p = multiprocessing.Process(target=self.changeSize, args=(j['Штрихкод'], token,))
-                    p.start()
-                    listProcess.append(p)
-                for p in listProcess:
-                    p.join()
-            #     pool.apply_async(self.changeSize, args=(nomenclature['Штрихкод'], token,))
-            # pool.close()
-            # pool.join()
+            for i in  listNomenclatures:  # range(0,len(listNomenclatures),25):
+                # for j in listNomenclatures[i:i+25]:
+                #     p = multiprocessing.Process(target=self.changeSize, args=(j['Штрихкод'], token,))
+                #     p.start()
+                #     listProcess.append(p)
+                # for p in listProcess:
+                #     p.join()
+                pool.apply_async(self.changeSize, args=(i['Штрихкод'], token,))
+            pool.close()
+            pool.join()
         
 
     def changeSize(self, barcod, token):
