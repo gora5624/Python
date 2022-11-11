@@ -26,6 +26,7 @@ class ModelWithAddin:
         self.maskFolderName = maskFolderName
         self.pathToSiliconMTAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликонМат.txt'
         self.pathToSiliconCLRAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликонПроз.txt'
+        self.pathToPlasticAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПластик.txt'
         self.pathToBookAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКнижки.txt'
         self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.txt'
         self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПринтов.txt'
@@ -38,6 +39,8 @@ class ModelWithAddin:
             self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToSiliconMTAddin,sep='\t'))
         elif 'силикон ' in maskFolderName and 'проз' in maskFolderName:
             self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToSiliconCLRAddin,sep='\t'))
+        elif 'пластик ' in maskFolderName and 'проз' in maskFolderName:
+            self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToPlasticAddin,sep='\t'))
         self.dfAddinForPrint = pandas.DataFrame(pandas.read_csv(self.pathToPrintAddin,sep='\t'))
         self.dfCategoryPrint = pandas.DataFrame(pandas.read_csv(self.pathToCategoryPrint,sep='\t'))
         self.data = []
@@ -53,6 +56,7 @@ class ModelWithAddin:
                 'Модель': 3,
                 'Тип чехлов': 3,
                 'Повод': 3,
+                'Материал изделия': 3
             }
 
         self.applyAddin(price)
@@ -163,6 +167,24 @@ class ModelWithAddin:
                 vendorCode3 += '_HLD'
             return '_'.join([vendorCode1, vendorCode3,#.join([vendorCode1, vendorCode2, vendorCode3,
                         categoryCode, 'PRNT',printName.replace('(Принт ','').replace(')','')])
+        elif 'пластик с' in self.maskFolderName:
+            vendorCode1 = self.maskFolderName.replace('Чехол','').split('пластик')[0].strip().replace(' ','_') + '_BPP'
+            # if 'с зак.кам.' in self.maskFolderName:
+            #     vendorCode2 = 'CCM'
+            # elif 'с отк.кам.' in self.maskFolderName:
+            #     vendorCode2 = 'OCM'
+            # else:
+            #     vendorCode2 = 'UCM'
+            for color, codeColor in self.siliconCaseColorDict.items():
+                if color == colorCase:
+                    vendorCode3 = codeColor
+                    break
+            else:
+                vendorCode3 = 'UNKNOW_COLOR'
+            if 'под карту' in self.maskFolderName:
+                vendorCode3 += '_HLD'
+            return '_'.join([vendorCode1, vendorCode3,#.join([vendorCode1, vendorCode2, vendorCode3,
+                        categoryCode, 'PRNT',printName.replace('(Принт ','').replace(')','')])
 
 
     def getDescription(self, category):
@@ -257,7 +279,7 @@ class ModelWithAddin:
                             'Повод': self.getPrintAddin(printName, 'Повод', category), # self.getRandomValue(category, 'Повод'),
                             'Страна производства': 'Китай',
                             'Декоративные элементы': self.getPrintAddin(printName, 'Декоративные элементы', category), # self.getRandomValue(category, 'Декоративные элементы'),
-                            'Материал изделия': 'Текстиль;Силикон;Экокожа',
+                            'Материал изделия': self.getRandomValue(category, 'Материал изделия'),
                             'Высота упаковки': 18.5,
                             'Ширина упаковки': 11,
                             'Глубина упаковки': 1.5,

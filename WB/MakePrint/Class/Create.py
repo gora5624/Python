@@ -17,7 +17,7 @@ import asyncio
 import aiohttp
 from aiohttp import ClientConnectorError
 import subprocess
-from Class.logMaker import LogMaker
+# from Class.logMaker import LogMaker
 # from requests import ConnectionError
 
 
@@ -64,7 +64,7 @@ class WBnomenclaturesCreater:
 
 
     def createNomenclaturesMultiporocessing(self, mode):
-        LogMaker.metodStart('createNomenclaturesMultiporocessing', {'mode':'str(mode)'})
+        # LogMaker.metodStart('createNomenclaturesMultiporocessing', {'mode':'str(mode)'})
         start_time = time.time()
         nomenclature = []
         if mode =='Караханян':
@@ -124,7 +124,10 @@ class WBnomenclaturesCreater:
             self.modelForUploads.append(nomenclature)
         headersRequest = {'Authorization': '{}'.format(token)}
         # self.modelForUploads
-        # self.listDoneVendorCode = self.getListNomenclatures(token, self.modelForUploads)
+        try:
+            self.getListNomenclaturesMulti(token, self.modelForUploads)
+        except:
+            pass
         for i in range(5):
             pool = multiprocessing.Pool()
             for model in self.modelForUploads:
@@ -132,11 +135,14 @@ class WBnomenclaturesCreater:
                 pool.apply_async(self.createNomenclatureSingleProcess, args=(model, headersRequest,token, ))
             pool.close()
             pool.join()
-            # self.listDoneVendorCode = self.getListNomenclatures(token, self.modelForUploads)
+            try:
+                self.getListNomenclaturesMulti(token, self.modelForUploads)
+            except:
+                pass
             # self.uplaodImage(self.pathToFileForUpload, token)
             # time.sleep(20)
         print("--- %s seconds ---" % (time.time() - start_time))
-        LogMaker.metodEnd('createNomenclaturesMultiporocessing','')
+        # LogMaker.metodEnd('createNomenclaturesMultiporocessing','')
 
             # vendorCodeMain = model[0]['vendorCode']
             # jsonCard = [[model[0]]]
@@ -161,7 +167,7 @@ class WBnomenclaturesCreater:
 
     def createNomenclatureSingleProcess(self, modelListCard, headersRequest,token):
         # print("createNomenclatureSingleProcess(self, modelListCard, headersRequest,token)")
-        LogMaker.metodStart('createNomenclatureSingleProcess', {'modelListCard': 'str(modelListCard)', 'headersRequest': 'str(headersRequest)'})
+        # LogMaker.metodStart('createNomenclatureSingleProcess', {'modelListCard': 'str(modelListCard)', 'headersRequest': 'str(headersRequest)'})
         vendorCodeMain = modelListCard[0]['vendorCode']
         # print("vendorCodeMain = modelListCard[0]['vendorCode']")
         jsonCard = [[modelListCard[0]]]
@@ -193,7 +199,7 @@ class WBnomenclaturesCreater:
                     continue
             if responce.status_code == 200:
                 # print("responce.status_code == 200:")
-                LogMaker.logAction('createNomenclatureSingleProcess', vendorCodeMain +'  успешно создана')
+                # LogMaker.logAction('createNomenclatureSingleProcess', vendorCodeMain +'  успешно создана')
                 print(vendorCodeMain + ' успешно создана')
                 #time.sleep(1)
                 # p = multiprocessing.Process(target=self.uplaodImage, args=(vendorCodeMain, urlsList, token,))
@@ -241,58 +247,76 @@ class WBnomenclaturesCreater:
                 #         break
                 if responce.status_code == 200:
                     # print("responce.status_code == 200:2")
-                    LogMaker.logAction('createNomenclatureSingleProcess', vendorCodeMain +'  успешно создана')
+                    # LogMaker.logAction('createNomenclatureSingleProcess', vendorCodeMain +'  успешно создана')
                     print(modelListCard[i]['vendorCode'] + ' успешно создана')
                 else:
                     # print("responce.text123")
-                    LogMaker.logAction('createNomenclatureSingleProcess', responce.text)
+                    # LogMaker.logAction('createNomenclatureSingleProcess', responce.text)
+                    if 'Указанные Артикулы поставщика используются в других карточках с Номенклатурой' in responce.text:
+                        if modelListCard[i]['vendorCode'] in responce.text:
+                            self.listDoneVendorCode.append(modelListCard[i]['vendorCode'])
                     print(responce.text)
                     # print(vendorCodeMain + ' ошибка при создании, проверь ВБ')
-        LogMaker.metodEnd('createNomenclatureSingleProcess', '')
+        # LogMaker.metodEnd('createNomenclatureSingleProcess', '')
         
 
-    def getListNomenclatures(self, token, modelListCard):
-        LogMaker.metodStart('getListNomenclatures', {'token': token, 'modelListCard': 'str(modelListCard)'})
-        requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/cards/list'
+    def getListNomenclaturesMulti(self, token, modelListCard):
+        # LogMaker.metodStart('getListNomenclatures', {'token': token, 'modelListCard': 'str(modelListCard)'})
         headersRequest = {'Authorization': '{}'.format(token)}
-        dataCard = []
-        countCardsToGet = 0
-        for i in modelListCard:
-            countCardsToGet+=len(i)
-        for a in range(0,countCardsToGet*2, 100):
+        listToGet =[]
+        countToRequests = 50
+        manager = multiprocessing.Manager()
+        listDoneVendorCode = manager.list()
+        pList = []
+        pool = multiprocessing.Pool()
+        for cards in modelListCard:
+            #listToGet =[]
+            #for card in cards:
+            # listToGet = [cards[0]['vendorCode']]
             jsonRequest = {
-                    "sort": {
-                    "limit": 100,
-                    "offset": a,
-                    "sortColumn": "updateAt",
-                    "ascending": False
+                    "vendorCodes": [cards[0]['vendorCode']]
                     }
-                }
-            countTry = 0
-            delta = 1
-            while True and countTry <10:
+            pool.apply_async(self.getListNomenclaturesProcess, args=(jsonRequest, headersRequest, listDoneVendorCode, ))
+        pool.close()
+        pool.join()
+        #     p = multiprocessing.Process(target=self.getListNomenclaturesProcess, args=(jsonRequest, headersRequest, listDoneVendorCode, ))
+        #     p.start()
+        #     pList.append(p)
+        # for p in pList:
+        #     p.join()
+        self.listDoneVendorCode = list(listDoneVendorCode)
+
+            # while True and countTry <2:
+            #     try:
+            #         response = requests.post(requestUrl, headers=headersRequest, json=jsonRequest, timeout=30)
+            #         break
+            #     except:
+            #         countTry+=1
+            #         continue
+            # if response.status_code ==200:
+            #     if len(data:=response.json()['data']) !=0:
+            #         for card in data: 
+            #             self.listDoneVendorCode.append(card['vendorCode'])
+            # LogMaker.logAction('getListNomenclatures', 'Получает {} карточек из {}'.format(str(i),len(modelListCard)*2))
+
+
+    def getListNomenclaturesProcess(self, jsonRequest, headersRequest, listDoneVendorCode):
+        requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/cards/filter'
+        countTry = 0
+        while True and countTry <5:
                 try:
-                    response = requests.post(requestUrl, headers=headersRequest, json=jsonRequest).json()
+                    response = requests.post(requestUrl, headers=headersRequest, json=jsonRequest, timeout=90)
                     break
                 except:
-                    delta+=1
-                    time.sleep(5)
                     countTry+=1
                     continue
-            LogMaker.logAction('getListNomenclatures', 'Получает {} карточек из {}'.format(str(i),len(modelListCard)*2))
-            if countTry>=10:
-                return []
-            try:
-                for j in response['data']['cards']:
-                    dataCard.append(j['vendorCode'])
-                # dataCard.extend(response['data']['cards'])
-            except:
-                pass
-        LogMaker.metodEnd('getListNomenclatures', 'получены {} карточек'.format(len(dataCard)))
-        return dataCard
-
-
-
+        if response.status_code ==200:
+            if len(data:=response.json()['data']) !=0:
+                for card in data: 
+                    # if card['vendorCode'] not in list(listDoneVendorCode):
+                        listDoneVendorCode.append(card['vendorCode'])
+                    # a = list(listDoneVendorCode)
+                    # a
 
 
 
