@@ -225,7 +225,7 @@ class changeSize():
                 try:
                     responce = requests.post(self.urlChangeSize, json=self.nomenclature, headers=self.headersRequest, timeout=timeout)
                     if responce.status_code == 200:
-                        fileLog.readline(self.nomenclature[0]['vendorCode'])
+                        fileLog.write(self.nomenclature[0]['vendorCode'] + '\n')
                         print(self.nomenclature[0]['vendorCode'])
                         break
                     else:
