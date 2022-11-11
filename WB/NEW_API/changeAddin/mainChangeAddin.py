@@ -110,7 +110,7 @@ class AddinChanger():
     def sortNomenclatures(self):
         # self.barcodeForChange = self.dfBarcod[self.dfBarcod['Характеристика'].str.contains("Принт", na = False)]['Штрихкод'].values.tolist()
         self.barcodeForChange = self.dfBarcod[self.dfBarcod['Характеристика'].str.contains("Принт", na = False)]
-        self.barcodeForChange = self.barcodeForChange[self.barcodeForChange['Номенклатура'].str.contains("силикон ", na = False)]
+        self.barcodeForChange = self.barcodeForChange[self.barcodeForChange['Номенклатура'].str.contains("силикон", na = False)]
         self.barcodeForChange = self.barcodeForChange[self.barcodeForChange['Характеристика'] != '(Принт 0)']
         self.dfNomenclatures['Баркод'] = self.dfNomenclatures['Баркод'].fillna(0.0).apply(numpy.int64)
         # self.listForChange = self.dfNomenclatures[self.dfNomenclatures['Баркод'].isin(self.barcodeForChange)]
@@ -118,13 +118,26 @@ class AddinChanger():
         self.listForChange = pandas.merge(self.listForChange, self.dfPrintAddin, how='inner',left_on='Характеристика',right_on='Принт')
         self.listForChange = pandas.merge(self.listForChange, self.dfCategories, how='inner',left_on='Принт',right_on='Принт')
         # self.listForChange = pandas.merge(self.listForChange, self.dfPrintAddin, how='left',left_on='Категория',right_on='Категория')
-        self.listForChange.sort_values('Номенклатура',inplace=True)
+        self.listForChange.sort_values('Артикул поставщика',inplace=True)
         self.listForChange.fillna('')
         self.listForChangeDictTMP = self.listForChange.to_dict('records')
         for line in self.listForChangeDictTMP:
-            if line['Артикул поставщика'] not in self.listChangedCards:
+            #if line['Артикул поставщика'] not in self.listChangedCards:
                 tmp = {line['Артикул поставщика']:line}
                 self.listForChangeDict.update(tmp)
+        self.listForChange
+        # i = 0
+        # for j in numpy.array_split(self.listForChange, len(self.listForChange)//500000):
+        #     j.to_excel(joinPath(r'E:\\','listForChangeSplit_{}.xlsx'.format(i)), index=False)
+        #     i+=1
+        # self.listForChange.to_excel(r'E:\listForChange.xlsx')
+        # self.listForChange = pandas.DataFrame(pandas.read_excel(r'E:\listForChangeКар.xlsx'))
+        # self.listForChangeDictTMP = self.listForChange.to_dict('records')
+        # for line in self.listForChangeDictTMP:
+        #     #if line['Артикул поставщика'] not in self.listChangedCards:
+        #         tmp = {line['Артикул поставщика']:line}
+        #         self.listForChangeDict.update(tmp)
+
         self.listForChangeDict
         i = 0
         # filepath = input('Введите пусть к файлу: ')
@@ -183,6 +196,14 @@ class AddinChanger():
             for line in self.dfSiliconCLRAddinDict:
                 if line['Категория'] == category:
                     listVariation = line[field].split(';')
+        elif 'силикон ' in caseName and 'блестки' in caseName:
+            for line in self.dfSiliconCLRAddinDict:
+                if line['Категория'] == category:
+                    listVariation = line[field].split(';')
+        elif 'силикон ' in caseName and 'Skin' in caseName:
+            for line in self.dfSiliconCLRAddinDict:
+                if line['Категория'] == category:
+                    listVariation = line[field].split(';')
         elif 'силикон ' in caseName and 'мат' in caseName:
             for line in self.dfSiliconMTAddinDict:
                 if line['Категория'] == category:
@@ -220,6 +241,14 @@ class AddinChanger():
             for line in self.dfSiliconCLRAddinDict:
                 if line['Категория'] == category:
                     equipmentCasePrefix = random.choice(line['Комплектация (префикс)'].split(';')).strip()
+        elif 'силикон ' in caseName and 'блестки' in caseName:
+            for line in self.dfSiliconCLRAddinDict:
+                if line['Категория'] == category:
+                    equipmentCasePrefix = random.choice(line['Комплектация (префикс)'].split(';')).strip()
+        elif 'силикон ' in caseName and 'Skin' in caseName:
+            for line in self.dfSiliconCLRAddinDict:
+                if line['Категория'] == category:
+                    equipmentCasePrefix = random.choice(line['Комплектация (префикс)'].split(';')).strip()
         elif 'силикон ' in caseName and 'мат' in caseName:
             for line in self.dfSiliconMTAddinDict:
                 if line['Категория'] == category:
@@ -244,6 +273,14 @@ class AddinChanger():
                 if line['Категория'] == category:
                     nameCasePrefix = random.choice(line['Наименование (префикс)'].split(';')).strip()
         elif 'силикон ' in caseName and 'проз' in caseName:
+            for line in self.dfSiliconCLRAddinDict:
+                if line['Категория'] == category:
+                    nameCasePrefix = random.choice(line['Наименование (префикс)'].split(';')).strip()
+        elif 'силикон ' in caseName and 'блестки' in caseName:
+            for line in self.dfSiliconCLRAddinDict:
+                if line['Категория'] == category:
+                    nameCasePrefix = random.choice(line['Наименование (префикс)'].split(';')).strip()
+        elif 'силикон ' in caseName and 'Skin' in caseName:
             for line in self.dfSiliconCLRAddinDict:
                 if line['Категория'] == category:
                     nameCasePrefix = random.choice(line['Наименование (префикс)'].split(';')).strip()
@@ -286,6 +323,14 @@ class AddinChanger():
             for line in self.dfSiliconCLRAddinDict:
                 if line['Категория'] == category:
                     description = random.choice(line['Описание'].split(';')).strip()
+        elif 'силикон ' in caseName and 'блестки' in caseName:
+            for line in self.dfSiliconCLRAddinDict:
+                if line['Категория'] == category:
+                    description = random.choice(line['Описание'].split(';')).strip()
+        elif 'силикон ' in caseName and 'Skin' in caseName:
+            for line in self.dfSiliconCLRAddinDict:
+                if line['Категория'] == category:
+                    description = random.choice(line['Описание'].split(';')).strip()
         elif 'силикон ' in caseName and 'мат' in caseName:
             for line in self.dfSiliconMTAddinDict:
                 if line['Категория'] == category:
@@ -319,7 +364,7 @@ class AddinChanger():
             'Декоративные элементы':[dekor],
             'Назначение подарка':reasonGift,
             'Любимые герои':[heroes],
-
+            # 'Совместимость' : line['Модель'].split(';')
         }
         
 
@@ -369,6 +414,15 @@ class AddinChanger():
                 stuff = 'Чехлы-книжки для телефонов'
             else:
                 stuff = 'Чехлы для телефонов'
+            # compatibility = addChar['Совместимость']
+            # model = addChar['Совместимость'][0:3]
+            # fabric = addChar['Совместимость'][0].split(' ')[0]
+            # if 'Tecno_Camon_19_Neo_BP_CCM_CLR_ART_PRNT_1160' == card['vendorCode']:
+            #     print('i')
+            if 'книга' in caseName:
+                stuff = 'Чехлы-книжки для телефонов'
+            else:
+                stuff = 'Чехлы для телефонов'
             # if card['vendorCode'] == 'Realmi_C30_BP_CCM_CLR_FRT_PRNT_1333':
             #     print('i')
             card['characteristics'] =[
@@ -377,7 +431,7 @@ class AddinChanger():
                             {'Тип чехлов': self.getRandomValue(category, 'Тип чехлов', caseName)},
                             {'Повод': addChar['Повод']},
                             {'Особенности чехла': self.getRandomValue(category, 'Особенности чехла', caseName)},
-                            {'Комплектация': self.getEquipmentCase(category, caseName, model)},
+                            {'Комплектация': [self.getEquipmentCase(category, caseName, model)]},
                             {'Модель': model},
                             {'Вид застежки': self.getRandomValue(category, 'Вид застежки', caseName)},
                             {'Декоративные элементы': addChar['Декоративные элементы']},
@@ -385,13 +439,16 @@ class AddinChanger():
                             {'Назначение подарка': addChar['Назначение подарка']},
                             {'Любимые герои': addChar['Любимые герои']},
                             {'Материал изделия': self.getRandomValue(category, 'Материал изделия', caseName)},
-                            {'Производитель телефона': fabric},
+                            {'Производитель телефона': [fabric]},
                             {'Бренд': 'Mobi711'},
                             {'Страна производства': 'Китай'},
                             {'Наименование': self.getName(category, caseName, model)},
+                            {'Предмет':stuff},
                             {'Предмет': stuff},
                             {'Описание': self.getDescription(category, caseName, compatibility)},
                             {'Высота упаковки': 18.5},
+                            {'Ширина упаковки': 12},
+                            {'Длина упаковки': 1.4}
                             {'Ширина упаковки': 11},
                             {'Длина упаковки': 1.4}
                         ]
@@ -406,7 +463,7 @@ class AddinChanger():
         
         while True and countTry < 10:
             try:
-                responce = requests.post(self.urlChangeCards, json=listChangedCardsForUploads, headers=headersRequest, timeout=10)
+                responce = requests.post(self.urlChangeCards, json=listChangedCardsForUploads, headers=headersRequest, timeout=20)
                 if responce.status_code == 200:
                     break
                 else:
@@ -414,7 +471,7 @@ class AddinChanger():
                     continue
             except ConnectionError:
                 time.sleep(5)
-                responce = requests.post(self.urlChangeCards, json=listChangedCardsForUploads, headers=headersRequest, timeout=3)
+                responce = requests.post(self.urlChangeCards, json=listChangedCardsForUploads, headers=headersRequest, timeout=20)
             except requests.exceptions.InvalidJSONError:
                 print('ValeuError')
                 pd = pandas.DataFrame(listChangedCardsForUploads)
@@ -423,18 +480,18 @@ class AddinChanger():
                 time.sleep(5)
                 countTry+=1
                 continue
-        # except:
-        #     with open(joinPath(dirname(__file__),'erreos.txt'), 'a') as errorsFile:
-        #         for i in self.listChangedCardsForUploads:
-        #             errorsFile.write(i['vendorCode'] + '\n')
-        # self.listChangedCards.extend(listVendorCodeForCanges)
+            # except:
+            #     with open(joinPath(dirname(__file__),'erreos.txt'), 'a') as errorsFile:
+            #         for i in self.listChangedCardsForUploads:
+            #             errorsFile.write(i['vendorCode'] + '\n')
+            # self.listChangedCards.extend(listVendorCodeForCanges)
         with open(self.listChangedCardsPath, 'a', encoding='utf-8') as listChangedCardsFile:
             for card in listChangedCardsForUploads:
                 listChangedCardsFile.write(card['vendorCode'] + '\n')
                 self.listChangedCards.append(card['vendorCode'])
             listChangedCardsFile.close()
-        # a = responce.json()
-        # a
+        a = responce.json()
+        a
 
 
     def changelistCardProcess(self, listCardForCangesNew):
@@ -447,7 +504,9 @@ class AddinChanger():
         start_time = time.time()
         listForChange = self.listForChange['Артикул поставщика'].values.tolist()
         listVendorCodeForCanges = []
+
         for vendorCode in listForChange:
+            listProcess = []
             if vendorCode not in self.listChangedCards:
                 listVendorCodeForCanges.append(vendorCode)
                 if len(listVendorCodeForCanges)>90:
@@ -456,22 +515,30 @@ class AddinChanger():
                     for card in listCardForCanges:
                         if card['vendorCode'] not in self.listChangedCards:
                             listCardForCangesNew.append(card)
-                    pool = multiprocessing.Pool()
+                    # pool = multiprocessing.Pool()
                     # start_time = time.time()
+                    
                     for i in range(0,len(listCardForCangesNew), 100):
                         # start_time = time.time()
-                        pool.apply_async(self.changelistCardProcess, args=(listCardForCangesNew[i:i+100],))
+                        p = multiprocessing.Process(target=self.changelistCardProcess, args=(listCardForCangesNew[i:i+100],))
+                        p.start()
+                        listProcess.append(p)
+                        # pool.apply_async(self.changelistCardProcess, args=(listCardForCangesNew[i:i+100],))
                         #self.changelistCard(listCardForCangesNew[i:i+100])
                         #self.pushChanges()
                         # print("--- %s seconds ---" % (time.time() - start_time))
-                    pool.close()
-                    pool.join()
+                    # pool.close()
+                    # pool.join()
+                    
                     for card in listCardForCangesNew:
-                        self.listChangedCards.append(card['vendorCode'])
+                        if card['vendorCode'] not in self.listChangedCards:
+                            self.listChangedCards.append(card['vendorCode'])
                     listVendorCodeForCanges = []
                     
             #listCardForCanges = self.getCardsNumenclatures(self.listForChange['Артикул поставщика'].values.tolist()[i:i+100])
             # start_time = time.time()
+        for p in listProcess:
+            p.join()
         listCardForCanges = self.getCardsNumenclatures(listVendorCodeForCanges)
         tmp = self.changelistCard(listCardForCanges)
         self.pushChanges(tmp)
@@ -483,11 +550,11 @@ class AddinChanger():
 
 
 if __name__=='__main__':
-    # ip = sys.argv[1]
-    # path = sys.argv[2]
+    # ip = 'Абраамян'# sys.argv[1]
+    # path = r'E:\Downloads\camon_19_neo.xlsx' # sys.argv[2]
     # changer = AddinChanger(ip, path)
     # changer.cangeCardsNumenclatures()
-    for item in [('Караханян', r'E:\Downloads\Караханян\tmp.txt'), ('Самвел', r'E:\Downloads\Самвел\tmp.txt'), ('Абраамян',r'E:\Downloads\report_2022_11_1\tmp.txt')]:
+    for item in [('Караханян', r'E:\Downloads\report_2022_11_8\tmp.xlsx')]:
         ip = item[0]
         path = item[1]
         changer = AddinChanger(ip, path)
