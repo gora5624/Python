@@ -1,5 +1,4 @@
 import multiprocessing
-import requests
 from classChangeSize import filterNomenclatures1CForChange, getNomenclaturesFromWB, changeSize
 
 
@@ -15,13 +14,22 @@ class changerSize():
         filterNom.getListNomenclatures()
         # filterNom.filterNomenclatures('Чехол;силикон','книга')
         filterNom.filterNomenclatures('Чехол;силикон')
-        self.listNomenclatures = filterNom.getNom()
+        # self.listNomenclatures = filterNom.getNom()
+        listNomenclatures= filterNom.getNom()
         for token in self.tokenList:
-            pool = multiprocessing.Pool(30)
-            for nomenclature in  self.listNomenclatures:
-                pool.apply_async(self.changeSize, args=(nomenclature['Штрихкод'], token,))
-            pool.close()
-            pool.join()
+            # pool = multiprocessing.Pool(30)
+            # self.listNomenclatures = listNomenclatures
+            listProcess = []
+            for i in  range(0,len(listNomenclatures),25):
+                for j in listNomenclatures[i:i+25]:
+                    p = multiprocessing.Process(target=self.changeSize, args=(j['Штрихкод'], token,))
+                    p.start()
+                    listProcess.append(p)
+                for p in listProcess:
+                    p.join()
+            #     pool.apply_async(self.changeSize, args=(nomenclature['Штрихкод'], token,))
+            # pool.close()
+            # pool.join()
         
 
     def changeSize(self, barcod, token):
@@ -30,8 +38,14 @@ class changerSize():
         if getNom.cardVendorCode != '':
             nomenclature = getNom.getNomenclature()
             if type(nomenclature) != None:
-                change = changeSize(nomenclature, token, (18.5,12,1.4),False)
+                change = changeSize(nomenclature, token, (18.5,12,1.4),True)
                 change.changeSize()
+            else:
+                print('1')
+        else:
+            print('1')
+        # obj = [change, nomenclature, getNom]
+        # return 0
 
 
 
