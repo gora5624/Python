@@ -4,7 +4,7 @@ import os
 
 class filterNomenclatures1CForChange():
     def __init__(self) -> None:
-        self.pathToNomenclaturesListFrom1C = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК — копия.txt'
+        self.pathToNomenclaturesListFrom1C = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'
         self.listNomenclaturesFrom1CDF = ''
         self.listNomenclaturesFromChangeSizeDF = ''
         self.listNomenclaturesFromChangeSizeDict = {}
@@ -203,8 +203,8 @@ class changeSize():
             self.isChange = True
             return True
         else:
-            self.isChange = True
-            return True
+            self.isChange = False
+            return False
 
 
     def changeSize(self):

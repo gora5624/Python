@@ -41,8 +41,11 @@ class ModelWithAddin:
             self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToSiliconCLRAddin,sep='\t'))
         elif 'пластик ' in maskFolderName and 'проз' in maskFolderName:
             self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToPlasticAddin,sep='\t'))
+        self.dfAddinFromFileDict = self.dfAddinFromFile.to_dict('records')
         self.dfAddinForPrint = pandas.DataFrame(pandas.read_csv(self.pathToPrintAddin,sep='\t'))
+        self.dfAddinForPrintDict = self.dfAddinForPrint.to_dict('records')
         self.dfCategoryPrint = pandas.DataFrame(pandas.read_csv(self.pathToCategoryPrint,sep='\t'))
+        self.dfCategoryPrintDict = self.dfCategoryPrint.to_dict('records')
         self.data = []
         self.countValueInField ={
                 'Цвет': 1,
@@ -136,16 +139,19 @@ class ModelWithAddin:
                 return color
 
 
-    def getName(self, category, countTry=0):
-        nameCasePrefix = random.choice(self.dfAddinFromFile[self.dfAddinFromFile.Категория == category]['Наименование (префикс)'].values.tolist()[0].split(';')).strip()
-        nameCase = nameCasePrefix + ' ' + random.choice(self.modelAddin.split(';'))
-        if countTry > 50:
-            return 'Невозможно сгенерить имя для {}'.format(self.modelAddin)
-        if len(nameCase) > 40:
-            countTry+=1
-            return self.getName(category, countTry)
-        else:
-             return nameCase
+    def getName(self, category):
+        for line in self.dfAddinFromFileDict:
+            if line['Категория'] == category:
+                nameCasePrefix = random.choice(line['Наименование (префикс)'].split(';')).strip()
+                break
+        # nameCasePrefix = random.choice(self.dfAddinFromFile[self.dfAddinFromFile.Категория == category]['Наименование (префикс)'].values.tolist()[0].split(';')).strip()
+        for model in self.modelAddin.split(';'):
+            nameCase = nameCasePrefix + ' ' + model
+            if len(nameCase) <= 60:
+                return nameCase
+            else:
+                continue
+        return 'Чехол для телефона'
 
 
     def getVendorCode(self, colorCase, categoryCode, printName):
@@ -188,7 +194,11 @@ class ModelWithAddin:
 
 
     def getDescription(self, category):
-        description = random.choice(self.dfAddinFromFile[self.dfAddinFromFile.Категория == category]['Описание'].values.tolist()).strip()
+        for line in self.dfAddinFromFileDict:
+            if line['Категория'] == category:
+                description = random.choice(line['Описание'].split(';')).strip()
+                break
+        # description = random.choice(self.dfAddinFromFile[self.dfAddinFromFile.Категория == category]['Описание'].values.tolist()).strip()
         countReplace = description.count('***')
         for i in range(countReplace):
             try:
@@ -199,13 +209,21 @@ class ModelWithAddin:
 
 
     def getEquipmentCase(self, category):
-        equipmentCasePrefix = random.choice(self.dfAddinFromFile[self.dfAddinFromFile.Категория == category]['Комплектация (префикс)'].values.tolist()[0].split(';')).strip()
-        return equipmentCasePrefix + ' ' + random.choice(self.modelAddin.split(';')) + ' 1 штука'
+        for line in self.dfAddinFromFileDict:
+            if line['Категория'] == category:
+                equipmentCasePrefix = random.choice(line['Комплектация (префикс)'].split(';')).strip()
+                break
+        # equipmentCasePrefix = random.choice(self.dfAddinFromFile[self.dfAddinFromFile.Категория == category]['Комплектация (префикс)'].values.tolist()[0].split(';')).strip()
+        return equipmentCasePrefix + ' ' + self.modelAddin.split(';')[0] + ' 1 штука'
 
 
     def getRandomValue(self, category, field):
         valueList = []
-        listVariation = self.dfAddinFromFile[self.dfAddinFromFile.Категория == category][field].values.tolist()[0].split(';')
+        for line in self.dfAddinFromFileDict:    
+        # listVariation = self.dfAddinFromFile[self.dfAddinFromFile.Категория == category][field].values.tolist()[0].split(';')
+            if line['Категория'] == category:
+                listVariation = line[field].split(';')
+                break
         try:
             listVariation.remove('').remove(' ')
         except ValueError:
@@ -224,7 +242,10 @@ class ModelWithAddin:
     def getPrintAddin(self, printName, field, category):
         try:
             #a = self.dfAddinForPrint[self.dfAddinForPrint.Принт == printName][field].values.tolist()[0]
-            return self.chekCountField(field, self.dfAddinForPrint[self.dfAddinForPrint.Принт == printName][field].values.tolist()[0])
+            for line in self.dfAddinForPrintDict:
+                if line['Принт'] == printName:
+                   return self.chekCountField(field, line[field])
+            # return self.chekCountField(field, self.dfAddinForPrint[self.dfAddinForPrint.Принт == printName][field].values.tolist()[0])
         except:
             try:
                 return self.getRandomValue(category, field)
@@ -238,6 +259,7 @@ class ModelWithAddin:
 
 
     def applyAddin(self, price):
+        start_time = time.time()
         # def getAddinFromFile():
         #     dfAddinFromFile = multiprocessing.Process(target=pandas.read_excel, args=(r'E:\MyProduct\Python\WB\MakePrint\Характеристики.xlsx',))
 
@@ -248,9 +270,18 @@ class ModelWithAddin:
         # dfCategoryPrint = pandas.DataFrame(pandas.read_excel(r'E:\MyProduct\Python\WB\MakePrint\cat.xlsx'))
         # data = []
         listCategory = self.dfCategoryPrint['Категория'].unique().tolist()
+        if 'книга' in self.maskFolderName:
+            stuff = 'Чехлы-книжки для телефонов'
 
+        else:
+            stuff = 'Чехлы для телефонов' 
         for pictures in listdir(self.pathToMask):
+            # start_time = time.time()
             printName = pictures[0:-4]
+            # for line in self.dfCategoryPrintDict:
+            #     if line['Принт'] == printName:
+            #         category = line['Категория']
+            #         categoryCode = line['Код категории']
             currentPictureCategoryList = self.dfCategoryPrint[self.dfCategoryPrint.Принт == printName]#['Категория'].values.tolist()
             for categoryData in currentPictureCategoryList.values:
                 category = categoryData[1]
@@ -283,12 +314,13 @@ class ModelWithAddin:
                             'Высота упаковки': 18.5,
                             'Ширина упаковки': 11,
                             'Глубина упаковки': 1.5,
+                            'Предмет': stuff,
                             'Медиафайлы': r'http://95.78.233.163:8001/wp-content/uploads/Готовые принты/Силикон/{}/{}'.format(self.maskFolderName, pictures)
                         }
-                
-
                 self.data.append(datapicture)
+                # print("--- %s seconds 1 ---" % (time.time() - start_time))
         countBarcods = len(self.data)
+        print("--- %s seconds 2 ---" % (time.time() - start_time))
         listBarcods = self.generate_bar_WB(countBarcods)
         for i, case in enumerate(self.data):
             self.data[i]['Баркод товара'] = listBarcods[i]

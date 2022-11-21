@@ -1,22 +1,24 @@
 import multiprocessing
 from classChangeSize import filterNomenclatures1CForChange, getNomenclaturesFromWB, changeSize
-import os
+import pandas
 
 
 class changerSize():
     def __init__(self) -> None:
         self.listNomenclatures = []
         self.tokenList = ['eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w',
-                    # 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM',
+                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM',
                     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y']
 
     def main(self):
         filterNom = filterNomenclatures1CForChange()
         filterNom.getListNomenclatures()
         # filterNom.filterNomenclatures('Чехол;силикон','книга')
-        filterNom.filterNomenclatures('Чехол;силикон')
+        filterNom.filterNomenclatures('книга')
         # self.listNomenclatures = filterNom.getNom()
         listNomenclatures= filterNom.getNom()
+        df = pandas.DataFrame(listNomenclatures)
+        df.to_excel(r'F:\tmp.xlsx')
         for token in self.tokenList:
             pool = multiprocessing.Pool()
             # self.listNomenclatures = listNomenclatures
@@ -39,7 +41,7 @@ class changerSize():
         if getNom.cardVendorCode != '':
             nomenclature = getNom.getNomenclature()
             if type(nomenclature) != None:
-                change = changeSize(nomenclature, token, (18.5,12,1.4),True)
+                change = changeSize(nomenclature, token, (12,20,2),True, 'Защитное стекло')
                 change.changeSize()
             else:
                 print('1')
