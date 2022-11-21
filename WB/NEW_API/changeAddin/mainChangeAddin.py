@@ -444,7 +444,6 @@ class AddinChanger():
                             {'Страна производства': 'Китай'},
                             {'Наименование': self.getName(category, caseName, model)},
                             {'Предмет':stuff},
-                            {'Предмет': stuff},
                             {'Описание': self.getDescription(category, caseName, compatibility)},
                             {'Высота упаковки': 18.5},
                             {'Ширина упаковки': 12},

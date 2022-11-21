@@ -14,7 +14,7 @@ class changerSize():
         filterNom = filterNomenclatures1CForChange()
         filterNom.getListNomenclatures()
         # filterNom.filterNomenclatures('Чехол;силикон','книга')
-        filterNom.filterNomenclatures('книга')
+        filterNom.filterNomenclatures('Чехол')
         # self.listNomenclatures = filterNom.getNom()
         listNomenclatures= filterNom.getNom()
         df = pandas.DataFrame(listNomenclatures)
@@ -41,7 +41,7 @@ class changerSize():
         if getNom.cardVendorCode != '':
             nomenclature = getNom.getNomenclature()
             if type(nomenclature) != None:
-                change = changeSize(nomenclature, token, (12,20,2),True, 'Защитное стекло')
+                change = changeSize(nomenclature, token, (20,15,2),True)
                 change.changeSize()
             else:
                 print('1')

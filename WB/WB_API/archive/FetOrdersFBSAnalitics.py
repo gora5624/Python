@@ -95,8 +95,8 @@ def get_orders(Token, mode, days=3):
             'Номер заказа':line['orderId'],
             'ИП': ip}
         datatmp2 = {
-            'Номенклатура': line['Номенклатура'],
-            # 'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
+            # 'Номенклатура': line['Номенклатура'],
+            'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
             'Дата': date,
             'Время': time,
             'Количество': 1,
