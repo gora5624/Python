@@ -1,5 +1,4 @@
 import multiprocessing
-from re import L
 import sys
 from os import listdir
 from os.path import join as joinPath, isdir, isfile, abspath, exists
