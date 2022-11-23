@@ -1,6 +1,6 @@
 import multiprocessing
 from classChangeSize import filterNomenclatures1CForChange, getNomenclaturesFromWB, changeSize
-import os
+import pandas
 
 
 class changerSize():
@@ -17,6 +17,8 @@ class changerSize():
         filterNom.filterNomenclatures()
         # self.listNomenclatures = filterNom.getNom()
         listNomenclatures= filterNom.getNom()
+        df = pandas.DataFrame(listNomenclatures)
+        df.to_excel(r'F:\tmp.xlsx')
         for token in self.tokenList:
             pool = multiprocessing.Pool()
             # self.listNomenclatures = listNomenclatures

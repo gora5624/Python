@@ -77,7 +77,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         pdCategoryPrint = pandas.DataFrame(pandas.read_excel(self.pathToCategoryPrint))
         pdBookAddin = pandas.DataFrame(pandas.read_excel(self.pathToBookAddin))
         pdSilsiconCLRAddin.to_csv(self.pathToSiliconCLRAddin.replace('xlsx','txt'),index=None,sep='\t')
-        pdPlasticAddin.to_csv(self.pathToPlasticAddin.replace('xlsx','txt'),index=None,sep='\t')
+        pdPlasticAddin.to_csv(self.pathToSiliconCLRAddin.replace('xlsx','txt'),index=None,sep='\t')
         pdSilsiconMTAddin.to_csv(self.pathToSiliconMTAddin.replace('xlsx','txt'),index=None,sep='\t')
         pdBookAddin.to_csv(self.pathToBookAddin.replace('xlsx','txt'),index=None,sep='\t')
         pdCardhonlderAddin.to_csv(self.pathToCardhonlderAddin.replace('xlsx','txt'),index=None,sep='\t')
@@ -379,10 +379,18 @@ class mameBookPrint(QtWidgets.QMainWindow):
         addImage = self.ui.AddPhotoSelector.currentText()
         if self.listModelForExcel == []:
             self.btnApplyAddin(True)
+        procList = []
+        # for item in self.listModelForExcel:
+        #     p = multiprocessing.Process(target=CreateExcelForFolder, args=(item, addImage, ))
+        #     p.start()
+        #     procList.append(p)
+        # for p in procList:
+        #     p.join()
+        pool = multiprocessing.Pool()
         for item in self.listModelForExcel:
-            p = multiprocessing.Process(target=CreateExcelForFolder, args=(item, addImage, ))
-            p.start()
-            p.join()
+            pool.apply_async(CreateExcelForFolder, args=(item, addImage, ))
+        pool.close()
+        pool.join()
         self.updeteListFile()
 
 
