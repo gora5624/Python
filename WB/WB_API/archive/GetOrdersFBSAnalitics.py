@@ -84,7 +84,10 @@ def get_orders(Token, mode, days=3):
             ip = 'Самвел'
         else:
             ip = 'хз'
-
+        try:
+            barcode = int(line['barcode']) if line['barcode'] != '' else ''
+        except:
+            barcode = ''
         datatmp = {
             'Номенклатура': line['Номенклатура'],
             # 'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
@@ -96,7 +99,7 @@ def get_orders(Token, mode, days=3):
             'ИП': ip}
         datatmp2 = {
             # 'Номенклатура': line['Номенклатура'],
-            'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
+            'Баркод': barcode,
             'Дата': date,
             'Время': time,
             'Количество': 1,
@@ -185,7 +188,10 @@ def get_ordersAll(days=3):
             ip = 'Самвел'
         else:
             ip = 'хз'
-
+        try:
+            barcode=  int(line['barcode']) if line['barcode'] != '' else ''
+        except:
+            barcode = ''
         datatmp = {
             'Номенклатура': line['Номенклатура'],
             # 'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
@@ -197,7 +203,7 @@ def get_ordersAll(days=3):
             'ИП': ip}
         datatmp2 = {
             # 'Номенклатура': line['Номенклатура'],
-            'Баркод': int(line['barcode']) if line['barcode'] != '' else '',
+            'Баркод': barcode,
             'Дата': date,
             'Время': time,
             'Количество': 1,

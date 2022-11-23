@@ -14,7 +14,7 @@ class changerSize():
         filterNom = filterNomenclatures1CForChange()
         filterNom.getListNomenclatures()
         # filterNom.filterNomenclatures('Чехол;силикон','книга')
-        filterNom.filterNomenclatures('Чехол')
+        filterNom.filterNomenclatures()
         # self.listNomenclatures = filterNom.getNom()
         listNomenclatures= filterNom.getNom()
         for token in self.tokenList:
