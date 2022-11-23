@@ -364,7 +364,11 @@ class AddinChanger():
             'Декоративные элементы':[dekor],
             'Назначение подарка':reasonGift,
             'Любимые герои':[heroes],
+<<<<<<< HEAD
             'Совместимость' : line['Модель'].split(';')
+=======
+            # 'Совместимость' : ['Vivo Y16', 'Y16', "Виво У16", "У16",'Y 16']# line['Модель'].split(';')
+>>>>>>> 804ca08eab5ff984b51efb061473c30430071345
         }
         
 
@@ -414,9 +418,15 @@ class AddinChanger():
                 stuff = 'Чехлы-книжки для телефонов'
             else:
                 stuff = 'Чехлы для телефонов'
+<<<<<<< HEAD
             compatibility = addChar['Совместимость']
             model = addChar['Совместимость'][0:3]
             fabric = addChar['Совместимость'][0].split(' ')[0]
+=======
+            compatibility = []# addChar['Совместимость']
+            model = []# addChar['Совместимость'][0:3]
+            fabric = []# addChar['Совместимость'][0].split(' ')[0]
+>>>>>>> 804ca08eab5ff984b51efb061473c30430071345
             # if 'Tecno_Camon_19_Neo_BP_CCM_CLR_ART_PRNT_1160' == card['vendorCode']:
             #     print('i')
             if 'книга' in caseName:
@@ -428,23 +438,23 @@ class AddinChanger():
             card['characteristics'] =[
                             {'Рисунок': addChar['Рисунок']},
                             {'Цвет': addChar['Цвет']},
-                            {'Тип чехлов': self.getRandomValue(category, 'Тип чехлов', caseName)},
+                            {'Тип чехлов': ['бампер','накладка','силиновый']},# self.getRandomValue(category, 'Тип чехлов', caseName)},
                             {'Повод': addChar['Повод']},
                             {'Особенности чехла': self.getRandomValue(category, 'Особенности чехла', caseName)},
-                            {'Комплектация': [self.getEquipmentCase(category, caseName, model)]},
-                            {'Модель': model},
+                            {'Комплектация': ['Чехол для телефона']},#[self.getEquipmentCase(category, caseName, model)]},
+                            {'Модель': []},#model},
                             {'Вид застежки': self.getRandomValue(category, 'Вид застежки', caseName)},
                             {'Декоративные элементы': addChar['Декоративные элементы']},
-                            {'Совместимость': compatibility},
+                            {'Совместимость': []},# compatibility},
                             {'Назначение подарка': addChar['Назначение подарка']},
                             {'Любимые герои': addChar['Любимые герои']},
                             {'Материал изделия': self.getRandomValue(category, 'Материал изделия', caseName)},
-                            {'Производитель телефона': [fabric]},
+                            {'Производитель телефона': []},
                             {'Бренд': 'Mobi711'},
-                            {'Страна производства': 'Китай'},
-                            {'Наименование': self.getName(category, caseName, model)},
+                            {'Страна производства': 'Россия'},
+                            {'Наименование': 'Чехол для телефона'},# self.getName(category, caseName, model)},
                             {'Предмет':stuff},
-                            {'Описание': self.getDescription(category, caseName, compatibility)},
+                            {'Описание': 'Чехол для телефона силиконовый'},# self.getDescription(category, caseName, compatibility)},
                             {'Высота упаковки': 18.5},
                             {'Ширина упаковки': 12},
                             {'Длина упаковки': 1.4}
@@ -551,7 +561,11 @@ if __name__=='__main__':
     # path = r'E:\Downloads\camon_19_neo.xlsx' # sys.argv[2]
     # changer = AddinChanger(ip, path)
     # changer.cangeCardsNumenclatures()
+<<<<<<< HEAD
     for item in [('Абраамян', r'F:\Downloads\report_2022_11_1\v25.xlsx')]:
+=======
+    for item in [('Самвел', r'E:\Downloads\report_2022_11_23\tmp.xlsx')]:
+>>>>>>> 804ca08eab5ff984b51efb061473c30430071345
         ip = item[0]
         path = item[1]
         changer = AddinChanger(ip, path)

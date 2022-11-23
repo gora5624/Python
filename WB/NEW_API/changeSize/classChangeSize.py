@@ -14,8 +14,10 @@ class filterNomenclatures1CForChange():
         self.listNomenclaturesFrom1CDF = pandas.DataFrame(pandas.read_table(self.pathToNomenclaturesListFrom1C, sep='\t'))
 
     
-    def filterNomenclatures(self, wordsForSearch, wordsForFilter='', delimiter=';'):
-        listWordsForSearch = wordsForSearch.split(delimiter)
+    def filterNomenclatures(self, wordsForSearch="", wordsForFilter='', delimiter=';'):
+        listWordsForSearch = []
+        if wordsForSearch!='':
+            listWordsForSearch = wordsForSearch.split(delimiter)
         if wordsForFilter != '':
             listWordsForFilter= wordsForFilter.split(delimiter)
         self.listNomenclaturesFromChangeSizeDF = self.listNomenclaturesFrom1CDF
