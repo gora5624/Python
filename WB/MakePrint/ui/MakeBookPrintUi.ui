@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>4</number>
    </property>
    <widget class="QWidget" name="tabBook">
     <attribute name="title">
@@ -294,6 +294,19 @@
      </property>
      <property name="text">
       <string>Симулировать натяжку</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="CreateSiliconImageTop">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>190</y>
+       <width>81</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Создать топ</string>
      </property>
     </widget>
    </widget>

@@ -364,7 +364,7 @@ class AddinChanger():
             'Декоративные элементы':[dekor],
             'Назначение подарка':reasonGift,
             'Любимые герои':[heroes],
-            # 'Совместимость' : line['Модель'].split(';')
+            'Совместимость' : line['Модель'].split(';')
         }
         
 
@@ -414,9 +414,9 @@ class AddinChanger():
                 stuff = 'Чехлы-книжки для телефонов'
             else:
                 stuff = 'Чехлы для телефонов'
-            # compatibility = addChar['Совместимость']
-            # model = addChar['Совместимость'][0:3]
-            # fabric = addChar['Совместимость'][0].split(' ')[0]
+            compatibility = addChar['Совместимость']
+            model = addChar['Совместимость'][0:3]
+            fabric = addChar['Совместимость'][0].split(' ')[0]
             # if 'Tecno_Camon_19_Neo_BP_CCM_CLR_ART_PRNT_1160' == card['vendorCode']:
             #     print('i')
             if 'книга' in caseName:
@@ -551,7 +551,7 @@ if __name__=='__main__':
     # path = r'E:\Downloads\camon_19_neo.xlsx' # sys.argv[2]
     # changer = AddinChanger(ip, path)
     # changer.cangeCardsNumenclatures()
-    for item in [('Караханян', r'E:\Downloads\report_2022_11_8\tmp.xlsx')]:
+    for item in [('Абраамян', r'F:\Downloads\report_2022_11_1\v25.xlsx')]:
         ip = item[0]
         path = item[1]
         changer = AddinChanger(ip, path)
