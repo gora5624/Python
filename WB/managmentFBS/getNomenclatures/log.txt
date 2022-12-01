@@ -1,0 +1,36 @@
+<html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
+
+<html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
+
+<html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
+
+<html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
+
+{"data":null,"error":true,"errorText":"¬нутренн€€ ошибка","additionalErrors":{"dial tcp4 10.37.56.25:80: connect: connection refused":"None"}}
+{"data":null,"error":true,"errorText":"внутренн€€ ошибка сервера.","additionalErrors":"внутренн€€ ошибка сервера."}
+{"data":null,"error":true,"errorText":"внутренн€€ ошибка сервера.","additionalErrors":"внутренн€€ ошибка сервера."}
+{"data":null,"error":true,"errorText":"¬нутренн€€ ошибка","additionalErrors":{"dial tcp4 10.36.50.94:80: i/o timeout":"None"}}

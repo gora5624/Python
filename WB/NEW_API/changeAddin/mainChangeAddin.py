@@ -109,9 +109,10 @@ class AddinChanger():
 
     def sortNomenclatures(self):
         # self.barcodeForChange = self.dfBarcod[self.dfBarcod['Характеристика'].str.contains("Принт", na = False)]['Штрихкод'].values.tolist()
-        self.barcodeForChange = self.dfBarcod[self.dfBarcod['Характеристика'].str.contains("Принт", na = False)]
-        self.barcodeForChange = self.barcodeForChange[self.barcodeForChange['Номенклатура'].str.contains("силикон", na = False)]
-        self.barcodeForChange = self.barcodeForChange[self.barcodeForChange['Характеристика'] != '(Принт 0)']
+        # self.barcodeForChange = self.dfBarcod[self.dfBarcod['Характеристика'].str.contains("Принт", na = False)]
+        # self.barcodeForChange = self.barcodeForChange[self.barcodeForChange['Номенклатура'].str.contains("силикон", na = False)]
+        # self.barcodeForChange = self.barcodeForChange[self.barcodeForChange['Характеристика'] != '(Принт 0)']
+        self.barcodeForChange = self.dfBarcod
         self.dfNomenclatures['Баркод'] = self.dfNomenclatures['Баркод'].fillna(0.0).apply(numpy.int64)
         # self.listForChange = self.dfNomenclatures[self.dfNomenclatures['Баркод'].isin(self.barcodeForChange)]
         self.listForChange = pandas.merge(self.dfNomenclatures, self.barcodeForChange, how='inner',left_on='Баркод',right_on='Штрихкод')
@@ -414,9 +415,9 @@ class AddinChanger():
                 stuff = 'Чехлы-книжки для телефонов'
             else:
                 stuff = 'Чехлы для телефонов'
-            compatibility = []# addChar['Совместимость']
-            model = []# addChar['Совместимость'][0:3]
-            fabric = []# addChar['Совместимость'][0].split(' ')[0]
+            # compatibility = []# addChar['Совместимость']
+            # model = []# addChar['Совместимость'][0:3]
+            # fabric = []# addChar['Совместимость'][0].split(' ')[0]
             # if 'Tecno_Camon_19_Neo_BP_CCM_CLR_ART_PRNT_1160' == card['vendorCode']:
             #     print('i')
             if 'книга' in caseName:
@@ -428,23 +429,23 @@ class AddinChanger():
             card['characteristics'] =[
                             {'Рисунок': addChar['Рисунок']},
                             {'Цвет': addChar['Цвет']},
-                            {'Тип чехлов': ['бампер','накладка','силиновый']},# self.getRandomValue(category, 'Тип чехлов', caseName)},
+                            {'Тип чехлов': self.getRandomValue(category, 'Тип чехлов', caseName)},
                             {'Повод': addChar['Повод']},
                             {'Особенности чехла': self.getRandomValue(category, 'Особенности чехла', caseName)},
-                            {'Комплектация': ['Чехол для телефона']},#[self.getEquipmentCase(category, caseName, model)]},
-                            {'Модель': []},#model},
+                            {'Комплектация': [self.getEquipmentCase(category, caseName, model)]},
+                            {'Модель': model},
                             {'Вид застежки': self.getRandomValue(category, 'Вид застежки', caseName)},
                             {'Декоративные элементы': addChar['Декоративные элементы']},
-                            {'Совместимость': []},# compatibility},
+                            {'Совместимость': compatibility},
                             {'Назначение подарка': addChar['Назначение подарка']},
                             {'Любимые герои': addChar['Любимые герои']},
                             {'Материал изделия': self.getRandomValue(category, 'Материал изделия', caseName)},
                             {'Производитель телефона': []},
                             {'Бренд': 'Mobi711'},
-                            {'Страна производства': 'Россия'},
-                            {'Наименование': 'Чехол для телефона'},# self.getName(category, caseName, model)},
+                            {'Страна производства': 'Китай'},
+                            {'Наименование': self.getName(category, caseName, model)},
                             {'Предмет':stuff},
-                            {'Описание': 'Чехол для телефона силиконовый'},# self.getDescription(category, caseName, compatibility)},
+                            {'Описание': self.getDescription(category, caseName, compatibility)},
                             {'Высота упаковки': 18.5},
                             {'Ширина упаковки': 12},
                             {'Длина упаковки': 1.4}
@@ -551,7 +552,7 @@ if __name__=='__main__':
     # path = r'E:\Downloads\camon_19_neo.xlsx' # sys.argv[2]
     # changer = AddinChanger(ip, path)
     # changer.cangeCardsNumenclatures()
-    for item in [('Самвел', r'E:\Downloads\report_2022_11_23\tmp.xlsx')]:
+    for item in [('Караханян', r'E:\Downloads\Караханян\tmp.xlsx')]:
         ip = item[0]
         path = item[1]
         changer = AddinChanger(ip, path)
