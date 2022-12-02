@@ -191,6 +191,24 @@ class ModelWithAddin:
                 vendorCode3 += '_HLD'
             return '_'.join([vendorCode1, vendorCode3,#.join([vendorCode1, vendorCode2, vendorCode3,
                         categoryCode, 'PRNT',printName.replace('(Принт ','').replace(')','')])
+        elif 'книга' in self.maskFolderName:
+            vendorCode1 = self.maskFolderName.replace('Чехол книга','').split('черный')[0].strip().replace(' ','_') + '_BK'
+            # if 'с зак.кам.' in self.maskFolderName:
+            #     vendorCode2 = 'CCM'
+            # elif 'с отк.кам.' in self.maskFolderName:
+            #     vendorCode2 = 'OCM'
+            # else:
+            #     vendorCode2 = 'UCM'
+            for color, codeColor in self.siliconCaseColorDict.items():
+                if color == colorCase:
+                    vendorCode3 = codeColor
+                    break
+            else:
+                vendorCode3 = 'UNKNOW_COLOR'
+            if 'под карту' in self.maskFolderName:
+                vendorCode3 += '_HLD'
+            return '_'.join([vendorCode1, vendorCode3,#.join([vendorCode1, vendorCode2, vendorCode3,
+                        categoryCode, 'PRNT',printName.replace('(Принт ','').replace(')','')])
 
 
     def getDescription(self, category):

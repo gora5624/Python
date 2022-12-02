@@ -26,4 +26,4 @@ pathToPrintImageFolderAllSil = r'{}:\Принты со светом все\Вс�
 pathToPrintImageFolderWithOutBackSil = r'{}:\Принты со светом все\Без фона'.format(workDisk)
 # pathToPrintImageFolderAllSil = r'F:\Картинки китай\натянуть временно'
 # pathToPrintImageFolderWithOutBackSil = r'F:\Картинки китай\натянуть временно'
-
+pathToMaskFolderSiliconTop = r'{}:\топ 300'.format(workDisk)

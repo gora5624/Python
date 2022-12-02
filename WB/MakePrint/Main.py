@@ -8,12 +8,12 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QApplication
 from my_mod.my_lib import file_exists
 # импортируем интерфейс
-from ui.MakeBookPrintUi import Ui_Form
+from ui.ui_MakeBookPrintUi import Ui_Form
 # импортируем дополнительные скрипты
 from Moduls.makeImageBookWithNameModel import makeImageBookWithNameModel
 from Moduls.AddSkriptForMakeBookImage import createExcel, deleteImage, copyImage
 from Moduls.makeImageSilicon import createAllSiliconImage, fakecreateAllSiliconImage
-from Folders import pathToDoneBookImageWithName, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon
+from Folders import pathToDoneBookImageWithName, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToMaskFolderSiliconTop
 from Moduls.AddSkriptForMakeSiliconImage import createExcelSilicon, markerForAllModel, copyImage, chekImage, siliconCaseColorDict, CreateExcelForFolder
 from Moduls.GetCardAsincio import getListCard
 # импортируем дополнительные классы
@@ -41,6 +41,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.tabWidget.tabBarClicked.connect(self.updeteListFile)
         self.ui.ChekMask.clicked.connect(self.fillSiliconMaskList)
         self.ui.CreateSiliconImage.clicked.connect(self.btnCreateSiliconImage)
+        self.ui.CreateSiliconImageTop.clicked.connect(self.btnCreateSiliconImageTop)
         self.ui.CreateExcelForSilicon.clicked.connect(self.btnCreateExcelForSilicon)
         self.ui.ChekImage.clicked.connect(self.btnChekImage)
         self.ui.ChekImageAll.clicked.connect(self.ChekImageAll)
@@ -274,7 +275,17 @@ class mameBookPrint(QtWidgets.QMainWindow):
         else:
             createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode)
         self.updateModelList()
-      
+
+
+    def btnCreateSiliconImageTop(self):
+        addImage = self.ui.AddPhotoSelector.currentText()
+        mode = 'all'
+        if self.ui.FakeModeChekBox.checkState() == 2:
+            fakecreateAllSiliconImage(pathToMaskFolderSiliconTop, mode)
+        else:
+            createAllSiliconImage(pathToMaskFolderSiliconTop,6, addImage, mode)
+        self.updateModelList()
+
 
     def btnApplyAddinFromFile(self):
         print('tst')
