@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>PrintHelper</class>
+ <widget class="QWidget" name="PrintHelper">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>313</height>
+    <height>420</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Print Helper</string>
   </property>
   <widget class="QPushButton" name="selectFileButt">
    <property name="geometry">
@@ -19,7 +19,7 @@
      <x>20</x>
      <y>20</y>
      <width>361</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
@@ -48,10 +48,10 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>10</x>
      <y>50</y>
-     <width>361</width>
-     <height>20</height>
+     <width>381</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -71,13 +71,19 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>80</y>
+     <y>90</y>
      <width>361</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>Большой принтер силикон</string>
+    <string>Большой принтер силикон (3*2)</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
    </property>
    <property name="flat">
     <bool>false</bool>
@@ -93,33 +99,33 @@
     </rect>
    </property>
    <property name="text">
-    <string>Средний принтер силикон</string>
+    <string>Средний принтер силикон (105*160)</string>
    </property>
   </widget>
   <widget class="QPushButton" name="smallButt">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>200</y>
-     <width>171</width>
+     <y>190</y>
+     <width>361</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>Силикон маленький</string>
+    <string>Силикон маленький (90*60)</string>
    </property>
   </widget>
   <widget class="QPushButton" name="smallButtPlastins">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>200</y>
-     <width>171</width>
+     <x>20</x>
+     <y>310</y>
+     <width>361</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>Планки маленкий</string>
+    <string>Планки маленкий (90*60)</string>
    </property>
   </widget>
   <widget class="QPushButton" name="smallButtBooks">
@@ -129,13 +135,13 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>260</y>
+     <y>250</y>
      <width>171</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>Книжки маленький</string>
+    <string>Книжки маленький (90*60)</string>
    </property>
   </widget>
   <widget class="QPushButton" name="smallButtCartholders">
@@ -144,16 +150,82 @@
    </property>
    <property name="geometry">
     <rect>
+     <x>20</x>
+     <y>360</y>
+     <width>361</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Картхолдеры маленький (90*60)</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="medButtBooks">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
      <x>210</x>
-     <y>260</y>
+     <y>250</y>
      <width>171</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>Картхолдеры маленький</string>
+    <string>Книжки средний (105*160)</string>
    </property>
   </widget>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>80</y>
+     <width>381</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Panel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Sunken</enum>
+   </property>
+   <property name="lineWidth">
+    <number>1</number>
+   </property>
+  </widget>
+  <widget class="QFrame" name="frame_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>240</y>
+     <width>381</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Panel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Sunken</enum>
+   </property>
+   <property name="midLineWidth">
+    <number>0</number>
+   </property>
+  </widget>
+  <zorder>frame_2</zorder>
+  <zorder>frame</zorder>
+  <zorder>selectFileButt</zorder>
+  <zorder>label</zorder>
+  <zorder>label_2</zorder>
+  <zorder>bigButt</zorder>
+  <zorder>medButt</zorder>
+  <zorder>smallButt</zorder>
+  <zorder>smallButtPlastins</zorder>
+  <zorder>smallButtBooks</zorder>
+  <zorder>smallButtCartholders</zorder>
+  <zorder>medButtBooks</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -365,11 +365,8 @@ class AddinChanger():
             'Декоративные элементы':[dekor],
             'Назначение подарка':reasonGift,
             'Любимые герои':[heroes],
-<<<<<<< HEAD
-            'Совместимость' : line['Модель'].split(';')
-=======
+            # 'Совместимость' : line['Модель'].split(';')
             # 'Совместимость' : ['Vivo Y16', 'Y16', "Виво У16", "У16",'Y 16']# line['Модель'].split(';')
->>>>>>> 804ca08eab5ff984b51efb061473c30430071345
         }
         
 
@@ -424,10 +421,6 @@ class AddinChanger():
             # fabric = []# addChar['Совместимость'][0].split(' ')[0]
             # if 'Tecno_Camon_19_Neo_BP_CCM_CLR_ART_PRNT_1160' == card['vendorCode']:
             #     print('i')
-            if 'книга' in caseName:
-                stuff = 'Чехлы-книжки для телефонов'
-            else:
-                stuff = 'Чехлы для телефонов'
             # if card['vendorCode'] == 'Realmi_C30_BP_CCM_CLR_FRT_PRNT_1333':
             #     print('i')
             card['characteristics'] =[
@@ -444,15 +437,15 @@ class AddinChanger():
                             {'Назначение подарка': addChar['Назначение подарка']},
                             {'Любимые герои': addChar['Любимые герои']},
                             {'Материал изделия': self.getRandomValue(category, 'Материал изделия', caseName)},
-                            {'Производитель телефона': []},
+                            {'Производитель телефона': fabric},
                             {'Бренд': 'Mobi711'},
                             {'Страна производства': 'Китай'},
                             {'Наименование': self.getName(category, caseName, model)},
                             {'Предмет':stuff},
-                            {'Описание': self.getDescription(category, caseName, compatibility)},
-                            {'Высота упаковки': 18.5},
-                            {'Ширина упаковки': 12},
-                            {'Длина упаковки': 1.4}
+                            {'Описание': self.getDescription(category, caseName, compatibility)}#,
+                            # {'Высота упаковки': 18.5},
+                            # {'Ширина упаковки': 12},
+                            # {'Длина упаковки': 1.4}
                         ]
             card
         return listCardForCanges

@@ -4,7 +4,7 @@ from os.path import join as joinpath , exists
 from os import listdir, remove, makedirs
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QApplication
-from ui.printHelperUI import Ui_Form
+from ui.ui_printHelperUI import Ui_PrintHelper
 # pyuic5 D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.ui -o D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.py
 pathToOrderFile = ''
 mode = ''
@@ -12,7 +12,7 @@ w = QtWidgets.QWidget
 class FBSStoks(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(FBSStoks, self).__init__(parent)
-        self.ui = Ui_Form()
+        self.ui = Ui_PrintHelper()
         self.ui.setupUi(self)
         self.ui.selectFileButt.clicked.connect(self.selectFile)
         self.ui.bigButt.clicked.connect(self.bigMode)
@@ -20,6 +20,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.smallButt.clicked.connect(self.smallMode)
         #self.ui.bigButt.clicked.connect(self.smallMode)
         self.ui.smallButtBooks.clicked.connect(self.smallBookMode)
+        self.ui.medButtBooks.clicked.connect(self.medBookMode)
         self.ui.smallButtPlastins.clicked.connect(self.smallPlastinMode)
         self.ui.smallButtCartholders.clicked.connect(self.smallCartholderMode)
 
@@ -62,6 +63,14 @@ class FBSStoks(QtWidgets.QMainWindow):
         mode = 'smallBookMode'
         self.saveModePrinter(mode)
         w.close(self)
+
+
+    def medBookMode(self):
+        global mode
+        mode = 'medBookMode'
+        self.saveModePrinter(mode)
+        w.close(self)
+    
 
     def smallPlastinMode(self):
         global mode
@@ -106,6 +115,7 @@ pathToFileConfigMed = joinpath(mainPath, 'configMed.txt')
 pathToFileConfigBig = joinpath(mainPath, 'configBig.txt')
 pathToFileConfigPlanks  = joinpath(mainPath, 'configPlank.txt')
 pathToFileConfigSmallBook = joinpath(mainPath, 'configSmallBook.txt')
+pathToFileConfigMedBook = joinpath(mainPath, 'configMedBook.txt')
 pathToFileConfigCartholder = joinpath(mainPath, 'configCartholder.txt')
 
 pathDebug = joinpath(mainPath, 'debug')
@@ -155,6 +165,11 @@ def applyConfig(mode):
             fileMode.close()
     elif mode == 'smallBookMode':
         pathToConfig = pathToFileConfigSmallBook
+        with open(pathToModeFile, 'w') as fileMode:
+            fileMode.write('book')
+            fileMode.close()
+    elif mode == 'medBookMode':
+        pathToConfig = pathToFileConfigMedBook
         with open(pathToModeFile, 'w') as fileMode:
             fileMode.write('book')
             fileMode.close()
@@ -219,6 +234,8 @@ def startChek(mode):
         pathToConfig = pathToFileConfigBig
     elif mode =='smallPlastinMode':
         pathToConfig = pathToFileConfigPlanks
+    elif mode =='medBookMode':
+        pathToConfig = pathToFileConfigMedBook
     elif mode == 'smallBookMode':
         pathToConfig = pathToFileConfigSmallBook
     errorsDirFlag = False
