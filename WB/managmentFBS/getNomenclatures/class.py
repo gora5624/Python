@@ -50,7 +50,7 @@ class nomenclaturesGetter():
                         "limit": 1000
                         },
                         "filter": {
-                        "textSearch": str(2044382352843),
+                        "textSearch": str(barcode),
                         "withPhoto": -1
                         },
                         "sort": {
