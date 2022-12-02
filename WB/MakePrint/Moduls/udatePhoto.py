@@ -9,13 +9,13 @@ def pushPhoto(line, token, requestUrl, countTry=0):
     if 'Артикул товара' in list(line.keys()):
         jsonRequest = {
             "vendorCode": line['Артикул товара'],
-            "data": []# line['Медиафайлы'].split(';')
+            "data": line['Медиафайлы'].split(';')
             }
         headersRequest = {'Authorization': '{}'.format(token)}
     else:
         jsonRequest = {
             "vendorCode": line['Артикул поставщика'],
-            "data": []# line['Медиафайлы'].split(';')
+            "data": line['Медиафайлы'].split(';')
             }
         headersRequest = {'Authorization': '{}'.format(token)}
     try:
@@ -68,8 +68,8 @@ def requestsVendorCode(vendoreCode):
 
 def main():
     print('work')
-    pathToFile = r'F:\залить фото\tmp.xlsx' # sys.argv[1:][0].replace('#', ' ')
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'#sys.argv[1:][1].replace('#', ' ')
+    pathToFile = sys.argv[1:][0].replace('#', ' ')
+    token = sys.argv[1:][1].replace('#', ' ')
     # pathToFile = r'F:\Для загрузки\Готовые принты\Силикон\Чехол iPhone 6 силикон с отк.кам. проз. под карту.xlsx'
     # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
     # pathToFile = sys.argv[1:][0].replace('#', ' ')
