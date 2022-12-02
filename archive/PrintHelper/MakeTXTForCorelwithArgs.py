@@ -380,9 +380,10 @@ def splitOrderTable(dataFromOrderFile, mode):
     data = []
     if dataFromOrderFile != None:
         for line in dataFromOrderFile:
-            orderNum = line['Номер задания'] if type(
-                line['Номер задания']) == str else str(line['Номер задания'])[0:-2]
-            if orderNum == '':
+            orderNum = line['Номер задания']
+            orderNum = orderNum if type(
+                orderNum) == str else str(orderNum)[0:-2]
+            if orderNum == '' and line['Размер'] == '':
                 with open(joinpath(pathToTables, nameTable.format(str(numTable))) + '.txt', 'w', encoding='ANSI') as file:
                     file.write('\n'.join(data))
                     file.close()
@@ -392,18 +393,19 @@ def splitOrderTable(dataFromOrderFile, mode):
                 continue
             X, Y = makeLocPrint(count)
             count += 1
-            printName = detectPtintFronName(line['Название'], mode)
-            size = detectSizeFromOrder(str(line['Размер'])[0:-2] if type(
-                line['Размер']) == float else line['Размер'], orderNum, str(numTable))
-            if size != None:
-                pathToFile = createpathToFile(printName, size)
-            else:
-                pathToFile = pathToBug
-            data.append(';'.join([
-                orderNum, pathToFile, X.replace('.', ','), Y.replace('.', ','), line['Название']]))
-            with open(joinpath(pathToTables, nameTable.format(str(numTable))) + '.txt', 'w', encoding='ANSI') as file:
-                file.write('\n'.join(data))
-                file.close()
+            if line['Название'] !='':
+                printName = detectPtintFronName(line['Название'], mode)
+                size = detectSizeFromOrder(str(line['Размер'])[0:-2] if type(
+                    line['Размер']) == float else line['Размер'], orderNum, str(numTable))
+                if size != None:
+                    pathToFile = createpathToFile(printName, size)
+                else:
+                    pathToFile = pathToBug
+                data.append(';'.join([
+                    orderNum, pathToFile, X.replace('.', ','), Y.replace('.', ','), line['Название']]))
+                with open(joinpath(pathToTables, nameTable.format(str(numTable))) + '.txt', 'w', encoding='ANSI') as file:
+                    file.write('\n'.join(data))
+                    file.close()
 
 
 def makeLocPrint(count):
