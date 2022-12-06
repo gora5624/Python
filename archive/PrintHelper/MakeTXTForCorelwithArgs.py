@@ -360,7 +360,7 @@ def detectPtintFronName(name, mode):
         else:
             # a = '(Принт' + name.lower().split(' (принт')[1].strip()
             # print(a)
-            return '(Принт ' + name.lower().split(' (принт')[1].strip()
+            return '(принт ' + name.lower().split(' (принт')[1].strip()
 
 
 def detectSizeFromOrder(orderSize, orderNum, table):
@@ -379,11 +379,11 @@ def createpathToFile(printNameAll, size):
         printName = printNameAll.split('(')[1].split(')')[0]
     elif '(' in printNameAll and ')' not in printNameAll:
         printName = printNameAll.split('(')[1]
-    printFileName = printName.replace('принт', 'print') + '.cdr'
+    printFileName = printName.replace('принт', 'print') + '.pdf'
     pathToFolder = dataWithSizePath[size]
     fullPath = joinpath(pathToFolder, printFileName)
     if not file_exists(fullPath):
-        printFileName = printFileName.replace('.cdr', '.pdf')
+        printFileName = printFileName.replace('.pdf', '.cdr')
         fullPath = joinpath(pathToFolder, printFileName)
     if not file_exists(fullPath):
         fullPath = pathToBug

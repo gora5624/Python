@@ -3,9 +3,9 @@ import multiprocessing
 import time
 
 
-class main():
+class Getter():
     def __init__(self) -> None:
-        self.periodGetNomenclatures = 12 # Часы
+        self.periodGetNomenclatures = 1 # Часы
         self.tokens = [
                     {
                         'IPName': 'Самвел',
@@ -22,24 +22,25 @@ class main():
                 ]
 
     def getNom(self):
-        for token in self.tokens:
-            self.getNomProcess(token)
+        while True:
+            listProc = []
+            for token in self.tokens:
+                p = multiprocessing.Process(target=self.getNomProcess, args=(token,))
+                p.start()
+            for p in listProc:
+                p.join()
+            time.sleep(self.periodGetNomenclatures*60*60)
+
 
 
     def getNomProcess(self,token):
-        while True:
-            getter = nomenclaturesGetter(token)
-            getter.getPiaceOfNom()
-            time.sleep(self.periodGetNomenclatures*60*60)
+        getter = nomenclaturesGetter(token)
+        getter.getPiaceOfNom()
+            # time.sleep(self.periodGetNomenclatures*60*60)
             # p = multiprocessing.Process(target=getter.getPiaceOfNom)
             # p.start()
-            # p.join()
-            # time.sleep(self.periodGetNomenclatures*60*60)
 
 
-
-
-def main():
-    getBarcodeList()
-    getnom()
-    saveFromFile()
+if __name__ == '__main__':
+    getter = Getter()
+    getter.getNom()

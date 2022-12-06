@@ -24,8 +24,9 @@ while True:
             break
         elif barcod == '':
             continue
-        nomenclaturesName = dfBarcodes[dfBarcodes.Штрихкод == int(barcod)]['Номенклатура'].values.tolist()
-        printName = dfBarcodes[dfBarcodes.Штрихкод == int(barcod)]['Характеристика'].values.tolist()
+        dfBarcodes['Штрихкод'] = dfBarcodes.Штрихкод.astype('string')
+        nomenclaturesName = dfBarcodes[dfBarcodes.Штрихкод == barcod]['Номенклатура'].values.tolist()
+        printName = dfBarcodes[dfBarcodes.Штрихкод == barcod]['Характеристика'].values.tolist()
         if len(nomenclaturesName) == 0:
             print('ШК не найден')
             continue
