@@ -9,13 +9,15 @@ def pushPhoto(line, token, requestUrl, countTry=0):
     if 'Артикул товара' in list(line.keys()):
         jsonRequest = {
             "vendorCode": line['Артикул товара'],
-            "data": line['Медиафайлы'].split(';')
+            # "data": line['Медиафайлы'].split(';')
+            "data": ['http://95.78.233.163:8001/wp-content/uploads/1.jpg']
             }
         headersRequest = {'Authorization': '{}'.format(token)}
     else:
         jsonRequest = {
             "vendorCode": line['Артикул поставщика'],
-            "data": line['Медиафайлы'].split(';')
+            "data": ['http://95.78.233.163:8001/wp-content/uploads/1.jpg']
+            #"data": line['Медиафайлы'].split(';')
             }
         headersRequest = {'Authorization': '{}'.format(token)}
     try:

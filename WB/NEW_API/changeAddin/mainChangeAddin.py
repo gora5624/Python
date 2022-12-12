@@ -160,7 +160,7 @@ class AddinChanger():
         countTry = 0
         while True and countTry < 100:
             try:
-                responce = requests.post(self.urlGetCards, json=jsonRequest, headers=headersRequest, timeout=60)
+                responce = requests.post(self.urlGetCards, json=jsonRequest, headers=headersRequest, timeout=120)
             except ConnectionError:
                 countTry+=1
                 continue
@@ -424,28 +424,28 @@ class AddinChanger():
             # if card['vendorCode'] == 'Realmi_C30_BP_CCM_CLR_FRT_PRNT_1333':
             #     print('i')
             card['characteristics'] =[
-                            {'Рисунок': addChar['Рисунок']},
-                            {'Цвет': addChar['Цвет']},
-                            {'Тип чехлов': self.getRandomValue(category, 'Тип чехлов', caseName)},
-                            {'Повод': addChar['Повод']},
-                            {'Особенности чехла': self.getRandomValue(category, 'Особенности чехла', caseName)},
-                            {'Комплектация': [self.getEquipmentCase(category, caseName, model)]},
-                            {'Модель': model},
-                            {'Вид застежки': self.getRandomValue(category, 'Вид застежки', caseName)},
-                            {'Декоративные элементы': addChar['Декоративные элементы']},
-                            {'Совместимость': compatibility},
-                            {'Назначение подарка': addChar['Назначение подарка']},
-                            {'Любимые герои': addChar['Любимые герои']},
-                            {'Материал изделия': self.getRandomValue(category, 'Материал изделия', caseName)},
-                            {'Производитель телефона': fabric},
-                            {'Бренд': 'Mobi711'},
-                            {'Страна производства': 'Китай'},
-                            {'Наименование': self.getName(category, caseName, model)},
+                            # {'Рисунок': addChar['Рисунок']},
+                            # {'Цвет': addChar['Цвет']},
+                            # {'Тип чехлов': self.getRandomValue(category, 'Тип чехлов', caseName)},
+                            # {'Повод': addChar['Повод']},
+                            # {'Особенности чехла': self.getRandomValue(category, 'Особенности чехла', caseName)},
+                            # {'Комплектация': []},# [self.getEquipmentCase(category, caseName, model)]},
+                            # {'Модель': []},#model},
+                            # {'Вид застежки': self.getRandomValue(category, 'Вид застежки', caseName)},
+                            # {'Декоративные элементы': addChar['Декоративные элементы']},
+                            # {'Совместимость': []},#compatibility},
+                            # {'Назначение подарка': addChar['Назначение подарка']},
+                            # {'Любимые герои': addChar['Любимые герои']},
+                            # {'Материал изделия': self.getRandomValue(category, 'Материал изделия', caseName)},
+                            # {'Производитель телефона': ''},# fabric},
+                            # {'Бренд': 'Mobi711'},
+                            # {'Страна производства': 'Китай'},
+                            # {'Наименование': 'Товар'},#self.getName(category, caseName, model)},
                             {'Предмет':stuff},
-                            {'Описание': self.getDescription(category, caseName, compatibility)}#,
-                            # {'Высота упаковки': 18.5},
-                            # {'Ширина упаковки': 12},
-                            # {'Длина упаковки': 1.4}
+                            {'Описание': self.getDescription(category, caseName, ['телефона'])},
+                            {'Высота упаковки': 18.5},
+                            {'Ширина упаковки': 12},
+                            {'Длина упаковки': 1.4}
                         ]
             card
         return listCardForCanges
@@ -458,7 +458,7 @@ class AddinChanger():
         
         while True and countTry < 10:
             try:
-                responce = requests.post(self.urlChangeCards, json=listChangedCardsForUploads, headers=headersRequest, timeout=20)
+                responce = requests.post(self.urlChangeCards, json=listChangedCardsForUploads, headers=headersRequest, timeout=60)
                 if responce.status_code == 200:
                     break
                 else:
@@ -466,7 +466,7 @@ class AddinChanger():
                     continue
             except ConnectionError:
                 time.sleep(5)
-                responce = requests.post(self.urlChangeCards, json=listChangedCardsForUploads, headers=headersRequest, timeout=20)
+                responce = requests.post(self.urlChangeCards, json=listChangedCardsForUploads, headers=headersRequest, timeout=60)
             except requests.exceptions.InvalidJSONError:
                 print('ValeuError')
                 pd = pandas.DataFrame(listChangedCardsForUploads)
@@ -549,7 +549,7 @@ if __name__=='__main__':
     # path = r'E:\Downloads\camon_19_neo.xlsx' # sys.argv[2]
     # changer = AddinChanger(ip, path)
     # changer.cangeCardsNumenclatures()
-    for item in [('Караханян', r'E:\Downloads\Караханян\tmp.xlsx')]:
+    for item in [('Караханян', r'E:\Downloads\report_2022_12_9.xlsx.XLSX')]:
         ip = item[0]
         path = item[1]
         changer = AddinChanger(ip, path)

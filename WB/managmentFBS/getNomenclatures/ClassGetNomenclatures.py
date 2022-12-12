@@ -147,8 +147,8 @@ class nomenclaturesGetter():
         df = pandas.merge(df, self.nomenclatures1CData, how='left', left_on='sku', right_on='Штрихкод')
         df = df.drop(columns=['Штрихкод','barcode'])
         if len(list(self.dataBase)) < 1000000:
-            df.to_excel(os.path.join(self.mainPath,'db_nom {}.xlsx'.format(self.ip)), index=False)
-        df.to_csv(os.path.join(self.mainPath,'db_nom {}.txt'.format(self.ip)), sep='\t', index=False)
+            df.to_excel(os.path.join(self.mainPath,'DB_nom {}.xlsx'.format(self.ip)), index=False)
+        df.to_csv(os.path.join(self.mainPath,'DB_nom {}.txt'.format(self.ip)), sep='\t', index=False)
         # else:
         #     df = pandas.DataFrame(self.dataBase)
         #     df['barcode'] = df['sku'].astype('string')
@@ -187,6 +187,8 @@ class cardGetter():
             if vendorCode not in self.listVendorCodeDone:
                 self.getNomProcess([vendorCode], i)
         df = pandas.DataFrame(self.DbCards)
+        df['sku'] = df['sku'].astype('string')
+        self.nomenclatures1CData['Штрихкод'] = self.nomenclatures1CData['Штрихкод'].astype('string')
         df = pandas.merge(df, self.nomenclatures1CData, how='left', left_on='sku', right_on='Штрихкод')
         df = df.drop(columns='Штрихкод')
         if len(self.DbCards) <1000000:
@@ -256,14 +258,14 @@ class cardGetter():
                 continue
         
 
-if __name__ == "__main__":
-    start_time = time.time()
-    b = {
-                        'IPName': 'Самвел',
-                        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
-                    }
-    a = cardGetter(r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\db_nom Самвел.txt', b)
-    a.getListVendorCode()
-    a.getNom()
+# if __name__ == "__main__":
+#     start_time = time.time()
+#     b = {
+#                         'IPName': 'Самвел',
+#                         'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
+#                     }
+#     a = cardGetter(r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\db_nom Самвел.txt', b)
+#     a.getListVendorCode()
+#     a.getNom()
 
-    print("--- %s seconds ---" % (time.time() - start_time))
+#     print("--- %s seconds ---" % (time.time() - start_time))
