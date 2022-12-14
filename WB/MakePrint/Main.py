@@ -55,6 +55,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.CreateDB.clicked.connect(self.crateDB)
         self.ui.makeCartholdersButt.clicked.connect(self.btnCreateCartholders)
         self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
+        self.tokenIvan = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
         self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
         self.tokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
         self.pathToSiliconCLRAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликонПроз.xlsx'
@@ -122,6 +123,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
                     token = self.tokenAb
                 elif mode =='Самвел':
                     token = self.tokenSam
+                elif mode =='Иван':
+                    token = self.tokenIvan
                 WBnomenclaturesCreater.uplaodImage(joinPath(pathToDoneFilesForUplaodsPhoto,file), token)
 
 
@@ -135,6 +138,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
             token = self.tokenAb
         elif mode =='Самвел':
             token = self.tokenSam
+        elif mode =='Иван':
+            token = self.tokenIvan
         WBnomenclaturesCreater.uplaodImage(joinPath(pathToDoneSiliconImageSilicon,fileName), token)
 
 

@@ -162,6 +162,7 @@ class Ui_Form(object):
         self.IPSelector.addItem("")
         self.IPSelector.addItem("")
         self.IPSelector.addItem("")
+        self.IPSelector.addItem("")
         self.FileSelector = QtWidgets.QComboBox(self.tab)
         self.FileSelector.setGeometry(QtCore.QRect(0, 290, 311, 22))
         self.FileSelector.setObjectName("FileSelector")
@@ -257,9 +258,10 @@ class Ui_Form(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Цена</p></body></html>"))
-        self.IPSelector.setItemText(0, _translate("Form", "Караханян"))
-        self.IPSelector.setItemText(1, _translate("Form", "Абраамян"))
-        self.IPSelector.setItemText(2, _translate("Form", "Самвел"))
+        self.IPSelector.setItemText(1, _translate("Form", "Караханян"))
+        self.IPSelector.setItemText(0, _translate("Form", "Иван"))
+        self.IPSelector.setItemText(2, _translate("Form", "Абраамян"))
+        self.IPSelector.setItemText(3, _translate("Form", "Самвел"))
         self.updateListModel.setText(_translate("Form", "Обновить список"))
         self.ForceUpdate.setText(_translate("Form", "Обновить принудительно"))
         self.ApplyAddinFromFile.setText(_translate("Form", "Выбрать файл со свойсвами"))
