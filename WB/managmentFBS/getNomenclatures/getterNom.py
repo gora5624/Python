@@ -26,47 +26,47 @@ class Getter():
                 ]
 
     def getNom(self):
-        #while True:
-        listProc = []
-        self.start_time = time.time()
-        for token in self.tokens:
-            p1 = multiprocessing.Process(target=self.getNomProcess, args=(token,))
-            p2 = multiprocessing.Process(target=self.getCardProcess, args=(token,))
-            p1.start()
-            p2.start()
-            listProc.append(p1)
-            listProc.append(p2)
-        for p in listProc:
-            p.join()
+        while True:
+            listProc = []
+            self.start_time = time.time()
+            for token in self.tokens:
+                p1 = multiprocessing.Process(target=self.getNomProcess, args=(token,))
+                p2 = multiprocessing.Process(target=self.getCardProcess, args=(token,))
+                p1.start()
+                p2.start()
+                listProc.append(p1)
+                listProc.append(p2)
+            for p in listProc:
+                p.join()
         
             #time.sleep(self.periodGetNomenclatures*60*60)
 
 
 
     def getNomProcess(self,token):
-        while True:
-            try:
-                self.start_timeGetNomProcess = time.time()
-                getter = nomenclaturesGetter(token)
-                getter.getPiaceOfNom()
-                time.sleep(self.periodGetNomenclatures*60*60)
-                print("--- %s getNomProcess seconds ---" % (time.time() - self.start_timeGetNomProcess))
-            except:
-                continue
+        # while True:
+        #     try:
+            self.start_timeGetNomProcess = time.time()
+            getter = nomenclaturesGetter(token)
+            getter.getPiaceOfNom()
+            time.sleep(self.periodGetNomenclatures*60*60)
+            print("--- %s getNomProcess seconds ---" % (time.time() - self.start_timeGetNomProcess))
+            # except:
+            #     continue
             # time.sleep(self.periodGetNomenclatures*60*60)
             # p = multiprocessing.Process(target=getter.getPiaceOfNom)
             # p.start()
 
 
     def getCardProcess(self, token):
-        while True:
-            try:
-                self.start_timeGetCardProcess = time.time()
-                getterCard = cardGetter(token)
-                getterCard.getNom()
-                print("--- %s getCardProcess seconds ---" % (time.time() - self.start_timeGetCardProcess))
-            except:
-                continue
+        # while True:
+        #     try:
+            self.start_timeGetCardProcess = time.time()
+            getterCard = cardGetter(token)
+            getterCard.getNom()
+            print("--- %s getCardProcess seconds ---" % (time.time() - self.start_timeGetCardProcess))
+            # except:
+            #     continue
 
 
 

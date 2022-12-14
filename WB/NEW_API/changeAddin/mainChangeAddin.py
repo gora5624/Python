@@ -119,6 +119,7 @@ class AddinChanger():
         self.listForChange = pandas.merge(self.listForChange, self.dfPrintAddin, how='inner',left_on='Характеристика',right_on='Принт')
         self.listForChange = pandas.merge(self.listForChange, self.dfCategories, how='inner',left_on='Принт',right_on='Принт')
         # self.listForChange = pandas.merge(self.listForChange, self.dfPrintAddin, how='left',left_on='Категория',right_on='Категория')
+        self.listForChange = self.dfNomenclatures
         self.listForChange.sort_values('Артикул поставщика',inplace=True)
         self.listForChange.fillna('')
         self.listForChangeDictTMP = self.listForChange.to_dict('records')
@@ -378,8 +379,8 @@ class AddinChanger():
                 line = self.listForChangeDict[card['vendorCode']]
             except KeyError:
                 continue
-            category = line['Категория']
-            caseName = line['Номенклатура']
+            # category = line['Категория']
+            # caseName = line['Номенклатура']
 
             # try: 
                 #category = self.listForChange[self.listForChange['Артикул поставщика'] == card['vendorCode']]['Категория'].values.tolist()[0]
@@ -411,11 +412,13 @@ class AddinChanger():
                 compatibility = model[0:3]
             if model != '':
                 fabric = model[0].split(' ')[0]
-            addChar = self.getCharForlistCardForCangesDict(card['vendorCode'])
-            if 'книга' in caseName:
-                stuff = 'Чехлы-книжки для телефонов'
-            else:
-                stuff = 'Чехлы для телефонов'
+            # addChar = self.getCharForlistCardForCangesDict(card['vendorCode'])
+            # if 'чехол' in caseName:
+            #     stuff = 'Чехлы для телефонов'
+            #     # stuff = 'Чехлы-книжки для телефонов'
+            # else:
+            #     stuff = 'Защитные стекла'
+            
             # compatibility = []# addChar['Совместимость']
             # model = []# addChar['Совместимость'][0:3]
             # fabric = []# addChar['Совместимость'][0].split(' ')[0]
@@ -423,6 +426,9 @@ class AddinChanger():
             #     print('i')
             # if card['vendorCode'] == 'Realmi_C30_BP_CCM_CLR_FRT_PRNT_1333':
             #     print('i')
+            for j in card['characteristics']:
+                if 'Предмет' in j:
+                    stuff = j['Предмет']
             card['characteristics'] =[
                             # {'Рисунок': addChar['Рисунок']},
                             # {'Цвет': addChar['Цвет']},
@@ -442,7 +448,7 @@ class AddinChanger():
                             # {'Страна производства': 'Китай'},
                             # {'Наименование': 'Товар'},#self.getName(category, caseName, model)},
                             {'Предмет':stuff},
-                            {'Описание': self.getDescription(category, caseName, ['телефона'])},
+                            {'Описание': 'Товар'},
                             {'Высота упаковки': 18.5},
                             {'Ширина упаковки': 12},
                             {'Длина упаковки': 1.4}
@@ -549,7 +555,7 @@ if __name__=='__main__':
     # path = r'E:\Downloads\camon_19_neo.xlsx' # sys.argv[2]
     # changer = AddinChanger(ip, path)
     # changer.cangeCardsNumenclatures()
-    for item in [('Караханян', r'E:\Downloads\report_2022_12_9.xlsx.XLSX')]:
+    for item in [('Абраамян', r'E:\Downloads\report_2022_12_13.xlsx.XLSX')]:
         ip = item[0]
         path = item[1]
         changer = AddinChanger(ip, path)

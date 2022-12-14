@@ -23,7 +23,7 @@ class nomenclaturesGetter():
             fileLog.close()
 
 
-    def getNomFromWB(self, updatedAt='',nmID='', timeout=5):
+    def getNomFromWB(self, updatedAt='',nmID='', timeout=20):
         dataCards = []
         if timeout> 300:
             return 0
@@ -213,11 +213,10 @@ class cardGetter():
                     timeout+=5
                     continue
                 for card in data:
-                    self.listVendorCodeDone.append(card['vendorCode'])
-                    try:
-                        self.listVendorCodeToGet.remove(card['vendorCode'])
-                    except ValueError:
-                        pass
+                    if card['vendorCode'] == 'iPhone_13_Pro_PRNT_CLR_CCM_DBL@1BP_CLR_DBL_PRNT_3080':
+                        print('1')
+                    if card['vendorCode'] == 'iPhone_13_Pro_PRNT_CLR_CCM_DBL@1BP_CLR_DBL_PRNT_3080':
+                        print('1')
                     dataNew = {
                         'imtID':card['imtID'],
                         'nmID':card['nmID'],
@@ -243,9 +242,14 @@ class cardGetter():
                                 dataNew.update({'sku':sku})
                                 self.DbCards.append(dataNew)
                         else:
-                            self.DbCards.append(dataNew)          
-                self.DbCards                                         
-                break
+                            self.DbCards.append(dataNew)      
+                    self.listVendorCodeDone.append(card['vendorCode'])     
+                    try:
+                        self.listVendorCodeToGet.remove(card['vendorCode'])                 
+                    except ValueError:
+                        pass 
+                self.DbCards           
+                break 
                 # self.DbCards
                 # df = pandas.DataFrame(self.DbCards)
                 # df.to_excel(r'E:\\tmp.xlsx', index=False)
