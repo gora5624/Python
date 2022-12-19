@@ -39,7 +39,7 @@
     <string>Добавить строку для фильтра</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboBox">
+  <widget class="QComboBox" name="filterType">
    <property name="geometry">
     <rect>
      <x>440</x>
@@ -50,22 +50,12 @@
    </property>
    <item>
     <property name="text">
-     <string>Все</string>
+     <string>И</string>
     </property>
    </item>
    <item>
     <property name="text">
-     <string>Караханян</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Абраамян</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Самвел</string>
+     <string>ИЛИ</string>
     </property>
    </item>
   </widget>
@@ -79,7 +69,92 @@
     </rect>
    </property>
    <property name="text">
-    <string>Выберите ИП</string>
+    <string>Тип фильтра</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="changePrice">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>470</y>
+     <width>121</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Изменить цены</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="changeQuan">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>470</y>
+     <width>131</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Изменить наличие</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="changeChar">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>470</y>
+     <width>151</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Изменить характеристики</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="readyToRecreateCards">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>440</y>
+     <width>161</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Подготовить для перезалива</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="toFromComboBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>410</y>
+     <width>161</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Из файла</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Из фильтра</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QPushButton" name="getLisCardsToFilterBtn">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>390</y>
+     <width>171</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Выгрузить товар по фильтру</string>
    </property>
   </widget>
  </widget>

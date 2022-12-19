@@ -244,10 +244,10 @@ class cardGetter():
                         else:
                             self.DbCards.append(dataNew)      
                     self.listVendorCodeDone.append(card['vendorCode'])     
-                    try:
-                        self.listVendorCodeToGet.remove(card['vendorCode'])                 
-                    except ValueError:
-                        pass 
+                    # try:
+                    #     self.listVendorCodeToGet.remove(card['vendorCode'])                 
+                    # except ValueError:
+                    #     pass 
                 self.DbCards           
                 break 
                 # self.DbCards

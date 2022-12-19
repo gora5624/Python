@@ -9,6 +9,7 @@ curTime = datetime.today().time().strftime(r"%H.%M.%S")
 TokenAbr = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
 TokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
 TokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
+TokenFed = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
 
 
 def get_orders(Token, mode, days=3):
@@ -82,6 +83,8 @@ def get_orders(Token, mode, days=3):
             ip = 'Манвел'
         elif line['storeId'] == 278784:
             ip = 'Самвел'
+        elif line['storeId'] == 652361:
+            ip = 'Федоров'
         else:
             ip = 'хз'
         try:
@@ -185,7 +188,9 @@ def get_ordersAll(days=3):
         elif line['storeId'] == 141069:
             ip = 'Манвел'
         elif line['storeId'] == 278784:
-            ip = 'Самвел'
+            ip = 'Самвел'        
+        elif line['storeId'] == 652361:
+            ip = 'Федоров'
         else:
             ip = 'хз'
         try:
@@ -224,7 +229,7 @@ def get_ordersAll(days=3):
 
 def getMode():
     try:
-        a = int(input('Введите режим работы: "0" по всем ИП, "1" - Караханян, "2" - Абраамян: , "3" - Самвел: '))
+        a = int(input('Введите режим работы: "0" по всем ИП, "1" - Караханян, "2" - Абраамян: , "3" - Самвел, "4" - Федоров: '))
     except ValueError:
         print('По умолчанию 0.')
         a = 0
@@ -234,6 +239,8 @@ def getMode():
         return 2
     elif a == 3:
         return 3
+    elif a == 4:
+        return 4
     elif a == 0:
         return 0
     else:
@@ -250,8 +257,10 @@ if __name__ == '__main__':
             token = TokenAbr
         elif mode == 3:
             token = TokenSam
+        elif mode == 4:
+            token = TokenFed
         elif mode == 0:
-            token = [TokenKar, TokenAbr, TokenSam]
+            token = [TokenKar, TokenAbr, TokenSam, TokenFed]
         else:
             print("Введён некорректный режим, установлен режим Караханян")
             token = TokenKar
