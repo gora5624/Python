@@ -171,8 +171,10 @@ class ModelWithAddin:
                 vendorCode3 = 'UNKNOW_COLOR'
             if 'под карту' in self.maskFolderName:
                 vendorCode3 += '_HLD'
+            # return '_'.join([vendorCode1, vendorCode3,#.join([vendorCode1, vendorCode2, vendorCode3,
+            #             categoryCode, 'PRNT',printName.replace('(Принт ','').replace(')','')])
             return '_'.join([vendorCode1, vendorCode3,#.join([vendorCode1, vendorCode2, vendorCode3,
-                        categoryCode, 'PRNT',printName.replace('(Принт ','').replace(')','')])
+                        'PRNT',printName.replace('(Принт ','').replace(')','')])
         elif 'пластик с' in self.maskFolderName:
             vendorCode1 = self.maskFolderName.replace('Чехол','').split('пластик')[0].strip().replace(' ','_') + '_BPP'
             # if 'с зак.кам.' in self.maskFolderName:
@@ -189,8 +191,10 @@ class ModelWithAddin:
                 vendorCode3 = 'UNKNOW_COLOR'
             if 'под карту' in self.maskFolderName:
                 vendorCode3 += '_HLD'
+            # return '_'.join([vendorCode1, vendorCode3,#.join([vendorCode1, vendorCode2, vendorCode3,
+            #             categoryCode, 'PRNT',printName.replace('(Принт ','').replace(')','')])
             return '_'.join([vendorCode1, vendorCode3,#.join([vendorCode1, vendorCode2, vendorCode3,
-                        categoryCode, 'PRNT',printName.replace('(Принт ','').replace(')','')])
+                        'PRNT',printName.replace('(Принт ','').replace(')','')])
         elif 'книга' in self.maskFolderName:
             vendorCode1 = self.maskFolderName.replace('Чехол книга','').split('черный')[0].strip().replace(' ','_') + '_BK'
             # if 'с зак.кам.' in self.maskFolderName:
@@ -207,9 +211,10 @@ class ModelWithAddin:
                 vendorCode3 = 'UNKNOW_COLOR'
             if 'под карту' in self.maskFolderName:
                 vendorCode3 += '_HLD'
+            # return '_'.join([vendorCode1, vendorCode3,#.join([vendorCode1, vendorCode2, vendorCode3,
+            #             categoryCode, 'PRNT',printName.replace('(Принт ','').replace(')','')])
             return '_'.join([vendorCode1, vendorCode3,#.join([vendorCode1, vendorCode2, vendorCode3,
-                        categoryCode, 'PRNT',printName.replace('(Принт ','').replace(')','')])
-
+                        'PRNT',printName.replace('(Принт ','').replace(')','')])
 
     def getDescription(self, category):
         for line in self.dfAddinFromFileDict:
@@ -296,46 +301,51 @@ class ModelWithAddin:
         for pictures in listdir(self.pathToMask):
             # start_time = time.time()
             printName = pictures[0:-4]
+            printNameRus = pictures.replace('.jpg', '')
             # for line in self.dfCategoryPrintDict:
             #     if line['Принт'] == printName:
             #         category = line['Категория']
             #         categoryCode = line['Код категории']
-            currentPictureCategoryList = self.dfCategoryPrint[self.dfCategoryPrint.Принт == printName]#['Категория'].values.tolist()
-            for categoryData in currentPictureCategoryList.values:
-                category = categoryData[1]
-                categoryCode = categoryData[2]
-                color = self.getColor()
-                datapicture = {
-                            'Номер карточки': listCategory.index(category),
-                            'Категория': category,
-                            'Цвет': color if (colorAddin:=self.getPrintAddin(printName, 'Цвет', category)) == 0 else colorAddin,# color,
-                            'Баркод товара': '',
-                            'Бренд': 'Mobi711',
-                            'Наименование': self.getName(category),
-                            'Цена': price,
-                            'Артикул товара': self.getVendorCode(color, categoryCode, printName),
-                            'Описание': self.getDescription(category),
-                            'Производитель телефона': self.modelAddin.split(' ')[0],
-                            'Назначение подарка': self.getPrintAddin(printName, 'Назначение подарка', category), # self.getRandomValue(category, 'Назначение подарка'),
-                            'Комплектация': self.getEquipmentCase(category),
-                            'Особенности чехла': self.getRandomValue(category, 'Особенности чехла'),
-                            'Вид застежки': self.getRandomValue(category, 'Вид застежки'),
-                            'Рисунок': self.getPrintAddin(printName, 'Рисунок', category), # self.getRandomValue(category, 'Рисунок'),
-                            'Любимые герои': self.getPrintAddin(printName, 'Любимые герои', category), # self.getRandomValue(category, 'Любимые герои'),
-                            'Совместимость': self.chekCountField('Совместимость',self.compatibility),
-                            'Тип чехлов': self.getRandomValue(category, 'Тип чехлов'),
-                            'Модель': self.chekCountField('Модель',self.modelAddin),
-                            'Повод': self.getPrintAddin(printName, 'Повод', category), # self.getRandomValue(category, 'Повод'),
-                            'Страна производства': 'Китай',
-                            'Декоративные элементы': self.getPrintAddin(printName, 'Декоративные элементы', category), # self.getRandomValue(category, 'Декоративные элементы'),
-                            'Материал изделия': self.getRandomValue(category, 'Материал изделия'),
-                            'Высота упаковки': 18.5,
-                            'Ширина упаковки': 11,
-                            'Глубина упаковки': 1.5,
-                            'Предмет': stuff,
-                            'Медиафайлы': r'http://95.78.233.163:8001/wp-content/uploads/Готовые принты/Силикон/{}/{}'.format(self.maskFolderName, pictures)
-                        }
-                self.data.append(datapicture)
+            currentPictureCategoryList = self.dfCategoryPrint[self.dfCategoryPrint.Принт == printName].values.tolist()
+            #for categoryData in currentPictureCategoryList.values:
+            # category = categoryData[1]
+            # categoryCode = categoryData[2]
+            category = currentPictureCategoryList[0][1]
+            categoryCode = currentPictureCategoryList[0][2]
+            color = self.getColor()
+            datapicture = {
+                        # 'Номер карточки': listCategory.index(category),
+                        'Номер карточки': 1,
+                        'Принт': printNameRus,
+                        'Категория': category,
+                        'Цвет': color if (colorAddin:=self.getPrintAddin(printName, 'Цвет', category)) == 0 else colorAddin,# color,
+                        'Баркод товара': '',
+                        'Бренд': 'Mobi711',
+                        'Наименование': self.getName(category),
+                        'Цена': price,
+                        'Артикул товара': self.getVendorCode(color, categoryCode, printName),
+                        'Описание': self.getDescription(category),
+                        'Производитель телефона': self.modelAddin.split(' ')[0],
+                        'Назначение подарка': self.getPrintAddin(printName, 'Назначение подарка', category), # self.getRandomValue(category, 'Назначение подарка'),
+                        'Комплектация': self.getEquipmentCase(category),
+                        'Особенности чехла': self.getRandomValue(category, 'Особенности чехла'),
+                        'Вид застежки': self.getRandomValue(category, 'Вид застежки'),
+                        'Рисунок': self.getPrintAddin(printName, 'Рисунок', category), # self.getRandomValue(category, 'Рисунок'),
+                        'Любимые герои': self.getPrintAddin(printName, 'Любимые герои', category), # self.getRandomValue(category, 'Любимые герои'),
+                        'Совместимость': self.chekCountField('Совместимость',self.compatibility),
+                        'Тип чехлов': self.getRandomValue(category, 'Тип чехлов'),
+                        'Модель': self.chekCountField('Модель',self.modelAddin),
+                        'Повод': self.getPrintAddin(printName, 'Повод', category), # self.getRandomValue(category, 'Повод'),
+                        'Страна производства': 'Китай',
+                        'Декоративные элементы': self.getPrintAddin(printName, 'Декоративные элементы', category), # self.getRandomValue(category, 'Декоративные элементы'),
+                        'Материал изделия': self.getRandomValue(category, 'Материал изделия'),
+                        'Высота упаковки': 18.5,
+                        'Ширина упаковки': 11,
+                        'Глубина упаковки': 1.5,
+                        'Предмет': stuff,
+                        'Медиафайлы': r'http://95.78.233.163:8001/wp-content/uploads/Готовые принты/Силикон/{}/{}'.format(self.maskFolderName, pictures)
+                    }
+            self.data.append(datapicture)
                 # print("--- %s seconds 1 ---" % (time.time() - start_time))
         countBarcods = len(self.data)
         print("--- %s seconds 2 ---" % (time.time() - start_time))

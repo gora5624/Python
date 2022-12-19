@@ -10,7 +10,6 @@ from copy import copy
 from shutil import copytree, ignore_patterns
 from Folders import pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToPrintImageFolderAllSil, pathToPrintImageFolderWithOutBackSil, pathToSecondImagesFolderSilicon, pathToUploadFolderLocal, pathToSecondImageUploadFolder
 
-
 maxCPUUse = 6
 reductionDict = {'закрытой камерой': 'зак.кам.',
                  'открытой камерой': 'отк.кам.',
@@ -94,7 +93,7 @@ def chekPath(path=str):
         makedirs(fullpathToDoneSiliconImage)
 
 
-def createSiliconImage(pathToMaskFolder, countCPU, addImage, mode):
+def createSiliconImage(pathToMaskFolder, countCPU, addImage, mode, topPrint):
     if "проз" in pathToMaskFolder.lower():
         pathToPrintFolder = pathToPrintImageFolderAllSil    
     elif 'книга' in pathToMaskFolder.lower():
@@ -109,7 +108,7 @@ def createSiliconImage(pathToMaskFolder, countCPU, addImage, mode):
             secondImage.save(joinPath(pathToSecondImageFolder, addImage),"JPEG",optimize=True, progressive=True, quality=70)
         except:
             print('Не удалось скопировать 2е фото для {}'.format(pathToMaskFolder))
-        pathToPrintFolder = pathToPrintImageFolderWithOutBackSil if mode != 'all' else pathToPrintImageFolderAllSil
+        pathToPrintFolder = pathToPrintImageFolderAllSil if mode != 'all' else pathToPrintImageFolderAllSil
     chekPath(pathToMaskFolder)
     pathToMask = joinPath(pathToMaskFolder,'mask.png')
     #xLeft, xRight, yTop, yBott = getSizeAndPos(imageMask)
@@ -128,7 +127,12 @@ def createSiliconImage(pathToMaskFolder, countCPU, addImage, mode):
         imageMaskN = copy(imageMask)
         imageBackN = copy(imageBack)
         for imagePrintName in listdir(pathToPrintFolder):
-            pool.apply_async(combineImage, args=(imageMaskN, imagePrintName, imageBackN, printsize, printPaste, pathToSave, pathToPrintFolder,))
+            if type(topPrint) != str:
+                namePrint = imagePrintName.replace('print','(Принт').replace('.png', ')')
+                if namePrint in topPrint['Принт'].values.tolist():            
+                    pool.apply_async(combineImage, args=(imageMaskN, imagePrintName, imageBackN, printsize, printPaste, pathToSave, pathToPrintFolder,))
+            else:
+                pool.apply_async(combineImage, args=(imageMaskN, imagePrintName, imageBackN, printsize, printPaste, pathToSave, pathToPrintFolder,))
             #combineImage(imageMask, imagePrint, imageBack, printsize, printPaste, pathToSave, pathToPrintFolder)
         imageMask.close()
         imageBack.close()
@@ -136,10 +140,16 @@ def createSiliconImage(pathToMaskFolder, countCPU, addImage, mode):
         pool.join()
     else:
         for imagePrintName in listdir(pathToPrintFolder):
-            combineImage(imageMask, imagePrintName, imageBack, printsize, printPaste, pathToSave, pathToPrintFolder)
+            if type(topPrint) != str:
+                namePrint = imagePrintName.replace('print','(Принт').replace('.png', ')')
+                if namePrint in topPrint['Принт'].values.tolist():
+                    combineImage(imageMask, imagePrintName, imageBack, printsize, printPaste, pathToSave, pathToPrintFolder)
+            else:
+                combineImage(imageMask, imagePrintName, imageBack, printsize, printPaste, pathToSave, pathToPrintFolder)
+            
 
 
-def fakeCreateSiliconImage(pathToMaskFolder, mode):
+def fakeCreateSiliconImage(pathToMaskFolder, mode, topPrint):
     if "проз" in pathToMaskFolder.lower():
         pathToPrintFolder = pathToPrintImageFolderAllSil
     elif 'книга' in pathToMaskFolder.lower():
@@ -154,7 +164,8 @@ def fakeCreateSiliconImage(pathToMaskFolder, mode):
         #     # secondImage.save(joinPath(pathToSecondImageFolder, addImage),"JPEG",optimize=True, progressive=True, quality=70)
         # except:
         #     print('Не удалось скопировать 2е фото для {}'.format(pathToMaskFolder))
-        pathToPrintFolder = pathToPrintImageFolderWithOutBackSil if mode != 'all' else pathToPrintImageFolderAllSil
+        # pathToPrintFolder = pathToPrintImageFolderWithOutBackSil if mode != 'all' else pathToPrintImageFolderAllSil
+        pathToPrintFolder = pathToPrintImageFolderAllSil if mode != 'all' else pathToPrintImageFolderAllSil
     chekPath(pathToMaskFolder)
     # pathToMask = joinPath(pathToMaskFolder,'mask.png')
     #xLeft, xRight, yTop, yBott = getSizeAndPos(imageMask)
@@ -178,7 +189,12 @@ def fakeCreateSiliconImage(pathToMaskFolder, mode):
     # pool.join()
     # else:
     for imagePrintName in listdir(pathToPrintFolder):
-        FakeCombineImage(imagePrintName, pathToSave)
+        if type(topPrint) != str:
+            namePrint = imagePrintName.replace('print','(Принт').replace('.png', ')')
+            if namePrint in topPrint['Принт'].values.tolist():
+                FakeCombineImage(imagePrintName, pathToSave)
+        else:
+            FakeCombineImage(imagePrintName, pathToSave)
 
 
 def FakeCombineImage(imagePrintName, pathToSave):
@@ -193,18 +209,18 @@ def copyImage():
     copytree(pathToSecondImagesFolderSilicon, pathToSecondImageUploadFolder + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
 
 
-def fakecreateAllSiliconImage(pathToSiliconMask, mode):
+def fakecreateAllSiliconImage(pathToSiliconMask, mode, topPrint=''):
     pool = multiprocessing.Pool()
     for model in listdir(pathToSiliconMask):
         pathToModel = joinPath(pathToSiliconMask, model)
         if isdir(pathToModel):
-            pool.apply_async(fakeCreateSiliconImage, args=(pathToModel, mode,))
+            pool.apply_async(fakeCreateSiliconImage, args=(pathToModel, mode, topPrint,))
     pool.close()
     pool.join()
     # copyImage()
 
 
-def createAllSiliconImage(pathToSiliconMask, maxCPUUse, addImage, mode):
+def createAllSiliconImage(pathToSiliconMask, maxCPUUse, addImage, mode, topPrint='',):
     start_time = time.time()
     #i = 0
     pool = multiprocessing.Pool(maxCPUUse)
@@ -214,7 +230,7 @@ def createAllSiliconImage(pathToSiliconMask, maxCPUUse, addImage, mode):
             # for color in listdir(pathToModel):
                 # if 'Thumbs.db' not in color:
                 # pathToColor = joinPath(pathToModel,color)
-                pool.apply_async(createSiliconImage, args=(pathToModel,1, addImage, mode))
+                pool.apply_async(createSiliconImage, args=(pathToModel,1, addImage, mode, topPrint,))
     pool.close()
     pool.join()
     #             p = multiprocessing.Process(target=createSiliconImage, args=(pathToColor,1))

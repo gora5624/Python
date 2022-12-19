@@ -13,7 +13,7 @@ from ui.ui_MakeBookPrintUi import Ui_Form
 from Moduls.makeImageBookWithNameModel import makeImageBookWithNameModel
 from Moduls.AddSkriptForMakeBookImage import createExcel, deleteImage, copyImage
 from Moduls.makeImageSilicon import createAllSiliconImage, fakecreateAllSiliconImage
-from Folders import pathToDoneBookImageWithName, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToMaskFolderSiliconTop
+from Folders import pathToDoneBookImageWithName, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToTopPrint
 from Moduls.AddSkriptForMakeSiliconImage import createExcelSilicon, markerForAllModel, copyImage, chekImage, siliconCaseColorDict, CreateExcelForFolder
 from Moduls.GetCardAsincio import getListCard
 # импортируем дополнительные классы
@@ -66,6 +66,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПринтов.xlsx'
         self.pathToCategoryPrint = r'E:\MyProduct\Python\WB\MakePrint\cat.xlsx'
         self.pathToAddinFile = ''
+        self.topPrint = ''
         self.updeteListFile()
         self.updateModelList()
 
@@ -285,10 +286,12 @@ class mameBookPrint(QtWidgets.QMainWindow):
     def btnCreateSiliconImageTop(self):
         addImage = self.ui.AddPhotoSelector.currentText()
         mode = 'all'
+        countPrint = self.ui.countPrints.value()
+        self.topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:countPrint]# ['Принт'].values.tolist()
         if self.ui.FakeModeChekBox.checkState() == 2:
-            fakecreateAllSiliconImage(pathToMaskFolderSiliconTop, mode)
+            fakecreateAllSiliconImage(pathToMaskFolderSilicon, mode, topPrint=self.topPrint)
         else:
-            createAllSiliconImage(pathToMaskFolderSiliconTop,6, addImage, mode)
+            createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode, topPrint=self.topPrint)
         self.updateModelList()
 
 
@@ -404,7 +407,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         #     p.join()
         pool = multiprocessing.Pool()
         for item in self.listModelForExcel:
-            pool.apply_async(CreateExcelForFolder, args=(item, addImage, ))
+            pool.apply_async(CreateExcelForFolder, args=(item, addImage, self.topPrint, ))
         pool.close()
         pool.join()
         self.updeteListFile()

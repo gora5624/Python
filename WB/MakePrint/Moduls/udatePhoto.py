@@ -9,15 +9,15 @@ def pushPhoto(line, token, requestUrl, countTry=0):
     if 'Артикул товара' in list(line.keys()):
         jsonRequest = {
             "vendorCode": line['Артикул товара'],
-            # "data": line['Медиафайлы'].split(';')
-            "data": ['http://95.78.233.163:8001/wp-content/uploads/1.jpg']
+            "data": line['Медиафайлы'].split(';')
+            # "data": ['http://95.78.233.163:8001/wp-content/uploads/1.jpg']
             }
         headersRequest = {'Authorization': '{}'.format(token)}
     else:
         jsonRequest = {
             "vendorCode": line['Артикул поставщика'],
-            "data": ['http://95.78.233.163:8001/wp-content/uploads/1.jpg']
-            #"data": line['Медиафайлы'].split(';')
+            # "data": ['http://95.78.233.163:8001/wp-content/uploads/1.jpg']
+            "data": line['Медиафайлы'].split(';')
             }
         headersRequest = {'Authorization': '{}'.format(token)}
     try:
@@ -72,7 +72,7 @@ def main():
     print('work')
     pathToFile = sys.argv[1:][0].replace('#', ' ')
     token = sys.argv[1:][1].replace('#', ' ')
-    # pathToFile = r'F:\Для загрузки\Готовые принты\Силикон\Чехол iPhone 6 силикон с отк.кам. проз. под карту.xlsx'
+    # pathToFile = r'F:\Для загрузки\Готовые принты\Силикон\Чехол iPhone 6 силикон с отк.кам. проз. п од карту.xlsx'
     # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
     # pathToFile = sys.argv[1:][0].replace('#', ' ')
     df = pandas.DataFrame(pandas.read_excel(pathToFile))
