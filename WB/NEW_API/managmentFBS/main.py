@@ -1,6 +1,6 @@
-from getNomenclatures.ClassGetNomenclatures import nomenclaturesGetter
-from getDB.ClassGetDB import getDB
-from getListCards.ClassGetListCards import getListCards
+from ClassGetDB import getDB
+from ClassGetListCardsToFilter import getListCardsToFilter
+from ClassExterminator import exterminator
 import multiprocessing
 import time
 import sys
@@ -15,10 +15,12 @@ class Manager(QMainWindow):
         super(Manager, self).__init__(parent)
         self.ui = Ui_Form()
         self.ui.setupUi(self)
-        
         self.ui.updateDbBtn.clicked.connect(self.updateDb)
         self.ui.addFilterStringBtn.clicked.connect(self.addFilterString)
         self.ui.getLisCardsToFilterBtn.clicked.connect(self.getLisCardsToFilter)
+        self.ui.startExtCharBtn.clicked.connect(self.startExtChar)
+        self.ui.startExtImageBtn.clicked.connect(self.startExtImage)
+        self.ui.startDeletStoksBtn.clicked.connect(self.startDeletStoks)
         self.filterTypeComboBoxList = [] # 0 column dor filter, 1 type filter, 2 value textEdit, 3 value comboBox
         self.DB = ''
         self.index = 1
@@ -33,7 +35,41 @@ class Manager(QMainWindow):
         self.createFilterLables()
         self.addFilterString()
 
-        
+
+    def startExtChar(self):
+        self.readyToRecreateCards('startExtChar')
+    def startExtImage(self):
+        self.readyToRecreateCards('startExtImage')
+    def startDeletStoks(self):
+        self.readyToRecreateCards('startDeletStoks')
+
+
+
+    def readyToRecreateCards(self, function):
+        source = self.ui.toFromComboBox.currentText()
+        try:
+            if source == 'Из фильтра':
+                data, dataPath = self.getLisCardsToFilter() 
+            else:
+                dataPath = QFileDialog.getOpenFileName(self, ("Выберите файл со списком номенклатуры"), "", ("Excel Files (*.xlsx)"))[0]
+                data = pandas.DataFrame(pandas.read_excel(dataPath))
+        except:
+            return 0
+        if 'vendorCode' in data.columns:
+            if function == 'startExtChar':
+                ext = exterminator().startExtChar(data)
+            if function == 'startExtImage':
+                ext = exterminator().startExtImage(data)
+            if function == 'startDeletStoks':
+                ext = exterminator().startDeletStoks(data, dataPath.replace(os.path.basename(dataPath),''))
+        else:
+            print('Нет обязательного поля vendorCode')
+
+
+    def getDataForExt(self):
+        pass
+
+
     def getLisCardsToFilter(self):
         filter = []
         dataPath = QFileDialog.getExistingDirectory(self, ("Выберите место для сохранения"))
@@ -43,13 +79,21 @@ class Manager(QMainWindow):
             if (typeFilter == 'Равно') or typeFilter == 'Не равно':
                 value = comboBox[3].currentText()
             else:
-                value = comboBox[2].currentText()
-            filter.append([column, value])
+                # QPlainTextEdit.toPlainText
+                value = comboBox[2].toPlainText()
+            filter.append([column, value, typeFilter])
         flterMain = self.ui.filterType.currentText()
-        getter = getListCards(filter,self.DB,typeFilter,flterMain)
-        data = getter.getListCards()
-        data.to_excel(os.path.join(dataPath, 'tmp.xlsx'), index=False)
+        # getter = getListCardsToFilter(filter,self.DB,typeFilter,flterMain)
+        # data = getter.getListCards()
+        data = getListCardsToFilter.getListCards(filter,self.DB,flterMain)
+        p = multiprocessing.Process(target=self.saveDB, args=(data, dataPath,), daemon=False)
+        p.start()
+        return (data, dataPath)
 
+    @staticmethod
+    def saveDB(data, dataPath):
+        data.to_excel(os.path.join(dataPath, 'tmp.xlsx'), index=False)
+        return 0
 
     def hideFilterTypeComboBox(self):
         for comboBox in self.filterTypeComboBoxList:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\Python\WB\managmentFBS\ui\managerUI.ui'
+# Form implementation generated from reading ui file 'd:\Python\WB\NEW_API\managmentFBS\ui\managerUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -38,9 +38,9 @@ class Ui_Form(object):
         self.changeChar = QtWidgets.QPushButton(Form)
         self.changeChar.setGeometry(QtCore.QRect(300, 470, 151, 23))
         self.changeChar.setObjectName("changeChar")
-        self.readyToRecreateCards = QtWidgets.QPushButton(Form)
-        self.readyToRecreateCards.setGeometry(QtCore.QRect(10, 440, 161, 23))
-        self.readyToRecreateCards.setObjectName("readyToRecreateCards")
+        self.startExtCharBtn = QtWidgets.QPushButton(Form)
+        self.startExtCharBtn.setGeometry(QtCore.QRect(10, 440, 161, 23))
+        self.startExtCharBtn.setObjectName("startExtCharBtn")
         self.toFromComboBox = QtWidgets.QComboBox(Form)
         self.toFromComboBox.setGeometry(QtCore.QRect(10, 410, 161, 22))
         self.toFromComboBox.setObjectName("toFromComboBox")
@@ -49,6 +49,12 @@ class Ui_Form(object):
         self.getLisCardsToFilterBtn = QtWidgets.QPushButton(Form)
         self.getLisCardsToFilterBtn.setGeometry(QtCore.QRect(370, 390, 171, 21))
         self.getLisCardsToFilterBtn.setObjectName("getLisCardsToFilterBtn")
+        self.startExtImageBtn = QtWidgets.QPushButton(Form)
+        self.startExtImageBtn.setGeometry(QtCore.QRect(190, 440, 171, 23))
+        self.startExtImageBtn.setObjectName("startExtImageBtn")
+        self.startDeletStoksBtn = QtWidgets.QPushButton(Form)
+        self.startDeletStoksBtn.setGeometry(QtCore.QRect(380, 440, 161, 23))
+        self.startDeletStoksBtn.setObjectName("startDeletStoksBtn")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -64,7 +70,9 @@ class Ui_Form(object):
         self.changePrice.setText(_translate("Form", "Изменить цены"))
         self.changeQuan.setText(_translate("Form", "Изменить наличие"))
         self.changeChar.setText(_translate("Form", "Изменить характеристики"))
-        self.readyToRecreateCards.setText(_translate("Form", "Подготовить для перезалива"))
+        self.startExtCharBtn.setText(_translate("Form", "Стереть свойства"))
         self.toFromComboBox.setItemText(0, _translate("Form", "Из файла"))
         self.toFromComboBox.setItemText(1, _translate("Form", "Из фильтра"))
         self.getLisCardsToFilterBtn.setText(_translate("Form", "Выгрузить товар по фильтру"))
+        self.startExtImageBtn.setText(_translate("Form", "Стереть картинки"))
+        self.startDeletStoksBtn.setText(_translate("Form", "Выгрузить ШК"))

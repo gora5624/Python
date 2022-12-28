@@ -111,7 +111,7 @@
     <string>Изменить характеристики</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="readyToRecreateCards">
+  <widget class="QPushButton" name="startExtCharBtn">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -121,7 +121,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Подготовить для перезалива</string>
+    <string>Стереть свойства</string>
    </property>
   </widget>
   <widget class="QComboBox" name="toFromComboBox">
@@ -155,6 +155,32 @@
    </property>
    <property name="text">
     <string>Выгрузить товар по фильтру</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="startExtImageBtn">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>440</y>
+     <width>171</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Стереть картинки</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="startDeletStoksBtn">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>440</y>
+     <width>161</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Выгрузить ШК</string>
    </property>
   </widget>
  </widget>
