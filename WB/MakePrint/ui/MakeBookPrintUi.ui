@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>4</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tabBook">
     <attribute name="title">
@@ -309,6 +309,19 @@
       <string>Создать топ</string>
      </property>
     </widget>
+    <widget class="QSpinBox" name="countPrints">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>190</y>
+       <width>71</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>99999</number>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="plastins">
     <attribute name="title">
@@ -540,6 +553,11 @@ p, li { white-space: pre-wrap; }
        <height>22</height>
       </rect>
      </property>
+     <item>
+      <property name="text">
+       <string>Иван</string>
+      </property>
+     </item>
      <item>
       <property name="text">
        <string>Караханян</string>

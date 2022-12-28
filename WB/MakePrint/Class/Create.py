@@ -26,13 +26,14 @@ class WBnomenclaturesCreater:
     def __init__(self):
         self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
         self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+        self.tokenIvan = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
         self.tokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
         self.urlCreate = 'https://suppliers-api.wildberries.ru/content/v1/cards/upload'
         self.urlAdd = 'https://suppliers-api.wildberries.ru/content/v1/cards/upload/add'
         self.pathToFileForUpload = ''
         self.modelForUploads = []
         self.listDoneVendorCode = []
-        self.timeout = 2
+        self.timeout = 10
 
 
     # @staticmethod
@@ -73,55 +74,58 @@ class WBnomenclaturesCreater:
             token = self.tokenAb
         elif mode =='Самвел':
             token = self.tokenSam
+        elif mode =='Иван':
+            token = self.tokenIvan
         if self.pathToFileForUpload =='':
             print('Путь к файлу не указан')
             return 0
         data = pandas.DataFrame(pandas.read_excel(self.pathToFileForUpload))
-        categoryList = data['Категория'].unique().tolist()
-        for category in categoryList:
-            nomenclature = []
-            dataCategory = data[data.Категория == category].to_dict('records')
-            for case in dataCategory:
-                card = {
-                        "vendorCode": case['Артикул товара'],
-                        #'mediaFiles': case['Медиафайлы'].split(';'),
-                        "characteristics": [
-                            {'Рисунок': case['Рисунок'].split(';')},
-                            {'Тип чехлов': case['Тип чехлов'].split(';')},
-                            {'Повод': case['Повод'].split(';')},
-                            {'Особенности чехла': case['Особенности чехла'].split(';')},
-                            {'Комплектация': case['Комплектация'].split(';')},
-                            {'Модель': case['Модель'].split(';')},
-                            {'Вид застежки': case['Вид застежки'].split(';')},
-                            {'Декоративные элементы': case['Декоративные элементы']},
-                            {'Совместимость': case['Совместимость'].split(';')},
-                            {'Назначение подарка': case['Назначение подарка'].split(';')},
-                            {'Любимые герои': case['Любимые герои'].split(';')},
-                            {'Материал изделия': case['Материал изделия'].split(';')},
-                            {'Производитель телефона': case['Производитель телефона']},
-                            {'Бренд': case['Бренд']},
-                            {'Страна производства': case['Страна производства'].split(';')},
-                            {'Наименование': case['Наименование']},
-                            {'Предмет':case['Предмет']},
-                            {'Цвет': case['Цвет'].split(';')},
-                            {'Описание': case['Описание']},
-                            {'Высота упаковки': 18.5},
-                            {'Ширина упаковки': 11},
-                            {'Длина упаковки': 1.5},
-                            # {'Медиафайлы': case['Медиафайлы'].split(';')}
-                        ],
-                        "sizes": [
-                            {
-                            'techSize': '0',
-                            "price": case['Цена'],
-                            "skus": [
-                                str(case['Баркод товара'])
-                            ]
-                            }
+        # categoryList = data['Категория'].unique().tolist()
+        # for category in categoryList:
+        nomenclature = []
+        # dataCategory = data[data.Категория == category].to_dict('records')
+        for case in data.to_dict('records'):
+            card = {
+                    "vendorCode": case['Артикул товара'],
+                    #'mediaFiles': case['Медиафайлы'].split(';'),
+                    "characteristics": [
+                        {'Рисунок': case['Рисунок'].split(';')},
+                        {'Тип чехлов': case['Тип чехлов'].split(';')},
+                        {'Повод': case['Повод'].split(';')},
+                        {'Особенности чехла': case['Особенности чехла'].split(';')},
+                        {'Комплектация': case['Комплектация'].split(';')},
+                        {'Модель': case['Модель'].split(';')},
+                        {'Вид застежки': case['Вид застежки'].split(';')},
+                        {'Декоративные элементы': case['Декоративные элементы']},
+                        {'Совместимость': case['Совместимость'].split(';')},
+                        {'Назначение подарка': case['Назначение подарка'].split(';')},
+                        {'Любимые герои': case['Любимые герои'].split(';')},
+                        {'Материал изделия': case['Материал изделия'].split(';')},
+                        {'Производитель телефона': case['Производитель телефона']},
+                        # {'Бренд': case['Бренд']},
+                        {'Бренд': 'SuperPrint'},
+                        {'Страна производства': case['Страна производства'].split(';')},
+                        {'Наименование': case['Наименование']},
+                        {'Предмет':case['Предмет']},
+                        {'Цвет': case['Цвет'].split(';')},
+                        {'Описание': case['Описание']},
+                        {'Высота упаковки': 18.5},
+                        {'Ширина упаковки': 11},
+                        {'Длина упаковки': 1.5},
+                        # {'Медиафайлы': case['Медиафайлы'].split(';')}
+                    ],
+                    "sizes": [
+                        {
+                        'techSize': '0',
+                        "price": case['Цена'],
+                        "skus": [
+                            str(case['Баркод товара'])
                         ]
                         }
-                nomenclature.append(card)
-            self.modelForUploads.append(nomenclature)
+                    ]
+                    }
+            nomenclature.append(card)
+        self.modelForUploads.append(nomenclature)
         headersRequest = {'Authorization': '{}'.format(token)}
         # self.modelForUploads
         try:
@@ -129,12 +133,13 @@ class WBnomenclaturesCreater:
         except:
             pass
         for i in range(5):
-            pool = multiprocessing.Pool()
+            # pool = multiprocessing.Pool()
             for model in self.modelForUploads:
                 # if model[''] not in listDoneVendorCode:
-                pool.apply_async(self.createNomenclatureSingleProcess, args=(model, headersRequest,token, ))
-            pool.close()
-            pool.join()
+            #     pool.apply_async(self.createNomenclatureSingleProcess, args=(model, headersRequest,token, ))
+                    self.createNomenclatureSingleProcess(model, headersRequest,token)
+            # pool.close()
+            # pool.join()
             try:
                 self.getListNomenclaturesMulti(token, self.modelForUploads)
             except:
@@ -184,8 +189,20 @@ class WBnomenclaturesCreater:
                 try:
                     # print("TRY1")
                     responce = requests.post(self.urlCreate, json=jsonCard, headers=headersRequest, timeout=self.timeout)
+                    time.sleep(5)
                     # print("responce = requests.post(self.urlCreate, json=jsonCard, headers=headersRequest)4")
-                    break
+                    if responce.status_code == 200:
+                        # print("responce.status_code == 200:")
+                        # LogMaker.logAction('createNomenclatureSingleProcess', vendorCodeMain +'  успешно создана')
+                            print(vendorCodeMain + ' успешно создана')
+                            time.sleep(2)
+                            break
+                        #time.sleep(1)
+                        # p = multiprocessing.Process(target=self.uplaodImage, args=(vendorCodeMain, urlsList, token,))
+                        # p.start()
+                    else:
+                        countTry+=1
+                        continue
                 except requests.ConnectionError:
                     time.sleep(5)
                     # print("except requests.ConnectionError:1")
@@ -197,13 +214,7 @@ class WBnomenclaturesCreater:
                     countTry+=1
                     # print('Timeout')
                     continue
-            if responce.status_code == 200:
-                # print("responce.status_code == 200:")
-                # LogMaker.logAction('createNomenclatureSingleProcess', vendorCodeMain +'  успешно создана')
-                print(vendorCodeMain + ' успешно создана')
-                #time.sleep(1)
-                # p = multiprocessing.Process(target=self.uplaodImage, args=(vendorCodeMain, urlsList, token,))
-                # p.start()
+            
             # else:
             #     print(responce.text)
             #     print(vendorCodeMain + ' ошибка при создании, проверь ВБ')
@@ -223,7 +234,28 @@ class WBnomenclaturesCreater:
                     try:
                         # print('requests.post(self.urlAdd, json=jsonNomenclature, headers=headersRequest)')
                         responce = requests.post(self.urlAdd, json=jsonNomenclature, headers=headersRequest, timeout=self.timeout)
-                        break
+                        # time.sleep(5)
+                        if responce.status_code == 200:
+                            # print("responce.status_code == 200:2")
+                            # LogMaker.logAction('createNomenclatureSingleProcess', vendorCodeMain +'  успешно создана')
+                            vendorCodeMain = modelListCard[i]['vendorCode']
+                            print(modelListCard[i]['vendorCode'] + ' успешно создана')
+                            time.sleep(1)
+                            break
+                        else:
+                            # print("responce.text123")
+                            # LogMaker.logAction('createNomenclatureSingleProcess', responce.text)
+                            if 'Указанные Артикулы поставщика используются в других карточках с Номенклатурой' in responce.text:
+                                if modelListCard[i]['vendorCode'] in responce.text:
+                                    self.listDoneVendorCode.append(modelListCard[i]['vendorCode'])
+                            elif 'Недопустимо отправлять дублирующиеся запросы!' in responce.text:
+                                time.sleep(5)
+                                countTry+=1
+                                continue
+                            print(responce.text)
+                            countTry+=1
+                            continue
+                    # print(vendorCodeMain + ' ошибка при создании, проверь ВБ')
                     except requests.ConnectionError:
                         time.sleep(5)
                         # print('requests.ConnectionError')
@@ -245,18 +277,7 @@ class WBnomenclaturesCreater:
                 #     if j[0] == 'Медиафайлы':
                 #         urlsList = j[1]
                 #         break
-                if responce.status_code == 200:
-                    # print("responce.status_code == 200:2")
-                    # LogMaker.logAction('createNomenclatureSingleProcess', vendorCodeMain +'  успешно создана')
-                    print(modelListCard[i]['vendorCode'] + ' успешно создана')
-                else:
-                    # print("responce.text123")
-                    # LogMaker.logAction('createNomenclatureSingleProcess', responce.text)
-                    if 'Указанные Артикулы поставщика используются в других карточках с Номенклатурой' in responce.text:
-                        if modelListCard[i]['vendorCode'] in responce.text:
-                            self.listDoneVendorCode.append(modelListCard[i]['vendorCode'])
-                    print(responce.text)
-                    # print(vendorCodeMain + ' ошибка при создании, проверь ВБ')
+                
         # LogMaker.metodEnd('createNomenclatureSingleProcess', '')
         
 

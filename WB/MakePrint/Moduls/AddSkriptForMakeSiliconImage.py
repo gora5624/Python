@@ -16,7 +16,7 @@ from Class.MyClassForMakeImage import ModelWithAddin
 from Class.ChekPhotoClass import ImageCheker
 from shutil import copytree, ignore_patterns
 # from Main import mameBookPrint
-from Folders import pathToCategoryList, pathToUploadFolderLocal, pathToUploadSecondWeb, pathToUploadFolderLocal, pathToSecondImagesFolderSilicon, pathToSecondImageUploadFolder, pathToDoneSiliconImageSilicon, pathToUploadWeb, pathToDoneBookImageWithName
+from Folders import pathToCategoryList, pathToUploadFolderLocal, pathToUploadSecondWeb, pathToUploadFolderLocal, pathToSecondImagesFolderSilicon, pathToSecondImageUploadFolder, pathToDoneSiliconImageSilicon, pathToUploadWeb, pathToDoneBookImageWithName, pathToTopPrint
 
 TokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
 TokenArb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
@@ -172,7 +172,7 @@ def generate_bar_WB(count):
     return listBarcode
 
 
-def CreateExcelForFolder(modelClass=ModelWithAddin, color=str, addImage=str):
+def CreateExcelForFolder(modelClass=ModelWithAddin, color=str, addImage=str, topPrint=''):
     listColor = []
     # model = modelClass.model
     pathToDone = pathToDoneSiliconImageSilicon # if modelClass.caseType == 'Силикон' else pathToDoneBookImageWithName
@@ -235,6 +235,11 @@ def CreateExcelForFolder(modelClass=ModelWithAddin, color=str, addImage=str):
         #listColor.append(data)
     # for data in modelClass.data:
     listColorpd = pandas.DataFrame(modelClass.data)
+    if type(topPrint) == str:
+        # a=len(listColorpd['Принт'])
+        topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:len(listColorpd['Принт'])]
+    listColorpd = pandas.merge(listColorpd, topPrint, how='left', left_on='Принт', right_on='Принт')
+    listColorpd.sort_values(by=['Позиция'], inplace=True)
     listColorpd.to_excel(joinPath(pathToDoneSiliconImageSilicon, modelClass.maskFolderName)+'.xlsx', index=False)
 
 
