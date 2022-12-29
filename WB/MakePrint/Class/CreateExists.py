@@ -5,7 +5,7 @@ from unicodedata import category
 from urllib import response
 from Class.CardBodyClass import CardCase, Nomenclature
 import sys
-from os.path import join as joinPath
+from os.path import join as joinPath, basename
 from os import system
 sys.path.insert(1, joinPath(sys.path[0], '../..'))
 from my_mod.my_lib import read_xlsx
@@ -19,26 +19,161 @@ from aiohttp import ClientConnectorError
 import subprocess
 
 
-class WBnomenclaturesCreater:    
-    def __init__(self):
+class ExistsNomenclaturesCreater:    
+    def __init__(self, data, mode, pathToFileForUpload):
         self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
         self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
         self.tokenIvan = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
         self.tokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
-        self.urlCreate = 'https://suppliers-api.wildberries.ru/content/v1/cards/upload'
-        self.urlAdd = 'https://suppliers-api.wildberries.ru/content/v1/cards/upload/add'
-        self.pathToFileForUpload = ''
+        self.urlGetCards = 'https://suppliers-api.wildberries.ru/content/v1/cards/filter'
+        self.urlUpdateCards = 'https://suppliers-api.wildberries.ru/content/v1/cards/update'
+        # self.pathToFileForUpload = pathToFileForUpload
+        self.data = data # pandas.DataFrame(pandas.read_excel(self.pathToFileForUpload))
+        self.dataDict = self.data.to_dict('records') # pandas.DataFrame(pandas.read_excel(self.pathToFileForUpload))
+        self.listVendorCodeToGet = self.data['Артикул товара'].values.tolist()
+        self.pathToFileForUpload = pathToFileForUpload
         self.modelForUploads = []
         self.listDoneVendorCode = []
-        self.timeout = 10
+        self.alredyGetVendorCode = []
+        self.listCardToChange = []
+        if mode =='Караханян':
+           self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+        elif mode =='Абраамян':
+            self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
+        elif mode =='Самвел':
+            self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
+        elif mode =='Иван':
+            self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
+        self.headersGetCard = {'Authorization': '{}'.format(self.token)}
+
+
+    def start(self):
+        self.getNomFromWB()
+        self.changeCards()
+        self.pushChanges()
 
 
     @staticmethod
-    def uplaodImage(path, token):
+    def uplaodImage(path, mode):
+        if mode =='Караханян':
+           token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+        elif mode =='Абраамян':
+            token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
+        elif mode =='Самвел':
+            token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
+        elif mode =='Иван':
+            token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
         args = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\udatePhoto.py', path.replace(' ', '#'), token]
-        subprocess.Popen(args, shell=True).wait
-        args2 = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\chekUdatePhoto.py', path.replace(' ', '#'), token]
-        subprocess.Popen(args2, shell=True)
+        subprocess.Popen(args, shell=True).wait()
+        # args2 = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\chekUdatePhoto.py', path.replace(' ', '#'), token]
+        # subprocess.Popen(args2, shell=True)
+
+
+    # def createExcelFor1C(self):
+    #     dataFor1C = []
+    #     for line in self.dataDict:
+    #         tmp = {
+    #             'Баркод':line['Баркод товара'],
+    #             'Группа':'Чехол производство (принт)',
+    #             'Основная характеристика':line['Принт'],
+    #             'Название 1С':'',
+    #             'Название полное':'',
+    #             'Размер Печать':''
+    #         }
+    #         dataFor1C.append(tmp)
+    #     df = pandas.DataFrame(dataFor1C)
+    #     df.to_excel(self.pathToFileForUpload.replace(name:=basename(self.pathToFileForUpload),'1C_'+ name), index=False)
+
+
+
+
+    def getNomFromWB(self):
+        for vendorCode in self.listVendorCodeToGet:
+            if vendorCode not in self.alredyGetVendorCode:
+                jsonRequestsGetCard = {
+                                    "vendorCodes": [vendorCode]
+                                    }
+                timeout = 10              
+                while timeout < 60:
+                    try:
+                        response = requests.post(self.urlGetCards, headers=self.headersGetCard, json=jsonRequestsGetCard, timeout=timeout)
+                        if response.status_code ==200:
+                            break
+                        else:
+                            timeout+=5
+                            continue    
+                    except requests.exceptions.ReadTimeout:
+                        timeout+=5
+                        continue
+                    except requests.exceptions.ConnectionError:
+                        timeout+=5
+                        continue
+                data = response.json()['data']
+                for card in data:
+                    if card['vendorCode'] in self.listVendorCodeToGet:
+                        self.alredyGetVendorCode.append(card['vendorCode'])
+                        self.listCardToChange.append(card)
+        self.listCardToChange
+                
+    def changeCards(self):
+        chek = len(self.listCardToChange) == len(self.alredyGetVendorCode) == len(self.listVendorCodeToGet) == len(self.dataDict)
+        if chek:
+            for i, card in enumerate(self.listCardToChange):
+                for case in self.dataDict:
+                    if case['Артикул товара'] == card['vendorCode']:
+                        char = {"characteristics": [
+                                {'Рисунок': case['Рисунок'].split(';')},
+                                {'Тип чехлов': case['Тип чехлов'].split(';')},
+                                {'Повод': case['Повод'].split(';')},
+                                {'Особенности чехла': case['Особенности чехла'].split(';')},
+                                {'Комплектация': case['Комплектация'].split(';')},
+                                {'Модель': case['Модель'].split(';')},
+                                {'Вид застежки': case['Вид застежки'].split(';')},
+                                {'Декоративные элементы': case['Декоративные элементы']},
+                                {'Совместимость': case['Совместимость'].split(';')},
+                                {'Назначение подарка': case['Назначение подарка'].split(';')},
+                                {'Любимые герои': case['Любимые герои'].split(';')},
+                                {'Материал изделия': case['Материал изделия'].split(';')},
+                                {'Производитель телефона': case['Производитель телефона']},
+                                {'Бренд': case['Бренд']},
+                                {'Страна производства': case['Страна производства'].split(';')},
+                                {'Наименование': case['Наименование']},
+                                {'Предмет':case['Предмет']},
+                                {'Цвет': case['Цвет'].split(';')},
+                                {'Описание': case['Описание']},
+                                {'Высота упаковки': 19},
+                                {'Ширина упаковки': 12},
+                                {'Длина упаковки': 2},
+                            ]}
+                        card.update(char)
+                        self.listCardToChange
+            self.listCardToChange
+        else:
+            print('Количество не совпадает, проверка не прошла')
+
+
+    def pushChanges(self):
+       # for card in self.listCardToChange:
+       step = 10
+       for i in range(0, len(self.listCardToChange), step):
+            timeout = 10              
+            jsonRequestsUpdateCard = self.listCardToChange[i:i+step]
+            while timeout < 60:
+                try:
+                    response = requests.post(self.urlUpdateCards, headers=self.headersGetCard, json=jsonRequestsUpdateCard, timeout=timeout)
+                    if response.status_code ==200:
+                        print('done')
+                        break
+                    else:
+                        timeout+=5
+                        continue    
+                except requests.exceptions.ReadTimeout:
+                    timeout+=5
+                    continue
+                except requests.exceptions.ConnectionError:
+                    timeout+=5
+                    continue
+
 
     def createNomenclaturesMultiporocessing(self, mode):
         # LogMaker.metodStart('createNomenclaturesMultiporocessing', {'mode':'str(mode)'})
@@ -52,12 +187,11 @@ class WBnomenclaturesCreater:
             token = self.tokenSam
         elif mode =='Иван':
             token = self.tokenIvan
-        if self.pathToFileForUpload =='':
-            print('Путь к файлу не указан')
-            return 0
-        data = pandas.DataFrame(pandas.read_excel(self.pathToFileForUpload))
+        # if self.pathToFileForUpload =='':
+        #     print('Путь к файлу не указан')
+        #     return 0
         nomenclature = []
-        for case in data.to_dict('records'):
+        for case in self.data.to_dict('records'):
             card = {
                     "vendorCode": case['Артикул товара'],
                     "characteristics": [

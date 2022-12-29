@@ -22,9 +22,10 @@ from Class.Create import WBnomenclaturesCreater
 from Class.CreateCartholders import WBnomenclaturesCreaterHolders
 from Class.MakePlastinsClass import MakePlastins
 import pandas
+from Class.CreateExists import ExistsNomenclaturesCreater
 
 
-start_time = time.time()
+
 # pyuic5 E:\MyProduct\Python\WB\MakePrint\ui\MakeBookPrintUi.ui -o E:\MyProduct\Python\WB\MakePrint\ui\MakeBookPrintUi.py
 
 
@@ -69,7 +70,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.pathToAddinFile = ''
         self.topPrint = ''
         self.ui.toExistsCardsChek.setChecked(False)
-        self.dfExistCase = pandas.DataFrame
+        self.dfExistCase = ''
         self.updeteListFile()
         self.updateModelList()
 
@@ -157,13 +158,25 @@ class mameBookPrint(QtWidgets.QMainWindow):
 
     def btnCreateCaseAll(self):
         pathToDoneSiliconImageSilicon = QFileDialog.getExistingDirectory(self, ("Выберите папку с файлами"))
+        mode = self.ui.IPSelector.currentText()
         for file in listdir(pathToDoneSiliconImageSilicon):
             if not isdir(joinPath(pathToDoneSiliconImageSilicon, file)):
-                create = WBnomenclaturesCreater()
                 pathToFileForUpload = joinPath(pathToDoneSiliconImageSilicon, file)
-                create.pathToFileForUpload = pathToFileForUpload
-                mode = self.ui.IPSelector.currentText()
-                create.createNomenclaturesMultiporocessing(mode)
+                if not self.ui.toExistsCardsChek.isChecked():
+                    create = WBnomenclaturesCreater()
+                    create.pathToFileForUpload = pathToFileForUpload
+                    create.createNomenclaturesMultiporocessing(mode)
+                else:
+                    start_time = time.time()
+                    data = pandas.DataFrame(pandas.read_excel(pathToFileForUpload))
+                    tmp = ExistsNomenclaturesCreater(data, mode, pathToFileForUpload)
+                    pool = multiprocessing.Pool(2)
+                    pool.apply_async(ExistsNomenclaturesCreater.uplaodImage, args=(pathToFileForUpload, mode,))
+                    pool.apply_async(tmp.start(), args=(pathToFileForUpload, mode,))
+                    pool.close()
+                    pool.join()
+                    print("--- %s seconds ---" % (time.time() - start_time))
+
 
 
     def btnCreateCartholders(self):
@@ -178,22 +191,22 @@ class mameBookPrint(QtWidgets.QMainWindow):
     def btnCreateCase(self):
         fileName = self.ui.FileSelector.currentText()
         pathToFileForUpload = joinPath(pathToDoneSiliconImageSilicon, fileName)
-        create = WBnomenclaturesCreater()
-        create.pathToFileForUpload = pathToFileForUpload
         mode = self.ui.IPSelector.currentText()
-        #barcodeList = getListCard(mode)
-        # barcodeList = []
-        create.createNomenclaturesMultiporocessing(mode)
-        # self.ui.textSiliconMask.setText('{} готов.'.format(fileName))
-        # getListCard(mode)
-
-    # def detectColor(self, path):
-    #     for color, code in siliconCaseColorDict.items():
-    #         if color in path:
-    #             if color == 'проз':
-    #                 return 'прозрачный'
-    #             return color
-
+        if not self.ui.toExistsCardsChek.isChecked():
+            create = WBnomenclaturesCreater()
+            create.pathToFileForUpload = pathToFileForUpload
+            create.createNomenclaturesMultiporocessing(mode)
+        else:
+            start_time = time.time()
+            data = pandas.DataFrame(pandas.read_excel(pathToFileForUpload))
+            tmp = ExistsNomenclaturesCreater(data, mode, pathToFileForUpload)
+            pool = multiprocessing.Pool(2)
+            pool.apply_async(ExistsNomenclaturesCreater.uplaodImage, args=(pathToFileForUpload, mode,))
+            pool.apply_async(tmp.start(), args=(pathToFileForUpload, mode,))
+            pool.close()
+            pool.join()
+            print("--- %s seconds ---" % (time.time() - start_time))
+          
 
     def fillSiliconMaskList(self, tabIndex):
         self.ui.textSiliconMask.setText('')
@@ -302,7 +315,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
         pathToListExistCaseFile = QFileDialog.getOpenFileName(self, ("Выберите файл с существующими карточками"), "", ("xlsx files (*.xlsx)"))[0]
         countCase = 0
         for case in listdir(pathToDoneSiliconImageSilicon):
-            countCase+= listdir(case)
+            if isdir(pathTMP:=joinPath(pathToDoneSiliconImageSilicon,case)):
+                countCase+= len(listdir(pathTMP))
         if '.txt' in pathToListExistCaseFile:
             self.dfExistCase = pandas.DataFrame(pandas.read_table(pathToListExistCaseFile, sep='\t'))
         elif '.xlsx' in pathToListExistCaseFile:
@@ -321,17 +335,25 @@ class mameBookPrint(QtWidgets.QMainWindow):
         print('tst')
         self.pathToAddinFile = QFileDialog.getOpenFileName(self, ("Выберите файл свойств"), "", ("xlsx files (*.xlsx)"))[0]
         dfAddinFile = pandas.DataFrame(pandas.read_excel(self.pathToAddinFile))
+        existsFlag = self.ui.toExistsCardsChek.isChecked()
+        counter = 0
         for mask in listdir(pathToMaskFolderSilicon):
             if 'проз.' not in mask:
-                mask = mask.replace('проз', 'проз.')
+                maskNew = mask.replace('проз', 'проз.')
             if 'мат.' not in mask:
-                mask = mask.replace('мат', 'мат.')
+                maskNew = mask.replace('мат', 'мат.')
             try:
-                if isdir(joinPath(pathToMaskFolderSilicon, mask)):
-                    compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == mask]['Совместимость'].values.tolist()[0]
-                    brand = 'Mobi711'
+                if isdir(pathTMP:=joinPath(pathToDoneSiliconImageSilicon, mask)):
+                    delta = len(listdir(pathTMP))
+                    listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                    counter+=delta
+                    try:
+                        compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == maskNew]['Совместимость'].values.tolist()[0]
+                    except IndexError:
+                        compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == mask]['Совместимость'].values.tolist()[0]
+                    brand = self.ui.textSiliconBrand.toPlainText()
                     price = dfAddinFile[dfAddinFile['Номенклатура'] == mask]['Цена'].values.tolist()[0]
-                    modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, mask, pathToDoneSiliconImageSilicon, siliconCaseColorDict)
+                    modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, mask, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
                     self.listModelForExcel.append(modelWithAddin)
             except:
                 print('Для {} не удалось получить свойства.'.format(mask))
@@ -347,7 +369,9 @@ class mameBookPrint(QtWidgets.QMainWindow):
         listModel = []
         for i in range(1,self.ui.ModelSelector.count()):
             listModel.append(self.ui.ModelSelector.itemText(i))
+        counter =0
         if curModel == markerForAllModel:
+            existsFlag = self.ui.toExistsCardsChek.isChecked()
             self.listModelForExcel = []
             brand = self.ui.textSiliconBrand.toPlainText()
             compability = self.ui.textSiliconCompability.toPlainText()
@@ -356,12 +380,11 @@ class mameBookPrint(QtWidgets.QMainWindow):
             # cameraType = self.ui.CameraType.currentText()
             price = self.ui.textPrice.toPlainText()
             for modelTMP in listModel:
-                if self.siliconName in modelTMP:
-                    caseType = self.siliconName
-                elif self.bookName in modelTMP:
-                    caseType = self.bookName
                 # model = modelTMP.replace(caseType,'').strip()
-                modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, modelTMP, pathToDoneSiliconImageSilicon, siliconCaseColorDict)
+                delta = len(listdir(joinPath(pathToDoneSiliconImageSilicon, modelTMP)))
+                listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                counter+=delta
+                modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, modelTMP, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
                 # if caseType == self.bookName:
                 #     modelWithAddin.colorList = listdir(joinPath(pathToDoneBookImageWithName, model.replace(caseType,'').strip()))
                 # else:
@@ -369,21 +392,18 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 self.listModelForExcel.append(modelWithAddin)
                 self.ui.textSiliconMask.setText('Все модели из списка записаны\n')
         else:
-            if self.siliconName in curModel:
-                    caseType = self.siliconName
-            elif self.bookName in curModel:
-                    caseType = self.bookName
             if self.listModelForExcel != []:
                 for i, item in enumerate(self.listModelForExcel):
                     # if item.model == curModel:
                         # if self.acceptEvent("Свойства для {} уже записаны, перезаписать?".format(item.model)):
+                    delta = len(listdir(joinPath(pathToDoneSiliconImageSilicon, modelTMP)))
+                    listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                    counter+=delta
                     brand = self.ui.textSiliconBrand.toPlainText()
                     compability = self.ui.textSiliconCompability.toPlainText()
-                    name = self.ui.textSiliconName.toPlainText()
                     modelAddin = self.ui.textSiliconModel.toPlainText()
-                    cameraType = self.ui.CameraType.currentText()
                     price = self.ui.textPrice.toPlainText()
-                    self.listModelForExcel[i] = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict)
+                    self.listModelForExcel[i] = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
 
                     # self.listModelForExcel[i].colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
                     self.ui.textSiliconMask.setText(curModel+' перезаписана\n')
@@ -392,11 +412,9 @@ class mameBookPrint(QtWidgets.QMainWindow):
                         #     return None
                 brand = self.ui.textSiliconBrand.toPlainText()
                 compability = self.ui.textSiliconCompability.toPlainText()
-                name = self.ui.textSiliconName.toPlainText()
                 modelAddin = self.ui.textSiliconModel.toPlainText()
-                cameraType = self.ui.CameraType.currentText()
                 price = self.ui.textPrice.toPlainText()
-                modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict)
+                modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
                 # modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
                 self.listModelForExcel.append(modelWithAddin)
                 self.ui.textSiliconMask.setText(curModel+' записан\n')
@@ -404,11 +422,9 @@ class mameBookPrint(QtWidgets.QMainWindow):
             else:
                 brand = self.ui.textSiliconBrand.toPlainText()
                 compability = self.ui.textSiliconCompability.toPlainText()
-                name = self.ui.textSiliconName.toPlainText()
                 modelAddin = self.ui.textSiliconModel.toPlainText()
-                cameraType = self.ui.CameraType.currentText()
                 price = self.ui.textPrice.toPlainText()
-                modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict)
+                modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
                 # modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
                 self.listModelForExcel.append(modelWithAddin)
                 self.ui.textSiliconMask.setText(curModel+' записан\n')
@@ -420,7 +436,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         addImage = self.ui.AddPhotoSelector.currentText()
         if self.listModelForExcel == []:
             self.btnApplyAddin(True)
-        procList = []
+        # procList = []
         # for item in self.listModelForExcel:
         #     p = multiprocessing.Process(target=CreateExcelForFolder, args=(item, addImage, ))
         #     p.start()
@@ -429,9 +445,11 @@ class mameBookPrint(QtWidgets.QMainWindow):
         #     p.join()
         pool = multiprocessing.Pool()
         for item in self.listModelForExcel:
-            pool.apply_async(CreateExcelForFolder, args=(item, addImage, self.topPrint, ))
+            pool.apply_async(CreateExcelForFolder, args=(item, self.topPrint, ))
         pool.close()
         pool.join()
+        # for item in self.listModelForExcel:
+        #     CreateExcelForFolder(item, self.topPrint)
         self.updeteListFile()
 
 

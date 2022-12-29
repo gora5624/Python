@@ -9,17 +9,19 @@ import random
 
 
 class ModelWithAddin:
-    def __init__(self, brand, compatibility, modelAddin, price, maskFolderName, pathToDoneSiliconImageSilicon, siliconCaseColorDict) -> None:
+    def __init__(self, brand, compatibility, modelAddin, price, maskFolderName, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=False, listDataVendorCode='') -> None:
         # self.colorList = []
         # self.cameraType = cameraType
         # self.model = model
         self.brand = brand
+        self.vendorCodeList = listDataVendorCode
+        self.existsFlag = existsFlag
         self.compatibility = compatibility
         # self.name = name
         self.modelAddin = modelAddin
         self.price = price
         self.TNVED = '3926909709'
-        self.pathToMask = joinPath(pathToDoneSiliconImageSilicon, maskFolderName)
+        self.pathSiliconImage = joinPath(pathToDoneSiliconImageSilicon, maskFolderName)
         # self.caseType = caseType
         self.listJsonForUpdateToWB = []
         self.siliconCaseColorDict = siliconCaseColorDict
@@ -91,7 +93,7 @@ class ModelWithAddin:
         listBarcode = []
         countTry = 0
         url = "https://suppliers-api.wildberries.ru/content/v1/barcodes"
-        headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'}
+        headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'}
 
         while count > 5000:
             
@@ -154,7 +156,7 @@ class ModelWithAddin:
         return 'Чехол для телефона'
 
 
-    def getVendorCode(self, colorCase, categoryCode, printName):
+    def getVendorCode(self, colorCase, printName):
         if 'силикон с' in self.maskFolderName:
             vendorCode1 = self.maskFolderName.replace('Чехол','').split('силикон')[0].strip().replace(' ','_') + '_BP'
             # if 'с зак.кам.' in self.maskFolderName:
@@ -223,9 +225,13 @@ class ModelWithAddin:
                 break
         # description = random.choice(self.dfAddinFromFile[self.dfAddinFromFile.Категория == category]['Описание'].values.tolist()).strip()
         countReplace = description.count('***')
+        listcompatibility=self.compatibility.split(';')
         for i in range(countReplace):
             try:
-                description = description.replace('***',self.compatibility.split(';')[i],1)
+                if len(listcompatibility)>i:
+                    description = description.replace('***',self.compatibility.split(';')[i],1)
+                else:
+                    description = description.replace('***',self.compatibility.split(';')[0],1)
             except IndexError:
                 description = description.replace('***',self.compatibility.split(';')[0],1)
         return description
@@ -248,7 +254,10 @@ class ModelWithAddin:
                 listVariation = line[field].split(';')
                 break
         try:
-            listVariation.remove('').remove(' ')
+            if '' in listVariation:
+                listVariation.remove('')
+            if ' ' in listVariation:
+                listVariation.remove(' ')
         except ValueError:
             pass
         countVariation = len(listVariation)
@@ -292,13 +301,13 @@ class ModelWithAddin:
         # dfAddinFromFile = pandas.DataFrame(pandas.read_excel(r'E:\MyProduct\Python\WB\MakePrint\Характеристики.xlsx'))
         # dfCategoryPrint = pandas.DataFrame(pandas.read_excel(r'E:\MyProduct\Python\WB\MakePrint\cat.xlsx'))
         # data = []
-        listCategory = self.dfCategoryPrint['Категория'].unique().tolist()
+        # listCategory = self.dfCategoryPrint['Категория'].unique().tolist()
         if 'книга' in self.maskFolderName:
             stuff = 'Чехлы-книжки для телефонов'
 
         else:
             stuff = 'Чехлы для телефонов' 
-        for pictures in listdir(self.pathToMask):
+        for i, pictures in enumerate(listdir(self.pathSiliconImage)):
             # start_time = time.time()
             printName = pictures[0:-4]
             printNameRus = pictures.replace('.jpg', '')
@@ -311,8 +320,12 @@ class ModelWithAddin:
             # category = categoryData[1]
             # categoryCode = categoryData[2]
             category = currentPictureCategoryList[0][1]
-            categoryCode = currentPictureCategoryList[0][2]
+            # categoryCode = currentPictureCategoryList[0][2]
             color = self.getColor()
+            if not self.existsFlag:
+                vendorCode = self.getVendorCode(color, printName)
+            else:
+                vendorCode = self.vendorCodeList[i]
             datapicture = {
                         # 'Номер карточки': listCategory.index(category),
                         'Номер карточки': 1,
@@ -323,7 +336,7 @@ class ModelWithAddin:
                         'Бренд': 'Mobi711',
                         'Наименование': self.getName(category),
                         'Цена': price,
-                        'Артикул товара': self.getVendorCode(color, categoryCode, printName),
+                        'Артикул товара': vendorCode,
                         'Описание': self.getDescription(category),
                         'Производитель телефона': self.modelAddin.split(' ')[0],
                         'Назначение подарка': self.getPrintAddin(printName, 'Назначение подарка', category), # self.getRandomValue(category, 'Назначение подарка'),
@@ -339,9 +352,9 @@ class ModelWithAddin:
                         'Страна производства': 'Китай',
                         'Декоративные элементы': self.getPrintAddin(printName, 'Декоративные элементы', category), # self.getRandomValue(category, 'Декоративные элементы'),
                         'Материал изделия': self.getRandomValue(category, 'Материал изделия'),
-                        'Высота упаковки': 18.5,
-                        'Ширина упаковки': 11,
-                        'Глубина упаковки': 1.5,
+                        'Высота упаковки': 19,
+                        'Ширина упаковки': 12,
+                        'Глубина упаковки': 2,
                         'Предмет': stuff,
                         'Медиафайлы': r'http://95.78.233.163:8001/wp-content/uploads/Готовые принты/Силикон/{}/{}'.format(self.maskFolderName, pictures)
                     }
@@ -349,9 +362,11 @@ class ModelWithAddin:
                 # print("--- %s seconds 1 ---" % (time.time() - start_time))
         countBarcods = len(self.data)
         print("--- %s seconds 2 ---" % (time.time() - start_time))
-        listBarcods = self.generate_bar_WB(countBarcods)
-        for i, case in enumerate(self.data):
-            self.data[i]['Баркод товара'] = listBarcods[i]
+        if not self.existsFlag:
+            listBarcods = self.generate_bar_WB(countBarcods)
+            for i, case in enumerate(self.data):
+                self.data[i]['Баркод товара'] = listBarcods[i]
+        self.data
 
 
     # def setDescriptionCase(seft, dfAddinFromFile):
