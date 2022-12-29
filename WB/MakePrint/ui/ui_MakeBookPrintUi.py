@@ -130,27 +130,15 @@ class Ui_Form(object):
         self.textSiliconBrand.setGeometry(QtCore.QRect(0, 40, 51, 21))
         self.textSiliconBrand.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.textSiliconBrand.setObjectName("textSiliconBrand")
-        self.textSiliconName = QtWidgets.QTextEdit(self.tab)
-        self.textSiliconName.setEnabled(False)
-        self.textSiliconName.setGeometry(QtCore.QRect(120, 260, 111, 21))
-        self.textSiliconName.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.textSiliconName.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
-        self.textSiliconName.setObjectName("textSiliconName")
-        self.CameraType = QtWidgets.QComboBox(self.tab)
-        self.CameraType.setEnabled(False)
-        self.CameraType.setGeometry(QtCore.QRect(0, 260, 121, 22))
-        self.CameraType.setObjectName("CameraType")
-        self.CameraType.addItem("")
-        self.CameraType.addItem("")
         self.textSiliconCompability = QtWidgets.QTextEdit(self.tab)
         self.textSiliconCompability.setGeometry(QtCore.QRect(0, 70, 311, 41))
         self.textSiliconCompability.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
         self.textSiliconCompability.setObjectName("textSiliconCompability")
         self.ApplyAddin = QtWidgets.QPushButton(self.tab)
-        self.ApplyAddin.setGeometry(QtCore.QRect(0, 170, 141, 21))
+        self.ApplyAddin.setGeometry(QtCore.QRect(0, 190, 141, 31))
         self.ApplyAddin.setObjectName("ApplyAddin")
         self.CreateExcelForSilicon = QtWidgets.QPushButton(self.tab)
-        self.CreateExcelForSilicon.setGeometry(QtCore.QRect(0, 220, 311, 23))
+        self.CreateExcelForSilicon.setGeometry(QtCore.QRect(0, 252, 311, 31))
         self.CreateExcelForSilicon.setObjectName("CreateExcelForSilicon")
         self.textSiliconModel = QtWidgets.QTextEdit(self.tab)
         self.textSiliconModel.setGeometry(QtCore.QRect(0, 120, 311, 21))
@@ -181,13 +169,13 @@ class Ui_Form(object):
         self.ForceUpdate.setLayoutDirection(QtCore.Qt.RightToLeft)
         self.ForceUpdate.setObjectName("ForceUpdate")
         self.ApplyAddinFromFile = QtWidgets.QPushButton(self.tab)
-        self.ApplyAddinFromFile.setGeometry(QtCore.QRect(150, 170, 161, 21))
+        self.ApplyAddinFromFile.setGeometry(QtCore.QRect(150, 190, 161, 31))
         self.ApplyAddinFromFile.setObjectName("ApplyAddinFromFile")
         self.ClearAddin = QtWidgets.QPushButton(self.tab)
-        self.ClearAddin.setGeometry(QtCore.QRect(0, 196, 141, 20))
+        self.ClearAddin.setGeometry(QtCore.QRect(0, 219, 141, 31))
         self.ClearAddin.setObjectName("ClearAddin")
         self.CreateDB = QtWidgets.QPushButton(self.tab)
-        self.CreateDB.setGeometry(QtCore.QRect(150, 195, 161, 21))
+        self.CreateDB.setGeometry(QtCore.QRect(150, 220, 161, 31))
         self.CreateDB.setObjectName("CreateDB")
         self.CreateCaseAll = QtWidgets.QPushButton(self.tab)
         self.CreateCaseAll.setGeometry(QtCore.QRect(160, 347, 151, 21))
@@ -195,10 +183,17 @@ class Ui_Form(object):
         self.ChekImageAll = QtWidgets.QPushButton(self.tab)
         self.ChekImageAll.setGeometry(QtCore.QRect(170, 400, 141, 23))
         self.ChekImageAll.setObjectName("ChekImageAll")
+        self.chooseExistsCardsBtn = QtWidgets.QPushButton(self.tab)
+        self.chooseExistsCardsBtn.setGeometry(QtCore.QRect(170, 160, 141, 31))
+        self.chooseExistsCardsBtn.setObjectName("chooseExistsCardsBtn")
+        self.toExistsCardsChek = QtWidgets.QCheckBox(self.tab)
+        self.toExistsCardsChek.setGeometry(QtCore.QRect(0, 160, 161, 31))
+        self.toExistsCardsChek.setLayoutDirection(QtCore.Qt.RightToLeft)
+        self.toExistsCardsChek.setObjectName("toExistsCardsChek")
         self.tabWidget.addTab(self.tab, "")
 
         self.retranslateUi(Form)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(4)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
@@ -238,13 +233,6 @@ class Ui_Form(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Mobi711</p></body></html>"))
-        self.textSiliconName.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Наименование ВБ</p></body></html>"))
-        self.CameraType.setItemText(0, _translate("Form", "с закрытой камерой"))
-        self.CameraType.setItemText(1, _translate("Form", "с открытой камерой"))
         self.textSiliconCompability.setHtml(_translate("Form", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -273,4 +261,6 @@ class Ui_Form(object):
         self.CreateDB.setText(_translate("Form", "Создать базу данных"))
         self.CreateCaseAll.setText(_translate("Form", "Создать все"))
         self.ChekImageAll.setText(_translate("Form", "Перезалить фото"))
+        self.chooseExistsCardsBtn.setText(_translate("Form", "Существующие чехлы"))
+        self.toExistsCardsChek.setText(_translate("Form", "В существующие карточки"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Form", "Создание товара"))
