@@ -147,7 +147,7 @@ def get_ordersAll(days=3):
     dataNew2 = []
     dataorders = []
     tmp = []
-    for Token in [TokenKar, TokenAbr, TokenSam]:
+    for Token in [TokenKar, TokenAbr, TokenSam, TokenFed]:
         flag = True
         count_skip = 0
         while len(tmp) > 0 or flag:
@@ -229,7 +229,7 @@ def get_ordersAll(days=3):
 
 def getMode():
     try:
-        a = int(input('Введите режим работы: "0" по всем ИП, "1" - Караханян, "2" - Абраамян: , "3" - Самвел, "4" - Федоров: '))
+        a = int(0)
     except ValueError:
         print('По умолчанию 0.')
         a = 0

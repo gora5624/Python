@@ -172,68 +172,7 @@ def generate_bar_WB(count):
     return listBarcode
 
 
-def CreateExcelForFolder(modelClass=ModelWithAddin, color=str, addImage=str, topPrint=''):
-    listColor = []
-    # model = modelClass.model
-    pathToDone = pathToDoneSiliconImageSilicon # if modelClass.caseType == 'Силикон' else pathToDoneBookImageWithName
-    #listVendorCode = generateVendorCode(modelClass, color, joinPath(pathToDone, model, color))
-    #listBarcodes = generate_bar_WB(len(listVendorCode))
-    #colorCase = color if color == 'прозрачный' else color + ' матовый'
-    #nameFor1C = 'Чехол {} силикон {} {}'.format(model, modelClass.cameraType, colorCase)
-    # for i, VendorCode in enumerate(listVendorCode):
-    #     imageList = [VendorCode['Путь к картинке'].replace(pathToDone, pathToUploadWeb + '/Силикон').replace('\\','/')]
-    #     if exists(joinPath(pathToSecondImagesFolderSilicon, model, color, '2.jpg')):
-    #         imageList.append(joinPath(pathToSecondImagesFolderSilicon, model, color, '2.jpg').replace(pathToSecondImagesFolderSilicon, pathToUploadSecondWeb + '/Силикон').replace('\\','/'))
-    #     elif exists(joinPath(pathToSecondImagesFolderSilicon, model, color, '3.jpg')):
-    #         imageList.append(joinPath(pathToSecondImagesFolderSilicon, model, color, '3.jpg').replace(pathToSecondImagesFolderSilicon, pathToUploadSecondWeb + '/Силикон').replace('\\','/'))    
-    #         data = {
-    #             'Баркод': listBarcodes[i],
-    #             'Бренд': modelClass.brand,
-    #             'Наименование': modelClass.name,
-    #             'Розничная цена': modelClass.price,
-    #             'Артикул поставщика': VendorCode['Артикул поставщика'],
-    #             'Описание': modelClass.description,
-    #             'Тнвэд': modelClass.TNVED,
-    #             'Комплектация': modelClass.equipment,
-    #             'Повод': modelClass.reason,
-    #             'Особенности чехла': modelClass.special,
-    #             'Вид застежки': modelClass.lock,
-    #             'Рисунок': VendorCode['Рисунок'],
-    #             'Любимые герои': VendorCode['Любимые герои'],
-    #             'Совместимость': modelClass.compatibility,
-    #             'Тип чехлов': modelClass.type,
-    #             'Модель':modelClass.model,
-    #             'Основная характеристика': VendorCode['Принт'],
-    #             'Название 1С': multiReplace(nameFor1C, reductionDict),
-    #             'Название полное': nameFor1C,
-    #             'Название полное с принтом': nameFor1C + ' ' + VendorCode['Принт'],
-    #             'Размер печать': '',
-    #             'Путь к файлу': '#'.join(imageList)
-    #                 }
-        # data = {'Баркод': listBarcodes[i],
-        #         'Бренд': modelClass.brand,
-        #         'Наименование': modelClass.name,
-        #         'Розничная цена': modelClass.price,
-        #         'Артикул поставщика': VendorCode['Артикул поставщика'],
-        #         'Описание': modelClass.description,
-        #         'Тнвэд': modelClass.TNVED,
-        #         'Комплектация': modelClass.equipment,
-        #         'Повод': modelClass.reason,
-        #         'Особенности чехла': modelClass.special,
-        #         'Вид застежки': modelClass.lock,
-        #         'Рисунок': VendorCode['Рисунок'],
-        #         'Любимые герои': VendorCode['Любимые герои'],
-        #         'Совместимость': modelClass.compatibility,
-        #         'Тип чехлов': modelClass.type,
-        #         'Модель':modelClass.model,
-        #         'Основная характеристика': VendorCode['Принт'],
-        #         'Название 1С': multiReplace(nameFor1C, reductionDict),
-        #         'Название полное': nameFor1C,
-        #         'Название полное с принтом': nameFor1C + ' ' + VendorCode['Принт'],
-        #         'Размер печать': '',
-        #         'Путь к файлу': '#'.join(imageList)}
-        #listColor.append(data)
-    # for data in modelClass.data:
+def CreateExcelForFolder(modelClass=ModelWithAddin, topPrint=''):
     listColorpd = pandas.DataFrame(modelClass.data)
     if type(topPrint) == str:
         # a=len(listColorpd['Принт'])

@@ -196,6 +196,26 @@ class cardGetter():
         df.to_csv(os.path.join(self.mainPath, 'DB_card {}.txt'.format(self.ip)), index=False, sep='\t')
 
 
+    def setListVendorCodeToGet(self, listVendorCodeToGet):
+        self.listVendorCodeToGet = listVendorCodeToGet
+
+
+    def returnNom(self):
+        for i, vendorCode in enumerate(self.listVendorCodeToGet):
+            if vendorCode not in self.listVendorCodeDone:
+                self.getNomProcess([vendorCode], i)
+        df = pandas.DataFrame(self.DbCards)
+        df['sku'] = df['sku'].astype('string')
+        self.nomenclatures1CData['Штрихкод'] = self.nomenclatures1CData['Штрихкод'].astype('string')
+        df = pandas.merge(df, self.nomenclatures1CData, how='left', left_on='sku', right_on='Штрихкод')
+        df = df.drop(columns='Штрихкод')
+        dfNew = pandas.DataFrame()
+        for vendorCode in self.listVendorCodeToGet:
+            dfNew = pandas.concat([dfNew, df[df['vendorCode'] == vendorCode]])
+        dfNew.insert(0, 'ИП', self.ip)
+        return dfNew
+
+
     def getNomProcess(self, vendorCodes, i, timeout=20):
         headersGetCard = {'Authorization': '{}'.format(self.token)}
         jsonRequestsGetCard = {
@@ -213,10 +233,6 @@ class cardGetter():
                     timeout+=5
                     continue
                 for card in data:
-                    if card['vendorCode'] == 'iPhone_13_Pro_PRNT_CLR_CCM_DBL@1BP_CLR_DBL_PRNT_3080':
-                        print('1')
-                    if card['vendorCode'] == 'iPhone_13_Pro_PRNT_CLR_CCM_DBL@1BP_CLR_DBL_PRNT_3080':
-                        print('1')
                     dataNew = {
                         'imtID':card['imtID'],
                         'nmID':card['nmID'],

@@ -53,6 +53,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.makePlastinsBut.clicked.connect(self.makeplastins)
         self.ui.ClearAddin.clicked.connect(self.crearAdiin)
         self.ui.CreateDB.clicked.connect(self.crateDB)
+        self.ui.chooseExistsCardsBtn.clicked.connect(self.chooseExistsCardsBtn)
         self.ui.makeCartholdersButt.clicked.connect(self.btnCreateCartholders)
         self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
         self.tokenIvan = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
@@ -67,6 +68,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.pathToCategoryPrint = r'E:\MyProduct\Python\WB\MakePrint\cat.xlsx'
         self.pathToAddinFile = ''
         self.topPrint = ''
+        self.ui.toExistsCardsChek.setChecked(False)
+        self.dfExistCase = pandas.DataFrame
         self.updeteListFile()
         self.updateModelList()
 
@@ -293,6 +296,25 @@ class mameBookPrint(QtWidgets.QMainWindow):
         else:
             createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode, topPrint=self.topPrint)
         self.updateModelList()
+
+
+    def chooseExistsCardsBtn(self):
+        pathToListExistCaseFile = QFileDialog.getOpenFileName(self, ("Выберите файл с существующими карточками"), "", ("xlsx files (*.xlsx)"))[0]
+        countCase = 0
+        for case in listdir(pathToDoneSiliconImageSilicon):
+            countCase+= listdir(case)
+        if '.txt' in pathToListExistCaseFile:
+            self.dfExistCase = pandas.DataFrame(pandas.read_table(pathToListExistCaseFile, sep='\t'))
+        elif '.xlsx' in pathToListExistCaseFile:
+            self.dfExistCase = pandas.DataFrame(pandas.read_excel(pathToListExistCaseFile))
+        countExistsCase = self.dfExistCase.shape[0]
+        if countExistsCase>countCase:
+            print('Количестов существующих артикулов ({}) больше чем нужно ({}>{}), будут использованы не все'.format(countExistsCase, countExistsCase, countCase))
+            self.ui.toExistsCardsChek.setChecked(True)
+        elif countExistsCase<countCase:
+            print('Количестов существующих артикулов ({}) меньше чем нужно ({}<{}), добавьте строки в документ'.format(countExistsCase, countExistsCase, countCase))
+            return 0
+        
 
 
     def btnApplyAddinFromFile(self):
