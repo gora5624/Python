@@ -16,11 +16,11 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.ui.selectFileButt.clicked.connect(self.selectFile)
         self.ui.bigButt.clicked.connect(self.bigMode)
-        self.ui.medButt.clicked.connect(self.medMode)
+        #self.ui.medButt.clicked.connect(self.medMode)
         self.ui.smallButt.clicked.connect(self.smallMode)
         #self.ui.bigButt.clicked.connect(self.smallMode)
         self.ui.smallButtBooks.clicked.connect(self.smallBookMode)
-        self.ui.medButtBooks.clicked.connect(self.medBookMode)
+        #self.ui.medButtBooks.clicked.connect(self.medBookMode)
         self.ui.smallButtPlastins.clicked.connect(self.smallPlastinMode)
         self.ui.smallButtCartholders.clicked.connect(self.smallCartholderMode)
 

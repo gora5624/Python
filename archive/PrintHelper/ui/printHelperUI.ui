@@ -90,6 +90,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="medButt">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -103,6 +106,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="smallButt">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -116,6 +122,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="smallButtPlastins">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -136,7 +145,7 @@
     <rect>
      <x>20</x>
      <y>250</y>
-     <width>171</width>
+     <width>361</width>
      <height>41</height>
     </rect>
    </property>
@@ -158,22 +167,6 @@
    </property>
    <property name="text">
     <string>Картхолдеры маленький (90*60)</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="medButtBooks">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>250</y>
-     <width>171</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Книжки средний (105*160)</string>
    </property>
   </widget>
   <widget class="QFrame" name="frame">
@@ -225,7 +218,6 @@
   <zorder>smallButtPlastins</zorder>
   <zorder>smallButtBooks</zorder>
   <zorder>smallButtCartholders</zorder>
-  <zorder>medButtBooks</zorder>
  </widget>
  <resources/>
  <connections/>

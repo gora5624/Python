@@ -28,7 +28,7 @@ def pushPhoto(line, token, requestUrl, countTry=0):
             print('1')
         print(r.text + ' ' + jsonRequest['vendorCode'])
     except requests.ConnectionError:
-        r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=1) 
+        r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=5) 
         print(r.text)
     except requests.exceptions.SSLError:
         print('requests.ReadTimeout')

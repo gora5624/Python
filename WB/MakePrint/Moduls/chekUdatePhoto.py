@@ -73,7 +73,7 @@ def main():
     # pathToFile = sys.argv[1:][0].replace('#', ' ')
     df = pandas.DataFrame(pandas.read_excel(pathToFile))
     requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/media/save'
-    pool = multiprocessing.Pool()
+    pool = multiprocessing.Pool(1)
     for line in df.to_dict('records'):
     #     pushPhoto(line, token, requestUrl)
         pool.apply_async(chekImage, args=(line, token, requestUrl,))

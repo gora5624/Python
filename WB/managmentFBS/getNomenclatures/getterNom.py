@@ -5,7 +5,7 @@ import time
 
 class Getter():
     def __init__(self) -> None:
-        self.periodGetNomenclatures = 1 # Часы
+        self.periodGetNomenclatures = 8 # Часы
         self.tokens = [
                     {
                         'IPName': 'Караханян',
@@ -44,7 +44,8 @@ class Getter():
                 listProc.append(p2)
             for p in listProc:
                 p.join()
-        
+            for p in listProc:
+                p.terminate()
             #time.sleep(self.periodGetNomenclatures*60*60)
 
 
