@@ -178,6 +178,7 @@ def get_ordersAll(days=3):
     dfBarcodes = pandas.DataFrame(pandas.read_table(r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'))
     dfBarcodes['Штрихкод'] = dfBarcodes['Штрихкод'].astype(str)
     dfdataordersMerge = pandas.merge(dfdataorders, dfBarcodes, how='left',left_on='barcode',right_on='Штрихкод')
+    dfdataordersMerge.to_excel(r'E:\tmp.xlsx', index=False)
     for line in dfdataordersMerge.to_dict('records'):
         date = line['dateCreated'].split('T')[0].split('-')
         time = ':'.join(line['dateCreated'].split('T')[1].split(':')[0:2])

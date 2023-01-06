@@ -205,6 +205,8 @@ class cardGetter():
             if vendorCode not in self.listVendorCodeDone:
                 self.getNomProcess([vendorCode], i)
         df = pandas.DataFrame(self.DbCards)
+        if len(self.DbCards) == 0:
+            return pandas.DataFrame([])
         df['sku'] = df['sku'].astype('string')
         self.nomenclatures1CData['Штрихкод'] = self.nomenclatures1CData['Штрихкод'].astype('string')
         df = pandas.merge(df, self.nomenclatures1CData, how='left', left_on='sku', right_on='Штрихкод')
@@ -221,12 +223,14 @@ class cardGetter():
         jsonRequestsGetCard = {
                             "vendorCodes": vendorCodes
                             }
-        while True:
+        while timeout<60:
             try:
                 responce = requests.post(url=self.urlGetCard, json=jsonRequestsGetCard, headers=headersGetCard, timeout=timeout)
                 if responce.status_code != 200:
                     timeout+=5
                     continue
+                # else:
+                #     print(responce.text)
                 try:
                     data = responce.json()['data']
                 except requests.exceptions.JSONDecodeError:

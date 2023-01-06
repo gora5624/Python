@@ -35,8 +35,8 @@ class getDB():
                 tmpDF = pandas.read_table(os.path.join(self.pathToDb, file), sep='\t')
                 tmpDF.insert(0, 'ИП', nameIP)
                 self.dbFull = pandas.concat([self.dbFull, tmpDF])
-        p1 = multiprocessing.Process(target=self.saveDB, args=(self.dbFull, self.pathToDb,), daemon=False)
-        p1.start()
+        # p1 = multiprocessing.Process(target=self.saveDB, args=(self.dbFull, self.pathToDb,), daemon=False)
+        # p1.start()
         # self.dbFull.to_csv(os.path.join(self.pathToDb, 'DB_full.txt'), sep='\t', index=False)
 
 
