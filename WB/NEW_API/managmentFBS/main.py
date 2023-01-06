@@ -1,6 +1,7 @@
 from ClassGetDB import getDB
 from ClassGetListCardsToFilter import getListCardsToFilter
 from ClassExterminator import exterminator
+from ClassGetterFBO import getterFBO
 import multiprocessing
 import time
 import sys
@@ -20,7 +21,9 @@ class Manager(QMainWindow):
         self.ui.getLisCardsToFilterBtn.clicked.connect(self.getLisCardsToFilter)
         self.ui.startExtCharBtn.clicked.connect(self.startExtChar)
         self.ui.startExtImageBtn.clicked.connect(self.startExtImage)
-        self.ui.startDeletStoksBtn.clicked.connect(self.startDeletStoks)
+        self.ui.startGenerateBarcodesFileFor1CBtn.clicked.connect(self.generateBarcodesFileFor1C)
+        self.ui.getFSOStocksBtn.clicked.connect(self.getFSOStocks)
+        self.ui.startDeletStoksBtn.clicked.connect(self.deletStocks)
         self.filterTypeComboBoxList = [] # 0 column dor filter, 1 type filter, 2 value textEdit, 3 value comboBox
         self.DB = ''
         self.index = 1
@@ -38,10 +41,20 @@ class Manager(QMainWindow):
 
     def startExtChar(self):
         self.readyToRecreateCards('startExtChar')
+
     def startExtImage(self):
         self.readyToRecreateCards('startExtImage')
-    def startDeletStoks(self):
+
+    def generateBarcodesFileFor1C(self):
+        self.readyToRecreateCards('generateBarcodesFileFor1CBtn')
+
+    def deletStocks(self):
         self.readyToRecreateCards('startDeletStoks')
+
+    def getFSOStocks(self):
+        self.readyToRecreateCards('getStocks')
+        # getter = getterFBO()
+        # getter.getStocks()
 
 
 
@@ -55,13 +68,17 @@ class Manager(QMainWindow):
                 data = pandas.DataFrame(pandas.read_excel(dataPath))
         except:
             return 0
-        if 'vendorCode' in data.columns:
+        if 'vendorCode' in data.columns or 'Артикул товара':
             if function == 'startExtChar':
                 ext = exterminator().startExtChar(data)
             if function == 'startExtImage':
                 ext = exterminator().startExtImage(data)
             if function == 'startDeletStoks':
-                ext = exterminator().startDeletStoks(data, dataPath.replace(os.path.basename(dataPath),''))
+                ext = exterminator().startDeletStoks(data)
+            if function == 'generateBarcodesFileFor1CBtn':
+                ext = exterminator().generateBarcodesFileFor1CBtn(data, dataPath.replace(os.path.basename(dataPath),''))
+            if function == 'getStocks':
+                getter = getterFBO().getStocks(data)
         else:
             print('Нет обязательного поля vendorCode')
 
@@ -86,13 +103,14 @@ class Manager(QMainWindow):
         # getter = getListCardsToFilter(filter,self.DB,typeFilter,flterMain)
         # data = getter.getListCards()
         data = getListCardsToFilter.getListCards(filter,self.DB,flterMain)
-        p = multiprocessing.Process(target=self.saveDB, args=(data, dataPath,), daemon=False)
+        fileName = 'listCardsFromFilter.xlsx'
+        p = multiprocessing.Process(target=self.saveDB, args=(data, dataPath, fileName, ), daemon=False)
         p.start()
         return (data, dataPath)
 
     @staticmethod
-    def saveDB(data, dataPath):
-        data.to_excel(os.path.join(dataPath, 'tmp.xlsx'), index=False)
+    def saveDB(data, dataPath, fileName):
+        data.to_excel(os.path.join(dataPath, fileName), index=False)
         return 0
 
     def hideFilterTypeComboBox(self):

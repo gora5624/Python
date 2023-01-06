@@ -227,12 +227,14 @@ class cardGetter():
         jsonRequestsGetCard = {
                             "vendorCodes": vendorCodes
                             }
-        while True:
+        while timeout<60:
             try:
                 responce = requests.post(url=self.urlGetCard, json=jsonRequestsGetCard, headers=headersGetCard, timeout=timeout)
                 if responce.status_code != 200:
                     timeout+=5
                     continue
+                # else:
+                #     print(responce.text)
                 try:
                     fixed_text = fix_text(responce.text)
                     dataTmp = json.loads(fixed_text)

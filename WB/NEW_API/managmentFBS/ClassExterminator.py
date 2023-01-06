@@ -12,28 +12,37 @@ class exterminator():
     def __init__(self) -> None:
         self.urlExtChar = 'https://suppliers-api.wildberries.ru/content/v1/cards/update'
         self.urlExtImage = 'https://suppliers-api.wildberries.ru/content/v1/media/save'
-        self.tokens = [
+        self.urlDetelStokcs = 'https://suppliers-api.wildberries.ru/api/v3/stocks/{}'
+        self.tokensInfo = [
             {
                 'IPName': 'Караханян',
                 'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w',
-                'pathToDB': r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_nom Караханян.txt'
+                'tokenStat': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImU1ZGNjYWE2LWVjZDUtNDAzZC04MDA4LWRiNDZiYWJlYzBmYiJ9.7frmMigIpFCPJnpd8jopqeew1PKC4KhWpDIGSxE81Zs',
+                'pathToDB': r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_nom Караханян.txt',
+                'warehouse':'10237'
             },
             {
                 'IPName': 'Самвел',
                 'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y',
-                'pathToDB': r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_nom Самвел.txt'
+                'tokenStat': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjZjM2Y5MmM0LWQyMDgtNDMwZi04M2RhLWI2ODhjNzVhNWNlMSJ9.AOGxlP2tH7_SvUA0zOQCDRCP6uWd4pUlk9j7pncTqtQ',
+                'pathToDB': r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_nom Самвел.txt',
+                'warehouse':'278784'
             },
             
             {
                 'IPName': 'Манвел',
                 'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM',
-                'pathToDB': r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_nom Манвел.txt'
+                'tokenStat': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIwZDJlZTA4LTM3ZDEtNDViZC1iNTY2LWMwOTE4NjNjNjk1NyJ9.tseNJFDf2vf1PQ6YlkPaic_f-f1lolmXmr7-TG1HSRM',
+                'pathToDB': r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_nom Манвел.txt',
+                'warehouse':'141069'
             } ,
             
             {
                 'IPName': 'Федоров',
                 'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI',
-                'pathToDB': r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_nom Федоров.txt'
+                'tokenStat': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImNhODU0ZTllLTM2MzYtNDFjNS1hODczLWNlYWYzNTI3NzYzZCJ9.i7XVHJm5goeXyBF-c4hc_YUg9pYL3nxu1Y6ZUliZ61I',
+                'pathToDB': r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_nom Федоров.txt',
+                'warehouse':'652361'
             }             
         ]
         # self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
@@ -47,16 +56,25 @@ class exterminator():
         p1 = multiprocessing.Process(target=self.extChar, args=(data,), daemon=False)
         p1.start()
         p1.join()
+        p1.terminate()
 
     def startExtImage(self, data):
         p2 = multiprocessing.Process(target=self.extImage, args=(data,), daemon=False)
         p2.start()
         p2.join()
+        p2.terminate()
     
-    def startDeletStoks(self, data, dataPath):
-        p3 = multiprocessing.Process(target=self.deletStoks, args=(data,dataPath, ), daemon=False)
+    def generateBarcodesFileFor1CBtn(self, data, dataPath):
+        p3 = multiprocessing.Process(target=self.generateBarcodesFileFor1C, args=(data,dataPath, ), daemon=False)
         p3.start()
         p3.join()
+        p3.terminate()
+
+    def startDeletStoks(self, data):
+        p4 = multiprocessing.Process(target=self.deleteStocks, args=(data, ), daemon=False)
+        p4.start()
+        p4.join()
+        p4.terminate()
 
 
     def extChar(self, data):
@@ -69,15 +87,16 @@ class exterminator():
         procList = []
         for seller in data['ИП'].unique().tolist():
             dataSeller = data[data['ИП'] == seller].to_dict('records')
-            for token in self.tokens:
-                if token['IPName'] == seller:
-                    token = token['token']
+            for info in self.tokensInfo:
+                if info['IPName'] == seller:
+                    token = info['token']
                     break
             p = multiprocessing.Process(target=self.extCharProcess, args=(dataSeller,token, ), daemon=False)
             p.start()
             procList.append(p)
         for p in procList:
             p.join()
+            p.terminate()
 
 
     def extCharProcess(self, data, token):
@@ -146,15 +165,16 @@ class exterminator():
         procList = []
         for seller in data['ИП'].unique().tolist():
             dataSeller = data[data['ИП'] == seller].to_dict('records')
-            for token in self.tokens:
-                if token['IPName'] == seller:
-                    token = token['token']
+            for info in self.tokensInfo:
+                if info['IPName'] == seller:
+                    token = info['token']
                     break
             p = multiprocessing.Process(target=self.extImageProcess, args=(dataSeller,token, ), daemon=False)
             p.start()
             procList.append(p)
         for p in procList:
             p.join()
+            p.terminate()
 
 
     def extImageProcess(self, data, token):
@@ -173,7 +193,50 @@ class exterminator():
                 r = requests.post(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=5) 
         
 
-    def deletStoks(self,data, dataPath):
+    def deleteStocks(self, data):
+        for key in self.keys:
+            if key in data.columns:
+                continue
+            else:
+                data = self.getDataFromWB(data)
+                break
+        procList = []
+        for seller in data['ИП'].unique().tolist():
+            dataSeller = data[data['ИП'] == seller]
+            dataSeller['sku'] = dataSeller['sku'].apply(int)
+            dataSeller['sku'] = dataSeller['sku'].apply(str)
+            barcodeList = dataSeller['sku'].values.tolist()
+            for info in self.tokensInfo:
+                if info['IPName'] == seller:
+                    token = info['token']
+                    wh = info['warehouse']
+                    break
+            p = multiprocessing.Process(target=self.deleteStocksProcess, args=(barcodeList,token, wh,), daemon=False)
+            p.start()
+            procList.append(p)
+        for p in procList:
+            p.join()
+            p.terminate()
+
+
+    def deleteStocksProcess(self, data, token, wh):
+        step = 1000
+        for i in range(0,len(data),step):
+            jsonRequest = {
+                            "skus": data[i:i+step]
+                            }
+            headersRequest = {'Authorization': '{}'.format(token)}
+            try:
+                r = requests.delete(self.urlDetelStokcs.format(wh), json=jsonRequest, headers=headersRequest, timeout=15)  
+                r
+            except requests.ConnectionError:
+                r = requests.delete(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=60) 
+            except requests.exceptions.ReadTimeout:
+                r = requests.delete(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=60) 
+
+
+
+    def generateBarcodesFileFor1C(self,data, dataPath):
         dfForStoks = pandas.DataFrame(columns=['Баркод'])
         dfForStoks['Баркод'] = data['sku']
         dfForStoks.insert(1, 'Группа', "Чехол производство (принт)")
@@ -188,16 +251,22 @@ class exterminator():
     def getDataFromWB(self, data):
         dataFull = pandas.DataFrame()
         if 'ИП' in data:
-            for token in self.tokens:
-                dataSeller = data[data['ИП'] == token['IPName']]
+            for info in self.tokensInfo:
+                dataSeller = data[data['ИП'] == info['IPName']]
                 if dataSeller.size !=0:
-                    getter = cardGetter(token) 
-                    getter.setListVendorCodeToGet(dataSeller['vendorCode'].unique().tolist())
+                    getter = cardGetter(info) 
+                    if 'vendorCode' in data:
+                        getter.setListVendorCodeToGet(dataSeller['vendorCode'].unique().tolist())
+                    elif 'Артикул товара' in data:
+                        getter.setListVendorCodeToGet(dataSeller['Артикул товара'].unique().tolist())
                     dataFull = pandas.concat([dataFull, getter.returnNom()])
         else:
-            for token in self.tokens:
-                getter = cardGetter(token) 
-                getter.setListVendorCodeToGet(data['vendorCode'].unique().tolist())
+            for info in self.tokensInfo:
+                getter = cardGetter(info) 
+                if 'vendorCode' in data:
+                    getter.setListVendorCodeToGet(data['vendorCode'].unique().tolist())
+                elif 'Артикул товара' in data:
+                    getter.setListVendorCodeToGet(data['Артикул товара'].unique().tolist())
                 dataFull = pandas.concat([dataFull, getter.returnNom()])
         return dataFull
 
