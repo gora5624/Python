@@ -4,6 +4,8 @@ import multiprocessing
 import os
 import time
 import copy
+from ftfy import fix_text
+import json
 
 class nomenclaturesGetter():
     def __init__(self, token) -> None:
@@ -69,7 +71,9 @@ class nomenclaturesGetter():
                     continue
                 else:
                     try:
-                        data = responce.json()['data']['cards']
+                        fixed_text = fix_text(responce.text)
+                        dataTmp = json.loads(fixed_text)
+                        data = dataTmp['data']['cards']
                     except requests.exceptions.JSONDecodeError:
                         timeout += 5
                         continue
@@ -205,6 +209,8 @@ class cardGetter():
             if vendorCode not in self.listVendorCodeDone:
                 self.getNomProcess([vendorCode], i)
         df = pandas.DataFrame(self.DbCards)
+        if len(self.DbCards) == 0:
+            return pandas.DataFrame(self.DbCards)
         df['sku'] = df['sku'].astype('string')
         self.nomenclatures1CData['Штрихкод'] = self.nomenclatures1CData['Штрихкод'].astype('string')
         df = pandas.merge(df, self.nomenclatures1CData, how='left', left_on='sku', right_on='Штрихкод')
@@ -228,7 +234,10 @@ class cardGetter():
                     timeout+=5
                     continue
                 try:
-                    data = responce.json()['data']
+                    fixed_text = fix_text(responce.text)
+                    dataTmp = json.loads(fixed_text)
+                    data = dataTmp['data']
+                    # data = responce.json()['data']
                 except requests.exceptions.JSONDecodeError:
                     timeout+=5
                     continue
