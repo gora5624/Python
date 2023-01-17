@@ -1,14 +1,6 @@
-from cProfile import label
-from distutils.log import Log
-import imp
-from unicodedata import category
-from urllib import response
-from Class.CardBodyClass import CardCase, Nomenclature
 import sys
 from os.path import join as joinPath, basename
-from os import system
 sys.path.insert(1, joinPath(sys.path[0], '../..'))
-from my_mod.my_lib import read_xlsx
 import requests
 import pandas
 import time
@@ -51,6 +43,11 @@ class ExistsNomenclaturesCreater:
         self.getNomFromWB()
         self.changeCards()
         self.pushChanges()
+        self.createFileFor1C()
+
+
+    def createFileFor1C(seelf):
+        pass
 
 
     @staticmethod

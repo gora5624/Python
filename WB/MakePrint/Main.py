@@ -162,20 +162,21 @@ class mameBookPrint(QtWidgets.QMainWindow):
         for file in listdir(pathToDoneSiliconImageSilicon):
             if not isdir(joinPath(pathToDoneSiliconImageSilicon, file)):
                 pathToFileForUpload = joinPath(pathToDoneSiliconImageSilicon, file)
-                if not self.ui.toExistsCardsChek.isChecked():
-                    create = WBnomenclaturesCreater()
-                    create.pathToFileForUpload = pathToFileForUpload
-                    create.createNomenclaturesMultiporocessing(mode)
-                else:
-                    start_time = time.time()
-                    data = pandas.DataFrame(pandas.read_excel(pathToFileForUpload))
-                    tmp = ExistsNomenclaturesCreater(data, mode, pathToFileForUpload)
-                    pool = multiprocessing.Pool(2)
-                    pool.apply_async(ExistsNomenclaturesCreater.uplaodImage, args=(pathToFileForUpload, mode,))
-                    pool.apply_async(tmp.start(), args=(pathToFileForUpload, mode,))
-                    pool.close()
-                    pool.join()
-                    print("--- %s seconds ---" % (time.time() - start_time))
+                if '.db' not in pathToFileForUpload and '~' not in pathToFileForUpload:
+                    if not self.ui.toExistsCardsChek.isChecked():
+                        create = WBnomenclaturesCreater()
+                        create.pathToFileForUpload = pathToFileForUpload
+                        create.createNomenclaturesMultiporocessing(mode)
+                    else:
+                        start_time = time.time()
+                        data = pandas.DataFrame(pandas.read_excel(pathToFileForUpload))
+                        tmp = ExistsNomenclaturesCreater(data, mode, pathToFileForUpload)
+                        pool = multiprocessing.Pool(2)
+                        pool.apply_async(ExistsNomenclaturesCreater.uplaodImage, args=(pathToFileForUpload, mode,))
+                        pool.apply_async(tmp.start(), args=(pathToFileForUpload, mode,))
+                        pool.close()
+                        pool.join()
+                        print("--- %s seconds ---" % (time.time() - start_time))
 
 
 
@@ -340,20 +341,27 @@ class mameBookPrint(QtWidgets.QMainWindow):
         for mask in listdir(pathToMaskFolderSilicon):
             if 'проз.' not in mask:
                 maskNew = mask.replace('проз', 'проз.')
-            if 'мат.' not in mask:
+                maskNew
+            elif 'мат.' not in mask:
                 maskNew = mask.replace('мат', 'мат.')
+            else:
+                maskNew = mask
             try:
                 if isdir(pathTMP:=joinPath(pathToDoneSiliconImageSilicon, mask)):
                     delta = len(listdir(pathTMP))
-                    listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                    # listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
                     counter+=delta
                     try:
                         compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == maskNew]['Совместимость'].values.tolist()[0]
                     except IndexError:
                         compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == mask]['Совместимость'].values.tolist()[0]
                     brand = self.ui.textSiliconBrand.toPlainText()
-                    price = dfAddinFile[dfAddinFile['Номенклатура'] == mask]['Цена'].values.tolist()[0]
-                    modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, mask, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
+                    try:
+                        price = dfAddinFile[dfAddinFile['Номенклатура'] == maskNew]['Цена'].values.tolist()[0]
+                    except IndexError:
+                        price = dfAddinFile[dfAddinFile['Номенклатура'] == mask]['Цена'].values.tolist()[0]
+                    # modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, mask, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
+                    modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, maskNew, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag)
                     self.listModelForExcel.append(modelWithAddin)
             except:
                 print('Для {} не удалось получить свойства.'.format(mask))

@@ -1,20 +1,7 @@
-import os
+import requests
 import pandas
 
-logoPath = r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\Принты под пластины PDF\лого'
-fullPath = r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\Принты под пластины PDF\полные'
-pdfPath = r'F:\L XL'
-logo2 = r'F:\PDF\лого'
-full2= r'F:\PDF\полные'
-for file in os.listdir(logoPath):
-    if not os.path.isdir(os.path.join(logoPath,file)):
-        try:
-            os.rename(os.path.join(pdfPath,file), os.path.join(logo2,file))
-        except:
-            try:
-                os.rename(os.path.join(pdfPath,file.replace('pdf','cdr')), os.path.join(logo2,file.replace('pdf','cdr')))
-            except:
-                try:
-                    os.rename(os.path.join(pdfPath,file.replace('cdr','pdf')), os.path.join(logo2,file.replace('cdr','pdf')))
-                except:
-                    print(file)
+url = 'https://suppliers-api.wildberries.ru/api/v3/supplies/WB-GI-29424994'
+headersGetCard = {'Authorization': '{}'.format('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y')}
+r = requests.delete(url=url, headers=headersGetCard)
+r
