@@ -46,7 +46,7 @@ def generate_bar_WB(count):
         listBarcode = []
         countTry = 0
         url = "https://suppliers-api.wildberries.ru/content/v1/barcodes"
-        headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'}
+        headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'}
 
         while count > 5000:
             
@@ -86,6 +86,6 @@ def generate_bar_WB(count):
         return str(listBarcode[0])
 
 
-name = 'Гежа Матвей'#line['Пользователь']
+name = 'Снапелев Максим'#line['Пользователь']
 bc = generate_bar_WB(1)# str(line['Штрихкод'] )[0:-2]
 create_1C_barcod(bc, name)

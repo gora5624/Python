@@ -5,7 +5,7 @@ import time
 
 class Getter():
     def __init__(self) -> None:
-        self.periodGetNomenclatures = 8 # Часы
+        self.periodGetNomenclatures = 2 # Часы
         self.tokens = [
                     {
                         'IPName': 'Караханян',
