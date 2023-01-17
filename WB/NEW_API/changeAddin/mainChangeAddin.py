@@ -113,19 +113,19 @@ class AddinChanger():
         # self.barcodeForChange = self.barcodeForChange[self.barcodeForChange['Номенклатура'].str.contains("силикон", na = False)]
         # self.barcodeForChange = self.barcodeForChange[self.barcodeForChange['Характеристика'] != '(Принт 0)']
         self.barcodeForChange = self.dfBarcod
-        self.dfNomenclatures['Баркод'] = self.dfNomenclatures['Баркод'].fillna(0.0).apply(numpy.int64)
+        self.dfNomenclatures['sku'] = self.dfNomenclatures['sku'].fillna(0.0).apply(numpy.int64)
         # self.listForChange = self.dfNomenclatures[self.dfNomenclatures['Баркод'].isin(self.barcodeForChange)]
-        self.listForChange = pandas.merge(self.dfNomenclatures, self.barcodeForChange, how='inner',left_on='Баркод',right_on='Штрихкод')
-        self.listForChange = pandas.merge(self.listForChange, self.dfPrintAddin, how='inner',left_on='Характеристика',right_on='Принт')
+        self.listForChange = pandas.merge(self.dfNomenclatures, self.barcodeForChange, how='inner',left_on='sku',right_on='Штрихкод')
+        self.listForChange = pandas.merge(self.listForChange, self.dfPrintAddin, how='inner',left_on='Характеристика_x',right_on='Принт')
         self.listForChange = pandas.merge(self.listForChange, self.dfCategories, how='inner',left_on='Принт',right_on='Принт')
         # self.listForChange = pandas.merge(self.listForChange, self.dfPrintAddin, how='left',left_on='Категория',right_on='Категория')
         self.listForChange = self.dfNomenclatures
-        self.listForChange.sort_values('Артикул поставщика',inplace=True)
+        self.listForChange.sort_values('vendorCode',inplace=True)
         self.listForChange.fillna('')
         self.listForChangeDictTMP = self.listForChange.to_dict('records')
         for line in self.listForChangeDictTMP:
             #if line['Артикул поставщика'] not in self.listChangedCards:
-                tmp = {line['Артикул поставщика']:line}
+                tmp = {line['vendorCode']:line}
                 self.listForChangeDict.update(tmp)
         self.listForChange
         # i = 0
@@ -379,28 +379,28 @@ class AddinChanger():
                 line = self.listForChangeDict[card['vendorCode']]
             except KeyError:
                 continue
-            # category = line['Категория']
-            # caseName = line['Номенклатура']
+            category = line['Категория']
+            caseName = line['Номенклатура']
 
-            # try: 
-                #category = self.listForChange[self.listForChange['Артикул поставщика'] == card['vendorCode']]['Категория'].values.tolist()[0]
-            # except IndexError:
-            #     continue
-            # caseName = self.listForChange[self.listForChange['Артикул поставщика'] == card['vendorCode']]['Номенклатура'].values.tolist()[0]
-            # characteristicsOld = copy.deepcopy(card['characteristics'])
+            try: 
+                category = self.listForChange[self.listForChange['Артикул поставщика'] == card['vendorCode']]['Категория'].values.tolist()[0]
+            except IndexError:
+                continue
+            caseName = self.listForChange[self.listForChange['Артикул поставщика'] == card['vendorCode']]['Номенклатура'].values.tolist()[0]
+            characteristicsOld = copy.deepcopy(card['characteristics'])
             model = ''
             compatibility = ''
             fabric = ''
-            # for char in card['characteristics']:
-            #     if 'Модель' in char:
-            #         model = char['Модель']
-            #     if 'Совместимость' in char:
-            #         compatibility = char['Совместимость']
-            # if model != '':
-            #     fabric = model[0].split(' ')[0]
-            # model = 'Realme C30; Реалми С30; Реалме ц30'.split(';')
-            # compatibility = 'Realme c30; Реалми ц30; Реалме ц30; Realme С30;Реалми с30;Реалми С 30;Реалме С30;Реалме С 30'.split(';')
-            # fabric = 'Realme'
+            for char in card['characteristics']:
+                if 'Модель' in char:
+                    model = char['Модель']
+                if 'Совместимость' in char:
+                    compatibility = char['Совместимость']
+            if model != '':
+                fabric = model[0].split(' ')[0]
+            model = 'Realme C30; Реалми С30; Реалме ц30'.split(';')
+            compatibility = 'Realme c30; Реалми ц30; Реалме ц30; Realme С30;Реалми с30;Реалми С 30;Реалме С30;Реалме С 30'.split(';')
+            fabric = 'Realme'
             for char in card['characteristics']:
                 if 'Модель' in char:
                     model = char['Модель']
@@ -412,46 +412,42 @@ class AddinChanger():
                 compatibility = model[0:3]
             if model != '':
                 fabric = model[0].split(' ')[0]
-            # addChar = self.getCharForlistCardForCangesDict(card['vendorCode'])
-            # if 'чехол' in caseName:
-            #     stuff = 'Чехлы для телефонов'
-            #     # stuff = 'Чехлы-книжки для телефонов'
-            # else:
-            #     stuff = 'Защитные стекла'
+            addChar = self.getCharForlistCardForCangesDict(card['vendorCode'])
+            if 'чехол' in caseName:
+                stuff = 'Чехлы для телефонов'
+                # stuff = 'Чехлы-книжки для телефонов'
+            else:
+                stuff = 'Защитные стекла'
             
-            # compatibility = []# addChar['Совместимость']
-            # model = []# addChar['Совместимость'][0:3]
-            # fabric = []# addChar['Совместимость'][0].split(' ')[0]
-            # if 'Tecno_Camon_19_Neo_BP_CCM_CLR_ART_PRNT_1160' == card['vendorCode']:
-            #     print('i')
-            # if card['vendorCode'] == 'Realmi_C30_BP_CCM_CLR_FRT_PRNT_1333':
-            #     print('i')
+            compatibility = ['Realmi 8i',"Реалми 8и","Реалме 8и","Realme 8 i"]# addChar['Совместимость']
+            model = ['Realmi 8i',"Реалми 8и","Реалме 8и"]# addChar['Совместимость'][0:3]
+            fabric = ['Realme']# addChar['Совместимость'][0].split(' ')[0]
             for j in card['characteristics']:
                 if 'Предмет' in j:
                     stuff = j['Предмет']
             card['characteristics'] =[
-                            # {'Рисунок': addChar['Рисунок']},
-                            # {'Цвет': addChar['Цвет']},
-                            # {'Тип чехлов': self.getRandomValue(category, 'Тип чехлов', caseName)},
-                            # {'Повод': addChar['Повод']},
-                            # {'Особенности чехла': self.getRandomValue(category, 'Особенности чехла', caseName)},
-                            # {'Комплектация': []},# [self.getEquipmentCase(category, caseName, model)]},
-                            # {'Модель': []},#model},
-                            # {'Вид застежки': self.getRandomValue(category, 'Вид застежки', caseName)},
-                            # {'Декоративные элементы': addChar['Декоративные элементы']},
-                            # {'Совместимость': []},#compatibility},
-                            # {'Назначение подарка': addChar['Назначение подарка']},
-                            # {'Любимые герои': addChar['Любимые герои']},
-                            # {'Материал изделия': self.getRandomValue(category, 'Материал изделия', caseName)},
-                            # {'Производитель телефона': ''},# fabric},
-                            # {'Бренд': 'Mobi711'},
-                            # {'Страна производства': 'Китай'},
-                            # {'Наименование': 'Товар'},#self.getName(category, caseName, model)},
+                            {'Рисунок': addChar['Рисунок']},
+                            {'Цвет': addChar['Цвет']},
+                            {'Тип чехлов': self.getRandomValue(category, 'Тип чехлов', caseName)},
+                            {'Повод': addChar['Повод']},
+                            {'Особенности чехла': self.getRandomValue(category, 'Особенности чехла', caseName)},
+                            {'Комплектация': []},# [self.getEquipmentCase(category, caseName, model)]},
+                            {'Модель': []},#model},
+                            {'Вид застежки': self.getRandomValue(category, 'Вид застежки', caseName)},
+                            {'Декоративные элементы': addChar['Декоративные элементы']},
+                            {'Совместимость': []},#compatibility},
+                            {'Назначение подарка': addChar['Назначение подарка']},
+                            {'Любимые герои': addChar['Любимые герои']},
+                            {'Материал изделия': self.getRandomValue(category, 'Материал изделия', caseName)},
+                            {'Производитель телефона': fabric},
+                            {'Бренд': 'Mobi711'},
+                            {'Страна производства': 'Китай'},
+                            {'Наименование': 'Товар'},#self.getName(category, caseName, model)},
                             {'Предмет':stuff},
                             {'Описание': 'Товар'},
-                            {'Высота упаковки': 18.5},
+                            {'Высота упаковки': 19},
                             {'Ширина упаковки': 12},
-                            {'Длина упаковки': 1.4}
+                            {'Длина упаковки': 2}
                         ]
             card
         return listCardForCanges
@@ -503,7 +499,7 @@ class AddinChanger():
 
     def cangeCardsNumenclatures(self):
         start_time = time.time()
-        listForChange = self.listForChange['Артикул поставщика'].values.tolist()
+        listForChange = self.listForChange['vendorCode'].values.tolist()
         listVendorCodeForCanges = []
 
         for vendorCode in listForChange:
@@ -555,7 +551,7 @@ if __name__=='__main__':
     # path = r'E:\Downloads\camon_19_neo.xlsx' # sys.argv[2]
     # changer = AddinChanger(ip, path)
     # changer.cangeCardsNumenclatures()
-    for item in [('Абраамян', r'E:\Downloads\report_2022_12_13.xlsx.XLSX')]:
+    for item in [('Абраамян', r'C:\Users\Георгий\Desktop\listCardsFromFilter.xlsx')]:
         ip = item[0]
         path = item[1]
         changer = AddinChanger(ip, path)
