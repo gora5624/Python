@@ -23,6 +23,7 @@ pathToMakets = r'\\192.168.0.33\shared\Отдел производство\Wildb
 pathToMaketsFile = r'\\192.168.0.33\shared\Отдел производство\Wildberries\Макеты для новой программы\Сопоставление макетов.xlsx'
 addForOrder = {"Глянцевые": 'clear',
                 "Матовые": 'mate'}
+counter = 0                
 
 
 
@@ -81,9 +82,10 @@ def applyConfig():
         input('Файл конфигурации по адресу {} не обнаружен. Настройки взяты по умолчанию. Путь к макетам {}. Нажмите Enter чтобы продолжить'.format(pathToConfigFile, pathToMakets))
 
 
-def makeTXTForCorel(dataFromOrder, add):
+def makeTXTForCorel(dataFromOrder, add, counter):
     listPathToFile = []
     count = 1
+    # counter = 0
     for lineOrder in dataFromOrder:
         count = 1
         if 'Комплект 2' in lineOrder['Название']:
@@ -94,6 +96,7 @@ def makeTXTForCorel(dataFromOrder, add):
             count = 4
         elif 'Комплект 5' in lineOrder['Название']:
             count = 5
+        counter+=count
         flagAdd = False
         barcod = lineOrder['ШК'] if type(lineOrder['ШК']) == str else str(lineOrder['ШК'])[0:-2] if type(lineOrder['ШК']) == float else str(lineOrder['ШК'])
         orderNum  = lineOrder['Номер задания'] if type(lineOrder['Номер задания']) == str else str(lineOrder['Номер задания'])[0:-2] if type(lineOrder['Номер задания']) == float else str(lineOrder['Номер задания'])
@@ -111,6 +114,7 @@ def makeTXTForCorel(dataFromOrder, add):
         for line in listPathToFile:
             fileTXTForCorel.writelines(';'.join([line['Путь к макету'], line['Номер задания']])+'\n')
     fileTXTForCorel.close()
+    input(str(f'Количество стекол в заказе = {counter}'))
 
 
 def deleteOredrTXT():
@@ -159,8 +163,8 @@ def main2():
         input('Не обнаружены глянцевые заказы')
     elif len(dataFromOrderMT)==0:
         input('Не обнаружены матовые заказы')
-    makeTXTForCorel(dataFromOrderCL, addForOrder['Глянцевые'])
-    makeTXTForCorel(dataFromOrderMT, addForOrder['Матовые'])
+    makeTXTForCorel(dataFromOrderCL, addForOrder['Глянцевые'], counter)
+    makeTXTForCorel(dataFromOrderMT, addForOrder['Матовые'], counter)
     
 
 main2()
