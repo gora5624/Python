@@ -4,7 +4,8 @@ import multiprocessing
 from PIL import Image, ImageDraw, ImageFont
 import sys
 sys.path.append(abspath(joinPath(__file__,'../..')))
-from Folders import pathToDoneBookImageWithName, fontPath, pathToBookImageWithOutModel
+from Folders import pathToDoneBookImageWithName, fontPath, pathToBookImageWithOutModel, pathToTopPrint
+import pandas
 
 
 XPasteBrand = 50
@@ -28,25 +29,27 @@ def makeImageColor(color, modelBrand, modelModel):
     pathToColor = joinPath(pathToBookImageWithOutModel, color)
     customFontBrand = ImageFont.truetype(fontPath, 80)
     customFontModel = ImageFont.truetype(fontPath, 65)
-    for pic in listdir(pathToColor): 
-        imagePrint = Image.open(joinPath(pathToColor, pic))
-        imageDone = Image.new('RGB', imagePrint.size)
-        imageDone.paste(imagePrint)
-        # Написать бренд
-        drawText = ImageDraw.Draw(imageDone)
-        widthImage, heightImage = imageDone.size
-        widthText, heightText = drawText.textsize(modelBrand, font=customFontBrand)
-        drawText = ImageDraw.Draw(imageDone)
-        drawText.text((widthImage-XPasteBrand-widthText,heightImage-YPasteBrand-heightText), modelBrand, font=customFontBrand,fill='#000000')
-        # написать Модель
-        drawText = ImageDraw.Draw(imageDone)
-        widthImage, heightImage = imageDone.size
-        widthText, heightText = drawText.textsize(modelModel, font=customFontModel)
-        if widthText>800:
-            customFontModel = ImageFont.truetype(fontPath, 55)
-        drawText = ImageDraw.Draw(imageDone)
-        drawText.text((widthImage-XPasteModel-widthText,heightImage-YPasteModel-heightText), modelModel, font=customFontModel,fill='#000000')
-        fullPathToSave = joinPath(pathToDoneBookImageWithName, modelBrand + ' ' + modelModel, color)
-        if not exists(fullPathToSave.replace('/','&')):
-            makedirs(fullPathToSave.replace('/','&'))
-        imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic[0:-4] + '.jpg'), quality=75)
+    topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:200]['Принт'].values.tolist()
+    for pic in listdir(pathToColor):
+        if pic.replace('.png',')').replace('print','(Принт') in topPrint:
+            imagePrint = Image.open(joinPath(pathToColor, pic))
+            imageDone = Image.new('RGB', imagePrint.size)
+            imageDone.paste(imagePrint)
+            # Написать бренд
+            drawText = ImageDraw.Draw(imageDone)
+            widthImage, heightImage = imageDone.size
+            widthText, heightText = drawText.textsize(modelBrand, font=customFontBrand)
+            drawText = ImageDraw.Draw(imageDone)
+            drawText.text((widthImage-XPasteBrand-widthText,heightImage-YPasteBrand-heightText), modelBrand, font=customFontBrand,fill='#000000')
+            # написать Модель
+            drawText = ImageDraw.Draw(imageDone)
+            widthImage, heightImage = imageDone.size
+            widthText, heightText = drawText.textsize(modelModel, font=customFontModel)
+            if widthText>800:
+                customFontModel = ImageFont.truetype(fontPath, 55)
+            drawText = ImageDraw.Draw(imageDone)
+            drawText.text((widthImage-XPasteModel-widthText,heightImage-YPasteModel-heightText), modelModel, font=customFontModel,fill='#000000')
+            fullPathToSave = joinPath(pathToDoneBookImageWithName, 'Чехол книга ' + modelBrand + ' ' + modelModel +' черный с сил. вставкой Fashion')
+            if not exists(fullPathToSave.replace('/','&')):
+                makedirs(fullPathToSave.replace('/','&'))
+            imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic[0:-4] + '.jpg'), quality=75)

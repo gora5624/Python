@@ -310,12 +310,15 @@ class ModelWithAddin:
         for i, pictures in enumerate(listdir(self.pathSiliconImage)):
             # start_time = time.time()
             printName = pictures[0:-4]
-            printNameRus = pictures.replace('.jpg', '')
+            if 'print' in pictures:
+                printNameRus = pictures.replace('.jpg', ')').replace('print ','(Принт ')
+            else:
+                printNameRus = pictures.replace('.jpg', '')
             # for line in self.dfCategoryPrintDict:
             #     if line['Принт'] == printName:
             #         category = line['Категория']
             #         categoryCode = line['Код категории']
-            currentPictureCategoryList = self.dfCategoryPrint[self.dfCategoryPrint.Принт == printName].values.tolist()
+            currentPictureCategoryList = self.dfCategoryPrint[self.dfCategoryPrint.Принт == printNameRus].values.tolist()
             #for categoryData in currentPictureCategoryList.values:
             # category = categoryData[1]
             # categoryCode = categoryData[2]
@@ -331,7 +334,7 @@ class ModelWithAddin:
                         'Номер карточки': 1,
                         'Принт': printNameRus,
                         'Категория': category,
-                        'Цвет': color if (colorAddin:=self.getPrintAddin(printName, 'Цвет', category)) == 0 else colorAddin,# color,
+                        'Цвет': color if (colorAddin:=self.getPrintAddin(printNameRus, 'Цвет', category)) == 0 else colorAddin,# color,
                         'Баркод товара': '',
                         'Бренд': 'Mobi711',
                         'Наименование': self.getName(category),
@@ -339,18 +342,18 @@ class ModelWithAddin:
                         'Артикул товара': vendorCode,
                         'Описание': self.getDescription(category),
                         'Производитель телефона': self.modelAddin.split(' ')[0],
-                        'Назначение подарка': self.getPrintAddin(printName, 'Назначение подарка', category), # self.getRandomValue(category, 'Назначение подарка'),
+                        'Назначение подарка': self.getPrintAddin(printNameRus, 'Назначение подарка', category), # self.getRandomValue(category, 'Назначение подарка'),
                         'Комплектация': self.getEquipmentCase(category),
                         'Особенности чехла': self.getRandomValue(category, 'Особенности чехла'),
                         'Вид застежки': self.getRandomValue(category, 'Вид застежки'),
-                        'Рисунок': self.getPrintAddin(printName, 'Рисунок', category), # self.getRandomValue(category, 'Рисунок'),
-                        'Любимые герои': self.getPrintAddin(printName, 'Любимые герои', category), # self.getRandomValue(category, 'Любимые герои'),
+                        'Рисунок': self.getPrintAddin(printNameRus, 'Рисунок', category), # self.getRandomValue(category, 'Рисунок'),
+                        'Любимые герои': self.getPrintAddin(printNameRus, 'Любимые герои', category), # self.getRandomValue(category, 'Любимые герои'),
                         'Совместимость': self.chekCountField('Совместимость',self.compatibility),
                         'Тип чехлов': self.getRandomValue(category, 'Тип чехлов'),
                         'Модель': self.chekCountField('Модель',self.modelAddin),
-                        'Повод': self.getPrintAddin(printName, 'Повод', category), # self.getRandomValue(category, 'Повод'),
+                        'Повод': self.getPrintAddin(printNameRus, 'Повод', category), # self.getRandomValue(category, 'Повод'),
                         'Страна производства': 'Китай',
-                        'Декоративные элементы': self.getPrintAddin(printName, 'Декоративные элементы', category), # self.getRandomValue(category, 'Декоративные элементы'),
+                        'Декоративные элементы': self.getPrintAddin(printNameRus, 'Декоративные элементы', category), # self.getRandomValue(category, 'Декоративные элементы'),
                         'Материал изделия': self.getRandomValue(category, 'Материал изделия'),
                         'Высота упаковки': 19,
                         'Ширина упаковки': 12,
