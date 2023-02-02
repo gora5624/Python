@@ -63,7 +63,8 @@ while True:
     curTime = datetime.today().time().strftime(r"%H.%M.%S")
     # caseListTMP.to_excel(os.path.join(os.path.join(r'\\192.168.0.111\shared\_Общие документы_\Заказы вайлд\Браки', branFileName.format(str(count),curData, curTime))), index=False)
     dataBracDF.to_excel(os.path.join(os.path.join(r'\\192.168.0.111\shared\_Общие документы_\Заказы вайлд\Браки', branFileName.format(str(count),curData, curTime))), index=False)
-    print('Файл создан в \\192.168.0.111\shared\_Общие документы_\Заказы вайлд\Браки')
+    print('Файл создан в \\192.168.0.111\shared\_Общие документы_\Заказы вайлд\Браки\n'+branFileName.format(str(count),curData, curTime))
+    print('Всего строк: '+str(len(dataBracDF)))
     with open(counter, 'w') as file:
         file.write(str(count + 1))
     file.close()

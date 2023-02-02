@@ -129,7 +129,7 @@ def main2():
     dataFromOrder = read_xlsx(pathToOrder)
     if len(dataFromOrder)==0:
         input('Пустой файл с заказом')
-        return 0
+        return
     dataFromOrderCL = []
     dataFromOrderMT = []
     for lineOrder in dataFromOrder:
