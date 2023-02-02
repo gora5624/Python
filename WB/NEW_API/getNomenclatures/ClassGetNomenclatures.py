@@ -69,6 +69,9 @@ class nomenclaturesGetter():
                     timeout += 5
                     self.log(responce.text)
                     continue
+                if responce.text == '':
+                    timeout+=5
+                    continue
                 else:
                     try:
                         fixed_text = fix_text(responce.text)
@@ -189,7 +192,9 @@ class cardGetter():
         # pool.join()
         for i, vendorCode in enumerate(self.listVendorCodeToGet):
             if vendorCode not in self.listVendorCodeDone:
-                self.getNomProcess([vendorCode], i)
+                ret = self.getNomProcess([vendorCode], i)
+                if ret == 'Ограничения':
+                    return
         df = pandas.DataFrame(self.DbCards)
         df['sku'] = df['sku'].astype('string')
         self.nomenclatures1CData['Штрихкод'] = self.nomenclatures1CData['Штрихкод'].astype('string')
@@ -207,7 +212,9 @@ class cardGetter():
     def returnNom(self):
         for i, vendorCode in enumerate(self.listVendorCodeToGet):
             if vendorCode not in self.listVendorCodeDone:
-                self.getNomProcess([vendorCode], i)
+                ret = self.getNomProcess([vendorCode], i)
+                if ret == 'Ограничения':
+                    return
         df = pandas.DataFrame(self.DbCards)
         if len(self.DbCards) == 0:
             return pandas.DataFrame(self.DbCards)
@@ -231,10 +238,16 @@ class cardGetter():
             try:
                 responce = requests.post(url=self.urlGetCard, json=jsonRequestsGetCard, headers=headersGetCard, timeout=timeout)
                 if responce.status_code != 200:
+                    if 'ограничения' in responce.text:
+                        print('Ограничения')
+                        return 'Ограничения'
                     timeout+=5
                     continue
                 # else:
                 #     print(responce.text)
+                if responce.text == '':
+                    timeout+=5
+                    continue
                 try:
                     fixed_text = fix_text(responce.text)
                     dataTmp = json.loads(fixed_text)

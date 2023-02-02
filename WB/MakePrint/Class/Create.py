@@ -1,14 +1,7 @@
-from cProfile import label
-from distutils.log import Log
-import imp
-from unicodedata import category
-from urllib import response
-from Class.CardBodyClass import CardCase, Nomenclature
+
 import sys
 from os.path import join as joinPath
-from os import system
 sys.path.insert(1, joinPath(sys.path[0], '../..'))
-from my_mod.my_lib import read_xlsx
 import requests
 import pandas
 import time
@@ -37,8 +30,8 @@ class WBnomenclaturesCreater:
     def uplaodImage(path, token):
         args = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\udatePhoto.py', path.replace(' ', '#'), token]
         subprocess.Popen(args, shell=True).wait()
-        args2 = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\chekUdatePhoto.py', path.replace(' ', '#'), token]
-        subprocess.Popen(args2, shell=True)
+        # args2 = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\chekUdatePhoto.py', path.replace(' ', '#'), token]
+        # subprocess.Popen(args2, shell=True)
 
     def createNomenclaturesMultiporocessing(self, mode):
         # LogMaker.metodStart('createNomenclaturesMultiporocessing', {'mode':'str(mode)'})
@@ -127,13 +120,11 @@ class WBnomenclaturesCreater:
                 try:
                     # print("TRY1")
                     responce = requests.post(self.urlCreate, json=jsonCard, headers=headersRequest, timeout=self.timeout)
-                    time.sleep(5)
                     # print("responce = requests.post(self.urlCreate, json=jsonCard, headers=headersRequest)4")
                     if responce.status_code == 200:
                         # print("responce.status_code == 200:")
                         # LogMaker.logAction('createNomenclatureSingleProcess', vendorCodeMain +'  успешно создана')
                             print(vendorCodeMain + ' успешно создана')
-                            time.sleep(2)
                             break
                         #time.sleep(1)
                         # p = multiprocessing.Process(target=self.uplaodImage, args=(vendorCodeMain, urlsList, token,))
@@ -178,7 +169,6 @@ class WBnomenclaturesCreater:
                             # LogMaker.logAction('createNomenclatureSingleProcess', vendorCodeMain +'  успешно создана')
                             vendorCodeMain = modelListCard[i]['vendorCode']
                             print(modelListCard[i]['vendorCode'] + ' успешно создана')
-                            time.sleep(1)
                             break
                         else:
                             # print("responce.text123")

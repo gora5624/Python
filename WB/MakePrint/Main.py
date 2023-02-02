@@ -162,7 +162,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         for file in listdir(pathToDoneSiliconImageSilicon):
             if not isdir(joinPath(pathToDoneSiliconImageSilicon, file)):
                 pathToFileForUpload = joinPath(pathToDoneSiliconImageSilicon, file)
-                if '.db' not in pathToFileForUpload and '~' not in pathToFileForUpload:
+                if '.db' not in pathToFileForUpload and '~' not in pathToFileForUpload and '1C_' not in pathToFileForUpload:
                     if not self.ui.toExistsCardsChek.isChecked():
                         create = WBnomenclaturesCreater()
                         create.pathToFileForUpload = pathToFileForUpload
@@ -172,7 +172,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
                         data = pandas.DataFrame(pandas.read_excel(pathToFileForUpload))
                         tmp = ExistsNomenclaturesCreater(data, mode, pathToFileForUpload)
                         pool = multiprocessing.Pool(2)
-                        pool.apply_async(ExistsNomenclaturesCreater.uplaodImage, args=(pathToFileForUpload, mode,))
+                        # pool.apply_async(ExistsNomenclaturesCreater.uplaodImage, args=(pathToFileForUpload, mode,))
                         pool.apply_async(tmp.start(), args=(pathToFileForUpload, mode,))
                         pool.close()
                         pool.join()
@@ -338,33 +338,36 @@ class mameBookPrint(QtWidgets.QMainWindow):
         dfAddinFile = pandas.DataFrame(pandas.read_excel(self.pathToAddinFile))
         existsFlag = self.ui.toExistsCardsChek.isChecked()
         counter = 0
-        for mask in listdir(pathToMaskFolderSilicon):
-            if 'проз.' not in mask:
-                maskNew = mask.replace('проз', 'проз.')
+        for case in listdir(pathToDoneSiliconImageSilicon):
+            if 'проз.' not in case:
+                maskNew = case.replace('проз', 'проз.')
                 maskNew
-            elif 'мат.' not in mask:
-                maskNew = mask.replace('мат', 'мат.')
+            elif 'мат.' not in case:
+                maskNew = case.replace('мат', 'мат.')
             else:
-                maskNew = mask
+                maskNew = case
             try:
-                if isdir(pathTMP:=joinPath(pathToDoneSiliconImageSilicon, mask)):
+                if isdir(pathTMP:=joinPath(pathToDoneSiliconImageSilicon, case)):
                     delta = len(listdir(pathTMP))
-                    # listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                    if existsFlag:
+                        listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
                     counter+=delta
                     try:
                         compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == maskNew]['Совместимость'].values.tolist()[0]
                     except IndexError:
-                        compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == mask]['Совместимость'].values.tolist()[0]
+                        compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == case]['Совместимость'].values.tolist()[0]
                     brand = self.ui.textSiliconBrand.toPlainText()
                     try:
                         price = dfAddinFile[dfAddinFile['Номенклатура'] == maskNew]['Цена'].values.tolist()[0]
                     except IndexError:
-                        price = dfAddinFile[dfAddinFile['Номенклатура'] == mask]['Цена'].values.tolist()[0]
-                    # modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, mask, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
-                    modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, maskNew, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag)
+                        price = dfAddinFile[dfAddinFile['Номенклатура'] == case]['Цена'].values.tolist()[0]
+                    if existsFlag:
+                        modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, case, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
+                    else:
+                        modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, maskNew, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag)
                     self.listModelForExcel.append(modelWithAddin)
             except:
-                print('Для {} не удалось получить свойства.'.format(mask))
+                print('Для {} не удалось получить свойства.'.format(case))
 
 
 
@@ -390,7 +393,10 @@ class mameBookPrint(QtWidgets.QMainWindow):
             for modelTMP in listModel:
                 # model = modelTMP.replace(caseType,'').strip()
                 delta = len(listdir(joinPath(pathToDoneSiliconImageSilicon, modelTMP)))
-                listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                if existsFlag:
+                    listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                else:
+                    listDataVendorCode = ''
                 counter+=delta
                 modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, modelTMP, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
                 # if caseType == self.bookName:
@@ -405,7 +411,10 @@ class mameBookPrint(QtWidgets.QMainWindow):
                     # if item.model == curModel:
                         # if self.acceptEvent("Свойства для {} уже записаны, перезаписать?".format(item.model)):
                     delta = len(listdir(joinPath(pathToDoneSiliconImageSilicon, modelTMP)))
-                    listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                    if existsFlag:
+                        listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                    else:
+                        listDataVendorCode = ''
                     counter+=delta
                     brand = self.ui.textSiliconBrand.toPlainText()
                     compability = self.ui.textSiliconCompability.toPlainText()
@@ -482,17 +491,23 @@ class mameBookPrint(QtWidgets.QMainWindow):
         modelBrand = self.ui.textEditBrand.toPlainText()
         if modelBrand == '':
             self.createMSGError('Поле бренд не заполенно!')
-            return 0
+            #return 0
         modelModel = self.ui.textEditModel.toPlainText()
         if modelModel == '':
             self.createMSGError('Поле модель не заполенно!')
-            return 0
+            #return 0
         colorList = self.checkColorBox()
         if colorList == 0:
             return 0
-        p = multiprocessing.Process(target=makeImageBookWithNameModel, args=(colorList, modelBrand, modelModel,), name=modelBrand + ' ' + modelModel)
-        self.ui.textLog.setText(self.ui.textLog.toPlainText() + modelBrand +' ' + modelModel + ' добавлен в очередь\n')
-        p.start()
+        # временный костыль, потом переделать
+        for line in pandas.DataFrame(pandas.read_excel(r'F:\Маски силикон\Новое.xlsx')).to_dict('records'):
+            tmpListName = line['Номенклатура'].replace('Чехол книга ','').replace(' черный с сил. вставкой Fashion','').split(' ')
+            modelBrand = tmpListName[0]
+            modelModel = ' '.join(tmpListName[1:])
+            p = multiprocessing.Process(target=makeImageBookWithNameModel, args=(colorList, modelBrand, modelModel,))
+            self.ui.textLog.setText(self.ui.textLog.toPlainText() + modelBrand +' ' + modelModel + ' добавлен в очередь\n')
+            p.start()
+            p.join()
 
 
 
