@@ -16,13 +16,16 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.ui.selectFileButt.clicked.connect(self.selectFile)
         self.ui.bigButt.clicked.connect(self.bigMode)
-        #self.ui.medButt.clicked.connect(self.medMode)
+        self.ui.medButt.clicked.connect(self.medMode)
+        self.ui.medButtBooks.clicked.connect(self.medBookMode)
         self.ui.smallButt.clicked.connect(self.smallMode)
         #self.ui.bigButt.clicked.connect(self.smallMode)
         self.ui.smallButtBooks.clicked.connect(self.smallBookMode)
         #self.ui.medButtBooks.clicked.connect(self.medBookMode)
         self.ui.smallButtPlastins.clicked.connect(self.smallPlastinMode)
         self.ui.smallButtCartholders.clicked.connect(self.smallCartholderMode)
+        self.ui.medButtBooks.setEnabled(False)
+        self.ui.medButt.setEnabled(False)
         self.ui.smallButt.setEnabled(False)
         self.ui.smallButtBooks.setEnabled(False)
         self.ui.smallButtPlastins.setEnabled(False)
@@ -72,6 +75,13 @@ class FBSStoks(QtWidgets.QMainWindow):
 
 
     def medBookMode(self):
+            global mode
+            mode = 'medBookMode'
+            self.saveModePrinter(mode)
+            w.close(self)
+
+
+    def medBookMode(self):
         global mode
         mode = 'medBookMode'
         self.saveModePrinter(mode)
@@ -91,6 +101,8 @@ class FBSStoks(QtWidgets.QMainWindow):
         if pathToOrderFile == '':
             self.createMSGError("Вы не выбрали файл номенклатурой для загрузки.")
             return 0
+        self.ui.medButtBooks.setEnabled(True)
+        self.ui.medButt.setEnabled(True)
         self.ui.smallButt.setEnabled(True)
         self.ui.smallButtBooks.setEnabled(True)
         self.ui.smallButtPlastins.setEnabled(True)
@@ -180,6 +192,11 @@ def applyConfig(mode):
             fileMode.close()
     elif mode == 'smallBookMode':
         pathToConfig = pathToFileConfigSmallBook
+        with open(pathToModeFile, 'w') as fileMode:
+            fileMode.write('book')
+            fileMode.close()
+    elif mode == 'medBookMode':
+        pathToConfig = pathToFileConfigMedBook
         with open(pathToModeFile, 'w') as fileMode:
             fileMode.write('book')
             fileMode.close()
@@ -283,7 +300,10 @@ def startChek(mode):
                     sizeName = sizeApp
                     sizePath = sizeConf.split('=')[1].strip()
                     global dataWithSizePath
-                    dataWithSizePath.update({sizeName: joinpath(pathToSizeDir,sizePath + '.cdr')})
+                    if mode == 'smallPlastinMode' or mode == 'smallCartholderMode':
+                        dataWithSizePath.update({sizeName: sizePath})
+                    else:
+                        dataWithSizePath.update({sizeName: joinpath(pathToSizeDir,sizePath + '.cdr')})
         if len(dataWithSizePath) != len(sizeApp) and len(dataWithSizePath) != len(listSize):
             errorsSizeFlag = True
             input('ВНИМАНИЕ, КАКОЙ_ТО РАЗМЕР НЕ СОВПАЛ ПО НАЗВАНИЮ В ФАЙЛЕ РАЗМЕРОВ "{}" И В ФАЙЛЕ КОНФИГУРАЦИИ "{}", ПРОВЕРЬТЕ ОБА ФАЙЛА!'.format(
@@ -425,6 +445,22 @@ def createpathToSize(size):
     # return fullPath
 
 
+def createPathToPrintWithSize(printNameAll, size):
+    if '(' in printNameAll and ')' in printNameAll:
+        printName = printNameAll.split('(')[1].split(')')[0]
+    elif '(' in printNameAll and ')' not in printNameAll:
+        printName = printNameAll.split('(')[1]
+    printFileName = printName.replace('принт', 'print') + '.pdf'
+    pathToFolder = dataWithSizePath[size]
+    fullPath = joinpath(pathToFolder, printFileName)
+    if not file_exists(fullPath):
+        printFileName = printFileName.replace('.pdf', '.cdr')
+        fullPath = joinpath(pathToFolder, printFileName)
+    if not file_exists(fullPath):
+        fullPath = pathToBug
+    return fullPath
+
+
 def splitOrderTable(dataFromOrderFile, mode):
     numTable = 1
     count = 0
@@ -453,13 +489,18 @@ def splitOrderTable(dataFromOrderFile, mode):
                     # позже добавить условие что картхолдеры, з фолд, пластины и тп по старому делать, остально по новому
                     pathToFile = createpathToFile(printName)
                     pathToSize = createpathToSize(size)
+                    pathToPrintWithSize = createPathToPrintWithSize(printName, size)
                 else:
                     pathToFile = pathToBug
-                data.append(';'.join([
-                    orderNum, pathToFile, X.replace('.', ','), Y.replace('.', ','), line['Название'], pathToSize]))
-                with open(joinpath(pathToTablesV2, nameTable.format(str(numTable))) + '.txt', 'w', encoding='ANSI') as file:
-                    file.write('\n'.join(data))
-                    file.close()
+                if mode == 'smallPlastinMode' or mode == 'smallCartholderMode':
+                    data.append(';'.join([
+                        orderNum, pathToFile, X.replace('.', ','), Y.replace('.', ','), line['Название'], pathToPrintWithSize]))
+                else:
+                    data.append(';'.join([
+                        orderNum, pathToFile, X.replace('.', ','), Y.replace('.', ','), line['Название'], pathToSize]))
+        with open(joinpath(pathToTablesV2, nameTable.format(str(numTable))) + '.txt', 'w', encoding='ANSI') as file:
+            file.write('\n'.join(data))
+            file.close()
 
 
 def makeLocPrint(count):
