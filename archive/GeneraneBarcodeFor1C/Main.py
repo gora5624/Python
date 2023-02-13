@@ -83,6 +83,8 @@ def generate_bar_WB(count):
                 time.sleep(10)
                 continue
         print(listBarcode[0])
+        # df = pandas.DataFrame(listBarcode)
+        # df.to_excel(r'E:\barcodes.xlsx', index=False)
         return str(listBarcode[0])
 
 

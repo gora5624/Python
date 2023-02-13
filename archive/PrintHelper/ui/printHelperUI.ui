@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>468</height>
+    <height>488</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -223,6 +223,19 @@
     </property>
    </widget>
   </widget>
+  <widget class="QPushButton" name="oldNewButt">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>460</y>
+     <width>211</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Переключить на новый интерфейс</string>
+   </property>
+  </widget>
   <zorder>frame_2</zorder>
   <zorder>frame</zorder>
   <zorder>selectFileButt</zorder>
@@ -232,6 +245,7 @@
   <zorder>medButt</zorder>
   <zorder>smallButtPlastins</zorder>
   <zorder>smallButtCartholders</zorder>
+  <zorder>oldNewButt</zorder>
  </widget>
  <resources/>
  <connections/>
