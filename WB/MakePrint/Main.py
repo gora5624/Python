@@ -333,7 +333,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
 
 
     def btnApplyAddinFromFile(self):
-        print('tst')
+        # print('tst')
         self.pathToAddinFile = QFileDialog.getOpenFileName(self, ("Выберите файл свойств"), "", ("xlsx files (*.xlsx)"))[0]
         dfAddinFile = pandas.DataFrame(pandas.read_excel(self.pathToAddinFile))
         existsFlag = self.ui.toExistsCardsChek.isChecked()

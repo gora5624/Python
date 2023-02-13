@@ -359,7 +359,7 @@ class ModelWithAddin:
                         'Ширина упаковки': 12,
                         'Глубина упаковки': 2,
                         'Предмет': stuff,
-                        'Медиафайлы': r'http://95.78.233.163:8001/wp-content/uploads/Готовые принты/Силикон/{}/{}'.format(self.maskFolderName, pictures)
+                        'Медиафайлы': r'http://95.78.233.163:8001/wp-content/uploads/Готовые принты/Силикон/{0}/{1};http://95.78.233.163:8001/wp-content/uploads/Вторые картинки/{0}/1.jpg;http://95.78.233.163:8001/wp-content/uploads/Вторые картинки/{0}/2.jpg'.format(self.maskFolderName, pictures)
                     }
             self.data.append(datapicture)
                 # print("--- %s seconds 1 ---" % (time.time() - start_time))

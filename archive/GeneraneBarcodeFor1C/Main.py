@@ -86,6 +86,6 @@ def generate_bar_WB(count):
         return str(listBarcode[0])
 
 
-name = 'Снапелев Максим'#line['Пользователь']
+name = 'Дмитриев Александр'#line['Пользователь']
 bc = generate_bar_WB(1)# str(line['Штрихкод'] )[0:-2]
 create_1C_barcod(bc, name)

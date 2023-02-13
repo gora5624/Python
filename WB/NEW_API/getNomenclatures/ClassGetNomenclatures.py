@@ -16,7 +16,7 @@ class nomenclaturesGetter():
         self.token = token['token']
         self.dataBase = []
         self.nomenclatures1CDataPath = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'
-        self.nomenclatures1CData = pandas.DataFrame(pandas.read_table(self.nomenclatures1CDataPath, sep='\t'))
+        self.nomenclatures1CData = pandas.DataFrame(pandas.read_table(self.nomenclatures1CDataPath, sep='\t', dtype={'Штрихкод':str, 'Номенклатура': str, 'Характеристика': str, 'Упаковка': str}))
         
 
     def log(self, text):
@@ -176,12 +176,12 @@ class cardGetter():
         self.ip = token['IPName']
         self.token = token['token']
         self.nomenclatures1CDataPath = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'
-        self.nomenclatures1CData = pandas.DataFrame(pandas.read_table(self.nomenclatures1CDataPath, sep='\t'))
+        self.nomenclatures1CData = pandas.DataFrame(pandas.read_table(self.nomenclatures1CDataPath, sep='\t',dtype={'Штрихкод':str, 'Номенклатура': str, 'Характеристика': str, 'Упаковка': str}))
         self.getListVendorCode()
     
     
     def getListVendorCode(self):
-        self.listVendorCodeToGet = pandas.DataFrame(pandas.read_table(self.pathToDbNom, sep='\t'))['vendorCode'].values.tolist()
+        self.listVendorCodeToGet = pandas.DataFrame(pandas.read_table(self.pathToDbNom, sep='\t', low_memory=False))['vendorCode'].values.tolist()
 
 
     def getNom(self):
