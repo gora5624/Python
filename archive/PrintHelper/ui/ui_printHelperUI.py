@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_PrintHelper(object):
     def setupUi(self, PrintHelper):
         PrintHelper.setObjectName("PrintHelper")
-        PrintHelper.resize(400, 468)
+        PrintHelper.resize(400, 488)
         self.selectFileButt = QtWidgets.QPushButton(PrintHelper)
         self.selectFileButt.setGeometry(QtCore.QRect(20, 20, 361, 21))
         self.selectFileButt.setObjectName("selectFileButt")
@@ -68,6 +68,9 @@ class Ui_PrintHelper(object):
         self.smallButt.setEnabled(True)
         self.smallButt.setGeometry(QtCore.QRect(10, 10, 361, 41))
         self.smallButt.setObjectName("smallButt")
+        self.oldNewButt = QtWidgets.QPushButton(PrintHelper)
+        self.oldNewButt.setGeometry(QtCore.QRect(20, 460, 211, 23))
+        self.oldNewButt.setObjectName("oldNewButt")
         self.frame_2.raise_()
         self.frame.raise_()
         self.selectFileButt.raise_()
@@ -77,6 +80,7 @@ class Ui_PrintHelper(object):
         self.medButt.raise_()
         self.smallButtPlastins.raise_()
         self.smallButtCartholders.raise_()
+        self.oldNewButt.raise_()
 
         self.retranslateUi(PrintHelper)
         QtCore.QMetaObject.connectSlotsByName(PrintHelper)
@@ -94,3 +98,4 @@ class Ui_PrintHelper(object):
         self.medButtBooks.setText(_translate("PrintHelper", "Средний принтер книжки (105*160)"))
         self.smallButtBooks.setText(_translate("PrintHelper", "Книжки маленький (90*60)"))
         self.smallButt.setText(_translate("PrintHelper", "Силикон маленький (90*60)"))
+        self.oldNewButt.setText(_translate("PrintHelper", "Переключить на новый интерфейс"))

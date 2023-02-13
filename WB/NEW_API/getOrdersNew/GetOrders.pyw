@@ -34,9 +34,9 @@ class GetOrdersMainWindows(QMainWindow):
         self.ui.checkBoxInsertNom.stateChanged.connect(self.deactiveCheck)
         self.ordersData = pd.DataFrame()
         # сделать фон главного окна белый
-        self.setStyleSheet("background-color: rgb(255, 255, 255);")
+        # self.setStyleSheet("background-color: rgb(255, 255, 255);")
         # сделать скругления на кнопке 10 px
-        self.ui.pushButtonSaveToExcel.setStyleSheet("border-radius: 10px;")
+        # self.ui.pushButtonSaveToExcel.setStyleSheet("border-radius: 10px;")
 
         #self.ui.pushButtonSaveToExcel.setStyleSheet("border-radius: 10px;background-color: red; ")
         # self.ui.pushButtonSaveToExcel.setStyleSheet("border-width: 10px;")

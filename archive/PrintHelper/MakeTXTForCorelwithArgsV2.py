@@ -1,15 +1,33 @@
-import sys
 import xlrd
-from os.path import join as joinpath , exists
+from os.path import join as joinpath , exists, basename, abspath
 from os import listdir, remove, makedirs
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog, QApplication
-from ui.ui_printHelperUI import Ui_PrintHelper
+from PyQt6 import QtWidgets, QtGui, QtCore
+from PyQt6.QtWidgets import QFileDialog, QApplication, QMessageBox
+from ui.chekUI import chekUIVesion, pathTouiVesionFile
+if (uiVersion:=chekUIVesion()) == '1.0':
+    from ui.ui_printHelperUI import Ui_PrintHelper
+else:
+    from ui.ui_printHelperUIV2 import Ui_PrintHelper
+import pickle
 # pyuic5 D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.ui -o D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.py
 pathToOrderFile = ''
 mode = ''
 w = QtWidgets.QWidget
 class FBSStoks(QtWidgets.QMainWindow):
+    printSettMainFilePath = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\printSetMain.pkl'
+    dataDefault = {
+        'bigButtInt': {'bigAcsButt': True},
+        'medButtInt': {'medAcsButt': True},
+        'smallButtInt': {'smallAcsButt': True},
+        'bigButt': {'bigSilAcsButt': True},
+        'medButt': {'medSilAcsButt': True},
+        'smallButt': {'smallSilAcsButt': True},
+        'medButtBooks': {'medBkAcsButt': True},
+        'smallButtBooks': {'smallBkAcsButt': True},
+        'smallButtPlastins': {'smallPlAcsButt': True},
+        'smallButtCartholders': {'sallHldAcsButt': True}
+    }
+    chekKeys = ['bigButtInt', 'medButtInt', 'smallButtInt', 'bigButt', 'medButt', 'smallButt', 'medButtBooks', 'smallButtBooks', 'smallButtPlastins', 'smallButtCartholders']
     def __init__(self,parent=None):
         super(FBSStoks, self).__init__(parent)
         self.ui = Ui_PrintHelper()
@@ -31,6 +49,164 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.smallButtPlastins.setEnabled(False)
         self.ui.bigButt.setEnabled(False)
         self.ui.smallButtCartholders.setEnabled(False)
+        self.readSett()
+        # Элементы нового интерфейса
+        if uiVersion != '1.0':
+            self.setIcon()
+            self.updateUiSett()
+            self.mainPageButt()
+            self.ui.bigButtInt.clicked.connect(self.bigButtInt)
+            self.ui.medButtInt.clicked.connect(self.medButtInt)
+            self.ui.smallButtInt.clicked.connect(self.smallButtInt)
+            self.ui.mainPageButt.clicked.connect(self.mainPageButt)
+            self.ui.frameSettings.setVisible(False)
+            self.ui.settButt.clicked.connect(self.showSett)
+            self.ui.applySettButt.clicked.connect(self.applySett)
+            self.ui.lineEditPass.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password) 
+        self.ui.oldNewButt.clicked.connect(self.oldNewButt)
+        if uiVersion == '1.0':
+            self.ui.oldNewButt.setText('Переключить на новый интерфейс')
+
+    def applySett(self):
+        self.data = {
+            'bigButtInt': {'bigAcsButt': self.ui.bigAcsButt.isChecked()},
+            'medButtInt': {'medAcsButt': self.ui.medAcsButt.isChecked()},
+            'smallButtInt': {'smallAcsButt': self.ui.smallAcsButt.isChecked()},
+            'bigButt': {'bigSilAcsButt': self.ui.bigSilAcsButt.isChecked()},
+            'medButt': {'medSilAcsButt': self.ui.medSilAcsButt.isChecked()},
+            'smallButt': {'smallSilAcsButt': self.ui.smallSilAcsButt.isChecked()},
+            'medButtBooks': {'medBkAcsButt': self.ui.medBkAcsButt.isChecked()},
+            'smallButtBooks': {'smallBkAcsButt': self.ui.smallBkAcsButt.isChecked()},
+            'smallButtPlastins': {'smallPlAcsButt': self.ui.smallPlAcsButt.isChecked()},
+            'smallButtCartholders': {'sallHldAcsButt': self.ui.sallHldAcsButt.isChecked()}
+        }
+        self.updateUiSett()
+        self.saveSett()
+        self.ui.frameMain.setVisible(True)
+        self.ui.mainPageButt.setVisible(True)
+        self.ui.frameSettings.setVisible(False)
+        self.ui.settButt.setVisible(True)
+        self.ui.label_2.setVisible(True)
+        self.ui.lineEditPass.setVisible(True)
+        self.mainPageButt()
+
+
+    def saveSett(self):
+        with open(self.printSettMainFilePath, 'wb') as file:
+            pickle.dump(self.data, file)
+            file.close()
+        # self.updateUiSett()
+
+
+    def updateUiSett(self):
+        try:
+            for name, chekDict in self.data.items():
+                butt = self.findChild(QtWidgets.QPushButton, name)
+                chek = self.findChild(QtWidgets.QCheckBox, list(chekDict.keys())[0])
+                if pathToOrderFile:
+                    butt.setEnabled(list(chekDict.values())[0])
+                chek.setChecked(list(chekDict.values())[0])
+        except:
+            QMessageBox.warning(self, 'Ошибка', 'Файл конфигурации повреждён, применены настройки по умолчанию!')
+            self.data = self.dataDefault
+            self.saveSett()
+
+
+
+    def readSett(self):
+        with open(self.printSettMainFilePath, 'rb') as file:
+                dataTMP = pickle.load(file)
+                file.close()
+        self.chekSett(dataTMP)
+        # self.updateChelSett()
+        # self.updateUiSett()
+
+    def chekSett(self, data):
+        for key in self.chekKeys:
+            try:
+                if key not in data.keys():
+                    QMessageBox.warning(self, 'Ошибка', 'Файл конфигурации повреждён, применены настройки по умолчанию!')
+                    self.saveSett()
+                    return 0
+            except:
+                QMessageBox.warning(self, 'Ошибка', 'Файл конфигурации повреждён, применены настройки по умолчанию!')
+                self.saveSett()
+                return 0
+        self.data = data          
+
+
+    def showSett(self):
+        if self.ui.lineEditPass.text()  == '565656':
+            self.mainPageButt()
+            self.ui.frameMain.setVisible(False)
+            self.ui.mainPageButt.setVisible(False)
+            self.ui.frameSettings.setVisible(True)
+            self.ui.settButt.setVisible(False)
+            self.ui.label_2.setVisible(False)
+            self.ui.lineEditPass.setVisible(False)
+            self.ui.lineEditPass.setText('') 
+        else:
+            QtWidgets.QMessageBox.warning(self, 'Ошибка', 'Неверный пароль!')
+        
+
+
+    def setIcon(self):
+        icon = QtGui.QIcon()
+        a = joinpath(r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\ui\image',r'bigButtInt.gif')
+        icon.addPixmap(QtGui.QPixmap(a), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.ui.bigButtInt.setIcon(icon)
+        self.ui.bigButtInt.setIconSize(QtCore.QSize(236, 130))
+        self.ui.bigButtInt.setShortcut("")
+        self.ui.bigButtInt.setObjectName("bigButtInt")
+        a = joinpath(r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\ui\image', r'medButtInt.gif')
+        icon.addPixmap(QtGui.QPixmap(a), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.ui.medButtInt.setIcon(icon)
+        self.ui.medButtInt.setIconSize(QtCore.QSize(119, 200))
+        self.ui.medButtInt.setShortcut("")
+        self.ui.medButtInt.setObjectName("medButtInt")
+        a = joinpath(r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\ui\image',r'smallButtInt.gif')
+        icon.addPixmap(QtGui.QPixmap(a), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.ui.smallButtInt.setIcon(icon)
+        self.ui.smallButtInt.setIconSize(QtCore.QSize(112, 200))
+        self.ui.smallButtInt.setShortcut("")
+        self.ui.smallButtInt.setObjectName("smallButtInt")
+
+    def mainPageButt(self):
+        self.ui.label_2.setText('Выберите станок')
+        self.ui.frameBig.setVisible(False)
+        self.ui.frameMed.setVisible(False)
+        self.ui.frameSmall.setVisible(False)
+        # self.ui.frameOther.setVisible(False)
+        self.ui.frameMain.setVisible(True)
+
+    def smallButtInt(self):
+        self.ui.label_2.setText('Выберите программу для запуска на маленьком принтере')
+        self.ui.frameSmall.setVisible(True)
+        self.ui.frameMain.setVisible(False)
+
+    def medButtInt(self):
+        self.ui.label_2.setText('Выберите программу для запуска на среднем принтере')
+        self.ui.frameMed.setVisible(True)
+        self.ui.frameMain.setVisible(False)
+
+    def bigButtInt(self):
+        self.ui.label_2.setText('Выберите программу для запуска на большом принтере')
+        self.ui.frameBig.setVisible(True)
+        self.ui.frameMain.setVisible(False)
+
+    def oldNewButt(self):
+        uiVersion = chekUIVesion()
+        with open(pathTouiVesionFile, 'w') as f:
+            if uiVersion == '1.0':
+                f.write('2.0')
+                self.ui.oldNewButt.setText('Вернуть старый интерфейс')
+            else:
+                f.write('1.0')
+                self.ui.oldNewButt.setText('Переключить на новый интерфейс')
+            f.close()
+        # Показать предупреждение с текстом "готово"
+        QMessageBox.information(self, 'Интерфейс', 'Перезапустите программу для применения')
+        
 
 
     def saveModePrinter(self, printer):
@@ -101,6 +277,8 @@ class FBSStoks(QtWidgets.QMainWindow):
         if pathToOrderFile == '':
             self.createMSGError("Вы не выбрали файл номенклатурой для загрузки.")
             return 0
+        self.ui.selectFileButt.setText(basename(pathToOrderFile))
+        self.ui.selectFileButt.setStyleSheet("font-size:11px; font-weight: bold")
         self.ui.medButtBooks.setEnabled(True)
         self.ui.medButt.setEnabled(True)
         self.ui.smallButt.setEnabled(True)
@@ -108,13 +286,14 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.smallButtPlastins.setEnabled(True)
         self.ui.bigButt.setEnabled(True)
         self.ui.smallButtCartholders.setEnabled(True)
+        self.updateUiSett()
+        self.mainPageButt()
+        # self.applySett()
 
     def createMSGError(self,text):
-        msg = QtWidgets.QMessageBox()
-        msg.setWindowTitle("Ошибка")
-        msg.setText(text)
-        msg.setIcon(QtWidgets.QMessageBox.Warning)
-        msg.exec_()
+        QMessageBox.warning(self, 'Ошибка', text)
+        #msg.setIcon(QtWidgets.QMessageBox.Warning)
+        #msg.exec_()
 
 
 
@@ -129,13 +308,13 @@ pathToSizeFileV2 = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\sizeV2.tx
 pathToBug = r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\Bug\print 0.cdr'
 pathToModeFile = r"C:\Users\Public\Documents\WBHelpTools\PrintHelper\mode.txt"
 pathToSizeDir = r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\Размеры принтов'
-pathToFolderPrint = r'\\192.168.0.111\shared\Отдел производство\PDF 1 волна'
+pathToFolderPrint = r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\Оригиналы'
 
 
 Debug = False
 
 
-pathToTablesV2 = joinpath(mainPath, 'Tables')
+pathToTables = joinpath(mainPath, 'Tables')
 pathToTablesV2 = joinpath(mainPath, 'TablesV2')
 pathToFileConfigSmall = joinpath(mainPath, 'configSmall.txt')
 pathToFileConfigMed = joinpath(mainPath, 'configMed.txt')
@@ -232,7 +411,13 @@ def applyConfig(mode):
             #     pathToSizeFileV2 = data[1].strip()
             elif data[0].strip() == 'listSize':
                 global listSize
+                listSize = []
                 listSize = [i.strip() for i in data[1].split(',')]
+                #A = data[1].split(',')
+                # for i in data[1].split(','):
+                #     listSize.append(i.strip())
+
+                # listSize
             elif data[0].strip() == 'tableSize':
                 global tableSize
                 tableSize = data[1].strip().split(',')
@@ -421,9 +606,6 @@ def createpathToFile(printNameAll):
     printFileName = printName.replace('принт', 'print') + '.pdf'
     # pathToFolder = dataWithSizePath[size]
     fullPath = joinpath(pathToFolderPrint, printFileName)
-    # if not file_exists(fullPath):
-    #     printFileName = printFileName.replace('.pdf', '.cdr')
-    #     fullPath = joinpath(pathToFolder, printFileName)
     if not file_exists(fullPath):
         fullPath = pathToBug
     return fullPath
@@ -467,18 +649,19 @@ def splitOrderTable(dataFromOrderFile, mode):
     nameTable = 'Table_{}'
     data = []
     if dataFromOrderFile != None:
-        for line in dataFromOrderFile:
+        for i, line in enumerate(dataFromOrderFile):
             orderNum = line['Номер задания']
             orderNum = orderNum if type(
                 orderNum) == str else str(orderNum)[0:-2]
             if orderNum == '' and line['Размер'] == '':
-                with open(joinpath(pathToTablesV2, nameTable.format(str(numTable))) + '.txt', 'w', encoding='ANSI') as file:
-                    file.write('\n'.join(data))
-                    file.close()
-                data = []
-                numTable += 1
-                count = 0
-                continue
+                if dataFromOrderFile[i + 1]['Номер задания'] != '':
+                    with open(joinpath(pathToTablesV2, nameTable.format(str(numTable))) + '.txt', 'w', encoding='ANSI') as file:
+                        file.write('\n'.join(data))
+                        file.close()
+                    data = []
+                    numTable += 1
+                    count = 0
+                    continue
             X, Y = makeLocPrint(count)
             count += 1
             if line['Название'] !='':
