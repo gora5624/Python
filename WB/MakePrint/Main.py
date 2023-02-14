@@ -350,7 +350,10 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 if isdir(pathTMP:=joinPath(pathToDoneSiliconImageSilicon, case)):
                     delta = len(listdir(pathTMP))
                     if existsFlag:
-                        listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                        if 'vendorCode' in self.dfExistCase:
+                            listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                        else:
+                            listDataVendorCode = self.dfExistCase['Артикул продавца'].values.tolist()[counter:counter+delta]
                     counter+=delta
                     try:
                         compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == maskNew]['Совместимость'].values.tolist()[0]
