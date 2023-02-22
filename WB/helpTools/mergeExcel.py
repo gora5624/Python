@@ -1,15 +1,16 @@
 import os
 import pandas
 
-mainPath = r'\\rab\Диск для принтов сервак Егор\для 1с'
+mainPath = r'F:\Для загрузки\Готовые принты\Силикон'
 df = pandas.DataFrame()
 for file in os.listdir(mainPath):
-    tmp = pandas.DataFrame(pandas.read_excel(os.path.join(mainPath, file)))
-    try:
-        tmp['Медиафайлы'] = tmp['Медиафайлы'].astype(str)
-    except:
-        pass
-    df = pandas.concat([tmp, df], ignore_index=True, sort=False)
+    if not os.path.isdir(os.path.join(mainPath,file)):
+        tmp = pandas.DataFrame(pandas.read_excel(os.path.join(mainPath, file)))
+        try:
+            tmp['Медиафайлы'] = tmp['Медиафайлы'].astype(str)
+        except:
+            pass
+        df = pandas.concat([tmp, df], ignore_index=True, sort=False)
 with pandas.ExcelWriter(os.path.join(mainPath, 'tmp.xlsx'), engine='xlsxwriter',options={'strings_to_urls': False}) as xlsxFile:
     df.to_excel(xlsxFile, index=False)
 

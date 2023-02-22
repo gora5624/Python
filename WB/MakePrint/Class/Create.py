@@ -91,11 +91,11 @@ class WBnomenclaturesCreater:
         self.modelForUploads.append(nomenclature)
         headersRequest = {'Authorization': '{}'.format(token)}
         # self.modelForUploads
-        try:
-            self.getListNomenclaturesMulti(token, self.modelForUploads)
-        except:
-            pass
-        for i in range(5):
+        # try:
+        #     self.getListNomenclaturesMulti(token, self.modelForUploads)
+        # except:
+        #     pass
+        for i in range(2):
             # pool = multiprocessing.Pool()
             for model in self.modelForUploads:
                 # if model[''] not in listDoneVendorCode:
@@ -103,10 +103,10 @@ class WBnomenclaturesCreater:
                     self.createNomenclatureSingleProcess(model, headersRequest,token)
             # pool.close()
             # pool.join()
-            try:
-                self.getListNomenclaturesMulti(token, self.modelForUploads)
-            except:
-                pass
+            # try:
+            #     self.getListNomenclaturesMulti(token, self.modelForUploads)
+            # except:
+            #     pass
         print("--- %s seconds ---" % (time.time() - start_time))
 
 
@@ -116,10 +116,11 @@ class WBnomenclaturesCreater:
         jsonCard = [[modelListCard[0]]]
         if vendorCodeMain not in self.listDoneVendorCode:
             countTry = 0
+            delta = 0
             while True and countTry <10:
                 try:
                     # print("TRY1")
-                    responce = requests.post(self.urlCreate, json=jsonCard, headers=headersRequest, timeout=self.timeout)
+                    responce = requests.post(self.urlCreate, json=jsonCard, headers=headersRequest, timeout=self.timeout+delta)
                     # print("responce = requests.post(self.urlCreate, json=jsonCard, headers=headersRequest)4")
                     if responce.status_code == 200:
                         # print("responce.status_code == 200:")
@@ -130,6 +131,7 @@ class WBnomenclaturesCreater:
                         # p = multiprocessing.Process(target=self.uplaodImage, args=(vendorCodeMain, urlsList, token,))
                         # p.start()
                     else:
+                        delta+=5
                         countTry+=1
                         continue
                 except requests.ConnectionError:
@@ -147,8 +149,13 @@ class WBnomenclaturesCreater:
             # else:
             #     print(responce.text)
             #     print(vendorCodeMain + ' ошибка при создании, проверь ВБ')
-        for i in range(1,len(modelListCard),1):
+        for i,value in enumerate(modelListCard):
             # print("for i in range(1,len(modelListCard),1):")
+            if i == 0:
+                continue
+            if i%10 == 0:
+                self.createNomenclatureSingleProcess(modelListCard[i:], headersRequest,token)
+                return
             jsonNomenclature = {
                 'vendorCode': vendorCodeMain,
                 'cards': modelListCard[i:i+1]
@@ -158,29 +165,34 @@ class WBnomenclaturesCreater:
             if modelListCard[i]['vendorCode'] not in self.listDoneVendorCode:
                 # print("modelListCard[i]['vendorCode']")
                 countTry = 0
+                delta =0
                 while True and countTry <10:
                     # print("while True and countTry <10:")
                     try:
                         # print('requests.post(self.urlAdd, json=jsonNomenclature, headers=headersRequest)')
-                        responce = requests.post(self.urlAdd, json=jsonNomenclature, headers=headersRequest, timeout=self.timeout)
+                        responce = requests.post(self.urlAdd, json=jsonNomenclature, headers=headersRequest, timeout=self.timeout+delta)
                         # time.sleep(5)
                         if responce.status_code == 200:
                             # print("responce.status_code == 200:2")
                             # LogMaker.logAction('createNomenclatureSingleProcess', vendorCodeMain +'  успешно создана')
                             vendorCodeMain = modelListCard[i]['vendorCode']
                             print(modelListCard[i]['vendorCode'] + ' успешно создана')
+                            time.sleep(1)
                             break
                         else:
                             # print("responce.text123")
                             # LogMaker.logAction('createNomenclatureSingleProcess', responce.text)
-                            if 'Указанные Артикулы поставщика используются в других карточках с Номенклатурой' in responce.text:
+                            if 'Указанные Артикулы товара используются в других карточках' in responce.text:
                                 if modelListCard[i]['vendorCode'] in responce.text:
                                     self.listDoneVendorCode.append(modelListCard[i]['vendorCode'])
+                                break
                             elif 'Недопустимо отправлять дублирующиеся запросы!' in responce.text:
                                 time.sleep(5)
+                                delta+=2
                                 countTry+=1
                                 continue
                             print(responce.text)
+                            delta+=2
                             countTry+=1
                             continue
                     # print(vendorCodeMain + ' ошибка при создании, проверь ВБ')
@@ -198,7 +210,7 @@ class WBnomenclaturesCreater:
                         continue
                 if countTry >=10:
                     # print("countTry >=10:")
-                    return 0
+                    continue
                 # vendorCode = jsonNomenclature['cards'][0]['vendorCode']
                 # for i in jsonNomenclature['cards'][0]['characteristics']:
                 #     j = list(i.items())[0]

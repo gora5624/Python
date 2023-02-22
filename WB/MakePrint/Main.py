@@ -172,7 +172,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
                         data = pandas.DataFrame(pandas.read_excel(pathToFileForUpload))
                         tmp = ExistsNomenclaturesCreater(data, mode, pathToFileForUpload)
                         pool = multiprocessing.Pool(2)
-                        # pool.apply_async(ExistsNomenclaturesCreater.uplaodImage, args=(pathToFileForUpload, mode,))
+                        pool.apply_async(ExistsNomenclaturesCreater.uplaodImage, args=(pathToFileForUpload, mode,))
                         pool.apply_async(tmp.start(), args=(pathToFileForUpload, mode,))
                         pool.close()
                         pool.join()
@@ -329,6 +329,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
         elif countExistsCase<countCase:
             print('Количестов существующих артикулов ({}) меньше чем нужно ({}<{}), добавьте строки в документ'.format(countExistsCase, countExistsCase, countCase))
             return 0
+        else:
+            self.ui.toExistsCardsChek.setChecked(True)
         
 
 
@@ -350,7 +352,10 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 if isdir(pathTMP:=joinPath(pathToDoneSiliconImageSilicon, case)):
                     delta = len(listdir(pathTMP))
                     if existsFlag:
-                        listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                        if 'vendorCode' in self.dfExistCase:
+                            listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                        else:
+                            listDataVendorCode = self.dfExistCase['Артикул продавца'].values.tolist()[counter:counter+delta]
                     counter+=delta
                     try:
                         compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == maskNew]['Совместимость'].values.tolist()[0]
