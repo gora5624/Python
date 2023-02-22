@@ -2,7 +2,7 @@ import xlrd
 from os.path import join as joinpath , exists, basename, abspath
 from os import listdir, remove, makedirs
 from PyQt6 import QtWidgets, QtGui, QtCore
-from PyQt6.QtWidgets import QFileDialog, QApplication, QMessageBox
+from PyQt6.QtWidgets import QFileDialog, QMessageBox
 from ui.chekUI import chekUIVesion, pathTouiVesionFile
 if (uiVersion:=chekUIVesion()) == '1.0':
     from ui.ui_printHelperUI import Ui_PrintHelper
@@ -66,6 +66,12 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.oldNewButt.clicked.connect(self.oldNewButt)
         if uiVersion == '1.0':
             self.ui.oldNewButt.setText('Переключить на новый интерфейс')
+        
+    def saveFileName(self, pathToOrderFile):
+        fileToSave = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\name.txt'
+        with open(fileToSave, 'r', encoding='ANSI') as file:
+            file.write(basename(pathToOrderFile))
+            file.close()
 
     def applySett(self):
         self.data = {
@@ -288,6 +294,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.smallButtCartholders.setEnabled(True)
         self.updateUiSett()
         self.mainPageButt()
+        self.saveFileName(self, pathToOrderFile)
         # self.applySett()
 
     def createMSGError(self,text):

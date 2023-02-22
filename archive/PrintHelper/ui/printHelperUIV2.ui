@@ -18,9 +18,7 @@
   </property>
   <property name="font">
    <font>
-    <family>Times New Roman</family>
     <pointsize>10</pointsize>
-    <weight>50</weight>
     <bold>false</bold>
     <stylestrategy>PreferDefault</stylestrategy>
     <kerning>false</kerning>
@@ -44,8 +42,9 @@
    <property name="font">
     <font>
      <pointsize>15</pointsize>
-     <weight>75</weight>
      <bold>true</bold>
+     <stylestrategy>PreferDefault</stylestrategy>
+     <kerning>false</kerning>
     </font>
    </property>
    <property name="styleSheet">
@@ -67,6 +66,9 @@
    <property name="font">
     <font>
      <pointsize>14</pointsize>
+     <bold>false</bold>
+     <stylestrategy>PreferDefault</stylestrategy>
+     <kerning>false</kerning>
     </font>
    </property>
    <property name="layoutDirection">
@@ -91,6 +93,9 @@
    <property name="font">
     <font>
      <pointsize>10</pointsize>
+     <bold>false</bold>
+     <stylestrategy>PreferDefault</stylestrategy>
+     <kerning>false</kerning>
     </font>
    </property>
    <property name="layoutDirection">
@@ -118,8 +123,9 @@
    <property name="font">
     <font>
      <pointsize>15</pointsize>
-     <weight>75</weight>
      <bold>true</bold>
+     <stylestrategy>PreferDefault</stylestrategy>
+     <kerning>false</kerning>
     </font>
    </property>
    <property name="frameShape">
@@ -268,8 +274,9 @@
        <property name="font">
         <font>
          <pointsize>14</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
+         <stylestrategy>PreferDefault</stylestrategy>
+         <kerning>false</kerning>
         </font>
        </property>
        <property name="text">
@@ -331,8 +338,9 @@
        <property name="font">
         <font>
          <pointsize>15</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
+         <stylestrategy>PreferDefault</stylestrategy>
+         <kerning>false</kerning>
         </font>
        </property>
        <property name="text">
@@ -354,8 +362,9 @@
        <property name="font">
         <font>
          <pointsize>15</pointsize>
-         <weight>75</weight>
          <bold>true</bold>
+         <stylestrategy>PreferDefault</stylestrategy>
+         <kerning>false</kerning>
         </font>
        </property>
        <property name="text">
@@ -428,9 +437,39 @@
          </property>
          <property name="palette">
           <palette>
-           <active/>
-           <inactive/>
-           <disabled/>
+           <active>
+            <colorrole role="Highlight">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>0</red>
+               <green>120</green>
+               <blue>215</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </active>
+           <inactive>
+            <colorrole role="Highlight">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>240</red>
+               <green>240</green>
+               <blue>240</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </inactive>
+           <disabled>
+            <colorrole role="Highlight">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>0</red>
+               <green>120</green>
+               <blue>215</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </disabled>
           </palette>
          </property>
          <property name="styleSheet">
@@ -451,9 +490,39 @@
         <widget class="QPushButton" name="medButtInt">
          <property name="palette">
           <palette>
-           <active/>
-           <inactive/>
-           <disabled/>
+           <active>
+            <colorrole role="Highlight">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>0</red>
+               <green>120</green>
+               <blue>215</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </active>
+           <inactive>
+            <colorrole role="Highlight">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>240</red>
+               <green>240</green>
+               <blue>240</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </inactive>
+           <disabled>
+            <colorrole role="Highlight">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>0</red>
+               <green>120</green>
+               <blue>215</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </disabled>
           </palette>
          </property>
          <property name="styleSheet">
@@ -567,6 +636,9 @@
            <property name="font">
             <font>
              <pointsize>9</pointsize>
+             <bold>false</bold>
+             <stylestrategy>PreferDefault</stylestrategy>
+             <kerning>false</kerning>
             </font>
            </property>
            <property name="text">
@@ -638,6 +710,9 @@
            <property name="font">
             <font>
              <pointsize>8</pointsize>
+             <bold>false</bold>
+             <stylestrategy>PreferDefault</stylestrategy>
+             <kerning>false</kerning>
             </font>
            </property>
            <property name="text">
@@ -659,6 +734,9 @@
            <property name="font">
             <font>
              <pointsize>8</pointsize>
+             <bold>false</bold>
+             <stylestrategy>PreferDefault</stylestrategy>
+             <kerning>false</kerning>
             </font>
            </property>
            <property name="text">

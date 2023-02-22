@@ -234,8 +234,12 @@ class cardGetter():
         jsonRequestsGetCard = {
                             "vendorCodes": vendorCodes
                             }
+        timestart = time.time()
         while timeout<60:
+            if time.time() - timestart < 20:
+                time.sleep(20)
             try:
+                timestart = time.time()
                 responce = requests.post(url=self.urlGetCard, json=jsonRequestsGetCard, headers=headersGetCard, timeout=timeout)
                 if responce.status_code != 200:
                     if 'ограничения' in responce.text:
