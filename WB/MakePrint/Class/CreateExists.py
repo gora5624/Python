@@ -30,12 +30,16 @@ class ExistsNomenclaturesCreater:
         self.alredyGetVendorCode = []
         self.listCardToChange = []
         if mode =='Караханян':
-           self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+            self.DBpath = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Караханян.txt'
+            self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
         elif mode =='Абраамян':
+            self.DBpath = r'\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Манвел.txt'
             self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
         elif mode =='Самвел':
+            self.DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Самвел2.txt"
             self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
         elif mode =='Иван':
+            self.DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Федоров.txt"
             self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
         self.headersGetCard = {'Authorization': '{}'.format(self.token)}
 
@@ -43,7 +47,7 @@ class ExistsNomenclaturesCreater:
     def start(self):
         self.getNomFromWB()
         self.changeCards()
-        # self.pushChanges()
+        self.pushChanges()
         self.updateFileForUpload()
         self.createFileFor1C()
 
@@ -114,7 +118,7 @@ class ExistsNomenclaturesCreater:
         # subprocess.Popen(args2, shell=True)
 
 
-    def getNomFromWB(self):
+    def getNomFromWBOld(self):
         for vendorCode in self.listVendorCodeToGet:
             if vendorCode not in self.alredyGetVendorCode:
                 jsonRequestsGetCard = {
@@ -136,6 +140,41 @@ class ExistsNomenclaturesCreater:
                         timeout+=5
                         continue
                 data = response.json()['data']
+                for card in data:
+                    if card['vendorCode'] in self.listVendorCodeToGet:
+                        self.alredyGetVendorCode.append(card['vendorCode'])
+                        self.listCardToChange.append(card)
+        self.listCardToChange
+
+
+    def getNomFromWB(self):
+        dataFromDB = pandas.DataFrame(pandas.read_table(self.DBpath))
+        for vendorCode in self.listVendorCodeToGet:
+            if vendorCode not in self.alredyGetVendorCode:
+                line = dataFromDB.loc[dataFromDB['vendorCode'] == vendorCode]
+                imtID = line['imtID'].values.tolist()[0]
+                nmID = line['nmID'].values.tolist()[0]
+                chrtID = line['chrtID'].values.tolist()[0]
+                price = line['price'].values.tolist()[0]
+                skus = line['skus'].values.tolist()[0].strip('[]\'\"').split(',')
+                sizes = [
+                    {
+                    "techSize": "0",
+                    "chrtID": chrtID,
+                    "wbSize": "",
+                    "price": price,
+                    "skus": skus
+                    }
+                    ]
+                data = [{
+                        "imtID": imtID,
+                        "nmID": nmID,
+                        "vendorCode": vendorCode,
+                        "sizes": sizes,
+                        "characteristics": []
+                        }]
+                
+                # data = response.json()['data']
                 for card in data:
                     if card['vendorCode'] in self.listVendorCodeToGet:
                         self.alredyGetVendorCode.append(card['vendorCode'])
@@ -165,7 +204,8 @@ class ExistsNomenclaturesCreater:
                                 {'Бренд': case['Бренд']},
                                 {'Страна производства': case['Страна производства'].split(';')},
                                 {'Наименование': case['Наименование']},
-                                {'Предмет':case['Предмет']},
+                                {'Предмет':'Чехлы для телефонов'},
+                                # {'Предмет':case['Предмет']},
                                 {'Цвет': case['Цвет'].split(';')},
                                 {'Описание': case['Описание']},
                                 {'Высота упаковки': 19},

@@ -17,6 +17,9 @@ if __name__ == '__main__':
     app = QtWidgets.QApplication([])
     application = test()
     pathToOrder = application.pathToOrderFile
+    with open(r'C:\Users\Public\Documents\CutHelp\pathFile.txt', 'w', encoding='ANSI') as file:
+        file.write(pathToOrder)
+        file.close()
     # application.show()
     # app.exec()
     # startPrintHelper()

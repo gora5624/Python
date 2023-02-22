@@ -1,27 +1,37 @@
+from tkinter import E
 import requests
 import multiprocessing
 import sys
 import pandas
-# import time
+import time
 
 
 def pushPhoto(line, token, requestUrl, countTry=0):
     if 'Артикул товара' in list(line.keys()):
+        data = line['Медиафайлы'].split(';')
+        if len(data) ==3:
+            tmp = [data[-1].replace('2.jpg', '3.jpg'), data[-1].replace('2.jpg', '4.jpg'), data[-1].replace('2.jpg', '5.jpg')]
+            data.extend(tmp)
         jsonRequest = {
             "vendorCode": line['Артикул товара'],
-            "data": line['Медиафайлы'].split(';')
-            # "data": ['http://95.78.233.163:8001/wp-content/uploads/1.jpg']
+            #"data": line['Медиафайлы'].split(';')
+            "data": [data[0]]
             }
         headersRequest = {'Authorization': '{}'.format(token)}
     else:
+        data = line['Медиафайлы'].split(';')
+        if len(data) ==3:
+            tmp = [data[-1].replace('2.jpg', '3.jpg'), data[-1].replace('2.jpg', '4.jpg'), data[-1].replace('2.jpg', '5.jpg')]
+            data.extend(tmp)
         jsonRequest = {
             "vendorCode": line['Артикул поставщика'],
-            # "data": ['http://95.78.233.163:8001/wp-content/uploads/1.jpg']
-            "data": line['Медиафайлы'].split(';')
+            "data": data
+            # "data": line['Медиафайлы'].split(';')
             }
         headersRequest = {'Authorization': '{}'.format(token)}
     try:
-        r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=2)  
+        r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=5)  
+        time.sleep(1)
         if '"Неверный запрос: по данному артикулу не нашлось карточки товара","additionalErrors' in r.text:
             print('Не нашлось карточки товара '+jsonRequest['vendorCode'])
         if '"Внутренняя ошибка сервиса","additionalErrors' in r.text:
@@ -42,43 +52,21 @@ def pushPhoto(line, token, requestUrl, countTry=0):
     #     pushPhoto(line, token, requestUrl, countTry)
 
 
-
-def requestsVendorCode(vendoreCode):        
-    url = 'https://suppliers-api.wildberries.ru/content/v1/cards/filter'
-    headersRequest = {'Authorization': '{}'.format('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM')}
-    json = {
-  "vendorCodes": [vendoreCode
-  ]
-}
-    countTry = 0
-    while countTry <6 :
-        try:
-            response = requests.post(url=url, headers=headersRequest, json=json, timeout=2)
-            if response.status_code == 200:
-                for card in response.json()['data']:
-                    if card['vendorCode'] == vendoreCode:
-                        if len(card['mediaFiles']) != 0:
-                            return 0
-                        else:
-                            return 1
-        except:
-            countTry+=1
-            continue
-
-
-
-
 def main():
     print('work')
     pathToFile = sys.argv[1:][0].replace('#', ' ')
     token = sys.argv[1:][1].replace('#', ' ')
-    # pathToFile = r'F:\Для загрузки\Готовые принты\Силикон\Чехол iPhone 6 силикон с отк.кам. проз. п од карту.xlsx'
-    # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+    # if __name__ == '__main__':
+    # pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол Honor X9 силикон с зак.кам. проз. под карту.xlsx"
+    # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
+    # else:
+    # pathToFile = sys.argv[1:][0].replace('#', ' ')
+    # token = sys.argv[1:][1].replace('#', ' ')
     # pathToFile = sys.argv[1:][0].replace('#', ' ')
     df = pandas.DataFrame(pandas.read_excel(pathToFile))
     requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/media/save'
     if __name__ == '__main__':
-        pool = multiprocessing.Pool()
+        pool = multiprocessing.Pool(2)
         for line in df.to_dict('records'):
         #     pushPhoto(line, token, requestUrl)
             pool.apply_async(pushPhoto, args=(line, token, requestUrl,))
