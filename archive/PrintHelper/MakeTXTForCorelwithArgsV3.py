@@ -4,18 +4,17 @@ from os.path import join as joinpath , exists, basename, abspath
 from os import listdir, remove, makedirs
 from PyQt6 import QtWidgets, QtGui, QtCore
 from PyQt6.QtWidgets import QFileDialog, QMessageBox
-from ui.chekUI import chekUIVesion, pathTouiVesionFile
-if (uiVersion:=chekUIVesion()) == '1.0':
-    from ui.ui_printHelperUI import Ui_PrintHelper
-else:
-    from ui.ui_printHelperUIV2 import Ui_PrintHelper
+# from ui.chekUI import chekUIVesion, pathTouiVesionFile
+# if (uiVersion:=chekUIVesion()) == '1.0':
+#     from ui.ui_printHelperUI import Ui_PrintHelper
+# else:
+from ui.ui_printHelperUIV3 import Ui_PrintHelper
 import pickle
 import psutil
 
-# pyuic5 D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.ui -o D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.py
+
 pathToOrderFile = ''
 mode = ''
-w = QtWidgets.QWidget
 class FBSStoks(QtWidgets.QMainWindow):
     printSettMainFilePath = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\printSetMain.pkl'
     dataDefault = {
@@ -32,7 +31,6 @@ class FBSStoks(QtWidgets.QMainWindow):
     }
     chekKeys = ['bigButtInt', 'medButtInt', 'smallButtInt', 'bigButt', 'medButt', 'smallButt', 'medButtBooks', 'smallButtBooks', 'smallButtPlastins', 'smallButtCartholders']
     def __init__(self,parent=None):
-        self.minMem = 5
         super(FBSStoks, self).__init__(parent)
         self.ui = Ui_PrintHelper()
         self.ui.setupUi(self)
@@ -46,6 +44,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         #self.ui.medButtBooks.clicked.connect(self.medBookMode)
         self.ui.smallButtPlastins.clicked.connect(self.smallPlastinMode)
         self.ui.smallButtCartholders.clicked.connect(self.smallCartholderMode)
+        self.ui.addSizeButt.clicked.connect(self.addSizeButt)
         self.ui.medButtBooks.setEnabled(False)
         self.ui.medButt.setEnabled(False)
         self.ui.smallButt.setEnabled(False)
@@ -55,34 +54,87 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.smallButtCartholders.setEnabled(False)
         self.readSett()
         # Элементы нового интерфейса
-        if uiVersion != '1.0':
-            self.setIcon()
-            self.updateUiSett()
-            self.mainPageButt()
-            self.ui.bigButtInt.clicked.connect(self.bigButtInt)
-            self.ui.medButtInt.clicked.connect(self.medButtInt)
-            self.ui.smallButtInt.clicked.connect(self.smallButtInt)
-            self.ui.mainPageButt.clicked.connect(self.mainPageButt)
-            self.ui.frameSettings.setVisible(False)
-            self.ui.settButt.clicked.connect(self.showSett)
-            self.ui.applySettButt.clicked.connect(self.applySett)
-            self.ui.lineEditPass.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password) 
-        self.ui.oldNewButt.clicked.connect(self.oldNewButt)
-        if uiVersion == '1.0':
-            self.ui.oldNewButt.setText('Переключить на новый интерфейс')
-        
+        # if uiVersion != '1.0':
+        #     self.setIcon()
+        #     self.updateUiSett()
+        #     self.mainPageButt()
+        #     self.ui.bigButtInt.clicked.connect(self.bigButtInt)
+        #     self.ui.medButtInt.clicked.connect(self.medButtInt)
+        #     self.ui.smallButtInt.clicked.connect(self.smallButtInt)
+        #     self.ui.mainPageButt.clicked.connect(self.mainPageButt)
+        #     self.ui.frameSettings.setVisible(False)
+        #     self.ui.settButt.clicked.connect(self.showSett)
+        #     self.ui.applySettButt.clicked.connect(self.applySett)
+        #     self.ui.lineEditPass.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password) 
+        self.setIcon()
+        self.updateUiSett()
+        self.mainPageButt()
+        self.ui.bigButtInt.clicked.connect(self.bigButtInt)
+        self.ui.medButtInt.clicked.connect(self.medButtInt)
+        self.ui.smallButtInt.clicked.connect(self.smallButtInt)
+        self.ui.mainPageButt.clicked.connect(self.mainPageButt)
+        self.ui.frameSettings.setVisible(False)
+        self.ui.lineEditPass.returnPressed.connect(self.showSett)
+        self.ui.settButt.clicked.connect(self.showSett)
+        self.ui.applySettButt.clicked.connect(self.applySett)
+        self.ui.lineEditPass.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password) 
+        # self.ui.oldNewButt.clicked.connect(self.oldNewButt)
+        # if uiVersion == '1.0':
+        #     self.ui.oldNewButt.setText('Переключить на новый интерфейс')
         
     def chekMem(self):
         avalMemGB = dict(psutil.virtual_memory()._asdict())['available']/1024/1024/1024
         if avalMemGB < self.minMem:
             QMessageBox.warning(self, 'Мало памяти', f'Внимание! На компьютере осталось менее {self.minMem} Гб совбодной оперативной памяти. Закройте вкладки с большими макетами в Corel иначе работа программы может быть некорректной.')
 
-    
+
     def saveFileName(self, pathToOrderFile):
         fileToSave = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\name.txt'
         with open(fileToSave, 'w', encoding='ANSI') as file:
             file.write(basename(pathToOrderFile))
             file.close()
+
+    def addSizeButt(self):
+        # with open(r"\\192.168.0.111\shared\Отдел производство\обновления программы печати\sizeV2.txt", 'r') as file:
+        #     data = file.readlines()
+            # listSize = [i.strip() for i in file.read().split(',')]
+        # with open(r'\\192.168.0.111\shared\Отдел производство\обновления программы печати\sizesList.pkl', 'wb') as file:
+        #     pickle.dump(listSize, file)
+        #     listSize
+        # with open(r"\\192.168.0.111\shared\Отдел производство\обновления программы печати\sizesName.pkl", 'wb') as file:
+        #     pickle.dump(data, file)
+        #     file.close()
+        # with open(r"\\192.168.0.111\shared\Отдел производство\обновления программы печати\sizesName.pkl", 'wb') as file:
+        #     data = [i.replace('\n','') for i in data]
+        #     pickle.dump(data, file)
+        #     file.close()
+        self.dataWithSizePath = {}
+        with open(r"\\192.168.0.111\shared\Отдел производство\обновления программы печати\sizesName.pkl", 'rb') as file:
+            data = pickle.load(file)
+            file.close()
+        with open(r"\\192.168.0.111\shared\Отдел производство\обновления программы печати\sizesList.pkl", 'rb') as file:
+            global listSize
+            listSize = pickle.load(file)
+        if len(data) != len(listSize):
+            QMessageBox.warning(self, 'Количество размеров в конфиге и в списке путей к размерам не совпадает! Программа может работать некорректно.')
+        for sizeApp in listSize:
+            for sizeConf in data:
+                if sizeApp.lower() == sizeConf.split('=')[0].strip().lower():
+                    sizeName = sizeApp
+                    sizePath = sizeConf.split('=')[1].strip()
+                    if exists(sizePath):
+                        self.dataWithSizePath.update({sizeName: sizePath})
+                    else:
+                        sizePath = joinpath(pathToSizeDir,sizePath + '.cdr')
+                        if not exists(sizePath):
+                            QMessageBox.warning(self, f'Размер {sizeName} не найден по пути {sizePath}. Программа может работать некорректно.')
+                        self.dataWithSizePath.update({sizeName: sizePath})
+        self.dataWithSizePath
+        global dataWithSizePath
+        dataWithSizePath = self.dataWithSizePath
+
+            
+
 
     def applySett(self):
         self.data = {
@@ -211,18 +263,18 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.frameBig.setVisible(True)
         self.ui.frameMain.setVisible(False)
 
-    def oldNewButt(self):
-        uiVersion = chekUIVesion()
-        with open(pathTouiVesionFile, 'w') as f:
-            if uiVersion == '1.0':
-                f.write('2.0')
-                self.ui.oldNewButt.setText('Вернуть старый интерфейс')
-            else:
-                f.write('1.0')
-                self.ui.oldNewButt.setText('Переключить на новый интерфейс')
-            f.close()
-        # Показать предупреждение с текстом "готово"
-        QMessageBox.information(self, 'Интерфейс', 'Перезапустите программу для применения')
+    # def oldNewButt(self):
+    #     uiVersion = chekUIVesion()
+    #     with open(pathTouiVesionFile, 'w') as f:
+    #         if uiVersion == '1.0':
+    #             f.write('2.0')
+    #             self.ui.oldNewButt.setText('Вернуть старый интерфейс')
+    #         else:
+    #             f.write('1.0')
+    #             self.ui.oldNewButt.setText('Переключить на новый интерфейс')
+    #         f.close()
+    #     # Показать предупреждение с текстом "готово"
+    #     QMessageBox.information(self, 'Интерфейс', 'Перезапустите программу для применения')
         
 
 
@@ -238,54 +290,54 @@ class FBSStoks(QtWidgets.QMainWindow):
         global mode
         mode = 'bigMode'
         self.saveModePrinter(mode)
-        w.close(self)
+        FBSStoks.close(self)
 
 
     def smallCartholderMode(self):
         global mode
         mode = 'smallCartholderMode'
         self.saveModePrinter(mode)
-        w.close(self)
+        FBSStoks.close(self)
     
 
     def medMode(self):
         global mode
         mode = 'medMode'
         self.saveModePrinter(mode)
-        w.close(self)
+        FBSStoks.close(self)
 
     def smallMode(self):
         global mode
         mode = 'smallMode'
         self.saveModePrinter(mode)
-        w.close(self)
+        FBSStoks.close(self)
 
     def smallBookMode(self):
         global mode
         mode = 'smallBookMode'
         self.saveModePrinter(mode)
-        w.close(self)
-
-
-    def medBookMode(self):
-            global mode
-            mode = 'medBookMode'
-            self.saveModePrinter(mode)
-            w.close(self)
+        FBSStoks.close(self)
 
 
     def medBookMode(self):
         global mode
         mode = 'medBookMode'
         self.saveModePrinter(mode)
-        w.close(self)
+        FBSStoks.close(self)
+
+
+    def medBookMode(self):
+        global mode
+        mode = 'medBookMode'
+        self.saveModePrinter(mode)
+        FBSStoks.close(self)
     
 
     def smallPlastinMode(self):
         global mode
         mode = 'smallPlastinMode'
         self.saveModePrinter(mode)
-        w.close(self)
+        FBSStoks.close(self)
 
 
     def selectFile(self):
@@ -313,6 +365,9 @@ class FBSStoks(QtWidgets.QMainWindow):
         QMessageBox.warning(self, 'Ошибка', text)
         #msg.setIcon(QtWidgets.QMessageBox.Warning)
         #msg.exec_()
+
+    
+    
 
 
 
@@ -347,8 +402,8 @@ pathDebug = joinpath(mainPath, 'debug')
 pathToPrinterMode= joinpath(mainPath, 'printerMode.txt')
 pathToAlgleDeltaLeft= joinpath(mainPath, 'algleDeltaLeft.txt')
 pathToAlgleDeltaRight= joinpath(mainPath, 'algleDeltaRight.txt')
-listSize = ['13', '13 min', '13 pm', 'L', 'M', 'MS', 'S', 'XL', 'XS', 'Книга']
-dataWithSizePath = {}
+# listSize = ['13', '13 min', '13 pm', 'L', 'M', 'MS', 'S', 'XL', 'XS', 'Книга']
+# dataWithSizePath = {}
 tableSize = ['925', '535']
 startPoint = ['47.569', '92.508']
 XDelta = '83'
@@ -428,10 +483,10 @@ def applyConfig(mode):
             # elif data[0].strip() == 'pathToSizeFileV2':
             #     global pathToSizeFileV2
             #     pathToSizeFileV2 = data[1].strip()
-            elif data[0].strip() == 'listSize':
-                global listSize
-                listSize = []
-                listSize = [i.strip() for i in data[1].split(',')]
+            # elif data[0].strip() == 'listSize':
+            #     global listSize
+            #     listSize = []
+            #     listSize = [i.strip() for i in data[1].split(',')]
                 #A = data[1].split(',')
                 # for i in data[1].split(','):
                 #     listSize.append(i.strip())
@@ -492,28 +547,6 @@ def startChek(mode):
                 continue
     if errorsDirFlag:
         input('ВНИМАНИЕ, ПРИ НАЧАЛЬНОЙ ПРОВЕРКЕ БЫЛИ ОБНАРУЖЕНЫ ОШИБКИ В ДИРЕКТОРИЯХ ИЛИ ПУТЯХ К ФАЙЛАМ ПРОГРАММЫ. ПРОГРАММА МОЖЕТ РАБОТАТЬ НЕПРАВИЛЬНО!')
-    with open(pathToSizeFileV2, 'r') as file:
-        data = file.readlines()
-        if len(data) != len(listSize):
-            errorsSizeFlag = True
-            input('ВНИМАНИЕ, В ФАЙЛЕ КОЛИЧЕСТВО РАЗМЕРОВ В ФАЙЛЕ РАЗМЕРОВ "{}" НЕ СОВПАДАЕТ С КОЛИЧЕСТВОМ РАЗМЕРОВ В ФАЙЛЕ КОНФИГУРАЦИИ "{}", ПРОВЕРЬТЕ ОБА ФАЙЛА!'.format(
-                pathToSizeFileV2, pathToConfig))
-        for sizeApp in listSize:
-            for sizeConf in data:
-                if sizeApp.lower() == sizeConf.split('=')[0].strip().lower():
-                    sizeName = sizeApp
-                    sizePath = sizeConf.split('=')[1].strip()
-                    global dataWithSizePath
-                    if mode == 'smallPlastinMode' or mode == 'smallCartholderMode':
-                        dataWithSizePath.update({sizeName: sizePath})
-                    else:
-                        dataWithSizePath.update({sizeName: joinpath(pathToSizeDir,sizePath + '.cdr')})
-        if len(dataWithSizePath) != len(sizeApp) and len(dataWithSizePath) != len(listSize):
-            errorsSizeFlag = True
-            input('ВНИМАНИЕ, КАКОЙ_ТО РАЗМЕР НЕ СОВПАЛ ПО НАЗВАНИЮ В ФАЙЛЕ РАЗМЕРОВ "{}" И В ФАЙЛЕ КОНФИГУРАЦИИ "{}", ПРОВЕРЬТЕ ОБА ФАЙЛА!'.format(
-                pathToSizeFileV2, pathToConfig))
-        for file in listdir(pathToTablesV2):
-            remove(joinpath(pathToTablesV2, file))
     return errorsDirFlag*errorsSizeFlag
 
 
@@ -723,20 +756,6 @@ def createStartAngleDeltaFile():
     open(pathToAlgleDeltaLeft, 'w').write(','.join([str(xDeltaAngle - float(tableSize[0])), str(yDeltaAngle)]))
 
 def startPrintHelper():
-    # while True:
-    #     mode = input('Для какого принтера макет? Введите если маленький  "1", если средний - "2", если планки - "3" (По умолчанию "1"): ')
-    #     if mode == '1':
-    #         break
-    #     elif mode == '2':
-    #         break
-    #     elif mode == '3':
-    #         break
-    #     elif mode == '':
-    #         mode = '1'
-    #         break
-    #     else:
-    #         print('Некорректный ввод!')
-    #         continue
     try:
         applyConfig(mode)
     except:
