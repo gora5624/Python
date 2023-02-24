@@ -37,11 +37,11 @@ class Getter():
             self.start_time = time.time()
             for token in self.tokens:
                 p1 = multiprocessing.Process(target=self.getNomProcess, args=(token,))
-                # p2 = multiprocessing.Process(target=self.getCardProcess, args=(token,))
+                p2 = multiprocessing.Process(target=self.getCardProcess, args=(token,))
                 p1.start()
-                # p2.start()
+                p2.start()
                 listProc.append(p1)
-                # listProc.append(p2)
+                listProc.append(p2)
             for p in listProc:
                 p.join()
             for p in listProc:
