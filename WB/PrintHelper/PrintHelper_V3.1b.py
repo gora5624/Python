@@ -1,8 +1,11 @@
+import copy
+import shutil
+import datetime
 from pandas import DataFrame, read_excel
 from os.path import join as joinpath , exists, basename
 from os import makedirs
 from PyQt6 import QtWidgets, QtGui, QtCore
-from PyQt6.QtWidgets import QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QFileDialog, QMessageBox, QTableWidgetItem
 # from ui.chekUI import chekUIVesion, pathTouiVesionFile
 # if (uiVersion:=chekUIVesion()) == '1.0':
 #     from ui.ui_printHelperUI import Ui_PrintHelper
@@ -12,7 +15,7 @@ import pickle
 import psutil
 import warnings
 
-
+# pyuic6 D:\Python\WB\PrintHelper\ui\printHelperUIV3.ui -o D:\Python\WB\PrintHelper\ui\ui_printHelperUIV3.py
 pathToOrderFile = ''
 mode = ''
 listSize = ''
@@ -24,12 +27,17 @@ class PrintHelper(QtWidgets.QMainWindow):
         'smallButtInt': {'smallAcsButt': True},
         'bigButt': {'bigSilAcsButt': True},
         'medButt': {'medSilAcsButt': True},
-        'smallButt': {'smallSilAcsButt': True},
+        'smallButt': {'smallSilAcsButt': True}, 
         'medButtBooks': {'medBkAcsButt': True},
         'smallButtBooks': {'smallBkAcsButt': True},
         'smallButtPlastins': {'smallPlAcsButt': True},
         'smallButtCartholders': {'sallHldAcsButt': True}
     }
+    pathToFileWithName = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\name.txt'
+    pathToSizeDir = r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\Размеры принтов'
+    pathToPklSizeV3 = r"\\192.168.0.111\shared\Отдел производство\обновления программы печати\sizesV3.pkl"
+    pathToPklSizeV3Back = r"\\192.168.0.111\shared\Отдел производство\обновления программы печати\backUp\sizesV3_BACKUP {}.pkl".format(datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S"))
+    # pathToFolderPrint = r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\Оригиналы'
     chekKeys = ['bigButtInt', 'medButtInt', 'smallButtInt', 'bigButt', 'medButt', 'smallButt', 'medButtBooks', 'smallButtBooks', 'smallButtPlastins', 'smallButtCartholders']
     def __init__(self,parent=None):
         super(PrintHelper, self).__init__(parent)
@@ -37,16 +45,20 @@ class PrintHelper(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.ui.selectFileButt.clicked.connect(self.selectFile)
         self.ui.bigButt.clicked.connect(self.bigMode)
+        self.ui.bigButtBooks.clicked.connect(self.bigBookMode)
         self.ui.medButt.clicked.connect(self.medMode)
         self.ui.medButtBooks.clicked.connect(self.medBookMode)
         self.ui.smallButt.clicked.connect(self.smallMode)
         self.ui.smallButtBooks.clicked.connect(self.smallBookMode)
         self.ui.smallButtPlastins.clicked.connect(self.smallPlastinMode)
         self.ui.smallButtCartholders.clicked.connect(self.smallCartholderMode)
+        self.ui.pushButtonChooseFileSize.clicked.connect(self.chooseFileSize)
+        self.ui.pushButtonChooseFileSize.setToolTip("Выбрать размер картинки")
         self.ui.addSizeButt.clicked.connect(self.addSizeButt)
         self.ui.medButtBooks.setEnabled(False)
         self.ui.medButt.setEnabled(False)
         self.ui.smallButt.setEnabled(False)
+        self.ui.bigButtBooks.setEnabled(False)
         self.ui.smallButtBooks.setEnabled(False)
         self.ui.smallButtPlastins.setEnabled(False)
         self.ui.bigButt.setEnabled(False)
@@ -75,16 +87,55 @@ class PrintHelper(QtWidgets.QMainWindow):
         self.ui.frameSettings.setVisible(False)
         self.ui.frameSettings2.setVisible(False)
         self.ui.lineEditPass.returnPressed.connect(self.showSett)
-        self.ui.settButt.clicked.connect(self.showSett)
         self.ui.applySettButt.clicked.connect(self.applySett)
+        self.ui.pushButtonSaveSizes.clicked.connect(self.saveSizes)
+        self.ui.settButt.clicked.connect(self.showSett)
+        # keyPressEvent(QtCore.QEvent(QtCore.QEvent.Type.KeyRelease), QtCore.Qt.Key.Key_Delete).connect(self.showSett)
+        self.ui.pushButtonShowSizes.hide()
+        # self.ui.pushButtonShowSizes.clicked.connect(self.pushButtonShowSizes)
         self.ui.lineEditPass.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password) 
         self.minMem = 5
         self.dataWithSizePath = {}
         self.loadsSizeFromConfig()
+        self.buckUpSizes = []
         # self.ui.oldNewButt.clicked.connect(self.oldNewButt)
         # if uiVersion == '1.0':
         #     self.ui.oldNewButt.setText('Переключить на новый интерфейс')
-        
+        shortcut = QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Z"), self)
+        shortcut.activated.connect(self.undo)
+
+    def chooseFileSize(self):
+        fileName = QFileDialog.getOpenFileName(self, 'Выберите файл с размерами', r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\Размеры принтов', '*.cdr')[0]
+        self.ui.lineEditNameFileSize.setToolTip(fileName)
+        self.ui.lineEditNameFileSize.setText(basename(fileName))
+
+    def keyReleaseEvent(self, e):
+        if e.key() == QtCore.Qt.Key.Key_Delete:
+            # проверить находится ли tableWidgetSizes в фокус
+            if self.ui.tableWidgetSizes.hasFocus():
+                self.deleteSize()
+                return
+
+
+    def undo(self):
+        if len(self.buckUpSizes) !=0:
+            if self.ui.tableWidgetSizes.hasFocus():
+                self.dataWithSizePath = copy.deepcopy(self.buckUpSizes[-1])
+                self.buckUpSizes.pop(-1)
+                print("Ctrl+Z")
+                self.pushButtonShowSizes()
+
+
+    def deleteSize(self):
+        rowNum = self.ui.tableWidgetSizes.currentRow()
+        self.buckUpSizes.append(copy.deepcopy(self.dataWithSizePath))
+        self.dataWithSizePath.pop(self.ui.tableWidgetSizes.item(rowNum, 0).text())
+        self.ui.tableWidgetSizes.removeRow(rowNum)
+        self.pushButtonShowSizes()
+        self.ui.tableWidgetSizes.clearFocus()
+
+
+
     def chekMem(self):
         avalMemGB = dict(psutil.virtual_memory()._asdict())['available']/1024/1024/1024
         if avalMemGB < self.minMem:
@@ -92,25 +143,67 @@ class PrintHelper(QtWidgets.QMainWindow):
 
 
     def saveFileName(self, pathToOrderFile):
-        fileToSave = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\name.txt'
-        with open(fileToSave, 'w', encoding='ANSI') as file:
+        # self.pathToFileWithName = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\name.txt'
+        with open(self.pathToFileWithName, 'w', encoding='ANSI') as file:
             file.write(basename(pathToOrderFile))
             file.close()
 
 
     def loadsSizeFromConfig(self):
-        with open(r"\\192.168.0.111\shared\Отдел производство\обновления программы печати\sizesV3.pkl", 'rb') as file:
+        with open(self.pathToPklSizeV3, 'rb') as file:
             self.dataWithSizePath = pickle.load(file)
         global dataWithSizePath
         dataWithSizePath = self.dataWithSizePath
 
 
-    def addSizeButt(self):
-        nameSize1C = self.ui.lineEditNameSize1C
-        nemeFileSize = self.ui.lineEditNameFileSize
-        pass
+    def saveSizes(self):
+        self.makeBack()
+        with open(self.pathToPklSizeV3, 'wb') as file:
+            pickle.dump(self.dataWithSizePath, file)
+            file.close()
 
-            
+    def makeBack(self):
+        shutil.copy(self.pathToPklSizeV3, self.pathToPklSizeV3Back)
+
+    def addSizeButt(self):
+        nameSize1C = self.ui.lineEditNameSize1C.text()
+        nameFileSize = self.ui.lineEditNameFileSize.text()
+        if nameSize1C == '':
+            QMessageBox.warning(self, "Ошибка", "Введите имя размера")
+            return
+        if nameFileSize == '':
+            QMessageBox.warning(self, "Ошибка", "Введите имя файла")
+            return
+        if nameSize1C in self.dataWithSizePath:
+            QMessageBox.warning(self, "Ошибка", "Размер с таким именем уже существует")
+            return
+        else:
+            if exists(fullPath:=joinpath(self.pathToSizeDir, nameFileSize + '.cdr' if '.cdr' not in nameFileSize else nameFileSize)):
+                self.dataWithSizePath.update({nameSize1C: fullPath})
+            else:
+                QMessageBox.warning(self, "Ошибка", f"Файл с таким именем не существует. Сначала закиньте файл с размером в \"{self.pathToSizeDir}\" и попробуйте ещё раз.")            
+                return
+        self.pushButtonShowSizes()
+        self.ui.lineEditNameFileSize.setToolTip('')
+        
+
+    def pushButtonShowSizes(self):
+        if self.ui.tableWidgetSizes.columnCount() < 3:
+            self.ui.tableWidgetSizes.insertColumn(0)
+            self.ui.tableWidgetSizes.setHorizontalHeaderItem(0, QTableWidgetItem("Размер"))
+            self.ui.tableWidgetSizes.insertColumn(1)
+            self.ui.tableWidgetSizes.setHorizontalHeaderItem(1, QTableWidgetItem("Имя файла"))
+            self.ui.tableWidgetSizes.insertColumn(2)
+            self.ui.tableWidgetSizes.setHorizontalHeaderItem(2, QTableWidgetItem("Путь к файлу"))
+        for i, (nameSize1C, fullPath) in enumerate(self.dataWithSizePath.items()):
+        # В таблицу self.ui.tableWidgetSizes заполняем данными из словаря self.dataWithSizePath
+        # Если есть то проверить есть ли значение в словаре self.dataWithSizePath, и если нет то добавить
+            if self.ui.tableWidgetSizes.findItems(nameSize1C, QtCore.Qt.MatchFlag.MatchExactly) == []:
+                self.ui.tableWidgetSizes.insertRow(i)
+                self.ui.tableWidgetSizes.setItem(i, 0, QTableWidgetItem(nameSize1C))
+                self.ui.tableWidgetSizes.setItem(i, 1, QTableWidgetItem(basename(fullPath)))
+                self.ui.tableWidgetSizes.setItem(i, 2, QTableWidgetItem(fullPath))
+        self.ui.tableWidgetSizes.resizeColumnsToContents()
 
 
     def applySett(self):
@@ -119,6 +212,7 @@ class PrintHelper(QtWidgets.QMainWindow):
             'medButtInt': {'medAcsButt': self.ui.medAcsButt.isChecked()},
             'smallButtInt': {'smallAcsButt': self.ui.smallAcsButt.isChecked()},
             'bigButt': {'bigSilAcsButt': self.ui.bigSilAcsButt.isChecked()},
+            'bigButtBooks': {'bigBkAcsButt': self.ui.bigBkAcsButt.isChecked()},
             'medButt': {'medSilAcsButt': self.ui.medSilAcsButt.isChecked()},
             'smallButt': {'smallSilAcsButt': self.ui.smallSilAcsButt.isChecked()},
             'medButtBooks': {'medBkAcsButt': self.ui.medBkAcsButt.isChecked()},
@@ -184,6 +278,9 @@ class PrintHelper(QtWidgets.QMainWindow):
     def showSett(self):
         if self.ui.lineEditPass.text()  == '565656':
             self.mainPageButt()
+            self.pushButtonShowSizes()
+            self.resize(422, 720)
+            self.ui.tableWidgetSizes.show()
             self.ui.frameMain.setVisible(False)
             self.ui.mainPageButt.setVisible(False)
             self.ui.frameSettings.setVisible(True)
@@ -191,8 +288,10 @@ class PrintHelper(QtWidgets.QMainWindow):
             self.ui.label_2.setVisible(False)
             self.ui.lineEditPass.setVisible(False)
             self.ui.lineEditPass.setText('') 
+            self.ui.tableWidgetSizes.clearFocus()
         else:
             QtWidgets.QMessageBox.warning(self, 'Ошибка', 'Неверный пароль!')
+            self.ui.lineEditPass.selectAll()
         
 
 
@@ -218,10 +317,12 @@ class PrintHelper(QtWidgets.QMainWindow):
         self.ui.smallButtInt.setObjectName("smallButtInt")
 
     def mainPageButt(self):
+        self.resize(QtCore.QSize(422, 387).expandedTo(self.minimumSizeHint()))
         self.ui.label_2.setText('Выберите станок')
         self.ui.frameBig.setVisible(False)
         self.ui.frameMed.setVisible(False)
         self.ui.frameSmall.setVisible(False)
+        self.ui.tableWidgetSizes.hide()
         # self.ui.frameOther.setVisible(False)
         self.ui.frameMain.setVisible(True)
 
@@ -259,6 +360,8 @@ class PrintHelper(QtWidgets.QMainWindow):
         with open(pathToPrinterMode, 'w') as file:
             if printer == 'bigMode':
                 file.write('1')
+            if printer == 'bigBookMode':
+                file.write('1')
             else:
                 file.write('0')
 
@@ -269,6 +372,11 @@ class PrintHelper(QtWidgets.QMainWindow):
         self.saveModePrinter(mode)
         PrintHelper.close(self)
 
+    def bigBookMode(self):
+        global mode
+        mode = 'bigBookMode'
+        self.saveModePrinter(mode)
+        PrintHelper.close(self)
 
     def smallCartholderMode(self):
         global mode
@@ -333,6 +441,7 @@ class PrintHelper(QtWidgets.QMainWindow):
         self.ui.smallButtPlastins.setEnabled(True)
         self.ui.bigButt.setEnabled(True)
         self.ui.smallButtCartholders.setEnabled(True)
+        self.ui.bigButtBooks.setEnabled(True)
         self.updateUiSett()
         self.mainPageButt()
         self.saveFileName(pathToOrderFile)
@@ -370,6 +479,7 @@ pathToTablesV2 = joinpath(mainPath, 'TablesV2')
 pathToFileConfigSmall = joinpath(mainPath, 'configSmall.txt')
 pathToFileConfigMed = joinpath(mainPath, 'configMed.txt')
 pathToFileConfigBig = joinpath(mainPath, 'configBig.txt')
+pathToFileConfigBigBook = joinpath(mainPath, 'configBigBook.txt')
 pathToFileConfigPlanks  = joinpath(mainPath, 'configPlank.txt')
 pathToFileConfigSmallBook = joinpath(mainPath, 'configSmallBook.txt')
 pathToFileConfigMedBook = joinpath(mainPath, 'configMedBook.txt')
@@ -414,7 +524,12 @@ def applyConfig(mode):
         pathToConfig = pathToFileConfigBig
         with open(pathToModeFile, 'w') as fileMode:
             fileMode.write('sil')
-            fileMode.close()         
+            fileMode.close() 
+    elif mode == 'bigBookMode':
+        pathToConfig = pathToFileConfigBigBook
+        with open(pathToModeFile, 'w') as fileMode:
+            fileMode.write('book')
+            fileMode.close()        
     elif mode =='smallPlastinMode':
         pathToConfig = pathToFileConfigPlanks
         with open(pathToModeFile, 'w') as fileMode:
@@ -503,6 +618,8 @@ def startChek(mode):
         pathToConfig = pathToFileConfigMed
     elif mode == 'bigMode':
         pathToConfig = pathToFileConfigBig
+    elif mode =='bigBookMode':
+        pathToConfig = pathToFileConfigBigBook
     elif mode =='smallPlastinMode':
         pathToConfig = pathToFileConfigPlanks
     elif mode =='medBookMode':

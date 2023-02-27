@@ -39,6 +39,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.ui.selectFileButt.clicked.connect(self.selectFile)
         self.ui.bigButt.clicked.connect(self.bigMode)
+        self.ui.bigButtBooks.clicked.connect(self.bigBookMode)
         self.ui.medButt.clicked.connect(self.medMode)
         self.ui.medButtBooks.clicked.connect(self.medBookMode)
         self.ui.smallButt.clicked.connect(self.smallMode)
@@ -53,6 +54,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.smallButtBooks.setEnabled(False)
         self.ui.smallButtPlastins.setEnabled(False)
         self.ui.bigButt.setEnabled(False)
+        self.ui.bigButtBooks.setEnabled(False)
         self.ui.smallButtCartholders.setEnabled(False)
         self.readSett()
         # Элементы нового интерфейса
@@ -91,6 +93,7 @@ class FBSStoks(QtWidgets.QMainWindow):
             'medButtInt': {'medAcsButt': self.ui.medAcsButt.isChecked()},
             'smallButtInt': {'smallAcsButt': self.ui.smallAcsButt.isChecked()},
             'bigButt': {'bigSilAcsButt': self.ui.bigSilAcsButt.isChecked()},
+            'bigButtBooks': {'bigBkAcsButt': self.ui.bigBkAcsButt.isChecked()},
             'medButt': {'medSilAcsButt': self.ui.medSilAcsButt.isChecked()},
             'smallButt': {'smallSilAcsButt': self.ui.smallSilAcsButt.isChecked()},
             'medButtBooks': {'medBkAcsButt': self.ui.medBkAcsButt.isChecked()},
@@ -231,6 +234,8 @@ class FBSStoks(QtWidgets.QMainWindow):
         with open(pathToPrinterMode, 'w') as file:
             if printer == 'bigMode':
                 file.write('1')
+            if printer == 'bigBookMode':
+                file.write('1')
             else:
                 file.write('0')
 
@@ -238,6 +243,12 @@ class FBSStoks(QtWidgets.QMainWindow):
     def bigMode(self):
         global mode
         mode = 'bigMode'
+        self.saveModePrinter(mode)
+        w.close(self)
+    
+    def bigBookMode(self):
+        global mode
+        mode = 'bigBookMode'
         self.saveModePrinter(mode)
         w.close(self)
 
@@ -304,6 +315,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.smallButtBooks.setEnabled(True)
         self.ui.smallButtPlastins.setEnabled(True)
         self.ui.bigButt.setEnabled(True)
+        self.ui.bigButtBooks.setEnabled(True)
         self.ui.smallButtCartholders.setEnabled(True)
         self.updateUiSett()
         self.mainPageButt()
@@ -342,6 +354,7 @@ pathToFileConfigBig = joinpath(mainPath, 'configBig.txt')
 pathToFileConfigPlanks  = joinpath(mainPath, 'configPlank.txt')
 pathToFileConfigSmallBook = joinpath(mainPath, 'configSmallBook.txt')
 pathToFileConfigMedBook = joinpath(mainPath, 'configMedBook.txt')
+pathToFileConfigBigBook = joinpath(mainPath, 'configBigBook.txt')
 pathToFileConfigCartholder = joinpath(mainPath, 'configCartholder.txt')
 
 pathDebug = joinpath(mainPath, 'debug')
@@ -399,8 +412,8 @@ def applyConfig(mode):
         with open(pathToModeFile, 'w') as fileMode:
             fileMode.write('book')
             fileMode.close()
-    elif mode == 'medBookMode':
-        pathToConfig = pathToFileConfigMedBook
+    elif mode == 'bigBookMode':
+        pathToConfig = pathToFileConfigBigBook
         with open(pathToModeFile, 'w') as fileMode:
             fileMode.write('book')
             fileMode.close()
@@ -476,6 +489,8 @@ def startChek(mode):
         pathToConfig = pathToFileConfigPlanks
     elif mode =='medBookMode':
         pathToConfig = pathToFileConfigMedBook
+    elif mode =='bigBookMode':
+        pathToConfig = pathToFileConfigBigBook
     elif mode == 'smallBookMode':
         pathToConfig = pathToFileConfigSmallBook
     errorsDirFlag = False
