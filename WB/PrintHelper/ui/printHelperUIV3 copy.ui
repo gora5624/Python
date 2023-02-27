@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>425</width>
-    <height>392</height>
+    <width>422</width>
+    <height>395</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -584,7 +584,7 @@
       <x>9</x>
       <y>0</y>
       <width>361</width>
-      <height>291</height>
+      <height>281</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -721,7 +721,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit"/>
+          <widget class="QLineEdit" name="lineEditNameSize1C"/>
          </item>
          <item>
           <widget class="QLabel" name="label_7">
@@ -745,12 +745,19 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_2"/>
+          <widget class="QLineEdit" name="lineEditNameFileSize"/>
          </item>
          <item>
           <widget class="QPushButton" name="addSizeButt">
            <property name="text">
             <string>Применить</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButtonShowSizes">
+           <property name="text">
+            <string>Показать все размеры</string>
            </property>
           </widget>
          </item>
@@ -839,11 +846,22 @@
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="applySettButt">
-       <property name="text">
-        <string>Применить</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QPushButton" name="applySettButt">
+         <property name="text">
+          <string>Применить</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>Следующее меню</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
@@ -874,6 +892,46 @@
     <set>Qt::ImhHiddenText</set>
    </property>
   </widget>
+  <widget class="QFrame" name="frameSettings2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>90</y>
+     <width>371</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLineEdit" name="lineEditMinRAM">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>113</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>261</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Минимум памяти для предупреждения, Гб</string>
+    </property>
+   </widget>
+  </widget>
+  <zorder>frameSettings2</zorder>
   <zorder>selectFileButt</zorder>
   <zorder>label</zorder>
   <zorder>label_2</zorder>
