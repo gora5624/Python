@@ -66,6 +66,7 @@ class OrdersGetter():
         # dataTMP.drop(['sku'], axis=1, inplace=True)
         if not self.rawDataFlag:
             self.orders = dataTMP.loc[:, ['Штрихкод', 'Номенклатура', "Дата", "Время", "Количество", "Цена", "Продавец"]]
+            self.orders.fillna(0, inplace=True)
             self.orders['Штрихкод'] = self.orders['Штрихкод'].astype(int64)
             if not self.saveSKUFlag:
                 self.orders = self.orders.drop(['Штрихкод'] , axis=1)

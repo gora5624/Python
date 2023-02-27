@@ -14,8 +14,8 @@ from my_class import OrdersGetter, WorkerQueue
 from autorz import token
 import pandas as pd
 from os.path import join as joinPath
-import gc
 
+# pyuic6 D:\Python\WB\NEW_API\getOrdersNew\ui\GetOrders.ui -o D:\Python\WB\NEW_API\getOrdersNew\ui\GetOrders.py
 
 class GetOrdersMainWindows(QMainWindow):
     def __init__(self, parent=None) -> None:

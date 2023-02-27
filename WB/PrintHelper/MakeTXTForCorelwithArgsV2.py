@@ -1,15 +1,19 @@
+import pandas
 import xlrd
 from os.path import join as joinpath , exists, basename, abspath
 from os import listdir, remove, makedirs
 from PyQt6 import QtWidgets, QtGui, QtCore
-from PyQt6.QtWidgets import QFileDialog, QApplication, QMessageBox
+from PyQt6.QtWidgets import QFileDialog, QMessageBox
 from ui.chekUI import chekUIVesion, pathTouiVesionFile
 if (uiVersion:=chekUIVesion()) == '1.0':
     from ui.ui_printHelperUI import Ui_PrintHelper
 else:
     from ui.ui_printHelperUIV2 import Ui_PrintHelper
 import pickle
-# pyuic5 D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.ui -o D:\Rep\Python\archive\PrintHelper\ui\printHelperUI.py
+import psutil
+
+# pyuic6 D:\Python\WB\PrintHelper\ui\printHelperUIV3.ui -o D:\Python\WB\PrintHelper\ui\ui_printHelperUIV3.py      
+
 pathToOrderFile = ''
 mode = ''
 w = QtWidgets.QWidget
@@ -29,6 +33,7 @@ class FBSStoks(QtWidgets.QMainWindow):
     }
     chekKeys = ['bigButtInt', 'medButtInt', 'smallButtInt', 'bigButt', 'medButt', 'smallButt', 'medButtBooks', 'smallButtBooks', 'smallButtPlastins', 'smallButtCartholders']
     def __init__(self,parent=None):
+        self.minMem = 5
         super(FBSStoks, self).__init__(parent)
         self.ui = Ui_PrintHelper()
         self.ui.setupUi(self)
@@ -66,6 +71,19 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.oldNewButt.clicked.connect(self.oldNewButt)
         if uiVersion == '1.0':
             self.ui.oldNewButt.setText('Переключить на новый интерфейс')
+        
+        
+    def chekMem(self):
+        avalMemGB = dict(psutil.virtual_memory()._asdict())['available']/1024/1024/1024
+        if avalMemGB < self.minMem:
+            QMessageBox.warning(self, 'Мало памяти', f'Внимание! На компьютере осталось менее {self.minMem} Гб совбодной оперативной памяти. Закройте вкладки с большими макетами в Corel иначе работа программы может быть некорректной.')
+
+    
+    def saveFileName(self, pathToOrderFile):
+        fileToSave = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\name.txt'
+        with open(fileToSave, 'w', encoding='ANSI') as file:
+            file.write(basename(pathToOrderFile))
+            file.close()
 
     def applySett(self):
         self.data = {
@@ -272,6 +290,7 @@ class FBSStoks(QtWidgets.QMainWindow):
 
 
     def selectFile(self):
+        self.chekMem()
         global pathToOrderFile
         pathToOrderFile = QFileDialog.getOpenFileName(self, ("Выберите файл со списком номенклатуры"), r"\\192.168.0.111\shared\Отдел производство\Wildberries\Заказы принты\Заказы Эксель", ("Excel Files (*.xlsx)"))[0]
         if pathToOrderFile == '':
@@ -288,6 +307,7 @@ class FBSStoks(QtWidgets.QMainWindow):
         self.ui.smallButtCartholders.setEnabled(True)
         self.updateUiSett()
         self.mainPageButt()
+        self.saveFileName(pathToOrderFile)
         # self.applySett()
 
     def createMSGError(self,text):
@@ -501,26 +521,28 @@ def startChek(mode):
 def read_xlsx(file_path, nameList):
     '''Считывает построчно xlsx файл и возращает список словарей - если title = 'Yes', список списков - если title = 'No'
     '''
-    rd = xlrd.open_workbook(file_path)
+    tmp = pandas.DataFrame(pandas.read_excel(file_path)).fillna('').to_dict('records')
+    # tmp = tmp
+    # rd = xlrd.open_workbook(file_path)
+    # # try:
+    # #     sheet = rd.sheet_by_name(nameList)
+    # # except:
+    # #     sheet = rd.sheet_by_index(0)
+    # sheet = rd.sheet_by_index(0)
     # try:
-    #     sheet = rd.sheet_by_name(nameList)
-    # except:
-    #     sheet = rd.sheet_by_index(0)
-    sheet = rd.sheet_by_index(0)
-    try:
-        Name_row = sheet.row_values(0)
-    except IndexError:
-        return None
-    start = 1
-    data = []
-    for rownum in range(start, sheet.nrows):
-        row = sheet.row_values(rownum)
-        dct = {}
-        for i, cel in enumerate(row):
-            tmp = {Name_row[i]: cel}
-            dct.update(tmp)
-        data.append(dct)
-    return data
+    #     Name_row = sheet.row_values(0)
+    # except IndexError:
+    #     return None
+    # start = 1
+    # data = []
+    # for rownum in range(start, sheet.nrows):
+    #     row = sheet.row_values(rownum)
+    #     dct = {}
+    #     for i, cel in enumerate(row):
+    #         tmp = {Name_row[i]: cel}
+    #         dct.update(tmp)
+    #     data.append(dct)
+    return tmp
 
 
 def getDataFromOrderFile(pathToOrderFile):
@@ -565,6 +587,7 @@ def detectPtintFronName(name, mode):
                 return name.lower().split('df')[1].strip()
 
     else:
+
         if 'прозрачный' in name.lower():
             return name.lower().split('прозрачный')[1].strip()
         elif 'матовый' in name.lower():
@@ -667,7 +690,7 @@ def splitOrderTable(dataFromOrderFile, mode):
             if line['Название'] !='':
                 printName = detectPtintFronName(line['Название'], mode)
                 size = detectSizeFromOrder(str(line['Размер'])[0:-2] if type(
-                    line['Размер']) == float else line['Размер'], orderNum, str(numTable))
+                    line['Размер']) == float else str(line['Размер']), orderNum, str(numTable))
                 if size != None:
                     # позже добавить условие что картхолдеры, з фолд, пластины и тп по старому делать, остально по новому
                     pathToFile = createpathToFile(printName)
