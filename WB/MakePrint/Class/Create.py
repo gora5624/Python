@@ -177,7 +177,7 @@ class WBnomenclaturesCreater:
                             # LogMaker.logAction('createNomenclatureSingleProcess', vendorCodeMain +'  успешно создана')
                             vendorCodeMain = modelListCard[i]['vendorCode']
                             print(modelListCard[i]['vendorCode'] + ' успешно создана')
-                            time.sleep(1)
+                            time.sleep(2)
                             break
                         else:
                             # print("responce.text123")
