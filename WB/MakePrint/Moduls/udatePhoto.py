@@ -57,8 +57,8 @@ def main():
     pathToFile = sys.argv[1:][0].replace('#', ' ')
     token = sys.argv[1:][1].replace('#', ' ')
     # if __name__ == '__main__':
-    # pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол Honor X9 силикон с зак.кам. проз. под карту.xlsx"
-    # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
+    # pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол книга Xiaomi Poco X4 GT (Redmi Note 11T Pro) черный с сил. вставкой Fashion.xlsx"
+    # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
     # else:
     # pathToFile = sys.argv[1:][0].replace('#', ' ')
     # token = sys.argv[1:][1].replace('#', ' ')
@@ -66,7 +66,7 @@ def main():
     df = pandas.DataFrame(pandas.read_excel(pathToFile))
     requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/media/save'
     if __name__ == '__main__':
-        pool = multiprocessing.Pool(2)
+        pool = multiprocessing.Pool(4)
         for line in df.to_dict('records'):
         #     pushPhoto(line, token, requestUrl)
             pool.apply_async(pushPhoto, args=(line, token, requestUrl,))

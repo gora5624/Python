@@ -61,7 +61,7 @@ class ExistsNomenclaturesCreater:
         nameCaseFull = Nom1CData[Nom1CData['Наименование']==nameCase]['Наименование для печати'].values[0]
         size = Nom1CData[Nom1CData['Наименование']==nameCase]['Размер чехла'].values[0]
         if pandas.isnull(size) and 'книга' in nameCase:
-                size = 'Книга'
+                size = ''
         for line in self.dataDictNew:
             tmp = {
                 'Баркод':line['Баркод товара'],

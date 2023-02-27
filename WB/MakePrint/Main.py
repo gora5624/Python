@@ -343,8 +343,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         for case in listdir(pathToDoneSiliconImageSilicon):
             if 'проз.' not in case:
                 maskNew = case.replace('проз', 'проз.')
-                maskNew
-            elif 'мат.' not in case:
+            if 'мат.' not in case:
                 maskNew = case.replace('мат', 'мат.')
             else:
                 maskNew = case
@@ -372,7 +371,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
                         modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, maskNew, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag)
                     self.listModelForExcel.append(modelWithAddin)
             except:
-                print('Для {} не удалось получить свойства.'.format(case))
+                print('Для {} не удалось получить свойства.'.format(maskNew))
 
 
 
