@@ -106,8 +106,15 @@ class PrintHelper(QtWidgets.QMainWindow):
 
     def chooseFileSize(self):
         fileName = QFileDialog.getOpenFileName(self, 'Выберите файл с размерами', r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\Размеры принтов', '*.cdr')[0]
-        self.ui.lineEditNameFileSize.setToolTip(fileName)
-        self.ui.lineEditNameFileSize.setText(basename(fileName))
+        if exists(joinpath(self.pathToSizeDir,basename(fileName))):
+            self.ui.lineEditNameFileSize.setToolTip(fileName)
+            self.ui.lineEditNameFileSize.setText(basename(fileName))
+        else:
+            if exists(fileName):
+                shutil.copy(fileName, joinpath(self.pathToSizeDir,basename(fileName)))
+            else:
+                QMessageBox.warning(self, 'Ошибка', 'Файл не найден {}'.format(fileName))
+
 
     def keyReleaseEvent(self, e):
         if e.key() == QtCore.Qt.Key.Key_Delete:
