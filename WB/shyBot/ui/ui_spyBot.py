@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'd:\Python\WB\shyBot\ui\spyBot.ui'
+# Form implementation generated from reading ui file 'e:\MyProduct\Python\WB\shyBot\ui\spyBot.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #

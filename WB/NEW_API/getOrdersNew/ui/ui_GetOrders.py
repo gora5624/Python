@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'D:\Python\WB\NEW_API\getOrdersNew\ui\GetOrders.ui'
+# Form implementation generated from reading ui file 'e:\MyProduct\Python\WB\NEW_API\getOrdersNew\ui\GetOrders.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #

@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'd:\Python\WB\createAct\ui\CreateAct.ui'
+# Form implementation generated from reading ui file 'e:\MyProduct\Python\WB\createAct\ui\CreateAct.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #
