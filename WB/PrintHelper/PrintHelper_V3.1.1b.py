@@ -367,7 +367,7 @@ class PrintHelper(QtWidgets.QMainWindow):
         with open(pathToPrinterMode, 'w') as file:
             if printer == 'bigMode':
                 file.write('1')
-            if printer == 'bigBookMode':
+            elif printer == 'bigBookMode':
                 file.write('1')
             else:
                 file.write('0')

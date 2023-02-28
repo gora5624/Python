@@ -38,7 +38,7 @@ while True:
         try:
             cod = dfNomenclatures[dfNomenclatures.Наименование == nomenclaturesName[0]]['Код'].values.tolist()[0]
             nomenclaturesNameFull = dfNomenclatures[dfNomenclatures.Наименование == nomenclaturesName[0]]['Наименование для печати'].values.tolist()[0]
-            typeProd = dfNomenclatures[dfNomenclatures.Наименование == nomenclaturesName[0]]['Тип номенклатуры производство'].values.tolist()[0]
+            typeProd = dfNomenclatures[dfNomenclatures.Наименование == nomenclaturesName[0]]['Тип производства'].values.tolist()[0]
         except:    
             print('Не удалось определить код для {}'.format(nomenclaturesName[0]))
             cod = 'Неизвестно, проверьте базу'
@@ -50,7 +50,7 @@ while True:
             'Название': nomenclaturesNameFull + ' ' + printName[0],
             'Размер': size,
             'Код': cod,
-            'Тип номенклатуры производство': typeProd,
+            'Тип производства': typeProd,
         }
         dataBrac.append(dataTmp)
         # caseListTMP = pandas.concat((caseListTMP,tmp), ignore_index=True)
