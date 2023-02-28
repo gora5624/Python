@@ -15,7 +15,7 @@ import pickle
 import psutil
 import warnings
 
-"""Version 3.1.2b"""
+"""Version 3.2.0b"""
 
 # pyuic6 D:\Python\WB\PrintHelper\ui\printHelperUIV3.ui -o D:\Python\WB\PrintHelper\ui\ui_printHelperUIV3.py
 pathToOrderFile = ''
@@ -66,19 +66,6 @@ class PrintHelper(QtWidgets.QMainWindow):
         self.ui.bigButt.setEnabled(False)
         self.ui.smallButtCartholders.setEnabled(False)
         self.readSett()
-        # Элементы нового интерфейса
-        # if uiVersion != '1.0':
-        #     self.setIcon()
-        #     self.updateUiSett()
-        #     self.mainPageButt()
-        #     self.ui.bigButtInt.clicked.connect(self.bigButtInt)
-        #     self.ui.medButtInt.clicked.connect(self.medButtInt)
-        #     self.ui.smallButtInt.clicked.connect(self.smallButtInt)
-        #     self.ui.mainPageButt.clicked.connect(self.mainPageButt)
-        #     self.ui.frameSettings.setVisible(False)
-        #     self.ui.settButt.clicked.connect(self.showSett)
-        #     self.ui.applySettButt.clicked.connect(self.applySett)
-        #     self.ui.lineEditPass.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password) 
         self.setIcon()
         self.updateUiSett()
         self.mainPageButt()
@@ -170,6 +157,7 @@ class PrintHelper(QtWidgets.QMainWindow):
         with open(self.pathToPklSizeV3, 'wb') as file:
             pickle.dump(self.dataWithSizePath, file)
             file.close()
+        QMessageBox.information(self,'Успешно','Таблица размеров сохранена!')
 
     def makeBack(self):
         shutil.copy(self.pathToPklSizeV3, self.pathToPklSizeV3Back)
@@ -194,6 +182,7 @@ class PrintHelper(QtWidgets.QMainWindow):
                 return
         self.pushButtonShowSizes()
         self.ui.lineEditNameFileSize.setToolTip('')
+        QMessageBox.information(self, 'Успешно', 'Размеры успешно добавлены в конец таблицы!')
         
 
     def pushButtonShowSizes(self):
