@@ -606,9 +606,9 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>90</y>
+     <y>10</y>
      <width>381</width>
-     <height>291</height>
+     <height>371</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -629,7 +629,7 @@
       <x>9</x>
       <y>0</y>
       <width>361</width>
-      <height>295</height>
+      <height>371</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -936,11 +936,45 @@
        <item>
         <widget class="QPushButton" name="pushButtonNextListSett">
          <property name="text">
-          <string>Следующее меню</string>
+          <string>Настройки столов</string>
          </property>
         </widget>
        </item>
       </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <item>
+        <widget class="QLabel" name="labelSearcgSize">
+         <property name="maximumSize">
+          <size>
+           <width>155</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Найти размер в таблице:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBoxSearchSize"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonSearchSize">
+       <property name="text">
+        <string>Найти</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonAbortSearchSize">
+       <property name="text">
+        <string>Сбросить фильтр</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -977,7 +1011,7 @@
      <x>20</x>
      <y>90</y>
      <width>371</width>
-     <height>281</height>
+     <height>291</height>
     </rect>
    </property>
    <property name="frameShape">
