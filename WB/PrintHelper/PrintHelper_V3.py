@@ -15,7 +15,7 @@ import pickle
 import psutil
 import warnings
 
-"""Version 3.2.0b"""
+"""Version 3.3.0"""
 
 # pyuic6 D:\Python\WB\PrintHelper\ui\printHelperUIV3.ui -o D:\Python\WB\PrintHelper\ui\ui_printHelperUIV3.py
 pathToOrderFile = ''
