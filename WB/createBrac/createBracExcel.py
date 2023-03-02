@@ -50,7 +50,7 @@ while True:
             'Название': nomenclaturesNameFull + ' ' + printName[0],
             'Размер': size,
             'Код': cod,
-            'Тип производства': typeProd,
+            'Тип производства': typeProd
         }
         dataBrac.append(dataTmp)
         # caseListTMP = pandas.concat((caseListTMP,tmp), ignore_index=True)
