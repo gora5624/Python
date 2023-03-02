@@ -833,13 +833,6 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="pushButtonShowSizes">
-           <property name="text">
-            <string>Показать все размеры</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
       </layout>

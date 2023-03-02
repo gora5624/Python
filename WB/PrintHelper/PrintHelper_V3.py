@@ -80,8 +80,6 @@ class PrintHelper(QtWidgets.QMainWindow):
         self.ui.pushButtonSaveSizes.clicked.connect(self.saveSizes)
         self.ui.settButt.clicked.connect(self.showSett)
         # keyPressEvent(QtCore.QEvent(QtCore.QEvent.Type.KeyRelease), QtCore.Qt.Key.Key_Delete).connect(self.showSett)
-        self.ui.pushButtonShowSizes.hide()
-        # self.ui.pushButtonShowSizes.clicked.connect(self.pushButtonShowSizes)
         self.ui.lineEditPass.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password) 
         self.minMem = 5
         self.dataWithSizePath = {}
@@ -220,6 +218,7 @@ class PrintHelper(QtWidgets.QMainWindow):
         }
         self.updateUiSett()
         self.saveSett()
+        self.saveSizes()
         self.ui.frameMain.setVisible(True)
         self.ui.mainPageButt.setVisible(True)
         self.ui.frameSettings.setVisible(False)
