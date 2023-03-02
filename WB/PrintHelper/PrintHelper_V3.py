@@ -79,6 +79,12 @@ class PrintHelper(QtWidgets.QMainWindow):
         self.ui.applySettButt.clicked.connect(self.applySett)
         self.ui.pushButtonSaveSizes.clicked.connect(self.saveSizes)
         self.ui.settButt.clicked.connect(self.showSett)
+        self.ui.comboBoxSearchSize.setEditable(True)
+        self.ui.comboBoxSearchSize.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
+        self.ui.comboBoxSearchSize.setMaxVisibleItems(20)
+        self.ui.comboBoxSearchSize.completer().setCompletionMode(QtWidgets.QCompleter.CompletionMode.PopupCompletion)
+        self.ui.pushButtonSearchSize.clicked.connect(self.findSize)
+        self.ui.pushButtonAbortSearchSize.clicked.connect(self.insertSizeToTable)
         # keyPressEvent(QtCore.QEvent(QtCore.QEvent.Type.KeyRelease), QtCore.Qt.Key.Key_Delete).connect(self.showSett)
         self.ui.lineEditPass.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password) 
         self.minMem = 5
@@ -109,7 +115,11 @@ class PrintHelper(QtWidgets.QMainWindow):
             if self.ui.tableWidgetSizes.hasFocus():
                 self.deleteSize()
                 return
-
+        # if e.key() == QtCore.Qt.Key.Key_Enter:
+        #     if self.ui.comboBoxSearchSize.hasFocus():
+        #         self.findSize()
+        #         return
+            
 
     def undo(self):
         if len(self.buckUpSizes) !=0:
@@ -117,7 +127,7 @@ class PrintHelper(QtWidgets.QMainWindow):
                 self.dataWithSizePath = copy.deepcopy(self.buckUpSizes[-1])
                 self.buckUpSizes.pop(-1)
                 print("Ctrl+Z")
-                self.pushButtonShowSizes()
+                self.insertSizeToTable()
 
 
     def deleteSize(self):
@@ -125,7 +135,7 @@ class PrintHelper(QtWidgets.QMainWindow):
         self.buckUpSizes.append(copy.deepcopy(self.dataWithSizePath))
         self.dataWithSizePath.pop(self.ui.tableWidgetSizes.item(rowNum, 0).text())
         self.ui.tableWidgetSizes.removeRow(rowNum)
-        self.pushButtonShowSizes()
+        self.insertSizeToTable()
         self.ui.tableWidgetSizes.clearFocus()
 
 
@@ -178,12 +188,14 @@ class PrintHelper(QtWidgets.QMainWindow):
             else:
                 QMessageBox.warning(self, "Ошибка", f"Файл с таким именем не существует. Сначала закиньте файл с размером в \"{self.pathToSizeDir}\" и попробуйте ещё раз.")            
                 return
-        self.pushButtonShowSizes()
+        self.insertSizeToTable()
         self.ui.lineEditNameFileSize.setToolTip('')
         QMessageBox.information(self, 'Успешно', 'Размеры успешно добавлены в конец таблицы!')
         
 
-    def pushButtonShowSizes(self):
+    def insertSizeToTable(self):
+        self.ui.comboBoxSearchSize.clear()
+        searchSizes = []
         if self.ui.tableWidgetSizes.columnCount() < 3:
             self.ui.tableWidgetSizes.insertColumn(0)
             self.ui.tableWidgetSizes.setHorizontalHeaderItem(0, QTableWidgetItem("Размер"))
@@ -199,7 +211,23 @@ class PrintHelper(QtWidgets.QMainWindow):
                 self.ui.tableWidgetSizes.setItem(i, 0, QTableWidgetItem(nameSize1C))
                 self.ui.tableWidgetSizes.setItem(i, 1, QTableWidgetItem(basename(fullPath)))
                 self.ui.tableWidgetSizes.setItem(i, 2, QTableWidgetItem(fullPath))
+                searchSizes.append(nameSize1C)
+        searchSizes.sort(key = lambda x: x.lower())
+        self.ui.comboBoxSearchSize.addItems(searchSizes)
         self.ui.tableWidgetSizes.resizeColumnsToContents()
+
+
+    def findSize(self):
+        self.ui.tableWidgetSizes.clearContents()
+        self.ui.tableWidgetSizes.setRowCount(0)
+        searchSize = self.ui.comboBoxSearchSize.currentText()
+        for nameSize1C, fullPath in self.dataWithSizePath.items():
+            if nameSize1C == searchSize:
+                self.ui.tableWidgetSizes.insertRow(self.ui.tableWidgetSizes.rowCount())
+                self.ui.tableWidgetSizes.setItem(self.ui.tableWidgetSizes.rowCount()-1, 0, QTableWidgetItem(nameSize1C))
+                self.ui.tableWidgetSizes.setItem(self.ui.tableWidgetSizes.rowCount()-1, 1, QTableWidgetItem(basename(fullPath)))
+                self.ui.tableWidgetSizes.setItem(self.ui.tableWidgetSizes.rowCount()-1, 2, QTableWidgetItem(fullPath))
+
 
 
     def applySett(self):
@@ -275,11 +303,13 @@ class PrintHelper(QtWidgets.QMainWindow):
     def showSett(self):
         if self.ui.lineEditPass.text()  == '565656':
             self.mainPageButt()
-            self.pushButtonShowSizes()
+            self.insertSizeToTable()
             self.resize(422, 720)
             self.ui.tableWidgetSizes.show()
             self.ui.frameMain.setVisible(False)
+            self.ui.selectFileButt.setVisible(False)
             self.ui.mainPageButt.setVisible(False)
+            self.ui.label.setVisible(False)
             self.ui.frameSettings.setVisible(True)
             self.ui.settButt.setVisible(False)
             self.ui.label_2.setVisible(False)
@@ -317,7 +347,9 @@ class PrintHelper(QtWidgets.QMainWindow):
         self.resize(QtCore.QSize(422, 387).expandedTo(self.minimumSizeHint()))
         self.ui.label_2.setText('Выберите станок')
         self.ui.frameBig.setVisible(False)
+        self.ui.label.setVisible(True)
         self.ui.frameMed.setVisible(False)
+        self.ui.selectFileButt.setVisible(True)
         self.ui.frameSmall.setVisible(False)
         self.ui.frameSettings.setVisible(False)
         self.ui.frameSettings2.setVisible(False)
