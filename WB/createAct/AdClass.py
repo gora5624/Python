@@ -49,8 +49,29 @@ class Acts():
         self.sellerToname = seller
         self.pathToStandartFonts = os.path.join(os.environ['WINDIR'],'fonts')
         self.seller = self.setSeller(seller)
-        self.strNamberBox = ', '.join(nambersBox)
-        self.numBox = len(nambersBox)
+        # проверить есть ли в nambersBox повторяющиеся значения
+        self.nambersBox = self.checkNambersBox(nambersBox)
+        self.strNamberBox = ', '.join(self.nambersBox)
+        self.numBox = len(self.nambersBox)
+
+
+    def checkNambersBox(self, nambersBox):
+        for box in nambersBox:
+            if box in nambersBox:
+                # посчитать количество box в nambersBox
+                count = nambersBox.count(box)
+                if count > 1:
+                    nambersBox.remove(box)
+                    # повторить проверку для оставшихся box в nambersBox
+                    self.checkNambersBox(nambersBox)
+                    break
+                else:
+                    continue
+            else:
+                continue
+        return nambersBox
+
+
 
 
     def setSeller(self, seller):

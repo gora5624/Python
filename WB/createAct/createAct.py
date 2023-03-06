@@ -1,6 +1,7 @@
 from PyQt6 import QtWidgets, QtGui, QtCore
 import os
-
+import pickle
+from datetime import datetime, timedelta
 from ui.ui_CreateAct import Ui_CreateAct
 from AdClass import Supplies, Acts
 
@@ -12,9 +13,13 @@ class createAct(QtWidgets.QMainWindow):
         self.ui = Ui_CreateAct()
         self.ui.setupUi(self)
         self.ui.lineEditScan.returnPressed.connect(self.scan)
+        self.ui.lineEditScan.returnPressed.connect(self.scan)
         self.ui.pushButtonCreateActs.clicked.connect(self.createActs)
         self.ui.tableWidgetSupp.insertColumn(0)
         self.ui.tableWidgetSupp.insertColumn(1)
+        self.dateNow = datetime.now().date()
+        self.fileSuppsName = f'{self.dateNow}_supp.pkl'
+        self.pathTofileSupps = os.path.join(os.environ['LOCALAPPDATA'],self.fileSuppsName)
         self.ui.tableWidgetSupp.setHorizontalHeaderLabels(['ИП', 'Номер поставки'])
         self.data = {'Караханян':[],
                     'Самвел':[],
@@ -36,6 +41,10 @@ class createAct(QtWidgets.QMainWindow):
         self.ui.statusbar.setStyleSheet("font-size: 20px; color: green")
         # act.createActs
 
+    def createDB(self):
+        with open(self.pathTofileSupps, 'wb') as file:
+            pickle.dump(self.data, file)
+            file.close()
 
 
     def scan(self):
@@ -45,6 +54,7 @@ class createAct(QtWidgets.QMainWindow):
         supp = Supplies()
         if ip:=supp.isExistsSupp(supplId):
             self.addToView(ip, supplId)
+            self.createDB()
         else:
             self.ui.statusbar.showMessage('Поставка не найдена')
             self.ui.statusbar.setStyleSheet("font-size: 20px; color: red")
