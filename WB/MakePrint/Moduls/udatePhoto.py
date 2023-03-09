@@ -1,25 +1,29 @@
-from tkinter import E
+import re
 import requests
 import multiprocessing
 import sys
 import pandas
 import time
 
-
+# url = re.sub(r'print.+\d\.jpg', number+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки')
 def pushPhoto(line, token, requestUrl, countTry=0):
     if 'Артикул товара' in list(line.keys()):
-        data = line['Медиафайлы'].split(';')
-        if len(data) ==3:
-            tmp = [data[-1].replace('2.jpg', '3.jpg'), data[-1].replace('2.jpg', '4.jpg'), data[-1].replace('2.jpg', '5.jpg')]
-            data.extend(tmp)
+        url = line['Медиафайлы'].split(';')[0]
+        data = [url]
+        # for i in range(1,6,1):
+        #     data.append(re.sub(r'print.+\d\.jpg', str(i)+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки'))
         jsonRequest = {
             "vendorCode": line['Артикул товара'],
             #"data": line['Медиафайлы'].split(';')
-            "data": [data[0]]
+            "data": data
             }
         headersRequest = {'Authorization': '{}'.format(token)}
     else:
-        data = line['Медиафайлы'].split(';')
+        # data = line['Медиафайлы'].split(';')
+        url = line['Медиафайлы'].split(';')[0]
+        data = [url]
+        # for i in range(1,6,1):
+        #     data.append(re.sub(r'print.+\d\.jpg', str(i)+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки'))
         if len(data) ==3:
             tmp = [data[-1].replace('2.jpg', '3.jpg'), data[-1].replace('2.jpg', '4.jpg'), data[-1].replace('2.jpg', '5.jpg')]
             data.extend(tmp)
@@ -57,7 +61,7 @@ def main():
     pathToFile = sys.argv[1:][0].replace('#', ' ')
     token = sys.argv[1:][1].replace('#', ' ')
     # if __name__ == '__main__':
-    # pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол книга Xiaomi Poco X4 GT (Redmi Note 11T Pro) черный с сил. вставкой Fashion.xlsx"
+    # pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол книга Honor 7A (Huawei Y5 2018) черный с сил. вставкой Fashion.xlsx"
     # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
     # else:
     # pathToFile = sys.argv[1:][0].replace('#', ' ')
