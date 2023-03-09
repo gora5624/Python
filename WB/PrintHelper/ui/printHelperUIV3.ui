@@ -6,15 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>422</width>
-    <height>395</height>
+    <width>423</width>
+    <height>730</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>423</width>
+    <height>388</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>423</width>
+    <height>730</height>
+   </size>
   </property>
   <property name="font">
    <font>
@@ -220,7 +232,7 @@
      <x>20</x>
      <y>100</y>
      <width>381</width>
-     <height>71</height>
+     <height>151</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -238,10 +250,10 @@
       <x>0</x>
       <y>0</y>
       <width>381</width>
-      <height>77</height>
+      <height>141</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
      <property name="spacing">
       <number>8</number>
      </property>
@@ -281,6 +293,39 @@
        </property>
        <property name="text">
         <string>Силикон большой станок (3*2)</string>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="bigButtBooks">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+         <bold>true</bold>
+         <stylestrategy>PreferDefault</stylestrategy>
+         <kerning>false</kerning>
+        </font>
+       </property>
+       <property name="text">
+        <string>Книжки большой станок (3*2)</string>
        </property>
        <property name="iconSize">
         <size>
@@ -561,13 +606,13 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>90</y>
+     <y>10</y>
      <width>381</width>
-     <height>281</height>
+     <height>371</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -584,7 +629,7 @@
       <x>9</x>
       <y>0</y>
       <width>361</width>
-      <height>281</height>
+      <height>371</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -745,19 +790,46 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEditNameFileSize"/>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLineEdit" name="lineEditNameFileSize"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButtonChooseFileSize">
+             <property name="minimumSize">
+              <size>
+               <width>10</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>68</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>8</pointsize>
+               <bold>false</bold>
+               <stylestrategy>PreferDefault</stylestrategy>
+               <kerning>false</kerning>
+              </font>
+             </property>
+             <property name="text">
+              <string>Обзор...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item>
           <widget class="QPushButton" name="addSizeButt">
            <property name="text">
-            <string>Применить</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButtonShowSizes">
-           <property name="text">
-            <string>Показать все размеры</string>
+            <string>Добавить размер</string>
            </property>
           </widget>
          </item>
@@ -789,6 +861,13 @@
           <widget class="QCheckBox" name="bigSilAcsButt">
            <property name="text">
             <string>Силикон большой</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="bigBkAcsButt">
+           <property name="text">
+            <string>Книжки большой</string>
            </property>
           </widget>
          </item>
@@ -855,13 +934,47 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="pushButtonNextListSett">
          <property name="text">
-          <string>Следующее меню</string>
+          <string>Настройки столов</string>
          </property>
         </widget>
        </item>
       </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <item>
+        <widget class="QLabel" name="labelSearcgSize">
+         <property name="maximumSize">
+          <size>
+           <width>155</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Найти размер в таблице:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBoxSearchSize"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonSearchSize">
+       <property name="text">
+        <string>Найти</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonAbortSearchSize">
+       <property name="text">
+        <string>Сбросить фильтр</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -898,7 +1011,7 @@
      <x>20</x>
      <y>90</y>
      <width>371</width>
-     <height>281</height>
+     <height>291</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -931,17 +1044,69 @@
     </property>
    </widget>
   </widget>
+  <widget class="QTableWidget" name="tableWidgetSizes">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>390</y>
+     <width>381</width>
+     <height>291</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>381</width>
+     <height>291</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>500</width>
+     <height>500</height>
+    </size>
+   </property>
+   <property name="autoScroll">
+    <bool>true</bool>
+   </property>
+   <property name="selectionBehavior">
+    <enum>QAbstractItemView::SelectRows</enum>
+   </property>
+   <property name="horizontalScrollMode">
+    <enum>QAbstractItemView::ScrollPerPixel</enum>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonSaveSizes">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>690</y>
+     <width>381</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Соханить список размеров</string>
+   </property>
+  </widget>
   <zorder>frameSettings2</zorder>
   <zorder>selectFileButt</zorder>
   <zorder>label</zorder>
   <zorder>label_2</zorder>
   <zorder>mainPageButt</zorder>
-  <zorder>frameBig</zorder>
   <zorder>frameMed</zorder>
   <zorder>frameSmall</zorder>
   <zorder>frameMain</zorder>
   <zorder>settButt</zorder>
   <zorder>lineEditPass</zorder>
+  <zorder>tableWidgetSizes</zorder>
+  <zorder>frameBig</zorder>
+  <zorder>pushButtonSaveSizes</zorder>
   <zorder>frameSettings</zorder>
  </widget>
  <resources/>

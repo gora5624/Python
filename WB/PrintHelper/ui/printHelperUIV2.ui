@@ -220,7 +220,7 @@
      <x>20</x>
      <y>100</y>
      <width>381</width>
-     <height>71</height>
+     <height>151</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -238,10 +238,10 @@
       <x>0</x>
       <y>0</y>
       <width>381</width>
-      <height>77</height>
+      <height>141</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
      <property name="spacing">
       <number>8</number>
      </property>
@@ -281,6 +281,39 @@
        </property>
        <property name="text">
         <string>Силикон большой станок (3*2)</string>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="bigButtBooks">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+         <bold>true</bold>
+         <stylestrategy>PreferDefault</stylestrategy>
+         <kerning>false</kerning>
+        </font>
+       </property>
+       <property name="text">
+        <string>Книжки большой станок (3*2)</string>
        </property>
        <property name="iconSize">
         <size>
@@ -786,6 +819,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QCheckBox" name="bigBkAcsButt">
+           <property name="text">
+            <string>Книжки большой</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QCheckBox" name="medSilAcsButt">
            <property name="text">
             <string>Силикон средний</string>
@@ -885,13 +925,13 @@
   <zorder>label</zorder>
   <zorder>label_2</zorder>
   <zorder>mainPageButt</zorder>
-  <zorder>frameBig</zorder>
   <zorder>frameMed</zorder>
   <zorder>frameSmall</zorder>
   <zorder>frameMain</zorder>
   <zorder>settButt</zorder>
   <zorder>lineEditPass</zorder>
   <zorder>frameSettings</zorder>
+  <zorder>frameBig</zorder>
  </widget>
  <resources/>
  <connections/>
