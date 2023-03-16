@@ -15,14 +15,14 @@ import pickle
 import psutil
 import warnings
 
-"""Version 3.3.0"""
+"""Version 3.3.1"""
 
 # pyuic6 D:\Python\WB\PrintHelper\ui\printHelperUIV3.ui -o D:\Python\WB\PrintHelper\ui\ui_printHelperUIV3.py
 pathToOrderFile = ''
 mode = ''
 listSize = ''
 class PrintHelper(QtWidgets.QMainWindow):
-    printSettMainFilePath = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\printSetMain.pkl'
+    printSettMainFilePathGlob = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\printSetMain.pkl'
     dataDefault = {
         'bigButtInt': {'bigAcsButt': True},
         'medButtInt': {'medAcsButt': True},
@@ -37,7 +37,8 @@ class PrintHelper(QtWidgets.QMainWindow):
     }
     pathToFileWithName = r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\name.txt'
     pathToSizeDir = r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\Размеры принтов'
-    pathToPklSizeV3 = r"\\192.168.0.111\shared\Отдел производство\обновления программы печати\sizesV3.pkl"
+    pathToPklSizeV3Glob = r"\\192.168.0.111\shared\Отдел производство\обновления программы печати\sizesV3.pkl"
+    pathToPklSizeV3Loc = r"C:\Users\Public\Documents\WBHelpTools\PrintHelper\sizesV3.pkl"
     pathToPklSizeV3Back = r"\\192.168.0.111\shared\Отдел производство\обновления программы печати\backUp\sizesV3_BACKUP {}.pkl".format(datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S"))
     # pathToFolderPrint = r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\Оригиналы'
     chekKeys = ['bigButtInt', 'medButtInt', 'smallButtInt', 'bigButt', 'medButt', 'smallButt', 'medButtBooks', 'smallButtBooks', 'smallButtPlastins', 'smallButtCartholders']
@@ -154,21 +155,28 @@ class PrintHelper(QtWidgets.QMainWindow):
 
 
     def loadsSizeFromConfig(self):
-        with open(self.pathToPklSizeV3, 'rb') as file:
+        with open(self.pathToPklSizeV3Glob, 'rb') as file:
             self.dataWithSizePath = pickle.load(file)
         global dataWithSizePath
         dataWithSizePath = self.dataWithSizePath
 
 
+    def chekSizeFile(self):
+        '''Проверяет сохранён ли файл размеров в локальной директории программы, если да, 
+        то проверяет его актуальность хэш сумме, если файлы совпадают то ничего не делает, если не совпадают - 
+        копирует его в локальную директорию.
+        Если файл недоступен то подгружает локальный файл.'''
+
+
     def saveSizes(self):
         self.makeBack()
-        with open(self.pathToPklSizeV3, 'wb') as file:
+        with open(self.pathToPklSizeV3Glob, 'wb') as file:
             pickle.dump(self.dataWithSizePath, file)
             file.close()
         QMessageBox.information(self,'Успешно','Таблица размеров сохранена!')
 
     def makeBack(self):
-        shutil.copy(self.pathToPklSizeV3, self.pathToPklSizeV3Back)
+        shutil.copy(self.pathToPklSizeV3Glob, self.pathToPklSizeV3Back)
 
     def addSizeButt(self):
         nameSize1C = self.ui.lineEditNameSize1C.text()
@@ -257,7 +265,7 @@ class PrintHelper(QtWidgets.QMainWindow):
 
 
     def saveSett(self):
-        with open(self.printSettMainFilePath, 'wb') as file:
+        with open(self.printSettMainFilePathGlob, 'wb') as file:
             pickle.dump(self.data, file)
             file.close()
         # self.updateUiSett()
@@ -279,7 +287,7 @@ class PrintHelper(QtWidgets.QMainWindow):
 
 
     def readSett(self):
-        with open(self.printSettMainFilePath, 'rb') as file:
+        with open(self.printSettMainFilePathGlob, 'rb') as file:
                 dataTMP = pickle.load(file)
                 file.close()
         self.chekSett(dataTMP)
@@ -838,7 +846,7 @@ def splitOrderTable(dataFromOrderFile, mode):
             orderNum = line['Номер задания']
             orderNum = orderNum if type(
                 orderNum) == str else str(orderNum)[0:-2]
-            if orderNum == '' and line['Размер'] == '':
+            if orderNum == '' and line['Размер'] == '' and line['Название'] == '':
                 if dataFromOrderFile[i + 1]['Номер задания'] != '':
                     with open(joinpath(pathToTablesV2, nameTable.format(str(numTable))) + '.txt', 'w', encoding='ANSI') as file:
                         file.write('\n'.join(data))
@@ -849,7 +857,7 @@ def splitOrderTable(dataFromOrderFile, mode):
                     continue
             X, Y = makeLocPrint(count)
             count += 1
-            if line['Название'] !='':
+            if (line['Название'] !='') and ('принт' in line['Название'].lower()):
                 printName = detectPtintFronName(line['Название'], mode)
                 size = detectSizeFromOrder(str(line['Размер'])[0:-2] if type(
                     line['Размер']) == float else str(line['Размер']), orderNum, str(numTable))
