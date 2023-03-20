@@ -343,7 +343,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         for case in listdir(pathToDoneSiliconImageSilicon):
             if 'проз.' not in case:
                 maskNew = case.replace('проз', 'проз.')
-            if 'мат.' not in case:
+            elif 'мат.' not in case:
                 maskNew = case.replace('мат', 'мат.')
             else:
                 maskNew = case
