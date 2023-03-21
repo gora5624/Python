@@ -306,14 +306,16 @@ class cardGetter():
                 continue
         
 
-# if __name__ == "__main__":
-#     start_time = time.time()
-#     b = {
-#                         'IPName': 'Самвел',
-#                         'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
-#                     }
-#     a = cardGetter(r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\db_nom Самвел.txt', b)
-#     a.getListVendorCode()
-#     a.getNom()
+if __name__ == "__main__":
+    start_time = time.time()
+    b = {
+                        'IPName': 'Самвел',
+                        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y',
+                        'pathToDB': r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\db_nom Самвел.txt'
+                    }
+    a = cardGetter(b)
+    # a.getListVendorCode()
+    a.listVendorCodeToGet = ['iPhone_12_P_M_(6.7)_PRNT_RED_OCM_DBLBP_RED_DBL_PRNT_3073']
+    a.getNom()
 
-#     print("--- %s seconds ---" % (time.time() - start_time))
+    print("--- %s seconds ---" % (time.time() - start_time))

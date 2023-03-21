@@ -13,7 +13,6 @@ class createAct(QtWidgets.QMainWindow):
         self.ui = Ui_CreateAct()
         self.ui.setupUi(self)
         self.ui.lineEditScan.returnPressed.connect(self.scan)
-        self.ui.lineEditScan.returnPressed.connect(self.scan)
         self.ui.pushButtonCreateActs.clicked.connect(self.createActs)
         self.ui.tableWidgetSupp.insertColumn(0)
         self.ui.tableWidgetSupp.insertColumn(1)
