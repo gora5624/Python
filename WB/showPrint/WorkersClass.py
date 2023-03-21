@@ -117,11 +117,13 @@ class WorkerRequestImageAPI(QRunnable):
             if len(cards:=r.json()['data']['cards'])==0:
                 continue
             else:
-                for url in cards[0]['mediaFiles']:
-                    if  '1.jpg' in url:
-                        self.urlImage = url
                 if len(cards[0]['mediaFiles']) >0:
-                    self.urlImage = cards[0]['mediaFiles'][0]
+                    for url in cards[0]['mediaFiles']:
+                        if  '1.jpg' in url:
+                            self.urlImage = url
+                            break
+                    if self.urlImage == '':
+                        self.urlImage = cards[0]['mediaFiles'][0]
         self.getImageFromUrl()
 
     @Slot()

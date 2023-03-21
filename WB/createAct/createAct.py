@@ -25,6 +25,7 @@ class createAct(QtWidgets.QMainWindow):
                     'Манвел':[],
                     'Федоров':[],
                     }
+        self.supp = Supplies()
         # self.ui.statusbar.setStyleSheet('font-size: 14px')
         # self.ui.tableWidgetSupp.resizeColumnsToContents()
 
@@ -50,8 +51,8 @@ class createAct(QtWidgets.QMainWindow):
         supplId = self.ui.lineEditScan.text().strip().replace('ЦИ', 'WB').replace('ПШ', 'GI')
         self.ui.lineEditScan.clear()
         self.ui.lineEditScan.setFocus()
-        supp = Supplies()
-        if ip:=supp.isExistsSupp(supplId):
+        self.supp
+        if ip:=self.supp.isExistsSupp(supplId):
             self.addToView(ip, supplId)
             self.createDB()
         else:

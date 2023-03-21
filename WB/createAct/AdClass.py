@@ -1,3 +1,4 @@
+from itertools import count
 import fpdf
 import requests
 from fpdf import FPDF
@@ -30,16 +31,22 @@ class Supplies():
 
     def isExistsSupp(self, supp):
         url = f'https://suppliers-api.wildberries.ru/api/v3/supplies/{supp}'
-        for token in self.tokens:
-            headers = {
-                    'Authorization': token['token']
-            }
-            response = requests.get(url, headers=headers, timeout=10)
-            if response.status_code == 200:
-                #data = response.json()
-                return token['IPName']
-            else:
-                continue
+        countTry = 0
+        while countTry <5:
+            for token in self.tokens:
+                headers = {
+                        'Authorization': token['token']
+                }
+                try:
+                    response = requests.get(url, headers=headers, timeout=10)
+                    if response.status_code == 200:
+                        #data = response.json()
+                        return token['IPName']
+                    else:
+                        continue
+                except:
+                    countTry += 1
+                    continue
         return False
 
 

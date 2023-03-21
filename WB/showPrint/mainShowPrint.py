@@ -57,9 +57,9 @@ class ShowPrint(QtWidgets.QMainWindow):
 
         # подключение сигналов к методам класса и слотов
         self.ui.lineEditScan.returnPressed.connect(self.scanStuff)
+        self.ui.comboBoxShoosePrint.currentTextChanged.connect(self.findPrint)
+        # returnPressed.connect(self.scanStuff)
         self.ui.actionUpdatePrintPkl.triggered.connect(self.forcedupdatePrintPkl)
-
-        
         self.resized.connect(self.updatePixmap)
 
         # настроки фокусировки
@@ -69,15 +69,15 @@ class ShowPrint(QtWidgets.QMainWindow):
 
         # маска для ввода штрихкода
         self.ui.lineEditScan.setInputMask('9999999999999')
+        self.ui.lineEditScan.setEchoMode(QtWidgets.QLineEdit.EchoMode.NoEcho)
 
         # видимость элементов и изменение надписей и стилей
         a = self.ui.labelImagePrint.setStyleSheet('background-color: rgb(230,230,230)')
-        a
         self.ui.labelStuffName.setText('')
         self.ui.labelChooseStuff.hide()
         self.ui.comboBoxChooseStuff.hide()
-        self.ui.labelChoosePrint.hide()
-        self.ui.comboBoxShoosePrint.hide()
+        # self.ui.labelChoosePrint.hide()
+        # self.ui.comboBoxShoosePrint.hide()
 
         # объявление динамических полей класса
         self.pixmapWB = QtGui.QPixmap()
@@ -92,11 +92,15 @@ class ShowPrint(QtWidgets.QMainWindow):
         self.printFileName = ''
         self.pickleDBImages = []
 
+        # создание поиска по принтам
+        self.ui.comboBoxShoosePrint.setEditable(True)
+        self.ui.comboBoxShoosePrint.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
+        self.ui.comboBoxShoosePrint.setMaxVisibleItems(20)
+        self.ui.comboBoxShoosePrint.completer().setCompletionMode(QtWidgets.QCompleter.CompletionMode.PopupCompletion)
+        
+
+
         # выполнение при запуске
-        # self.start()
-        # self.getDataFrom1c()
-        # checkDBImage().chekImageList()
-        # self.loadsImagePrints()
         self.startSetups()
         
 
@@ -104,6 +108,13 @@ class ShowPrint(QtWidgets.QMainWindow):
         with open(self.pathToPickleDBImages, 'rb') as f:
             self.pickleDBImages = pickle.load(f)
             f.close()
+        self.addItemsTocomboBoxShoosePrint()
+
+    def addItemsTocomboBoxShoosePrint(self):
+        self.ui.comboBoxShoosePrint.clear()
+        listPrintName = [x.replace('print ','').replace('.png','') for x in list(self.pickleDBImages.keys())]
+        listPrintName.sort()
+        self.ui.comboBoxShoosePrint.addItems(listPrintName)
 
 
     def resizeEvent(self, event):
@@ -178,11 +189,15 @@ class ShowPrint(QtWidgets.QMainWindow):
         if self.printFileName in self.pickleDBImages:
             if (self.char == '(Принт 0)') or ('Принт' not in self.char):
                 self.pixmapPrint.loadFromData(self.pickleDBImages[self.printFileName])
+                self.ui.labelPrintTitle.setText(self.printFileName)
             else:
                 self.pixmapPrint.loadFromData(self.pickleDBImages[self.printFileName])
+                self.ui.labelPrintTitle.setText(self.printFileName)
             self.updatePixmap()
         else:
+            self.pixmapPrint = QtGui.QPixmap()
             self.ui.labelImagePrint.clear()
+            self.updatePixmap()
             return False
         
 
@@ -204,14 +219,16 @@ class ShowPrint(QtWidgets.QMainWindow):
             path = os.path.normpath(joinPath(self.pathToCaseImage, 'Бронепленки', 'filmClear.jpg'))
         else:
             path = os.path.normpath(joinPath(self.pathToCaseImage, self.name, 'fon.png'))
-        if not exists(path):
-            path = os.path.normpath(joinPath(self.pathToCaseImage, self.name, 'fon.png'))
+            if not exists(path):
+                path = os.path.normpath(joinPath(self.pathToCaseImage, self.name[0:-1], 'fon.png'))
         if exists(path):
             f = open(path, 'rb').read()
             self.pixmapStuff.loadFromData(f)
             self.updatePixmap()
         else:
+            self.pixmapStuff = QtGui.QPixmap()
             self.ui.labelImageStuff.clear()
+            self.updatePixmap()
             return False
 
 
@@ -245,27 +262,41 @@ class ShowPrint(QtWidgets.QMainWindow):
         self.pool.waitForDone()
         self.swMess('Обновление завершено, можно работать', 'green')
 
-
-        
-
     def updateUiGetData(self, listBarcodesFrom1C, dataDF):
         self.listBarcodesFrom1C, self.dataDF = listBarcodesFrom1C, dataDF
         self.ui.statusbar.showMessage('Программа готова к работе')
 
+    def findPrint(self):
+        if self.ui.comboBoxShoosePrint.hasFocus():
+            # регулярное выражение для удаления лишних 0 перед цифрами, например из 010 сделать 10 и из 001192 сделать 1192
+            self.ui.comboBoxShoosePrint.setCurrentText(re.sub(r'^0+', '', self.ui.comboBoxShoosePrint.currentText()))
+            # регулярное выражение для удаления всех символов кроме цифр
+            self.ui.comboBoxShoosePrint.setCurrentText(re.sub(r'[^0-9]', '', self.ui.comboBoxShoosePrint.currentText()))
+            self.printFileName = 'print ' + self.ui.comboBoxShoosePrint.currentText() + '.png'
+            try:
+                self.pixmapPrint.loadFromData(self.pickleDBImages[self.printFileName])
+                self.ui.labelPrintTitle.setText(self.printFileName)
+            except KeyError:
+                pass
+            finally:
+                self.updatePixmap()
+
     def scanStuff(self):
         # функция последовательных вызовов доп. функиций для получания и вывода изображений
-        self.barcode = self.ui.lineEditScan.text()
-        self.ui.lineEditScan.clear()
-        if self.setNameStuff():
-            worker_1 = WorkerRequestImageAPI(self.barcode)
-            worker_1.signal.complete.connect(self.setPixmapImageFromWB)
-            worker_1.signal.fail.connect(self.setPixmapImageFromWB)
-            self.pool.start(worker_1)
-            self.setPixmapPrint()
-            self.setPixmapStuff()
-            # self.pool.waitForDone()        
-        self.pool.clear()
-        self.clearAtr()
+        if self.ui.lineEditScan.hasFocus():
+            self.barcode = self.ui.lineEditScan.text()
+            self.ui.lineEditScan.clear()
+            self.ui.comboBoxShoosePrint.setCurrentText('')
+            if self.setNameStuff():
+                worker_1 = WorkerRequestImageAPI(self.barcode)
+                worker_1.signal.complete.connect(self.setPixmapImageFromWB)
+                worker_1.signal.fail.connect(self.setPixmapImageFromWB)
+                self.pool.start(worker_1)
+                self.setPixmapPrint()
+                self.setPixmapStuff()
+                # self.pool.waitForDone()        
+            self.pool.clear()
+            self.clearAtr()
     
     def clearAtr(self):
         self.name = ''
