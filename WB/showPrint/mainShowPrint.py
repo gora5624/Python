@@ -273,13 +273,11 @@ class ShowPrint(QtWidgets.QMainWindow):
             # регулярное выражение для удаления всех символов кроме цифр
             self.ui.comboBoxShoosePrint.setCurrentText(re.sub(r'[^0-9]', '', self.ui.comboBoxShoosePrint.currentText()))
             self.printFileName = 'print ' + self.ui.comboBoxShoosePrint.currentText() + '.png'
-            try:
+            if self.printFileName in self.pickleDBImages:
                 self.pixmapPrint.loadFromData(self.pickleDBImages[self.printFileName])
                 self.ui.labelPrintTitle.setText(self.printFileName)
-            except KeyError:
-                pass
-            finally:
                 self.updatePixmap()
+            
 
     def scanStuff(self):
         # функция последовательных вызовов доп. функиций для получания и вывода изображений
