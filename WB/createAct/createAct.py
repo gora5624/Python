@@ -1,19 +1,25 @@
+from multiprocessing import pool
 from PyQt6 import QtWidgets, QtGui, QtCore
 import os
 import pickle
 from datetime import datetime, timedelta
 from ui.ui_CreateAct import Ui_CreateAct
-from AdClass import Supplies, Acts
+from AdClass import SuppliesWorker, Acts
+from PyQt6.QtCore import QThreadPool
 
 
 
 class createAct(QtWidgets.QMainWindow):
+    pool = QThreadPool().globalInstance()
+
     def __init__(self, parent=None):
         super(createAct, self).__init__(parent)
         self.ui = Ui_CreateAct()
         self.ui.setupUi(self)
         self.ui.lineEditScan.returnPressed.connect(self.scan)
         self.ui.pushButtonCreateActs.clicked.connect(self.createActs)
+        self.ui.tableWidgetSupp.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.ui.tableWidgetSupp.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.ui.tableWidgetSupp.insertColumn(0)
         self.ui.tableWidgetSupp.insertColumn(1)
         self.dateNow = datetime.now().date()
@@ -25,7 +31,8 @@ class createAct(QtWidgets.QMainWindow):
                     'Манвел':[],
                     'Федоров':[],
                     }
-        self.supp = Supplies()
+        self.result = False
+        # self.supp = SuppliesWorker()
         # self.ui.statusbar.setStyleSheet('font-size: 14px')
         # self.ui.tableWidgetSupp.resizeColumnsToContents()
 
@@ -48,18 +55,37 @@ class createAct(QtWidgets.QMainWindow):
 
 
     def scan(self):
-        supplId = self.ui.lineEditScan.text().strip().replace('ЦИ', 'WB').replace('ПШ', 'GI')
-        self.ui.lineEditScan.clear()
-        self.ui.lineEditScan.setFocus()
-        self.supp
-        if ip:=self.supp.isExistsSupp(supplId):
-            self.addToView(ip, supplId)
-            self.createDB()
-        else:
-            self.ui.statusbar.showMessage('Поставка не найдена')
-            self.ui.statusbar.setStyleSheet("font-size: 20px; color: red")
+        self.result = False
+        self.supplId = self.ui.lineEditScan.text().strip().replace('ЦИ', 'WB').replace('ПШ', 'GI')
+        if not self.ui.tableWidgetSupp.findItems(self.supplId, QtCore.Qt.MatchFlag.MatchExactly):
+            self.ui.lineEditScan.clear()
+            self.ui.lineEditScan.setFocus()
+            for IPName in self.data.keys():
+                worker = SuppliesWorker(IPName, self.supplId)
+                worker.signal.complete.connect(self.completeScan)
+                self.pool.start(worker)
+            self.pool.waitForDone()
+            if not self.result:
+                self.ui.statusbar.showMessage('Поставка не добавлена')
+                self.ui.statusbar.setStyleSheet("font-size: 20px; color: red")
 
-        # self.addToView('test', 'supplId')
+        else:
+            self.ui.statusbar.showMessage('Поставка уже добавлена')
+            self.ui.statusbar.setStyleSheet("font-size: 20px; color: red")
+            self.ui.lineEditScan.clear()
+            self.ui.lineEditScan.setFocus()
+        
+
+    def completeScan(self, result, IPName):
+        self.result = result
+        if self.result:
+            self.addToView(IPName, self.supplId)
+            self.createDB()
+            self.pool.clear()
+        
+        # else:
+        #     self.ui.statusbar.showMessage('Поставка не найдена')
+        #     self.ui.statusbar.setStyleSheet("font-size: 20px; color: red")
 
     def startInitial(self):
         for key, values in self.data.items():
@@ -76,6 +102,7 @@ class createAct(QtWidgets.QMainWindow):
             self.ui.tableWidgetSupp.setItem(rowCount,1,QtWidgets.QTableWidgetItem(supplId))
             self.data[ip].append(supplId)
             self.ui.tableWidgetSupp.resizeColumnsToContents()
+            self.ui.tableWidgetSupp.scrollToBottom()
             self.ui.statusbar.showMessage('Поставка добавлена')
             self.ui.statusbar.setStyleSheet("font-size: 20px; color: green")
         else:
