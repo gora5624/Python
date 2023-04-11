@@ -68,6 +68,7 @@ class Manager(QMainWindow):
             else:
                 dataPath = QFileDialog.getOpenFileName(self, ("Выберите файл со списком номенклатуры"), "", ("Excel Files (*.xlsx)"))[0]
                 data = pandas.DataFrame(pandas.read_excel(dataPath))
+                data.fillna(0, inplace=True)
         except:
             return 0
         if 'vendorCode' in data.columns or 'Артикул товара':

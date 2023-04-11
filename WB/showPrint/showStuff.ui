@@ -544,6 +544,7 @@
      <string>Меню</string>
     </property>
     <addaction name="actionUpdatePrintPkl"/>
+    <addaction name="actionUpdateUrlsList"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -551,6 +552,11 @@
   <action name="actionUpdatePrintPkl">
    <property name="text">
     <string>Принудительно обновить базу принтов</string>
+   </property>
+  </action>
+  <action name="actionUpdateUrlsList">
+   <property name="text">
+    <string>Обновить базу ссылок на изображения</string>
    </property>
   </action>
  </widget>

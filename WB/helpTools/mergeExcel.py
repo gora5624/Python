@@ -1,7 +1,7 @@
 import os
 import pandas
 
-mainPath = r'E:\Downloads\report_2023_2_23.xlsx'
+mainPath = r'E:\Downloads\10_4_2023_Карточки из корзины'
 df = pandas.DataFrame()
 for file in os.listdir(mainPath):
     if not os.path.isdir(os.path.join(mainPath,file)):

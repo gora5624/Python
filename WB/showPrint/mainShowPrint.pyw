@@ -274,6 +274,7 @@ class ShowPrint(QtWidgets.QMainWindow):
             self.ui.comboBoxShoosePrint.setCurrentText(re.sub(r'[^0-9]', '', self.ui.comboBoxShoosePrint.currentText()))
             self.printFileName = 'print ' + self.ui.comboBoxShoosePrint.currentText() + '.png'
             if self.printFileName in self.pickleDBImages:
+                self.clearView()
                 self.pixmapPrint.loadFromData(self.pickleDBImages[self.printFileName])
                 self.ui.labelPrintTitle.setText(self.printFileName)
                 self.updatePixmap()
@@ -286,6 +287,7 @@ class ShowPrint(QtWidgets.QMainWindow):
             self.ui.lineEditScan.clear()
             self.ui.comboBoxShoosePrint.setCurrentText('')
             if self.setNameStuff():
+                self.clearView()
                 worker_1 = WorkerRequestImageAPI(self.barcode)
                 worker_1.signal.complete.connect(self.setPixmapImageFromWB)
                 worker_1.signal.fail.connect(self.setPixmapImageFromWB)
@@ -296,6 +298,15 @@ class ShowPrint(QtWidgets.QMainWindow):
             self.pool.clear()
             self.clearAtr()
     
+    def clearView(self):
+        self.pixmapWB = QtGui.QPixmap()
+        self.ui.labelImageFromWB.clear()
+        self.pixmapPrint = QtGui.QPixmap()
+        self.ui.labelImagePrint.clear()
+        self.pixmapStuff = QtGui.QPixmap()
+        self.ui.labelImageStuff.clear()
+
+
     def clearAtr(self):
         self.name = ''
         self.char = ''

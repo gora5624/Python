@@ -117,6 +117,7 @@ class exterminator():
                             ],
                             "characteristics": [
                             {"Предмет": line['Предмет']},
+                            {"Бренд": 'Mobi114'},
                             {'Описание': 'Товар'},
                             {'Высота упаковки': 19},
                             {'Ширина упаковки': 12},
@@ -132,6 +133,9 @@ class exterminator():
                             jsonDataFull=[]
                             break
                         else:
+                            if 'Указанные Артикулы товара находятся в корзине' in responce.text:
+                                jsonDataFull=[]
+                                break
                             timeout+=10
                             continue
                     except:
