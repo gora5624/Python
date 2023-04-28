@@ -64,7 +64,7 @@ class Manager(QMainWindow):
         source = self.ui.toFromComboBox.currentText()
         try:
             if source == 'Из фильтра':
-                data, dataPath = self.getLisCardsToFilter() 
+                data, dataPath = self.getLisCardsToFilter()
             else:
                 dataPath = QFileDialog.getOpenFileName(self, ("Выберите файл со списком номенклатуры"), "", ("Excel Files (*.xlsx)"))[0]
                 data = pandas.DataFrame(pandas.read_excel(dataPath))
@@ -128,8 +128,8 @@ class Manager(QMainWindow):
 
     def fillFilterTextComboBox(self):
         if len(self.listValuesColumns)!=0:
-            for comboBox in self.filterTypeComboBoxList:   
-                comboBox[3].clear()   
+            for comboBox in self.filterTypeComboBoxList:
+                comboBox[3].clear()
                 comboBox[3].addItems(self.listValuesColumns[comboBox[0].currentText()])
 
 
@@ -221,7 +221,7 @@ class Manager(QMainWindow):
         self.updateComdoBoxFilter()
         self.createListValuesColumns()
         self.listColumnForFilter
-            
+
 
 
 

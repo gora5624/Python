@@ -1,0 +1,128 @@
+from os.path import join as joinPath, abspath, exists, basename, splitext
+from os import listdir, makedirs
+import multiprocessing
+from PIL import Image, ImageDraw, ImageFont
+import pandas
+import re
+
+
+XPasteBrand = 50
+YPasteBrand = 100
+XPasteModel = 50
+YPasteModel = 20
+
+
+def makeImageBookWithNameModel(colorList, modelBrand, modelModel):
+    pool = multiprocessing.Pool()
+    for color in colorList:
+        pool.apply_async(makeImageColor, args=(color, modelBrand, modelModel,))
+    pool.close()
+    pool.join()
+    # for color in colorList:
+    #     makeImageColor(color, modelBrand, modelModel)
+    print(modelBrand + ' ' + modelModel + ' готов!')
+
+
+def makeImageColor(color, modelBrand, modelModel):
+    pathToColor = joinPath(pathToBookImageWithOutModel, color)
+    customFontBrand = ImageFont.truetype(fontPath, 80)
+    customFontModel = ImageFont.truetype(fontPath, 65)
+    topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:200]['Принт'].values.tolist()
+    for pic in listdir(pathToColor):
+        if pic.replace('.png',')').replace('print','(Принт') in topPrint:
+            imagePrint = Image.open(joinPath(pathToColor, pic))
+            imageDone = Image.new('RGB', imagePrint.size)
+            imageDone.paste(imagePrint)
+            # Написать бренд
+            drawText = ImageDraw.Draw(imageDone)
+            widthImage, heightImage = imageDone.size
+            widthText, heightText = drawText.textsize(modelBrand, font=customFontBrand)
+            drawText = ImageDraw.Draw(imageDone)
+            drawText.text((widthImage-XPasteBrand-widthText,heightImage-YPasteBrand-heightText), modelBrand, font=customFontBrand,fill='#000000')
+            # написать Модель
+            drawText = ImageDraw.Draw(imageDone)
+            widthImage, heightImage = imageDone.size
+            widthText, heightText = drawText.textsize(modelModel, font=customFontModel)
+            if widthText>800:
+                customFontModel = ImageFont.truetype(fontPath, 55)
+            drawText = ImageDraw.Draw(imageDone)
+            drawText.text((widthImage-XPasteModel-widthText,heightImage-YPasteModel-heightText), modelModel, font=customFontModel,fill='#000000')
+            fullPathToSave = joinPath(pathToDoneBookImageWithName, 'Чехол книга ' + modelBrand + ' ' + modelModel +' черный с сил. вставкой Fashion')
+            if not exists(fullPathToSave.replace('/','&')):
+                makedirs(fullPathToSave.replace('/','&'))
+            imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic[0:-4] + '.jpg'), quality=75)
+
+pathToExcelWithName = r"E:\Downloads\Планшеты и электронные книги(Медиа).xlsx"
+pathToImagesToPaste = ''
+pathToImagesToPasteFolder = r'D:\Бронепленки\SP бронепленка  планшет\Матовая'
+listValidImageName = ["1"]
+listValidFileTypes = ['.jpg']
+fontPath = r'D:\Python\WB\pasteTextToImage\Fonts\CarosSoftBold.ttf'
+columnName = 'Модель'
+
+
+textSizeBrand = 220
+textSizeModel = 150
+XPasteBrand = 2370
+YPasteBrand = 400
+XPasteModel = 2370
+YPasteModel = 550
+deltaTextSize = 5
+
+def startPasteText(pathToFile):
+    listModels = pandas.read_excel(pathToExcelWithName)
+    listModelsDict = listModels.to_dict('records')
+    for line in listModelsDict:
+        deltaTextSize = 5
+        customFontBrand = ImageFont.truetype(fontPath, textSizeBrand)
+        customFontModel = ImageFont.truetype(fontPath, textSizeModel)
+        brand = line[columnName].split(' ')[0]
+        model = ' '.join(line[columnName].split(' ')[1:])
+        image = Image.open(pathToFile)
+        imageDone = Image.new('RGB', image.size)
+        imageDone.paste(image)
+        drawText = ImageDraw.Draw(imageDone)
+        widthText, heightText = drawText.textsize(brand, font=customFontBrand)
+        while widthText>1400:
+                textSizeBrandNew = textSizeBrand - deltaTextSize
+                customFontBrand = ImageFont.truetype(fontPath, textSizeBrandNew)
+                widthText, heightText = drawText.textsize(brand, font=customFontBrand)
+                deltaTextSize += 5
+        while heightText>210:
+                textSizeBrandNew = textSizeBrand - deltaTextSize
+                customFontBrand = ImageFont.truetype(fontPath, textSizeBrandNew)
+                widthText, heightText = drawText.textsize(brand, font=customFontBrand)
+                deltaTextSize += 5
+        drawText.text((XPasteBrand-widthText,YPasteBrand-heightText), brand, font=customFontBrand,fill='#FFFFFF')
+        drawText = ImageDraw.Draw(imageDone)
+        widthText, heightText = drawText.textsize(model, font=customFontModel)
+        while widthText>1400:
+                textSizeModelNew = textSizeModel - deltaTextSize
+                customFontModel = ImageFont.truetype(fontPath, textSizeModelNew)
+                widthText, heightText = drawText.textsize(model, font=customFontModel)
+                deltaTextSize += 5
+        while heightText>160:
+                textSizeModelNew = textSizeModel - deltaTextSize
+                customFontModel = ImageFont.truetype(fontPath, textSizeModelNew)
+                widthText, heightText = drawText.textsize(model, font=customFontModel)
+                deltaTextSize += 5
+        drawText.text((XPasteBrand-widthText,YPasteModel-heightText), model, font=customFontModel,fill='#FFFFFF')        
+        if not exists(fullPathToSave:=joinPath(pathToImagesToPasteFolder, 'Done', splitext(basename(pathToFile))[0])):
+            makedirs(fullPathToSave)
+        imageDone.save(joinPath(fullPathToSave, re.sub(r'[^\w_. -)()]', '_', line[columnName]) + '.jpg'), quality=75)
+
+
+def main():
+    pool = multiprocessing.Pool()
+    for file in listdir(pathToImagesToPasteFolder):
+        for fileTypes in listValidFileTypes:
+            if fileTypes in file:
+                if file.replace(fileTypes, '') in listValidImageName:
+                    pool.apply_async(startPasteText, args=(joinPath(pathToImagesToPasteFolder, file), ))
+    pool.close()
+    pool.join()
+
+    
+
+if __name__ == '__main__':
+    main()
