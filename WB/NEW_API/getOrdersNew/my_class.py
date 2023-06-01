@@ -50,6 +50,7 @@ class OrdersGetter():
         for line in self.orders:
             for sku in line['skus']:
                 line.update({'sku': sku})
+                line.update({'Артикул WB': line['nmId']})
                 line.update({'Дата': datetime.strptime(line['createdAt'].split('T')[0], '%Y-%m-%d').date().strftime('%d.%m.%Y')})
                 line.update({'Время': datetime.strptime(line['createdAt'].split('T')[1], '%H:%M:%SZ').time().strftime('%H:%M:%S')})
                 line.update({'Количество': 1})
@@ -65,7 +66,7 @@ class OrdersGetter():
         #  столбцы "номенклатура" и "штришкод" из dataTMP в self.orders
         # dataTMP.drop(['sku'], axis=1, inplace=True)
         if not self.rawDataFlag:
-            self.orders = dataTMP.loc[:, ['Штрихкод', 'Номенклатура', "Дата", "Время", "Количество", "Цена", "Продавец"]]
+            self.orders = dataTMP.loc[:, ['Штрихкод', 'Артикул WB' ,'Номенклатура', "Дата", "Время", "Количество", "Цена", "Продавец"]]
             self.orders.fillna(0, inplace=True)
             self.orders['Штрихкод'] = self.orders['Штрихкод'].astype(int64)
             if not self.saveSKUFlag:
@@ -104,7 +105,7 @@ class OrdersGetter():
         countTry = 0
         while countTry<10:
             try:
-                response = requests.get(self.urlGetOrders, headers=headers, params=params, timeout=10)
+                response = requests.get(self.urlGetOrders, headers=headers, params=params, timeout=50)
             except requests.exceptions.ConnectionError:
                 countTry += 1
                 continue

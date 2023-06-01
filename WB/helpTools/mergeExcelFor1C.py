@@ -2,7 +2,7 @@ from genericpath import isdir
 import os
 import pandas
 
-mainPath = r'\\rab\Диск для принтов сервак Егор\Для загрузки\Готовые принты\Силикон'
+mainPath = r'\\rab\Диск для принтов сервак Егор\для 1с'
 df = pandas.DataFrame()
 dbNodenclatures = pandas.DataFrame(pandas.read_table(r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\Список стандартный поиск номенклатура.txt'))
 data = []
@@ -30,7 +30,7 @@ for file in os.listdir(mainPath):
             dataTMP = {
                 'Баркод':line['Баркод товара'],
                 'Группа':'Чехол производство (принт)',
-                'Основная характеристика':'(Принт '+line['Артикул товара'].split('PRNT_')[1]+')',
+                'Основная характеристика':line['Принт'],
                 'Название 1С':name,
                 'Название полное':fullName,
                 'Размер Печать':size

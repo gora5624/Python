@@ -4,6 +4,7 @@ import multiprocessing
 import sys
 import pandas
 import time
+import os
 
 # url = re.sub(r'print.+\d\.jpg', number+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки')
 def pushPhoto(line, token, requestUrl, countTry=0):

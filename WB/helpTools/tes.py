@@ -1,23 +1,11 @@
-import os
-import shutil
+import pandas as pd
+from os.path import basename
 
-
-with open(r'F:\printspdf.txt', 'r', encoding='utf-8') as file:
-  listFile = file.readlines()
-  for i, line in enumerate(listFile):
-    listFile[i] = line[0:-1]
-  listFile
-for file in listFile:
-  try:
-    if os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\Принты под пластины PDF\полные', file) not in os.listdir(r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\Принты под пластины PDF'):
-      shutil.copy(os.path.join(r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\XXL',file),os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\Принты под пластины PDF\полные', file) )
-  except:
-    pass
-  try:
-    if os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\Принты под пластины PDF\полные', file.replace('pdf','cdr')) not in os.listdir(r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\Принты под пластины PDF'):
-      shutil.copy(os.path.join(r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\XXL',file.replace('pdf','cdr')),os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\Принты под пластины PDF\полные', file.replace('pdf','cdr')) )
-  except:
-    pass
-
-
-
+filePath = r"F:\Downloads\писарев.xlsx"
+df = pd.DataFrame(pd.read_excel(filePath))
+df.insert(2,column='ШК все',value='')
+for model in df.loc[:, 'Модель']:
+    listModels = df.loc[df['Модель']==model]['ШК'].values.tolist()
+    strModels = ','.join(str(x) for x in listModels)
+    df.loc[df['Модель']==model, ['ШК все']] = strModels
+df.to_excel(filePath.replace(basename(filePath), 'New.xlsx'), index=False)

@@ -347,7 +347,7 @@
      <x>20</x>
      <y>100</y>
      <width>381</width>
-     <height>141</height>
+     <height>241</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -361,14 +361,62 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>381</width>
-      <height>146</height>
+      <width>402</width>
+      <height>241</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <property name="sizeConstraint">
       <enum>QLayout::SetMinimumSize</enum>
      </property>
+     <item>
+      <widget class="QPushButton" name="medButtHld">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>15</pointsize>
+         <bold>true</bold>
+         <stylestrategy>PreferDefault</stylestrategy>
+         <kerning>false</kerning>
+        </font>
+       </property>
+       <property name="text">
+        <string>Картхолдеры средний станок (105*160)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="medButtPlastin">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>15</pointsize>
+         <bold>true</bold>
+         <stylestrategy>PreferDefault</stylestrategy>
+         <kerning>false</kerning>
+        </font>
+       </property>
+       <property name="text">
+        <string>Пластины средний станок (105*160)</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QPushButton" name="medButt">
        <property name="enabled">
@@ -389,7 +437,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Ссиликон средний станок (105*160)</string>
+        <string>Силикон средний станок (105*160)</string>
        </property>
       </widget>
      </item>
@@ -914,9 +962,23 @@
           </widget>
          </item>
          <item>
+          <widget class="QCheckBox" name="medPlAcsButt">
+           <property name="text">
+            <string>Планки средний</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QCheckBox" name="sallHldAcsButt">
            <property name="text">
             <string>Картхолдеры маленький</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="medHldAcsButt">
+           <property name="text">
+            <string>Картхолдеры средний</string>
            </property>
           </widget>
          </item>
@@ -1062,13 +1124,13 @@
    <property name="minimumSize">
     <size>
      <width>381</width>
-     <height>291</height>
+     <height>286</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
      <width>500</width>
-     <height>500</height>
+     <height>471</height>
     </size>
    </property>
    <property name="autoScroll">
@@ -1099,7 +1161,6 @@
   <zorder>label</zorder>
   <zorder>label_2</zorder>
   <zorder>mainPageButt</zorder>
-  <zorder>frameMed</zorder>
   <zorder>frameSmall</zorder>
   <zorder>frameMain</zorder>
   <zorder>settButt</zorder>
@@ -1107,6 +1168,7 @@
   <zorder>tableWidgetSizes</zorder>
   <zorder>frameBig</zorder>
   <zorder>pushButtonSaveSizes</zorder>
+  <zorder>frameMed</zorder>
   <zorder>frameSettings</zorder>
  </widget>
  <resources/>

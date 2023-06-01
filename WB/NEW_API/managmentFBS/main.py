@@ -5,11 +5,13 @@ from ClassGetterFBO import getterFBO
 import multiprocessing
 import time
 import sys
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import *
+from PyQt6 import QtWidgets, QtCore
+from PyQt6.QtWidgets import *
 from ui.ui_managerUI import Ui_Form
 import os
 import pandas
+
+# pyuic6 D:\Python\WB\NEW_API\managmentFBS\ui\managerUI.ui -o D:\Python\WB\NEW_API\managmentFBS\ui\ui_managerUI.py
 
 class Manager(QMainWindow):
     def __init__(self, parent=None) -> None:
@@ -62,10 +64,11 @@ class Manager(QMainWindow):
         source = self.ui.toFromComboBox.currentText()
         try:
             if source == 'Из фильтра':
-                data, dataPath = self.getLisCardsToFilter() 
+                data, dataPath = self.getLisCardsToFilter()
             else:
                 dataPath = QFileDialog.getOpenFileName(self, ("Выберите файл со списком номенклатуры"), "", ("Excel Files (*.xlsx)"))[0]
                 data = pandas.DataFrame(pandas.read_excel(dataPath))
+                data.fillna(0, inplace=True)
         except:
             return 0
         if 'vendorCode' in data.columns or 'Артикул товара':
@@ -125,8 +128,8 @@ class Manager(QMainWindow):
 
     def fillFilterTextComboBox(self):
         if len(self.listValuesColumns)!=0:
-            for comboBox in self.filterTypeComboBoxList:   
-                comboBox[3].clear()   
+            for comboBox in self.filterTypeComboBoxList:
+                comboBox[3].clear()
                 comboBox[3].addItems(self.listValuesColumns[comboBox[0].currentText()])
 
 
@@ -156,14 +159,14 @@ class Manager(QMainWindow):
             textEdit = self.createFilterTextEdit(self.index, 'filterTextTextEdit_{}', (self.startX+self.width_*2+self.space*2, self.startY_1+self.delta*self.index, self.width_,self.height_))
             comboBox_2 = self.createFilterComboBox(self.index, 'filterTextComboBox_{}', (self.startX+self.width_*2+self.space*2, self.startY_1+self.delta*self.index, self.width_,self.height_))
             comboBox_0.setEditable(True)
-            comboBox_0.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
-            comboBox_0.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+            comboBox_0.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
+            comboBox_0.completer().setCompletionMode(QtWidgets.QCompleter.CompletionMode.PopupCompletion)
             comboBox_1.setEditable(True)
-            comboBox_1.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
-            comboBox_1.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+            comboBox_1.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
+            comboBox_1.completer().setCompletionMode(QtWidgets.QCompleter.CompletionMode.PopupCompletion)
             comboBox_2.setEditable(True)
-            comboBox_2.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
-            comboBox_2.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+            comboBox_2.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
+            comboBox_2.completer().setCompletionMode(QtWidgets.QCompleter.CompletionMode.PopupCompletion)
             self.filterTypeComboBoxList.append((comboBox_0, comboBox_1, textEdit, comboBox_2))
             comboBox_1.currentIndexChanged.connect(self.hideFilterTypeComboBox)
             comboBox_0.currentIndexChanged.connect(self.fillFilterTextComboBox)
@@ -173,8 +176,8 @@ class Manager(QMainWindow):
         textEdit = QTextEdit(self)
         textEdit.setObjectName(objectName.format(index))
         textEdit.setGeometry(QtCore.QRect(*size))
-        textEdit.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        textEdit.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        textEdit.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        textEdit.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         # textEdit.show()
         return textEdit
 
@@ -218,7 +221,7 @@ class Manager(QMainWindow):
         self.updateComdoBoxFilter()
         self.createListValuesColumns()
         self.listColumnForFilter
-            
+
 
 
 

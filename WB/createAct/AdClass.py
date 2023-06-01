@@ -1,46 +1,96 @@
+from itertools import count
 import fpdf
 import requests
 from fpdf import FPDF
 from datetime import datetime
 import os
+from PyQt6.QtCore import QRunnable, pyqtSlot as Slot, pyqtSignal as Signal, QObject
 
 
-class Supplies():
-    def __init__(self):
-        self.tokens = [
-                    {
-                        'IPName': 'Караханян',
-                        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
-                    },
-                    {
-                        'IPName': 'Самвел',
-                        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
-                    },
-                    
-                    {
-                        'IPName': 'Манвел',
-                        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
-                    } ,
-                    
-                    {
-                        'IPName': 'Федоров',
-                        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
-                    }             
-                ]
+class Signals(QObject):
+    complete = Signal(bool, str)
+
+
+class SuppliesWorker(QRunnable):
+    tokens = [
+            {
+                'IPName': 'Караханян',
+                'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgxYjczNGVmLWI2OWUtNGRhMi1iNTBiLThkMTEyYWM4MjhkMCJ9.pU1YOOirgRe3Om-WRYT61AofToggCLbV3na7GbXKGqU'
+            },
+            {
+                'IPName': 'Самвел',
+                'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImUxNGFmM2UxLTc0YTctNDlkOC1hNGIyLTI1Y2Q4ZDc2YmM4NSJ9.bCTyIoPVS3wpbzy7TdK-Gt8Sgz3iyPamzJjnA_EH3Iw'
+            },
+            
+            {
+                'IPName': 'Манвел',
+                'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjNhZmUzMzMzLWFmYjEtNDI5Yi1hN2Q1LTE1Yjc4ODg4MmU5MSJ9.kWUDkHkGrtD8WxE9sQHto5B7L3bQh-XRDf7EeZQiw7A'
+            } ,
+            
+            {
+                'IPName': 'Федоров',
+                'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
+            }             
+        ]
+    
+    def __init__(self, IPName, supp):
+        super().__init__()
+        self.IPName = IPName
+        self.token = self.getToken()
+        self.url = f'https://suppliers-api.wildberries.ru/api/v3/supplies/{supp}'
+        self.signal = Signals()
+
+    def getToken(self):
+        for token in self.tokens:
+            if token['IPName'] == self.IPName:
+                return token['token']
+
 
     def isExistsSupp(self, supp):
-        url = f'https://suppliers-api.wildberries.ru/api/v3/supplies/{supp}'
-        for token in self.tokens:
-            headers = {
-                    'Authorization': token['token']
-            }
-            response = requests.get(url, headers=headers, timeout=10)
-            if response.status_code == 200:
-                #data = response.json()
-                return token['IPName']
-            else:
-                continue
+        countTry = 0
+        while countTry <5:
+            for token in self.tokens:
+                headers = {
+                        'Authorization': token['token']
+                }
+                try:
+                    response = requests.get(self.url, headers=headers, timeout=10)
+                    if response.status_code == 200:
+                        #data = response.json()
+                        return token['IPName']
+                    else:
+                        continue
+                except:
+                    countTry += 1
+                    continue
         return False
+    
+    @Slot()
+    def run(self):
+        countTry = 0
+        while countTry <5:
+            headers = {
+                    'Authorization': self.token
+            }
+            try:
+                response = requests.get(self.url, headers=headers, timeout=10)
+                if 'Не найдено' in response.text:
+                    break
+                if response.status_code == 200:
+                    #data = response.json()
+                    self.signal.complete.emit(True, self.IPName)
+                    break
+                    # 
+                    # return self.IPName
+                else:
+                    countTry += 1
+                    continue
+            except:
+                countTry += 1
+                continue
+        # self.signal.complete.emit(False, self.IPName)
+        # return False
+
 
 
 
@@ -49,8 +99,29 @@ class Acts():
         self.sellerToname = seller
         self.pathToStandartFonts = os.path.join(os.environ['WINDIR'],'fonts')
         self.seller = self.setSeller(seller)
-        self.strNamberBox = ', '.join(nambersBox)
-        self.numBox = len(nambersBox)
+        # проверить есть ли в nambersBox повторяющиеся значения
+        self.nambersBox = self.checkNambersBox(nambersBox)
+        self.strNamberBox = ', '.join(self.nambersBox)
+        self.numBox = len(self.nambersBox)
+
+
+    def checkNambersBox(self, nambersBox):
+        for box in nambersBox:
+            if box in nambersBox:
+                # посчитать количество box в nambersBox
+                count = nambersBox.count(box)
+                if count > 1:
+                    nambersBox.remove(box)
+                    # повторить проверку для оставшихся box в nambersBox
+                    self.checkNambersBox(nambersBox)
+                    break
+                else:
+                    continue
+            else:
+                continue
+        return nambersBox
+
+
 
 
     def setSeller(self, seller):

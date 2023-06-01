@@ -34,6 +34,7 @@ if not DEBUG:
 else:
     pathToOrderTXTForCorel = joinPath(__file__,'..', 'order_{}.txt')
     pathToOrderTXTErrorsForCorel = joinPath(__file__,'..', 'errors.txt')
+    pathToOrderTXTErrorsForCorel = joinPath(__file__,'..', 'errors.txt')
     pathToConfigFile = joinPath(__file__,'..', 'Config.txt')
 
 
