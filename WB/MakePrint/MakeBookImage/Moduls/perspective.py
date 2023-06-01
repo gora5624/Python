@@ -15,6 +15,7 @@ def transformPrint(pathToPrint):
     coeffs = find_coeffs(
             [(0, 0), (width, 0), (width, height), (0, height)],
             [(int(-473*Xscale),int(-125*Yscale)), (width, 0), (width+int(357*Xscale), height), (0, height+int(132*Yscale))])
+    print(coeffs)
 
     img = img.transform((width, height), Image.PERSPECTIVE, coeffs,
             Image.BICUBIC)

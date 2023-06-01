@@ -4,12 +4,13 @@ import multiprocessing
 import sys
 import pandas
 import time
+import os
 
 # url = re.sub(r'print.+\d\.jpg', number+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки')
 def pushPhoto(line, token, requestUrl, countTry=0):
     if 'Артикул товара' in list(line.keys()):
-        url = line['Медиафайлы'].split(';')[0]
-        data = [url]
+        url = line['Медиафайлы'].split(';')
+        data = url
         # for i in range(1,6,1):
         #     data.append(re.sub(r'print.+\d\.jpg', str(i)+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки'))
         jsonRequest = {
@@ -20,8 +21,8 @@ def pushPhoto(line, token, requestUrl, countTry=0):
         headersRequest = {'Authorization': '{}'.format(token)}
     else:
         # data = line['Медиафайлы'].split(';')
-        url = line['Медиафайлы'].split(';')[0]
-        data = [url]
+        url = line['Медиафайлы'].split(';')
+        data = url
         # for i in range(1,6,1):
         #     data.append(re.sub(r'print.+\d\.jpg', str(i)+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки'))
         if len(data) ==3:

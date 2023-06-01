@@ -170,7 +170,7 @@ def main(file, filePath):
 
 
 if __name__ == '__main__':
-    pool = multiprocessing.Pool()
+    pool = multiprocessing.Pool(6)
     for file in os.listdir(dirWithPrint):
         if file not in os.listdir(dirToSavePDF):
             filePath = os.path.join(dirWithPrint, file)

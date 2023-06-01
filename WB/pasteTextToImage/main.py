@@ -6,11 +6,8 @@ import pandas
 import re
 
 
-XPasteBrand = 50
-YPasteBrand = 100
-XPasteModel = 50
-YPasteModel = 20
 
+# http://95.78.233.163:8001/wp-content/uploads/пленки/Планшеты/Глянцевая/Done/1/***.jpg;http://95.78.233.163:8001/wp-content/uploads/пленки/Планшеты/Глянцевая/4.jpg
 
 def makeImageBookWithNameModel(colorList, modelBrand, modelModel):
     pool = multiprocessing.Pool()
@@ -52,22 +49,35 @@ def makeImageColor(color, modelBrand, modelModel):
                 makedirs(fullPathToSave.replace('/','&'))
             imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic[0:-4] + '.jpg'), quality=75)
 
-pathToExcelWithName = r"E:\Downloads\Планшеты и электронные книги(Медиа).xlsx"
+pathToExcelWithName = r"F:\Downloads\7партия смартфоны_МЕДИАФАЙЛЫ.xlsx"
 pathToImagesToPaste = ''
-pathToImagesToPasteFolder = r'D:\Бронепленки\SP бронепленка  планшет\Матовая'
-listValidImageName = ["1"]
+pathToImagesToPasteFolder = r'D:\Бронепленки\Бронепленки смартфон\Матовая'
+listValidImageName = ["1",'2','3']
 listValidFileTypes = ['.jpg']
 fontPath = r'D:\Python\WB\pasteTextToImage\Fonts\CarosSoftBold.ttf'
 columnName = 'Модель'
 
 
-textSizeBrand = 220
-textSizeModel = 150
-XPasteBrand = 2370
-YPasteBrand = 400
-XPasteModel = 2370
-YPasteModel = 550
+textSizeBrand = 250
+textSizeModel = 500
 deltaTextSize = 5
+
+# XPasteBrand = 2662
+# YPasteBrand = 996
+# XPasteModel = 2662
+# YPasteModel = 1153
+
+# # Планшеты
+# XPasteBrand = 1812
+# YPasteBrand = 3277
+# XPasteModel = XPasteBrand
+# YPasteModel = 3505
+
+# Смартфоны
+XPasteBrand = 1662
+YPasteBrand = 3345
+XPasteModel = XPasteBrand
+YPasteModel = 3591
 
 def startPasteText(pathToFile):
     listModels = pandas.read_excel(pathToExcelWithName)
@@ -83,12 +93,12 @@ def startPasteText(pathToFile):
         imageDone.paste(image)
         drawText = ImageDraw.Draw(imageDone)
         widthText, heightText = drawText.textsize(brand, font=customFontBrand)
-        while widthText>1400:
+        while widthText>1494:
                 textSizeBrandNew = textSizeBrand - deltaTextSize
                 customFontBrand = ImageFont.truetype(fontPath, textSizeBrandNew)
                 widthText, heightText = drawText.textsize(brand, font=customFontBrand)
                 deltaTextSize += 5
-        while heightText>210:
+        while heightText>250:
                 textSizeBrandNew = textSizeBrand - deltaTextSize
                 customFontBrand = ImageFont.truetype(fontPath, textSizeBrandNew)
                 widthText, heightText = drawText.textsize(brand, font=customFontBrand)
@@ -96,12 +106,12 @@ def startPasteText(pathToFile):
         drawText.text((XPasteBrand-widthText,YPasteBrand-heightText), brand, font=customFontBrand,fill='#FFFFFF')
         drawText = ImageDraw.Draw(imageDone)
         widthText, heightText = drawText.textsize(model, font=customFontModel)
-        while widthText>1400:
+        while widthText>1494:
                 textSizeModelNew = textSizeModel - deltaTextSize
                 customFontModel = ImageFont.truetype(fontPath, textSizeModelNew)
                 widthText, heightText = drawText.textsize(model, font=customFontModel)
                 deltaTextSize += 5
-        while heightText>160:
+        while heightText>200:
                 textSizeModelNew = textSizeModel - deltaTextSize
                 customFontModel = ImageFont.truetype(fontPath, textSizeModelNew)
                 widthText, heightText = drawText.textsize(model, font=customFontModel)
@@ -109,7 +119,8 @@ def startPasteText(pathToFile):
         drawText.text((XPasteBrand-widthText,YPasteModel-heightText), model, font=customFontModel,fill='#FFFFFF')        
         if not exists(fullPathToSave:=joinPath(pathToImagesToPasteFolder, 'Done', splitext(basename(pathToFile))[0])):
             makedirs(fullPathToSave)
-        imageDone.save(joinPath(fullPathToSave, re.sub(r'[^\w_. -)()]', '_', line[columnName]) + '.jpg'), quality=75)
+        imageDone = imageDone.resize((900,int(imageDone.size[1]*(900/imageDone.size[0]))))
+        imageDone.save(joinPath(fullPathToSave, re.sub(r'[^\w_.)()-]', '_', line[columnName]) + '.jpg'), quality=75)
 
 
 def main():

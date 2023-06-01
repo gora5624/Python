@@ -16,14 +16,14 @@ class exterminator():
         self.tokensInfo = [
             {
                 'IPName': 'Караханян',
-                'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w',
+                'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgxYjczNGVmLWI2OWUtNGRhMi1iNTBiLThkMTEyYWM4MjhkMCJ9.pU1YOOirgRe3Om-WRYT61AofToggCLbV3na7GbXKGqU',
                 'tokenStat': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImU1ZGNjYWE2LWVjZDUtNDAzZC04MDA4LWRiNDZiYWJlYzBmYiJ9.7frmMigIpFCPJnpd8jopqeew1PKC4KhWpDIGSxE81Zs',
                 'pathToDB': r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_nom Караханян.txt',
                 'warehouse':'10237'
             },
             {
                 'IPName': 'Самвел',
-                'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y',
+                'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImUxNGFmM2UxLTc0YTctNDlkOC1hNGIyLTI1Y2Q4ZDc2YmM4NSJ9.bCTyIoPVS3wpbzy7TdK-Gt8Sgz3iyPamzJjnA_EH3Iw',
                 'tokenStat': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjZjM2Y5MmM0LWQyMDgtNDMwZi04M2RhLWI2ODhjNzVhNWNlMSJ9.AOGxlP2tH7_SvUA0zOQCDRCP6uWd4pUlk9j7pncTqtQ',
                 'pathToDB': r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_nom Самвел.txt',
                 'warehouse':'278784'
@@ -31,7 +31,7 @@ class exterminator():
             
             {
                 'IPName': 'Манвел',
-                'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM',
+                'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjNhZmUzMzMzLWFmYjEtNDI5Yi1hN2Q1LTE1Yjc4ODg4MmU5MSJ9.kWUDkHkGrtD8WxE9sQHto5B7L3bQh-XRDf7EeZQiw7A',
                 'tokenStat': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIwZDJlZTA4LTM3ZDEtNDViZC1iNTY2LWMwOTE4NjNjNjk1NyJ9.tseNJFDf2vf1PQ6YlkPaic_f-f1lolmXmr7-TG1HSRM',
                 'pathToDB': r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_nom Манвел.txt',
                 'warehouse':'141069'
@@ -54,15 +54,20 @@ class exterminator():
     
     def startExtChar(self, data):
         p1 = multiprocessing.Process(target=self.extChar, args=(data,), daemon=False)
+        # p2 = multiprocessing.Process(target=self.extImage, args=(data,), daemon=False)
         p1.start()
+        # p2.start()
+        # p2.join()
         p1.join()
         p1.terminate()
+        # p2.terminate()
 
     def startExtImage(self, data):
-        p2 = multiprocessing.Process(target=self.extImage, args=(data,), daemon=False)
-        p2.start()
-        p2.join()
-        p2.terminate()
+        while True:
+            p2 = multiprocessing.Process(target=self.extImage, args=(data,), daemon=False)
+            p2.start()
+            p2.join()
+            p2.terminate()
     
     def generateBarcodesFileFor1CBtn(self, data, dataPath):
         p3 = multiprocessing.Process(target=self.generateBarcodesFileFor1C, args=(data,dataPath, ), daemon=False)
@@ -102,45 +107,79 @@ class exterminator():
     def extCharProcess(self, data, token):
         headersRequest = {'Authorization': '{}'.format(token)}
         jsonDataFull = []
+        doneDataList = []
+        listVendorCodeDone = [i.replace('\n','') for i in open(r'D:\Python\WB\NEW_API\managmentFBS\done.txt', 'r', encoding='utf-8').readlines()]
         for line in data:
-            jsonDataFull.append({
-                            "imtID": int(line['imtID']),
-                            "nmID": int(line['nmID']),
-                            "vendorCode": line['vendorCode'],
-                            "sizes": [
-                            {
-                                "techSize": str(line['techSize']),
-                                "chrtID": int(line['chrtID']),
-                                "price": int(line['price']),
-                                "skus": self.mkList(line['skus'])
-                            }
-                            ],
-                            "characteristics": [
-                            {"Предмет": line['Предмет']},
-                            {"Бренд": 'Mobi114'},
-                            {'Описание': 'Товар'},
-                            {'Высота упаковки': 19},
-                            {'Ширина упаковки': 12},
-                            {'Длина упаковки': 2}
-                            ]
-                        })
-            if len(jsonDataFull) > 10:
-                timeout = 10
-                while timeout < 60:
-                    try:
-                        responce = requests.post(url=self.urlExtChar, json=jsonDataFull, headers=headersRequest, timeout=timeout)
-                        if responce.status_code == 200:
-                            jsonDataFull=[]
-                            break
-                        else:
-                            if 'Указанные Артикулы товара находятся в корзине' in responce.text:
+            if line['vendorCode'] not in doneDataList:
+                doneDataList.append(line['vendorCode'])
+                jsonDataFull.append({
+                                "imtID": int(line['imtID']),
+                                "nmID": int(line['nmID']),
+                                "vendorCode": line['vendorCode'],
+                                "sizes": [
+                                {
+                                    "techSize": str(line['techSize']),
+                                    "chrtID": int(line['chrtID']),
+                                    "price": int(line['price']),
+                                    "skus": self.mkList(line['skus'])
+                                }
+                                ],
+                                "characteristics": [
+                                {"Предмет": line['Предмет']},
+                                {"Бренд": 'Mobi115'},
+                                {'Описание': 'Товар'},
+                                {'Высота упаковки': 19},
+                                {'Ширина упаковки': 12},
+                                {'Длина упаковки': 2}
+                                ]
+                            })
+                if len(jsonDataFull) > 10:
+                    timeout = 10
+                    while timeout < 60:
+                        try:
+                            responce = requests.post(url=self.urlExtChar, json=jsonDataFull, headers=headersRequest, timeout=timeout)
+                            if responce.status_code == 200:
                                 jsonDataFull=[]
+                                with open(r'D:\Python\WB\NEW_API\managmentFBS\done.txt', 'a', encoding='utf-8') as fileDone:
+                                    fileDone.writelines([i+'\n' for i in doneDataList])
+                                    doneDataList = []
+                                    fileDone.close()
+                                time.sleep(1)
                                 break
+                            else:
+                                if 'Указанные Артикулы товара находятся в корзине' in responce.text:
+                                    jsonDataFull=[]
+                                    break
+                                if 'артикулы wb' in responce.text.lower():
+                                    try:
+                                        dataErrors = [i.strip() for i in responce.json()['additionalErrors']['Неверные артикулы WB'].split(',')]
+                                        with open(r'D:\Python\WB\NEW_API\managmentFBS\errors.txt', 'a', encoding='utf-8') as fileErrors:
+                                            fileErrors.writelines([i+'\n' for i in dataErrors])
+                                            fileErrors.close()
+                                        i = 0
+                                        while True and (i <500):
+                                            i +=1
+                                            for j,line in enumerate(jsonDataFull):
+                                                if str(line['nmID']) in dataErrors:
+                                                    jsonDataFull.pop(j)
+                                                    break
+                                                else:
+                                                    continue
+                                            if j >= len(jsonDataFull)-1:
+                                                break
+                                    except:
+                                        with open(r'D:\Python\WB\NEW_API\managmentFBS\errors.txt', 'a', encoding='utf-8') as fileErrors:
+                                            fileErrors.writelines('***' + responce.text + '***' + '\n')
+                                            fileErrors.close()
+                                    timeout+=10
+                                    continue
+                                timeout+=10
+                                time.sleep(1)
+                                continue
+                        except:
                             timeout+=10
+                            time.sleep(1)
                             continue
-                    except:
-                        timeout+=10
-                        continue
         timeout = 10
         while timeout < 60:
             try:
@@ -182,19 +221,58 @@ class exterminator():
 
 
     def extImageProcess(self, data, token):
+        list_ = [i.replace('\n','') for i in open(r'D:\Python\WB\NEW_API\managmentFBS\doneImg.txt', 'r', encoding='utf-8').readlines()]
         for line in data:
-            jsonRequest = {
-                "vendorCode": line['vendorCode'],
-                "data": ['http://95.78.233.163:8001/wp-content/uploads/1.jpg']
-                }
-            headersRequest = {'Authorization': '{}'.format(token)}
-            try:
-                r = requests.post(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=2)  
-                r
-            except requests.ConnectionError:
-                r = requests.post(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=5) 
-            except requests.exceptions.ReadTimeout:
-                r = requests.post(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=5) 
+            if line['vendorCode'] not in list_:
+                jsonRequest = {
+                    "vendorCode": line['vendorCode'],
+                    "data": ['http://95.78.233.163:8001/wp-content/uploads/1.jpg']
+                    }
+                headersRequest = {'Authorization': '{}'.format(token)}
+                try:
+                    r = requests.post(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=2)  
+                    time.sleep(0.6)
+                    if 'Неверный запрос' in r.text:
+                        with open(r'D:\Python\WB\NEW_API\managmentFBS\doneImg.txt', 'a', encoding='utf-8') as fileDone:
+                            fileDone.writelines(line['vendorCode'] + '\n')
+                            fileDone.close()
+                        print(r.text)
+                    if r.status_code == 200:
+                        with open(r'D:\Python\WB\NEW_API\managmentFBS\doneImg.txt', 'a', encoding='utf-8') as fileDone:
+                            fileDone.writelines(line['vendorCode'] + '\n')
+                            fileDone.close()
+                    print(r.text)
+                except requests.exceptions.ConnectTimeout:
+                    r = requests.post(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=10) 
+                    if r.status_code == 200:
+                        with open(r'D:\Python\WB\NEW_API\managmentFBS\doneImg.txt', 'a', encoding='utf-8') as fileDone:
+                            fileDone.writelines(line['vendorCode'] + '\n')               
+                            fileDone.close()
+                    time.sleep(0.7)
+                except requests.exceptions.ReadTimeout:
+                    r = requests.post(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=10) 
+                    if r.status_code == 200:
+                        with open(r'D:\Python\WB\NEW_API\managmentFBS\doneImg.txt', 'a', encoding='utf-8') as fileDone:
+                            fileDone.writelines(line['vendorCode'] + '\n')               
+                            fileDone.close()
+                    time.sleep(0.7)
+                except requests.ConnectionError:
+                    r = requests.post(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=10) 
+                    if r.status_code == 200:
+                        with open(r'D:\Python\WB\NEW_API\managmentFBS\doneImg.txt', 'a', encoding='utf-8') as fileDone:
+                            fileDone.writelines(line['vendorCode'] + '\n')
+                            fileDone.close()
+                    time.sleep(0.7)
+
+
+                except:
+                    r = requests.post(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=30) 
+                    if r.status_code == 200:
+                        with open(r'D:\Python\WB\NEW_API\managmentFBS\doneImg.txt', 'a', encoding='utf-8') as fileDone:
+                            fileDone.writelines(line['vendorCode'] + '\n')                 
+                            fileDone.close()
+                    time.sleep(0.7)
+
         
 
     def deleteStocks(self, data):
@@ -230,13 +308,35 @@ class exterminator():
                             "skus": data[i:i+step]
                             }
             headersRequest = {'Authorization': '{}'.format(token)}
-            try:
-                r = requests.delete(self.urlDetelStokcs.format(wh), json=jsonRequest, headers=headersRequest, timeout=15)  
-                r
-            except requests.ConnectionError:
-                r = requests.delete(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=60) 
-            except requests.exceptions.ReadTimeout:
-                r = requests.delete(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=60) 
+            countTry =0
+            while True and countTry <5:
+                try:
+                    countTry+=1
+                    r = requests.delete(self.urlDetelStokcs.format(wh), json=jsonRequest, headers=headersRequest, timeout=15)  
+                    if r.status_code == 404:
+                        try:
+                            d = r.json()
+                            for barcode in d['data']:
+                                jsonRequest['skus'].remove(barcode)
+                            jsonRequest
+                            countTry+=1
+                            if len(jsonRequest['skus'])>0:
+                                continue
+                            else:
+                                break
+                        except:
+                            pass
+                    elif r.status_code == 204:
+                        break
+                    r
+                except requests.ConnectionError:
+                    r = requests.delete(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=60) 
+                    countTry+=1
+                    break
+                except requests.exceptions.ReadTimeout:
+                    r = requests.delete(self.urlExtImage, json=jsonRequest, headers=headersRequest, timeout=60) 
+                    countTry+=1
+                    break
 
 
 
@@ -259,6 +359,7 @@ class exterminator():
                 dataSeller = data[data['ИП'] == info['IPName']]
                 if dataSeller.size !=0:
                     getter = cardGetter(info) 
+                    getter.listVendorCodeDone = [i.replace('\n','') for i in open(r'D:\Python\WB\NEW_API\managmentFBS\done.txt', 'r', encoding='utf-8').readlines()]
                     if 'vendorCode' in data:
                         getter.setListVendorCodeToGet(dataSeller['vendorCode'].unique().tolist())
                     elif 'Артикул товара' in data:

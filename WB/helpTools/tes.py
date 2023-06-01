@@ -1,7 +1,7 @@
 import pandas as pd
 from os.path import basename
 
-filePath = r"E:\Downloads\писарев.xlsx"
+filePath = r"F:\Downloads\писарев.xlsx"
 df = pd.DataFrame(pd.read_excel(filePath))
 df.insert(2,column='ШК все',value='')
 for model in df.loc[:, 'Модель']:

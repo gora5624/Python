@@ -2,8 +2,8 @@ import sys
 import xlrd
 from os.path import join as joinPath, exists
 from os import remove
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog, QMainWindow
+from PyQt6 import QtWidgets
+from PyQt6.QtWidgets import QFileDialog, QMainWindow
 # from ui import Ui
 
 class test(QMainWindow):
@@ -32,6 +32,7 @@ if not DEBUG:
     pathToConfigFile = joinPath(r'C:\Users\Public\Documents\CutHelp', 'Config.txt')
 else:
     pathToOrderTXTForCorel = joinPath(__file__,'..', 'order_{}.txt')
+    pathToOrderTXTErrorsForCorel = joinPath(__file__,'..', 'errors.txt')
     pathToConfigFile = joinPath(__file__,'..', 'Config.txt')
 
 
@@ -122,12 +123,18 @@ def makeTXTForCorel(dataFromOrder, add, counter):
         for lineMaketFile in  read_xlsx(pathToMaketsFile):
             if barcod in (lineMaketFile['ШК'] if type(lineMaketFile['ШК']) == str else str(lineMaketFile['ШК'])[0:-2]):
                 for i in range(count):
-                    listPathToFile.append({'Путь к макету': joinPath(pathToMakets, lineMaketFile['Файл']),
-                                       'Номер задания': orderNum})
+                    if exists(path:=joinPath(pathToMakets, lineMaketFile['Файл'])):
+                        listPathToFile.append({'Путь к макету': path,
+                                        'Номер задания': orderNum})
+                    else:
+                        input('Ошибка! Для заказа {} не обнаружен макет {} в {}. Нажмите Enter чтобы продолжить'.format(orderNum, lineMaketFile['Файл'], pathToMakets))
+                        continue
                 flagAdd = True
                 break
         if not flagAdd:
             input('Ошибка! Для заказа {} не обнаружен макет. Проверьте штрихкод {} в {}. Нажмите Enter чтобы продолжить'.format(orderNum, barcod, pathToMakets))
+            with open(pathToOrderTXTErrorsForCorel, 'a', encoding='ANSI') as fileTXTErrors:
+                fileTXTErrors.write(orderNum  +'\t'+barcod+'\t'+pathToMakets+'\n')
     with open(pathToOrderTXTForCorel.format(add), 'w', encoding='ANSI') as fileTXTForCorel:
         for line in listPathToFile:
             fileTXTForCorel.writelines(';'.join([line['Путь к макету'], line['Номер задания']])+'\n')
