@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'D:\Python\WB\PrintHelper\ui\printHelperUIV2.ui'
+# Form implementation generated from reading ui file 'e:\MyProduct\Python\WB\PrintHelper\ui\printHelperUIV2.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #

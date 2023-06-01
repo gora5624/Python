@@ -14,10 +14,10 @@ import subprocess
 
 class WBnomenclaturesCreater:    
     def __init__(self):
-        self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
-        self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+        self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjNhZmUzMzMzLWFmYjEtNDI5Yi1hN2Q1LTE1Yjc4ODg4MmU5MSJ9.kWUDkHkGrtD8WxE9sQHto5B7L3bQh-XRDf7EeZQiw7A'   
+        self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgxYjczNGVmLWI2OWUtNGRhMi1iNTBiLThkMTEyYWM4MjhkMCJ9.pU1YOOirgRe3Om-WRYT61AofToggCLbV3na7GbXKGqU'
         self.tokenIvan = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
-        self.tokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
+        self.tokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImUxNGFmM2UxLTc0YTctNDlkOC1hNGIyLTI1Y2Q4ZDc2YmM4NSJ9.bCTyIoPVS3wpbzy7TdK-Gt8Sgz3iyPamzJjnA_EH3Iw'
         self.urlCreate = 'https://suppliers-api.wildberries.ru/content/v1/cards/upload'
         self.urlAdd = 'https://suppliers-api.wildberries.ru/content/v1/cards/upload/add'
         self.pathToFileForUpload = ''
@@ -95,7 +95,7 @@ class WBnomenclaturesCreater:
         #     self.getListNomenclaturesMulti(token, self.modelForUploads)
         # except:
         #     pass
-        for i in range(2):
+        for i in range(3):
             # pool = multiprocessing.Pool()
             for model in self.modelForUploads:
                 # if model[''] not in listDoneVendorCode:
@@ -126,11 +126,14 @@ class WBnomenclaturesCreater:
                         # print("responce.status_code == 200:")
                         # LogMaker.logAction('createNomenclatureSingleProcess', vendorCodeMain +'  успешно создана')
                             print(vendorCodeMain + ' успешно создана')
+                            time.sleep(2)
                             break
                         #time.sleep(1)
                         # p = multiprocessing.Process(target=self.uplaodImage, args=(vendorCodeMain, urlsList, token,))
                         # p.start()
                     else:
+                        if 'Внутренняя ошибка' in responce.text:
+                            time.sleep(5)
                         delta+=5
                         countTry+=1
                         continue
@@ -153,7 +156,7 @@ class WBnomenclaturesCreater:
             # print("for i in range(1,len(modelListCard),1):")
             if i == 0:
                 continue
-            if i%10 == 0:
+            if i%200 == 0:
                 self.createNomenclatureSingleProcess(modelListCard[i:], headersRequest,token)
                 return
             jsonNomenclature = {
@@ -180,6 +183,11 @@ class WBnomenclaturesCreater:
                             time.sleep(2)
                             break
                         else:
+                            if 'Внутренняя ошибка' in responce.text:
+                                time.sleep(5)
+                                delta+=2
+                                countTry+=1
+                                continue
                             # print("responce.text123")
                             # LogMaker.logAction('createNomenclatureSingleProcess', responce.text)
                             if 'Указанные Артикулы товара используются в других карточках' in responce.text:

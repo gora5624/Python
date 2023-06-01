@@ -13,10 +13,10 @@ import subprocess
 
 class ExistsNomenclaturesCreater:    
     def __init__(self, data, mode, pathToFileForUpload):
-        self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
-        self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+        self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjNhZmUzMzMzLWFmYjEtNDI5Yi1hN2Q1LTE1Yjc4ODg4MmU5MSJ9.kWUDkHkGrtD8WxE9sQHto5B7L3bQh-XRDf7EeZQiw7A'   
+        self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgxYjczNGVmLWI2OWUtNGRhMi1iNTBiLThkMTEyYWM4MjhkMCJ9.pU1YOOirgRe3Om-WRYT61AofToggCLbV3na7GbXKGqU'
         self.tokenIvan = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
-        self.tokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
+        self.tokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImUxNGFmM2UxLTc0YTctNDlkOC1hNGIyLTI1Y2Q4ZDc2YmM4NSJ9.bCTyIoPVS3wpbzy7TdK-Gt8Sgz3iyPamzJjnA_EH3Iw'
         self.urlGetCards = 'https://suppliers-api.wildberries.ru/content/v1/cards/filter'
         self.urlUpdateCards = 'https://suppliers-api.wildberries.ru/content/v1/cards/update'
         self.pathTo1CNom = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\Список стандартный поиск номенклатура.txt'
@@ -31,13 +31,13 @@ class ExistsNomenclaturesCreater:
         self.listCardToChange = []
         if mode =='Караханян':
             self.DBpath = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Караханян.txt'
-            self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+            self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgxYjczNGVmLWI2OWUtNGRhMi1iNTBiLThkMTEyYWM4MjhkMCJ9.pU1YOOirgRe3Om-WRYT61AofToggCLbV3na7GbXKGqU'
         elif mode =='Абраамян':
             self.DBpath = r'\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Манвел.txt'
-            self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
+            self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjNhZmUzMzMzLWFmYjEtNDI5Yi1hN2Q1LTE1Yjc4ODg4MmU5MSJ9.kWUDkHkGrtD8WxE9sQHto5B7L3bQh-XRDf7EeZQiw7A'   
         elif mode =='Самвел':
             self.DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Самвел2.txt"
-            self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
+            self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImUxNGFmM2UxLTc0YTctNDlkOC1hNGIyLTI1Y2Q4ZDc2YmM4NSJ9.bCTyIoPVS3wpbzy7TdK-Gt8Sgz3iyPamzJjnA_EH3Iw'
         elif mode =='Иван':
             self.DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Федоров.txt"
             self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
@@ -49,7 +49,7 @@ class ExistsNomenclaturesCreater:
         self.changeCards()
         self.pushChanges()
         self.updateFileForUpload()
-        self.createFileFor1C()
+        # self.createFileFor1C()
 
 
     
@@ -105,11 +105,11 @@ class ExistsNomenclaturesCreater:
     @staticmethod
     def uplaodImage(path, mode):
         if mode =='Караханян':
-           token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
+           token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgxYjczNGVmLWI2OWUtNGRhMi1iNTBiLThkMTEyYWM4MjhkMCJ9.pU1YOOirgRe3Om-WRYT61AofToggCLbV3na7GbXKGqU'
         elif mode =='Абраамян':
-            token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
+            token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjNhZmUzMzMzLWFmYjEtNDI5Yi1hN2Q1LTE1Yjc4ODg4MmU5MSJ9.kWUDkHkGrtD8WxE9sQHto5B7L3bQh-XRDf7EeZQiw7A'   
         elif mode =='Самвел':
-            token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
+            token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImUxNGFmM2UxLTc0YTctNDlkOC1hNGIyLTI1Y2Q4ZDc2YmM4NSJ9.bCTyIoPVS3wpbzy7TdK-Gt8Sgz3iyPamzJjnA_EH3Iw'
         elif mode =='Иван':
             token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
         args = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\udatePhoto.py', path.replace(' ', '#'), token]
@@ -150,40 +150,46 @@ class ExistsNomenclaturesCreater:
     def getNomFromWB(self):
         dataFromDB = pandas.DataFrame(pandas.read_table(self.DBpath))
         for vendorCode in self.listVendorCodeToGet:
-            if vendorCode not in self.alredyGetVendorCode:
-                line = dataFromDB.loc[dataFromDB['vendorCode'] == vendorCode]
-                imtID = line['imtID'].values.tolist()[0]
-                nmID = line['nmID'].values.tolist()[0]
-                chrtID = line['chrtID'].values.tolist()[0]
-                price = line['price'].values.tolist()[0]
-                skus = line['skus'].values.tolist()[0].strip('[]\'\"').split(',')
-                sizes = [
-                    {
-                    "techSize": "0",
-                    "chrtID": chrtID,
-                    "wbSize": "",
-                    "price": price,
-                    "skus": skus
-                    }
-                    ]
-                data = [{
-                        "imtID": imtID,
-                        "nmID": nmID,
-                        "vendorCode": vendorCode,
-                        "sizes": sizes,
-                        "characteristics": []
-                        }]
-                
-                # data = response.json()['data']
-                for card in data:
-                    if card['vendorCode'] in self.listVendorCodeToGet:
-                        self.alredyGetVendorCode.append(card['vendorCode'])
-                        self.listCardToChange.append(card)
+            try:
+                if vendorCode not in self.alredyGetVendorCode:
+                    line = dataFromDB.loc[dataFromDB['vendorCode'] == vendorCode]
+                    imtID = line['imtID'].values.tolist()[0]
+                    nmID = line['nmID'].values.tolist()[0]
+                    chrtID = line['chrtID'].values.tolist()[0]
+                    price = line['price'].values.tolist()[0]
+                    skus = line['skus'].values.tolist()[0].strip('[]\'\"').split(',')
+                    sizes = [
+                        {
+                        "techSize": "0",
+                        "chrtID": chrtID,
+                        "wbSize": "",
+                        "price": price,
+                        "skus": skus
+                        }
+                        ]
+                    data = [{
+                            "imtID": imtID,
+                            "nmID": nmID,
+                            "vendorCode": vendorCode,
+                            "sizes": sizes,
+                            "characteristics": []
+                            }]
+                    
+                    # data = response.json()['data']
+                    for card in data:
+                        if card['vendorCode'] in self.listVendorCodeToGet:
+                            self.alredyGetVendorCode.append(card['vendorCode'])
+                            self.listCardToChange.append(card)
+            except:
+                f = open(r'E:\MyProduct\Python\WB\MakePrint\errors.txt', 'a', encoding='utf-8')
+                f.write(vendorCode + '\n')
+                f.close()
+                continue
         self.listCardToChange
                 
     def changeCards(self):
         chek = len(self.listCardToChange) == len(self.alredyGetVendorCode) == len(self.listVendorCodeToGet) == len(self.dataDict)
-        if chek:
+        if True:
             for i, card in enumerate(self.listCardToChange):
                 for case in self.dataDict:
                     if case['Артикул товара'] == card['vendorCode']:
@@ -233,7 +239,7 @@ class ExistsNomenclaturesCreater:
                 try:
                     response = requests.post(self.urlUpdateCards, headers=self.headersGetCard, json=jsonRequestsUpdateCard, timeout=timeout)
                     if response.status_code ==200:
-                        print('done')
+                        print(response.text)
                         break
                     else:
                         timeout+=5

@@ -4,8 +4,9 @@ import multiprocessing
 from PIL import Image, ImageDraw, ImageFont
 import sys
 sys.path.append(abspath(joinPath(__file__,'../..')))
-from Folders import pathToDoneBookImageWithName, fontPath, pathToBookImageWithOutModel, pathToTopPrint
+from Folders import pathToDoneBookImageWithName, fontPath, pathToBookImageWithOutModel, pathToTopPrint, pathToUploadFolderLocal
 import pandas
+from shutil import copytree, ignore_patterns
 
 
 XPasteBrand = 50
@@ -14,12 +15,17 @@ XPasteModel = 50
 YPasteModel = 20
 
 
+def copyImage():
+    copytree(pathToDoneBookImageWithName, pathToUploadFolderLocal + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
+    # copytree(pathToSecondImagesFolderSilicon, pathToSecondImageUploadFolder + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
+
 def makeImageBookWithNameModel(colorList, modelBrand, modelModel):
     pool = multiprocessing.Pool()
     for color in colorList:
         pool.apply_async(makeImageColor, args=(color, modelBrand, modelModel,))
     pool.close()
     pool.join()
+    copyImage()
     # for color in colorList:
     #     makeImageColor(color, modelBrand, modelModel)
     print(modelBrand + ' ' + modelModel + ' готов!')
@@ -52,4 +58,4 @@ def makeImageColor(color, modelBrand, modelModel):
             fullPathToSave = joinPath(pathToDoneBookImageWithName, 'Чехол книга ' + modelBrand + ' ' + modelModel +' черный с сил. вставкой Fashion')
             if not exists(fullPathToSave.replace('/','&')):
                 makedirs(fullPathToSave.replace('/','&'))
-            imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic[0:-4] + '.jpg'), quality=75)
+            imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic.replace('print ','(Принт ').replace('.png',')') + '.jpg'), quality=75)

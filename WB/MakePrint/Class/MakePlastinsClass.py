@@ -7,22 +7,29 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 class MakePlastins():
     def __init__(self) -> None:
-        #self.pathToPlastinBackground = r'F:\Маски силикон\Комплекты бейдж\fon.png'    
-        self.pathToPlastinBackground = r'F:\Маски силикон\Комплекты бейдж\fonSize.png'    
-        #self.pathToPlastinRetangleMask = r'F:\Маски силикон\Комплекты бейдж\mask.png'
-        self.pathToPlastinRetangleMask = r'F:\Маски силикон\Комплекты бейдж\maskSize.png'
-        self.pathToPlastinCircleMask = r'F:\Маски силикон\Комплекты бейдж\mask.png'
+        self.pathToPlastinBackground = r"\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Маски пластины\bakcgroung.png"
+        # self.pathToPlastinBackground = r"\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Комплекты бейдж\fonSize.png"
+        self.pathToPlastinRetangleMask = r"\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Маски пластины\rectangleMask.png"
+        # self.pathToPlastinRetangleMask = r"\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Комплекты бейдж\maskSize.png"
+        self.pathToPlastinCircleMask = r"\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Маски пластины\circleMask.png"
         self.pathToLogoPrint = r'F:\Принты пластины смешанные\лого'
         self.pathToFullPrint = r'F:\Принты пластины смешанные\полные'
         self.pathToDonePlastins = r'F:\Пластины принты готовые'
-        self.leftPointToRect = 311
-        self.rightPointToRect = 728
-        self.topPointToRect = 347
-        self.bottPointToRect = 986
-        self.centerCircleX = 0
-        self.centerCircleY = 0
-        self.radiusCircle = 10
-    
+        self.leftPointToRect = 55
+        self.rightPointToRect = 295
+        self.topPointToRect = 235
+        self.bottPointToRect = 578
+        self.centerCircleX = 436
+        self.centerCircleY = 459
+        self.radiusCircle = 118
+
+        # self.leftPointToRect = 313
+        # self.rightPointToRect = 727
+        # self.topPointToRect = 351
+        # self.bottPointToRect = 984
+        # self.centerCircleX = 436
+        # self.centerCircleY = 459
+        # self.radiusCircle = 118    
 
     def makePlastin(self, i):
         if i == 1:
@@ -33,11 +40,15 @@ class MakePlastins():
             for logoPrint in listdir(self.pathToLogoPrint):
                 #printImg = Image.open(joinPath(self.pathToLogoPrint, logoPrint))
                 flag = 'logo'
-                pool.apply_async(self.combineImage, args=(joinPath(self.pathToLogoPrint, logoPrint), rectangleMaskImg, circleMaskImg, backgroundImg, flag, ))
+                # if 'print 22.png' in logoPrint:
+                if 'Thumbs.db' not in logoPrint:
+                    pool.apply_async(self.combineImage, args=(joinPath(self.pathToLogoPrint, logoPrint), rectangleMaskImg, circleMaskImg, backgroundImg, flag, ))
             for FullPrint in listdir(self.pathToFullPrint):
                 flag = 'full'
                 #printImg = Image.open(joinPath(self.pathToLogoPrint, FullPrint))
-                pool.apply_async(self.combineImage, args=(joinPath(self.pathToFullPrint, FullPrint), rectangleMaskImg, circleMaskImg, backgroundImg, flag, ))
+                # if 'print 22.png' in FullPrint:
+                if 'Thumbs.db' not in FullPrint:
+                    pool.apply_async(self.combineImage, args=(joinPath(self.pathToFullPrint, FullPrint), rectangleMaskImg, circleMaskImg, backgroundImg, flag, ))
             pool.close()
             pool.join()
         else:
@@ -48,24 +59,31 @@ class MakePlastins():
             for logoPrint in listdir(self.pathToLogoPrint):
                 #printImg = Image.open(joinPath(self.pathToLogoPrint, logoPrint))
                 flag = 'logo'
-                pool.apply_async(self.combineImage2, args=(joinPath(self.pathToLogoPrint, logoPrint), rectangleMaskImg, backgroundImg, flag, ))
+                if 'Thumbs.db' not in logoPrint:
+                    pool.apply_async(self.combineImage2, args=(joinPath(self.pathToLogoPrint, logoPrint), rectangleMaskImg, backgroundImg, flag, ))
             for FullPrint in listdir(self.pathToFullPrint):
                 flag = 'full'
                 #printImg = Image.open(joinPath(self.pathToLogoPrint, FullPrint))
-                pool.apply_async(self.combineImage2, args=(joinPath(self.pathToFullPrint, FullPrint), rectangleMaskImg, backgroundImg, flag, ))
+                if 'Thumbs.db' not in FullPrint:
+                    pool.apply_async(self.combineImage2, args=(joinPath(self.pathToFullPrint, FullPrint), rectangleMaskImg, backgroundImg, flag, ))
             pool.close()
             pool.join()
 
 
     def combineImage(self, printPath, rectangleMaskImg, circleMaskImg, backgroundImg, flag):
+        # if 'print 22.png' in printPath:
+            # print('')
         printImg = Image.open(printPath)
-        #printImg.show()
+        # if 'print 22.png' in printPath:
+            # printImg.show()
         sizeImg = backgroundImg.size
         mainImg = Image.new('RGB', sizeImg)
         mainImg.paste(backgroundImg, (0,0))
-        # mainImg.show()
+        if 'print 22.png' in printPath:
+            mainImg.show()
         if flag == 'full':
-            printImgRet = printImg.resize(self.returnSizePrintForRect(printImg, flag))
+            printImgRet = printImg.resize(sizeTMP:=self.returnSizePrintForRect(printImg, flag))
+            # rectangleMaskImg = rectangleMaskImg.resize(sizeTMP)
             # mainImg.show()
             mainImgTMP = Image.new('RGBA', sizeImg)
             mainImgTMP.paste(printImgRet, self.returnCoordForPasteRectangleImage(printImgRet))
@@ -74,7 +92,8 @@ class MakePlastins():
             # mainImg.show()
             #mainImg.paste(rectangleMaskImg, (0,0), rectangleMaskImg)
             # mainImg.show()
-            printImgCirc = printImg.resize(self.returnSizePrintForCirc(printImg, flag))
+            printImgCirc = printImg.resize(sizeTMP:=self.returnSizePrintForCirc(printImg, flag))
+            # circleMaskImg = circleMaskImg.resize(sizeTMP)
             mainImgTMP = Image.new('RGBA', sizeImg)
             mainImgTMP.paste(printImgCirc, self.returnCoordForPasteCircleImage(printImgCirc))
             mainImg.paste(mainImgTMP, (0, 0), circleMaskImg)
@@ -82,7 +101,8 @@ class MakePlastins():
             #mainImg.paste(circleMaskImg, (0,0), circleMaskImg)
             mainImg.save(joinPath(self.pathToDonePlastins, basename(printPath)))
         else:
-            printImgRet = printImg.resize(self.returnSizePrintForRect(printImg, flag))
+            printImgRet = printImg.resize(sizeTMP:=self.returnSizePrintForRect(printImg, flag))
+            # rectangleMaskImg = rectangleMaskImg.resize(sizeTMP)
             #mainImg.show()
             mainImgTMP = Image.new('RGBA', sizeImg)
             mainImgTMP.paste(printImgRet, self.returnCoordForPasteRectangleImage(printImgRet), printImgRet)
@@ -90,7 +110,8 @@ class MakePlastins():
             #mainImg.show()
             #mainImg.paste(rectangleMaskImg, (0,0), rectangleMaskImg)
             #mainImg.show()
-            printImgCirc = printImg.resize(self.returnSizePrintForCirc(printImg, flag))
+            printImgCirc = printImg.resize(sizeTMP:=self.returnSizePrintForCirc(printImg, flag))
+            # circleMaskImg = circleMaskImg.resize(sizeTMP)
             mainImgTMP = Image.new('RGBA', sizeImg)
             mainImgTMP.paste(printImgCirc, self.returnCoordForPasteCircleImage(printImgCirc), printImgCirc)
             mainImg.paste(mainImgTMP, (0, 0), circleMaskImg)
@@ -107,7 +128,8 @@ class MakePlastins():
         mainImg.paste(backgroundImg, (0,0))
         # mainImg.show()
         if flag == 'full':
-            printImgRet = printImg.resize(self.returnSizePrintForRect(printImg, flag))
+            printImgRet = printImg.resize(sizeTMP:=self.returnSizePrintForRect(printImg, flag))
+            # rectangleMaskImg = rectangleMaskImg.resize(sizeTMP)
             # mainImg.show()
             mainImgTMP = Image.new('RGBA', sizeImg)
             mainImgTMP.paste(printImgRet, self.returnCoordForPasteRectangleImage(printImgRet))
@@ -125,7 +147,8 @@ class MakePlastins():
             #mainImg.paste(circleMaskImg, (0,0), circleMaskImg)
             mainImg.save(joinPath(self.pathToDonePlastins, basename(printPath)))
         else:
-            printImgRet = printImg.resize(self.returnSizePrintForRect(printImg, flag))
+            printImgRet = printImg.resize(sizeTMP:= self.returnSizePrintForRect(printImg, flag))
+            # rectangleMaskImg = rectangleMaskImg.resize(sizeTMP)
             #mainImg.show()
             mainImgTMP = Image.new('RGBA', sizeImg)
             mainImgTMP.paste(printImgRet, self.returnCoordForPasteRectangleImage(printImgRet), printImgRet)
@@ -180,16 +203,16 @@ class MakePlastins():
             ySize = printImgRet.size[1] * (xSize / printImgRet.size[0])
             return (int(xSize), int(ySize))
         else:
-            xSize = (self.rightPointToRect - self.leftPointToRect) * 0.9
+            xSize = (self.rightPointToRect - self.leftPointToRect) * 0.97
             ySize = printImgRet.size[1] * xSize / printImgRet.size[0]
             if ySize < (self.bottPointToRect - self.topPointToRect):
                 return (int(xSize), int(ySize))
             else:
-                ySize = (self.bottPointToRect - self.topPointToRect) * 0.9
+                ySize = (self.bottPointToRect - self.topPointToRect) * 0.97
                 xSize = printImgRet.size[0] * (ySize / printImgRet.size[1])
                 return (int(xSize), int(ySize))
 
 
 if __name__ == '__main__':
     a = MakePlastins()
-    a.makePlastin(2)
+    a.makePlastin(1)

@@ -1,6 +1,6 @@
 import multiprocessing
 import sys
-from os import listdir
+from os import listdir, makedirs
 from os.path import join as joinPath, isdir, isfile, abspath, exists
 sys.path.append(abspath(joinPath(__file__,'../../..')))
 import time
@@ -56,16 +56,17 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.CreateDB.clicked.connect(self.crateDB)
         self.ui.chooseExistsCardsBtn.clicked.connect(self.chooseExistsCardsBtn)
         self.ui.makeCartholdersButt.clicked.connect(self.btnCreateCartholders)
-        self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'   
+        self.tokenAb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjNhZmUzMzMzLWFmYjEtNDI5Yi1hN2Q1LTE1Yjc4ODg4MmU5MSJ9.kWUDkHkGrtD8WxE9sQHto5B7L3bQh-XRDf7EeZQiw7A'   
         self.tokenIvan = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
-        self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
-        self.tokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
+        self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgxYjczNGVmLWI2OWUtNGRhMi1iNTBiLThkMTEyYWM4MjhkMCJ9.pU1YOOirgRe3Om-WRYT61AofToggCLbV3na7GbXKGqU'
+        self.tokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImUxNGFmM2UxLTc0YTctNDlkOC1hNGIyLTI1Y2Q4ZDc2YmM4NSJ9.bCTyIoPVS3wpbzy7TdK-Gt8Sgz3iyPamzJjnA_EH3Iw'
         self.pathToSiliconCLRAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликонПроз.xlsx'
         self.pathToPlasticAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПластик.xlsx'
         self.pathToSiliconMTAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликонМат.xlsx'
         self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.xlsx'
         self.pathToBookAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКнижки.xlsx'
         self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПринтов.xlsx'
+        self.pathToSkinShell = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиSkinShell.xlsx'
         self.pathToCategoryPrint = r'E:\MyProduct\Python\WB\MakePrint\cat.xlsx'
         self.pathToAddinFile = ''
         self.topPrint = ''
@@ -79,6 +80,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         pdSilsiconCLRAddin = pandas.DataFrame(pandas.read_excel(self.pathToSiliconCLRAddin))
         pdPlasticAddin = pandas.DataFrame(pandas.read_excel(self.pathToPlasticAddin))
         pdSilsiconMTAddin = pandas.DataFrame(pandas.read_excel(self.pathToSiliconMTAddin))
+        pdSkinShellAddin = pandas.DataFrame(pandas.read_excel(self.pathToSkinShell))
         pdCardhonlderAddin = pandas.DataFrame(pandas.read_excel(self.pathToCardhonlderAddin))
         pdPrintAddin = pandas.DataFrame(pandas.read_excel(self.pathToPrintAddin))
         pdCategoryPrint = pandas.DataFrame(pandas.read_excel(self.pathToCategoryPrint))
@@ -86,6 +88,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         pdSilsiconCLRAddin.to_csv(self.pathToSiliconCLRAddin.replace('xlsx','txt'),index=None,sep='\t')
         pdPlasticAddin.to_csv(self.pathToPlasticAddin.replace('xlsx','txt'),index=None,sep='\t')
         pdSilsiconMTAddin.to_csv(self.pathToSiliconMTAddin.replace('xlsx','txt'),index=None,sep='\t')
+        pdSkinShellAddin.to_csv(self.pathToSkinShell.replace('xlsx','txt'),index=None,sep='\t')
         pdBookAddin.to_csv(self.pathToBookAddin.replace('xlsx','txt'),index=None,sep='\t')
         pdCardhonlderAddin.to_csv(self.pathToCardhonlderAddin.replace('xlsx','txt'),index=None,sep='\t')
         pdPrintAddin.to_csv(self.pathToPrintAddin.replace('xlsx','txt'),index=None,sep='\t')
@@ -116,7 +119,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.listModelForExcel = []
 
     def ChekImageAll(self):
-        pathToDoneFilesForUplaodsPhoto = QFileDialog.getExistingDirectory(self, ("Выберите папку с файлами"))
+        pathToDoneFilesForUplaodsPhoto = QFileDialog.getExistingDirectory(self, ("Выберите папку с файлами"), r'F:\Для загрузки\Готовые принты\Силикон')
         # fileName = self.ui.FileSelector.currentText()
         mode = self.ui.IPSelector.currentText()
         for file in listdir(pathToDoneFilesForUplaodsPhoto):
@@ -157,26 +160,28 @@ class mameBookPrint(QtWidgets.QMainWindow):
 
 
     def btnCreateCaseAll(self):
-        pathToDoneSiliconImageSilicon = QFileDialog.getExistingDirectory(self, ("Выберите папку с файлами"))
+        pathToDoneSiliconImageSilicon = QFileDialog.getExistingDirectory(self, ("Выберите папку с файлами"), r'F:\Для загрузки\Готовые принты\Силикон')
         mode = self.ui.IPSelector.currentText()
         for file in listdir(pathToDoneSiliconImageSilicon):
             if not isdir(joinPath(pathToDoneSiliconImageSilicon, file)):
                 pathToFileForUpload = joinPath(pathToDoneSiliconImageSilicon, file)
                 if '.db' not in pathToFileForUpload and '~' not in pathToFileForUpload and '1C_' not in pathToFileForUpload:
                     if not self.ui.toExistsCardsChek.isChecked():
-                        create = WBnomenclaturesCreater()
-                        create.pathToFileForUpload = pathToFileForUpload
-                        create.createNomenclaturesMultiporocessing(mode)
+                        if not isdir(pathToFileForUpload):
+                            create = WBnomenclaturesCreater()
+                            create.pathToFileForUpload = pathToFileForUpload
+                            create.createNomenclaturesMultiporocessing(mode)
                     else:
-                        start_time = time.time()
-                        data = pandas.DataFrame(pandas.read_excel(pathToFileForUpload))
-                        tmp = ExistsNomenclaturesCreater(data, mode, pathToFileForUpload)
-                        pool = multiprocessing.Pool(2)
-                        pool.apply_async(ExistsNomenclaturesCreater.uplaodImage, args=(pathToFileForUpload, mode,))
-                        pool.apply_async(tmp.start(), args=(pathToFileForUpload, mode,))
-                        pool.close()
-                        pool.join()
-                        print("--- %s seconds ---" % (time.time() - start_time))
+                        if not isdir(pathToFileForUpload):
+                            start_time = time.time()
+                            data = pandas.DataFrame(pandas.read_excel(pathToFileForUpload))
+                            tmp = ExistsNomenclaturesCreater(data, mode, pathToFileForUpload)
+                            pool = multiprocessing.Pool(2)
+                            # pool.apply_async(ExistsNomenclaturesCreater.uplaodImage, args=(pathToFileForUpload, mode,))
+                            pool.apply_async(tmp.start(), args=(pathToFileForUpload, mode,))
+                            pool.close()
+                            pool.join()
+                            print("--- %s seconds ---" % (time.time() - start_time))
 
 
 
@@ -289,11 +294,17 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 if isdir(joinPath(pathToDoneBookImageWithName,model)):
                     self.ui.ModelSelector.addItem(model)
 
+    def makeFakeDirsWithMask(self):
+        pathToFile = QFileDialog.getOpenFileName(self, 'Выберите файл со свойствами', r'F:\Маски силикон', '*.xlsx',)[0]
+        for i in pandas.DataFrame(pandas.read_excel(pathToFile))['Номенклатура'].unique().tolist():
+            makedirs(joinPath(pathToMaskFolderSilicon, i), exist_ok=True)
+
 
     def btnCreateSiliconImage(self):
         addImage = self.ui.AddPhotoSelector.currentText()
         mode = 'all' if self.ui.SiliconeMode.checkState() == 2 else 'withOutBack'
         if self.ui.FakeModeChekBox.checkState() == 2:
+            self.makeFakeDirsWithMask()
             fakecreateAllSiliconImage(pathToMaskFolderSilicon, mode)
         else:
             createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode)
@@ -306,6 +317,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         countPrint = self.ui.countPrints.value()
         self.topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:countPrint]# ['Принт'].values.tolist()
         if self.ui.FakeModeChekBox.checkState() == 2:
+            self.makeFakeDirsWithMask()
             fakecreateAllSiliconImage(pathToMaskFolderSilicon, mode, topPrint=self.topPrint)
         else:
             createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode, topPrint=self.topPrint)
@@ -336,14 +348,14 @@ class mameBookPrint(QtWidgets.QMainWindow):
 
     def btnApplyAddinFromFile(self):
         # print('tst')
-        self.pathToAddinFile = QFileDialog.getOpenFileName(self, ("Выберите файл свойств"), "", ("xlsx files (*.xlsx)"))[0]
+        self.pathToAddinFile = QFileDialog.getOpenFileName(self, ("Выберите файл свойств"), r'F:\Маски силикон', ("xlsx files (*.xlsx)"))[0]
         dfAddinFile = pandas.DataFrame(pandas.read_excel(self.pathToAddinFile))
         existsFlag = self.ui.toExistsCardsChek.isChecked()
         counter = 0
         for case in listdir(pathToDoneSiliconImageSilicon):
-            if 'проз.' not in case:
+            if case[-4:] =='проз':
                 maskNew = case.replace('проз', 'проз.')
-            elif 'мат.' not in case:
+            elif case[-3:] == 'мат':
                 maskNew = case.replace('мат', 'мат.')
             else:
                 maskNew = case
@@ -353,6 +365,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
                     if existsFlag:
                         if 'vendorCode' in self.dfExistCase:
                             listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                        elif 'Артикул товара' in self.dfExistCase:
+                            listDataVendorCode = self.dfExistCase['Артикул товара'].values.tolist()[counter:counter+delta]
                         else:
                             listDataVendorCode = self.dfExistCase['Артикул продавца'].values.tolist()[counter:counter+delta]
                     counter+=delta
@@ -360,7 +374,11 @@ class mameBookPrint(QtWidgets.QMainWindow):
                         compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == maskNew]['Совместимость'].values.tolist()[0]
                     except IndexError:
                         compability = modelAddin = dfAddinFile[dfAddinFile['Номенклатура'] == case]['Совместимость'].values.tolist()[0]
-                    brand = self.ui.textSiliconBrand.toPlainText()
+                    # brand = self.ui.textSiliconBrand.toPlainText()
+                    if self.ui.IPSelector.currentText() == 'Иван':
+                        brand = 'SuperPrint'
+                    else:
+                        brand = 'Mobi711'
                     try:
                         price = dfAddinFile[dfAddinFile['Номенклатура'] == maskNew]['Цена'].values.tolist()[0]
                     except IndexError:
@@ -493,12 +511,12 @@ class mameBookPrint(QtWidgets.QMainWindow):
 
     def btnMakeBookPrint(self):
         modelBrand = self.ui.textEditBrand.toPlainText()
-        if modelBrand == '':
-            self.createMSGError('Поле бренд не заполенно!')
-            #return 0
+        # if modelBrand == '':
+        #     self.createMSGError('Поле бренд не заполенно!')
+        #     #return 0
         modelModel = self.ui.textEditModel.toPlainText()
-        if modelModel == '':
-            self.createMSGError('Поле модель не заполенно!')
+        # if modelModel == '':
+        #     self.createMSGError('Поле модель не заполенно!')
             #return 0
         colorList = self.checkColorBox()
         if colorList == 0:

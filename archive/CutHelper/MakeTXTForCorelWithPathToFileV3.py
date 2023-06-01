@@ -2,8 +2,8 @@ import sys
 import xlrd
 from os.path import join as joinPath, exists
 from os import remove
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog, QMainWindow
+from PyQt6 import QtWidgets
+from PyQt6.QtWidgets import QFileDialog, QMainWindow
 # from ui import Ui
 
 class test(QMainWindow):
@@ -29,9 +29,11 @@ if __name__ == '__main__':
 # pathToOrder = sys.argv[1].replace('#', ' ') if DEBUG == False else  r'C:\Users\Георгий\Downloads\A1_122 от 08.05.2022.xlsx'
 if not DEBUG:
     pathToOrderTXTForCorel = joinPath(r'C:\Users\Public\Documents\CutHelp', 'order_{}.txt')
+    pathToOrderTXTErrorsForCorel = joinPath(__file__,'..', 'errors.txt')
     pathToConfigFile = joinPath(r'C:\Users\Public\Documents\CutHelp', 'Config.txt')
 else:
     pathToOrderTXTForCorel = joinPath(__file__,'..', 'order_{}.txt')
+    pathToOrderTXTErrorsForCorel = joinPath(__file__,'..', 'errors.txt')
     pathToConfigFile = joinPath(__file__,'..', 'Config.txt')
 
 
@@ -74,7 +76,7 @@ def read_xlsx(file_path, title='Yes'):
 def applyConfig():
     # Открываем и читаем файл конфига
     if exists(pathToConfigFile):
-        input('Обнаружен файл конфигурации по адресу {}. Настройки взяты из него. Нажмите Enter чтобы продолжить'.format(pathToConfigFile))
+        print('Обнаружен файл конфигурации по адресу {}. Настройки взяты из него. Нажмите Enter чтобы продолжить'.format(pathToConfigFile))
         with open(pathToConfigFile, 'r', encoding='utf-8') as fileConfig:
             dataConfig = fileConfig.readlines()
             for lineConfig in dataConfig:
@@ -100,7 +102,7 @@ def applyConfig():
         input('Файл конфигурации по адресу {} не обнаружен. Настройки взяты по умолчанию. Путь к макетам {}. Нажмите Enter чтобы продолжить'.format(pathToConfigFile, pathToMakets))
 
 
-def makeTXTForCorel(dataFromOrder, add, counter):
+def makeTXTForCorel(dataFromOrder, pathToOrder, add, counter):
     listPathToFile = []
     count = 1
     # counter = 0
@@ -121,13 +123,19 @@ def makeTXTForCorel(dataFromOrder, add, counter):
         a = read_xlsx(pathToMaketsFile)
         for lineMaketFile in  read_xlsx(pathToMaketsFile):
             if barcod in (lineMaketFile['ШК'] if type(lineMaketFile['ШК']) == str else str(lineMaketFile['ШК'])[0:-2]):
-                for i in range(count):
-                    listPathToFile.append({'Путь к макету': joinPath(pathToMakets, lineMaketFile['Файл']),
-                                       'Номер задания': orderNum})
+                if exists(path:=joinPath(pathToMakets, lineMaketFile['Файл'])):
+                    for i in range(count):
+                        listPathToFile.append({'Путь к макету': path,
+                                        'Номер задания': orderNum})
+                else:
+                    print('Ошибка! Для заказа {} не обнаружен макет {} в {}. Нажмите Enter чтобы продолжить'.format(orderNum, lineMaketFile['Файл'], pathToMakets))
+                    continue
                 flagAdd = True
                 break
         if not flagAdd:
-            input('Ошибка! Для заказа {} не обнаружен макет. Проверьте штрихкод {} в {}. Нажмите Enter чтобы продолжить'.format(orderNum, barcod, pathToMakets))
+            print('Ошибка! Для заказа {} не обнаружен макет. Проверьте штрихкод {} в {}. Нажмите Enter чтобы продолжить'.format(orderNum, barcod, pathToMakets))
+            with open(pathToOrder.replace('.xlsx','_{}_errors.txt'.format(add)), 'a', encoding='ANSI') as fileTXTErrors:
+                fileTXTErrors.write(orderNum  +';'+barcod+';'+pathToMakets+'\n')
     with open(pathToOrderTXTForCorel.format(add), 'w', encoding='ANSI') as fileTXTForCorel:
         for line in listPathToFile:
             fileTXTForCorel.writelines(';'.join([line['Путь к макету'], line['Номер задания']])+'\n')
@@ -181,8 +189,8 @@ def main2():
         input('Не обнаружены глянцевые заказы')
     elif len(dataFromOrderMT)==0:
         input('Не обнаружены матовые заказы')
-    makeTXTForCorel(dataFromOrderCL, addForOrder['Глянцевые'], counter)
-    makeTXTForCorel(dataFromOrderMT, addForOrder['Матовые'], counter)
+    makeTXTForCorel(dataFromOrderCL, pathToOrder, addForOrder['Глянцевые'], counter)
+    makeTXTForCorel(dataFromOrderMT, pathToOrder, addForOrder['Матовые'], counter)
     
 
 main2()

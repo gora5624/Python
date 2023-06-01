@@ -8,20 +8,20 @@ import time
 # url = re.sub(r'print.+\d\.jpg', number+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки')
 def pushPhoto(line, token, requestUrl, countTry=0):
     if 'Артикул товара' in list(line.keys()):
-        url = line['Медиафайлы'].split(';')[0]
-        data = [url]
+        url = line['Медиафайлы'].split(';')
+        data = [url[0]]
         # for i in range(1,6,1):
         #     data.append(re.sub(r'print.+\d\.jpg', str(i)+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки'))
         jsonRequest = {
             "vendorCode": line['Артикул товара'],
             #"data": line['Медиафайлы'].split(';')
-            "data": data
+            "data": []
             }
         headersRequest = {'Authorization': '{}'.format(token)}
     else:
         # data = line['Медиафайлы'].split(';')
-        url = line['Медиафайлы'].split(';')[0]
-        data = [url]
+        url = line['Медиафайлы'].split(';')
+        data = [url[0]]
         # for i in range(1,6,1):
         #     data.append(re.sub(r'print.+\d\.jpg', str(i)+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки'))
         if len(data) ==3:
@@ -35,7 +35,7 @@ def pushPhoto(line, token, requestUrl, countTry=0):
         headersRequest = {'Authorization': '{}'.format(token)}
     try:
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=5)  
-        time.sleep(1)
+        time.sleep(1.5)
         if '"Неверный запрос: по данному артикулу не нашлось карточки товара","additionalErrors' in r.text:
             print('Не нашлось карточки товара '+jsonRequest['vendorCode'])
         if '"Внутренняя ошибка сервиса","additionalErrors' in r.text:
@@ -61,8 +61,8 @@ def main():
     pathToFile = sys.argv[1:][0].replace('#', ' ')
     token = sys.argv[1:][1].replace('#', ' ')
     # if __name__ == '__main__':
-    # pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол книга Honor 7A (Huawei Y5 2018) черный с сил. вставкой Fashion.xlsx"
-    # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
+    # pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол Infinix Smart 7 силикон с зак.кам. черный мат..xlsx"
+    # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
     # else:
     # pathToFile = sys.argv[1:][0].replace('#', ' ')
     # token = sys.argv[1:][1].replace('#', ' ')
@@ -72,8 +72,9 @@ def main():
     if __name__ == '__main__':
         pool = multiprocessing.Pool(4)
         for line in df.to_dict('records'):
+            # if ('2098' in line['Артикул товара']) or ('1160' in line['Артикул товара']):
         #     pushPhoto(line, token, requestUrl)
-            pool.apply_async(pushPhoto, args=(line, token, requestUrl,))
+                pool.apply_async(pushPhoto, args=(line, token, requestUrl,))
         pool.close()
         pool.join()
         # jsonRequest = {

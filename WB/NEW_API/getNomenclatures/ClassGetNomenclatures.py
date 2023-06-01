@@ -169,7 +169,10 @@ class cardGetter():
         self.mainPath = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db'
         self.urlGetCard = 'https://suppliers-api.wildberries.ru/content/v1/cards/filter'
         self.listDbNom = []
-        self.listVendorCodeToGet = []
+        self.listVendorCodeToGet = ['iPhone_6_Plus_PRNT_TRQ_OCM_BTFBP_TRQ_BTF_PRNT_1270',
+'iPhone_6_(6S)_PRNT_BLC_OCM_NTRBP_BLC_NTR_PRNT_2280',
+'iPhone_6_(6S)_PRNT_BLU_OCM_AUMBP_BLU_AUM_PRNT_1736',
+'iPhone_6_(6S)_PRNT_BLU_OCM_DBLBP_BLU_DBL_PRNT_3072']
         self.listVendorCodeDone = []
         self.DbCards = []
         self.pathToDbNom = token['pathToDB']
@@ -177,7 +180,7 @@ class cardGetter():
         self.token = token['token']
         self.nomenclatures1CDataPath = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'
         self.nomenclatures1CData = pandas.DataFrame(pandas.read_table(self.nomenclatures1CDataPath, sep='\t',dtype={'Штрихкод':str, 'Номенклатура': str, 'Характеристика': str, 'Упаковка': str}))
-        self.getListVendorCode()
+        # self.getListVendorCode()
     
     
     def getListVendorCode(self):
@@ -232,12 +235,13 @@ class cardGetter():
     def getNomProcess(self, vendorCodes, i, timeout=20):
         headersGetCard = {'Authorization': '{}'.format(self.token)}
         jsonRequestsGetCard = {
+                            # "vendorCodes": 'iPhone_13_Pro_PRNT_BLU_OCM_AUMBP_BLU_AUM_PRNT_0371'
                             "vendorCodes": vendorCodes
                             }
         timestart = time.time()
         while timeout<60:
-            if time.time() - timestart < 20:
-                time.sleep(20)
+            # if time.time() - timestart < 20:
+            #     time.sleep(20)
             try:
                 timestart = time.time()
                 responce = requests.post(url=self.urlGetCard, json=jsonRequestsGetCard, headers=headersGetCard, timeout=timeout)
@@ -306,14 +310,15 @@ class cardGetter():
                 continue
         
 
-# if __name__ == "__main__":
-#     start_time = time.time()
-#     b = {
-#                         'IPName': 'Самвел',
-#                         'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
-#                     }
-#     a = cardGetter(r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\db_nom Самвел.txt', b)
-#     a.getListVendorCode()
-#     a.getNom()
+if __name__ == "__main__":
+    start_time = time.time()
+    b = {
+                        'IPName': 'Самвел',
+                        'pathToDB': r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_nom Самвел.txt',
+                        'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjM3ZGIyZjExLTYyMmYtNDhkNC05YmVhLTE3NWUxNDRlZWVlNSJ9.yMAeIv0WWmF3rot06aPraiQYDOy522s5IYnuZILfN6Y'
+                    }
+    a = cardGetter(b)
+    # a.getListVendorCode()
+    a.getNom()
 
-#     print("--- %s seconds ---" % (time.time() - start_time))
+    print("--- %s seconds ---" % (time.time() - start_time))

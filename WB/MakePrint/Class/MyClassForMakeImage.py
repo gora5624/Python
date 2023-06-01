@@ -31,12 +31,15 @@ class ModelWithAddin:
         self.pathToPlasticAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПластик.txt'
         self.pathToBookAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКнижки.txt'
         self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.txt'
+        self.pathToSkinShellAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиSkinShell.txt'
         self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПринтов.txt'
         self.pathToCategoryPrint = r'E:\MyProduct\Python\WB\MakePrint\cat.txt'
         if 'под карту' in maskFolderName:
             self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToCardhonlderAddin,sep='\t'))
         elif 'книга' in maskFolderName:
             self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToBookAddin,sep='\t'))
+        elif 'SkinShell' in maskFolderName and 'проз' in maskFolderName:
+            self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToSkinShellAddin,sep='\t'))
         elif 'силикон ' in maskFolderName and 'мат' in maskFolderName:
             self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToSiliconMTAddin,sep='\t'))
         elif 'силикон ' in maskFolderName and 'проз' in maskFolderName:
@@ -78,12 +81,14 @@ class ModelWithAddin:
         pdSilsiconMTAddin = pandas.DataFrame(pandas.read_excel(self.pathToSiliconMTAddin.replace('txt','xlsx')))
         pdBookAddin = pandas.DataFrame(pandas.read_excel(self.pathToBookAddin.replace('txt','xlsx')))
         pdCardhonlderAddin = pandas.DataFrame(pandas.read_excel(self.pathToCardhonlderAddin.replace('txt','xlsx')))
+        pdSkinShellAddin = pandas.DataFrame(pandas.read_excel(self.pathToSkinShellAddin.replace('txt','xlsx')))
         pdPrintAddin = pandas.DataFrame(pandas.read_excel(self.pathToPrintAddin.replace('txt','xlsx')))
         pdCategoryPrint = pandas.DataFrame(pandas.read_excel(self.pathToCategoryPrint.replace('txt','xlsx')))
         pdSilsiconCLRAddin.to_csv(self.pathToSiliconCLRAddin,index=None,sep='\t')
         pdBookAddin.to_csv(self.pathToBookAddin,index=None,sep='\t')
         pdSilsiconMTAddin.to_csv(self.pathToSiliconMTAddin,index=None,sep='\t')
         pdCardhonlderAddin.to_csv(self.pathToCardhonlderAddin,index=None,sep='\t')
+        pdSkinShellAddin.to_csv(self.pathToSkinShellAddin,index=None,sep='\t')
         pdPrintAddin.to_csv(self.pathToPrintAddin,index=None,sep='\t')
         pdCategoryPrint.to_csv(self.pathToCategoryPrint,index=None,sep='\t')
 
@@ -157,6 +162,7 @@ class ModelWithAddin:
 
 
     def getVendorCode(self, colorCase, printName):
+        vendorCode2 = ''
         if 'силикон с' in self.maskFolderName:
             vendorCode1 = self.maskFolderName.replace('Чехол','').split('силикон')[0].strip().replace(' ','_') + '_BP'
             # if 'с зак.кам.' in self.maskFolderName:
@@ -199,6 +205,8 @@ class ModelWithAddin:
                         'PRNT',printName.replace('(Принт ','').replace(')','')])
         elif 'книга' in self.maskFolderName:
             vendorCode1 = self.maskFolderName.replace('Чехол книга','').split('черный')[0].strip().replace(' ','_') + '_BK'
+            if 'fashion' in self.maskFolderName.lower():
+                vendorCode2 = 'FSN'
             # if 'с зак.кам.' in self.maskFolderName:
             #     vendorCode2 = 'CCM'
             # elif 'с отк.кам.' in self.maskFolderName:
@@ -215,8 +223,12 @@ class ModelWithAddin:
                 vendorCode3 += '_HLD'
             # return '_'.join([vendorCode1, vendorCode3,#.join([vendorCode1, vendorCode2, vendorCode3,
             #             categoryCode, 'PRNT',printName.replace('(Принт ','').replace(')','')])
-            return '_'.join([vendorCode1, vendorCode3,#.join([vendorCode1, vendorCode2, vendorCode3,
+            if vendorCode2 == '':
+                return '_'.join([vendorCode1, vendorCode3,
                         'PRNT',printName.replace('(Принт ','').replace(')','')])
+            else:        
+                return '_'.join([vendorCode1,vendorCode2, vendorCode3,
+                            'PRNT',printName.replace('(Принт ','').replace(')','')])
 
     def getDescription(self, category):
         for line in self.dfAddinFromFileDict:
@@ -336,7 +348,7 @@ class ModelWithAddin:
                         'Категория': category,
                         'Цвет': color if (colorAddin:=self.getPrintAddin(printNameRus, 'Цвет', category)) == 0 else colorAddin,# color,
                         'Баркод товара': '',
-                        'Бренд': 'Mobi711',
+                        'Бренд': self.brand,
                         'Наименование': self.getName(category),
                         'Цена': price,
                         'Артикул товара': vendorCode,

@@ -14,7 +14,7 @@ pathToBookImageWithOutModel = r'F:\книжки'
 pathToBookEffect = abspath(joinPath(__file__, '..', r'MakeBookImage',r'Effect',r'light.png'))
 pathToBookMasks = abspath(joinPath(__file__, '..',r'MakeBookImage',r'BookPic',r'BookMask'))
 pathToBookBacks = abspath(joinPath(__file__, '..', r'MakeBookImage',r'BookPic',r'BookBack'))
-pathToDoneBookImageWithName = r'{}:\Для загрузки\Готовые принты\Fashion'.format(workDisk)
+pathToDoneBookImageWithName = r'{}:\Для загрузки\Готовые принты\Силикон'.format(workDisk)
 fontPath = abspath(joinPath(__file__, '..', r'MakeBookImage',r'Fonts',r'CarosSoftBold.ttf'))
 pathToSecondImagesBook = r'{}:\Для загрузки\Вторые картинки\Fashoin'.format(workDisk)
 # пути для силикона
