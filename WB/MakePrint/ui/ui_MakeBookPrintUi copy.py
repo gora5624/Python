@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'E:\MyProduct\Python\WB\MakePrint\ui\MakeBookPrintUi.ui'
+# Form implementation generated from reading ui file 'e:\MyProduct\Python\WB\MakePrint\ui\MakeBookPrintUi.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -21,7 +21,7 @@ class Ui_Form(object):
         self.tabBook = QtWidgets.QWidget()
         self.tabBook.setObjectName("tabBook")
         self.CreatePrint = QtWidgets.QPushButton(self.tabBook)
-        self.CreatePrint.setGeometry(QtCore.QRect(0, 390, 101, 23))
+        self.CreatePrint.setGeometry(QtCore.QRect(160, 380, 101, 23))
         self.CreatePrint.setObjectName("CreatePrint")
         self.splitterColor = QtWidgets.QSplitter(self.tabBook)
         self.splitterColor.setGeometry(QtCore.QRect(0, 40, 101, 221))
@@ -51,6 +51,9 @@ class Ui_Form(object):
         self.checkBox_8_Blue.setObjectName("checkBox_8_Blue")
         self.checkBox_1_Vinous = QtWidgets.QCheckBox(self.splitterColor)
         self.checkBox_1_Vinous.setObjectName("checkBox_1_Vinous")
+        self.textEditModel = QtWidgets.QTextEdit(self.tabBook)
+        self.textEditModel.setGeometry(QtCore.QRect(0, 340, 261, 31))
+        self.textEditModel.setObjectName("textEditModel")
         self.label = QtWidgets.QLabel(self.tabBook)
         self.label.setGeometry(QtCore.QRect(0, 10, 201, 16))
         self.label.setAutoFillBackground(True)
@@ -58,9 +61,17 @@ class Ui_Form(object):
         self.textLog = QtWidgets.QTextBrowser(self.tabBook)
         self.textLog.setGeometry(QtCore.QRect(120, 40, 141, 221))
         self.textLog.setObjectName("textLog")
-        self.checkBox_NewDes = QtWidgets.QCheckBox(self.tabBook)
-        self.checkBox_NewDes.setGeometry(QtCore.QRect(0, 340, 101, 20))
-        self.checkBox_NewDes.setObjectName("checkBox_NewDes")
+        self.label_3 = QtWidgets.QLabel(self.tabBook)
+        self.label_3.setGeometry(QtCore.QRect(0, 320, 41, 16))
+        self.label_3.setAutoFillBackground(True)
+        self.label_3.setObjectName("label_3")
+        self.label_2 = QtWidgets.QLabel(self.tabBook)
+        self.label_2.setGeometry(QtCore.QRect(0, 260, 31, 16))
+        self.label_2.setAutoFillBackground(True)
+        self.label_2.setObjectName("label_2")
+        self.textEditBrand = QtWidgets.QTextEdit(self.tabBook)
+        self.textEditBrand.setGeometry(QtCore.QRect(0, 280, 261, 31))
+        self.textEditBrand.setObjectName("textEditBrand")
         self.tabWidget.addTab(self.tabBook, "")
         self.tabSilicon = QtWidgets.QWidget()
         self.tabSilicon.setObjectName("tabSilicon")
@@ -182,7 +193,7 @@ class Ui_Form(object):
         self.tabWidget.addTab(self.tab, "")
 
         self.retranslateUi(Form)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(4)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
@@ -199,7 +210,8 @@ class Ui_Form(object):
         self.checkBox_8_Blue.setText(_translate("Form", "Синий"))
         self.checkBox_1_Vinous.setText(_translate("Form", "Бордовый"))
         self.label.setText(_translate("Form", "Выберете цвета для создания принтов"))
-        self.checkBox_NewDes.setText(_translate("Form", "Новый дизайн"))
+        self.label_3.setText(_translate("Form", "Модель"))
+        self.label_2.setText(_translate("Form", "Бренд"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabBook), _translate("Form", "Книжки"))
         self.CreateSiliconImage.setText(_translate("Form", "Создать всё"))
         self.ChekMask.setText(_translate("Form", "Проверить маски"))

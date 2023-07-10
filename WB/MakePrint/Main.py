@@ -10,7 +10,7 @@ from my_mod.my_lib import file_exists
 # импортируем интерфейс
 from ui.ui_MakeBookPrintUi import Ui_Form
 # импортируем дополнительные скрипты
-from Moduls.makeImageBookWithNameModel import makeImageBookWithNameModel
+from Moduls.makeImageBookWithNameModel import makeImageBookWithNameModel, makeImageBookWithNameModelNew
 from Moduls.AddSkriptForMakeBookImage import createExcel, deleteImage, copyImage
 from Moduls.makeImageSilicon import createAllSiliconImage, fakecreateAllSiliconImage
 from Folders import pathToDoneBookImageWithName, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToTopPrint
@@ -26,7 +26,7 @@ from Class.CreateExists import ExistsNomenclaturesCreater
 
 
 
-# pyuic5 E:\MyProduct\Python\WB\MakePrint\ui\MakeBookPrintUi.ui -o E:\MyProduct\Python\WB\MakePrint\ui\MakeBookPrintUi.py
+# pyuic5 E:\MyProduct\Python\WB\MakePrint\ui\MakeBookPrintUi.ui -o E:\MyProduct\Python\WB\MakePrint\ui\ui_MakeBookPrintUi.py
 
 
 class mameBookPrint(QtWidgets.QMainWindow):
@@ -207,7 +207,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
             data = pandas.DataFrame(pandas.read_excel(pathToFileForUpload))
             tmp = ExistsNomenclaturesCreater(data, mode, pathToFileForUpload)
             pool = multiprocessing.Pool(2)
-            pool.apply_async(ExistsNomenclaturesCreater.uplaodImage, args=(pathToFileForUpload, mode,))
+            # pool.apply_async(ExistsNomenclaturesCreater.uplaodImage, args=(pathToFileForUpload, mode,))
             pool.apply_async(tmp.start(), args=(pathToFileForUpload, mode,))
             pool.close()
             pool.join()
@@ -510,11 +510,11 @@ class mameBookPrint(QtWidgets.QMainWindow):
 
 
     def btnMakeBookPrint(self):
-        modelBrand = self.ui.textEditBrand.toPlainText()
+        # modelBrand = self.ui.textEditBrand.toPlainText()
         # if modelBrand == '':
         #     self.createMSGError('Поле бренд не заполенно!')
         #     #return 0
-        modelModel = self.ui.textEditModel.toPlainText()
+        # modelModel = self.ui.textEditModel.toPlainText()
         # if modelModel == '':
         #     self.createMSGError('Поле модель не заполенно!')
             #return 0
@@ -526,8 +526,11 @@ class mameBookPrint(QtWidgets.QMainWindow):
             tmpListName = line['Номенклатура'].replace('Чехол книга ','').replace(' черный с сил. вставкой Fashion','').split(' ')
             modelBrand = tmpListName[0]
             modelModel = ' '.join(tmpListName[1:])
-            p = multiprocessing.Process(target=makeImageBookWithNameModel, args=(colorList, modelBrand, modelModel,))
-            self.ui.textLog.setText(self.ui.textLog.toPlainText() + modelBrand +' ' + modelModel + ' добавлен в очередь\n')
+            if not self.ui.checkBox_NewDes.checkState():
+                p = multiprocessing.Process(target=makeImageBookWithNameModel, args=(colorList, modelBrand, modelModel,))
+            else:
+                p = multiprocessing.Process(target=makeImageBookWithNameModelNew, args=(colorList, modelBrand, modelModel,))
+            #self.ui.textLog.setText(self.ui.textLog.toPlainText() + modelBrand +' ' + modelModel + ' добавлен в очередь\n')
             p.start()
             p.join()
 

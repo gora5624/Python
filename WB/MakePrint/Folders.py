@@ -11,6 +11,7 @@ pathToUploadSecondWeb = r'http://80.237.77.44/joomla/images/mobi/Вторые к
 pathToSecondImageUploadFolder = r'D:\OpenServer\domains\wordpress\wp-content\uploads\Вторые картинки'
 # пути для книжек
 pathToBookImageWithOutModel = r'F:\книжки'
+pathToBookImageWithOutModelNew = r'F:\книжки новые'
 pathToBookEffect = abspath(joinPath(__file__, '..', r'MakeBookImage',r'Effect',r'light.png'))
 pathToBookMasks = abspath(joinPath(__file__, '..',r'MakeBookImage',r'BookPic',r'BookMask'))
 pathToBookBacks = abspath(joinPath(__file__, '..', r'MakeBookImage',r'BookPic',r'BookBack'))

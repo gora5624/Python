@@ -16,7 +16,7 @@ def pushPhoto(line, token, requestUrl, countTry=0):
         jsonRequest = {
             "vendorCode": line['Артикул товара'],
             #"data": line['Медиафайлы'].split(';')
-            "data": []
+            "data": data
             }
         headersRequest = {'Authorization': '{}'.format(token)}
     else:
@@ -36,6 +36,7 @@ def pushPhoto(line, token, requestUrl, countTry=0):
         headersRequest = {'Authorization': '{}'.format(token)}
     try:
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=5)  
+        r
         time.sleep(1.5)
         if '"Неверный запрос: по данному артикулу не нашлось карточки товара","additionalErrors' in r.text:
             print('Не нашлось карточки товара '+jsonRequest['vendorCode'])
@@ -62,8 +63,8 @@ def main():
     pathToFile = sys.argv[1:][0].replace('#', ' ')
     token = sys.argv[1:][1].replace('#', ' ')
     # if __name__ == '__main__':
-    # pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол Infinix Smart 7 силикон с зак.кам. черный мат..xlsx"
-    # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
+    # pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол книга Tecno Pova 2 черный с сил. вставкой Fashion.xlsx"
+    # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgxYjczNGVmLWI2OWUtNGRhMi1iNTBiLThkMTEyYWM4MjhkMCJ9.pU1YOOirgRe3Om-WRYT61AofToggCLbV3na7GbXKGqU'
     # else:
     # pathToFile = sys.argv[1:][0].replace('#', ' ')
     # token = sys.argv[1:][1].replace('#', ' ')

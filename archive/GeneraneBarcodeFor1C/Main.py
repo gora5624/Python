@@ -31,7 +31,7 @@ def create_1C_barcod(bc, name):
     pdf.add_font(
         'Arial', '', fname="Arial.ttf", uni=True)
     pdf.set_font('Arial', '', 100)
-    pdf.multi_cell(350, 50, txt="{}".format(    
+    pdf.multi_cell(350, 50, txt="{}".format(
         name), align='C')
     pdf.output(joinpath(dirForPicWithBarcode, name + '.pdf'))
 
@@ -46,10 +46,10 @@ def generate_bar_WB(count):
         listBarcode = []
         countTry = 0
         url = "https://suppliers-api.wildberries.ru/content/v1/barcodes"
-        headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'}
+        headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'}
 
         while count > 5000:
-            
+
             while True and countTry < 10:
                 json = {
                         "count": 5000
@@ -83,11 +83,13 @@ def generate_bar_WB(count):
                 time.sleep(10)
                 continue
         print(listBarcode[0])
-        # df = pandas.DataFrame(listBarcode)
-        # df.to_excel(r'E:\barcodes.xlsx', index=False)
+        df = pandas.DataFrame(listBarcode)
+        df.to_excel(r'E:\barcodes.xlsx', index=False)
         return str(listBarcode[0])
 
 
-name = 'Тюкин Николай'#line['Пользователь']
-bc = '2037520053207'#generate_bar_WB(1)# str(line['Штрихкод'] )[0:-2]
-create_1C_barcod(bc, name)
+# name = 'Тюкин Николай'#
+# for i in
+# name = line['Пользователь']
+bc = generate_bar_WB(1)# str(line['Штрихкод'] )[0:-2]
+# create_1C_barcod(bc, name)
