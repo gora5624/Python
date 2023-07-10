@@ -49,12 +49,12 @@ def makeImageColor(color, modelBrand, modelModel):
                 makedirs(fullPathToSave.replace('/','&'))
             imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic[0:-4] + '.jpg'), quality=75)
 
-pathToExcelWithName = r"F:\Downloads\7партия смартфоны_МЕДИАФАЙЛЫ.xlsx"
+pathToExcelWithName = r"F:\Downloads\8 партия_смартфоны медиафайлы.xlsx"
 pathToImagesToPaste = ''
-pathToImagesToPasteFolder = r'D:\Бронепленки\Бронепленки смартфон\Матовая'
+pathToImagesToPasteFolder = r'\\192.168.0.33\shared\_Общие документы_\Егор\Бронепленки\Бронепленки смартфон\Глянцевая'
 listValidImageName = ["1",'2','3']
 listValidFileTypes = ['.jpg']
-fontPath = r'D:\Python\WB\pasteTextToImage\Fonts\CarosSoftBold.ttf'
+fontPath = r'D:\Python\WB\makeNanoFilm\Fonts\CarosSoftBold.ttf'
 columnName = 'Модель'
 
 
@@ -79,9 +79,10 @@ YPasteBrand = 3345
 XPasteModel = XPasteBrand
 YPasteModel = 3591
 
-def startPasteText(pathToFile):
-    listModels = pandas.read_excel(pathToExcelWithName)
-    listModelsDict = listModels.to_dict('records')
+def startPasteText(pathToFile=''):
+    #listModels = pandas.read_excel(pathToExcelWithName)
+    #listModelsDict = listModels.to_dict('records')
+    listModelsDict = [{'Модель':'Tecno Camon 20/20 Pro 4G'}]
     for line in listModelsDict:
         deltaTextSize = 5
         customFontBrand = ImageFont.truetype(fontPath, textSizeBrand)
@@ -127,7 +128,7 @@ def main():
     pool = multiprocessing.Pool()
     for file in listdir(pathToImagesToPasteFolder):
         for fileTypes in listValidFileTypes:
-            if fileTypes in file:
+            #if fileTypes in file:
                 if file.replace(fileTypes, '') in listValidImageName:
                     pool.apply_async(startPasteText, args=(joinPath(pathToImagesToPasteFolder, file), ))
     pool.close()
