@@ -524,62 +524,6 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QPushButton" name="smallButtInt">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="palette">
-          <palette>
-           <active>
-            <colorrole role="Highlight">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>0</red>
-               <green>120</green>
-               <blue>215</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </active>
-           <inactive>
-            <colorrole role="Highlight">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>240</red>
-               <green>240</green>
-               <blue>240</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </inactive>
-           <disabled>
-            <colorrole role="Highlight">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>0</red>
-               <green>120</green>
-               <blue>215</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </disabled>
-          </palette>
-         </property>
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>Маленький</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>112</width>
-           <height>200</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="medButtInt">
          <property name="palette">
           <palette>
@@ -656,7 +600,7 @@
      <x>20</x>
      <y>10</y>
      <width>381</width>
-     <height>371</height>
+     <height>391</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -677,7 +621,7 @@
       <x>9</x>
       <y>0</y>
       <width>361</width>
-      <height>371</height>
+      <height>388</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -1110,9 +1054,9 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>390</y>
+     <y>400</y>
      <width>381</width>
-     <height>291</height>
+     <height>286</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -1156,20 +1100,20 @@
     <string>Соханить список размеров</string>
    </property>
   </widget>
+  <zorder>frameMed</zorder>
+  <zorder>frameSettings</zorder>
   <zorder>frameSettings2</zorder>
+  <zorder>frameSmall</zorder>
   <zorder>selectFileButt</zorder>
   <zorder>label</zorder>
   <zorder>label_2</zorder>
   <zorder>mainPageButt</zorder>
-  <zorder>frameSmall</zorder>
-  <zorder>frameMain</zorder>
   <zorder>settButt</zorder>
   <zorder>lineEditPass</zorder>
   <zorder>tableWidgetSizes</zorder>
   <zorder>frameBig</zorder>
   <zorder>pushButtonSaveSizes</zorder>
-  <zorder>frameMed</zorder>
-  <zorder>frameSettings</zorder>
+  <zorder>frameMain</zorder>
  </widget>
  <resources/>
  <connections/>

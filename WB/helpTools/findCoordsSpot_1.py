@@ -7,8 +7,9 @@ import re
 
 
 dirWithPrint = r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\Оригиналы'
-dirToSavePDF = r'D:\PDF'
-dirToSavePNG = r'D:\PNG'
+dirToSavePDF = r'D:\PDF\{}'
+dirToSaveCords = r'D:\PDF'
+dirToSavePNG = r'D:\PNG\{}'
 def findKoef(image_bytes):
     image = Image.open(io.BytesIO(image_bytes))
     # image.show()
@@ -88,7 +89,13 @@ def makePNG(spot_1, image, file, koef):
     spotImage = spotImage.point(lambda x: 0 if x > 200 else 255)
     # image.show()
     image.putalpha(spotImage)
-    image.save(os.path.join(dirToSavePNG, file.replace('pdf', 'png')))
+    #global dirToSavePNG
+    if file.replace('pdf', 'png') in os.listdir(r'\\rab\Диск для принтов сервак Егор\Принты пластины смешанные\лого'):
+        image.save(os.path.join(r'D:\PNG\лого', file.replace('pdf', 'png')))
+        #dirToSavePNG=dirToSavePNG.format('лого')
+    else:
+        image.save(os.path.join(r'D:\PNG\полные', file.replace('pdf', 'png')))
+        #dirToSavePNG=dirToSavePNG.format('полные')
 
 
 def main(file, filePath):       
@@ -98,6 +105,7 @@ def main(file, filePath):
         page = pdf_file[page_index]
         text = page.get_text('dict')
         dX, dY = page.mediabox.x0, page.mediabox.y0
+        sizeX, sizeY = page.mediabox_size
         w,h = page.mediabox_size.x+dX, page.mediabox_size.y+dY
         # deltaMy = (-1, -1, 1, 1)
         image_list = page.get_images()
@@ -154,9 +162,15 @@ def main(file, filePath):
         pageN.show_pdf_page(pageN.rect, pdf_file, 0, clip = cropBoxNew2)
         # pageN.insert_image(pageN.rect, stream=spot_1)
         # pageN.insert_image(pageN.rect, stream=image)
-    outFile.save(os.path.join(dirToSavePDF, file))
-    f = open(os.path.join(dirToSavePDF,'cords.txt'), 'a')
-    f.write(file + ','+','.join([str(cropBoxNew2.x0+dX), str(cropBoxNew2.x1+dX), str(cropBoxNew2.y0+dY),str(cropBoxNew2.y1+dY), str(w),str(h)])+'\n')
+        #global dirToSavePDF
+    if file.replace('pdf', 'png') in os.listdir(r'\\rab\Диск для принтов сервак Егор\Принты пластины смешанные\лого'):
+        outFile.save(os.path.join(r'D:\PDF\лого', file))
+        #dirToSavePDF = dirToSavePDF.format('лого')
+    else:
+        outFile.save(os.path.join(r'D:\PDF\полные', file))
+        #dirToSavePDF = dirToSavePDF.format('полные')
+    f = open(os.path.join(dirToSaveCords,'cords.txt'), 'a')
+    f.write(file + ','+','.join([str(cropBoxNew2.x0+dX), str(cropBoxNew2.x1+dX), str(cropBoxNew2.y0+dY),str(cropBoxNew2.y1+dY), str(w),str(h),str(sizeX),str(sizeY)])+'\n')
     f.close()
     # thread1 = Thread(target=savePDF, args=(dirToSavePDF, file))
     # thread1.start()
@@ -170,13 +184,18 @@ def main(file, filePath):
 
 
 if __name__ == '__main__':
-    pool = multiprocessing.Pool(6)
+    pool = multiprocessing.Pool(8)
     for file in os.listdir(dirWithPrint):
-        if file not in os.listdir(dirToSavePDF):
-            filePath = os.path.join(dirWithPrint, file)
-            # if re.match(r'print 22.pdf', file):
-            if re.match(r'print \d*.pdf', file):
-                pool.apply_async(main, args=(file,filePath,))
+        if file.replace('pdf', 'png') in os.listdir(r'\\rab\Диск для принтов сервак Егор\Принты пластины смешанные\лого'):
+            dirToSavePDF = dirToSavePDF.format('лого')
+        else:
+            continue
+            dirToSavePDF = dirToSavePDF.format('полные')
+        #if file not in os.listdir(dirToSavePDF):
+        filePath = os.path.join(dirWithPrint, file)
+        # if re.match(r'print 22.pdf', file):
+        if re.match(r'print \d*.pdf', file):
+            pool.apply_async(main, args=(file,filePath,))
     pool.close()
     pool.join()
 
