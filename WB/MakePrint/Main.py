@@ -67,6 +67,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.pathToBookAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКнижки.xlsx'
         self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПринтов.xlsx'
         self.pathToSkinShell = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиSkinShell.xlsx'
+        self.pathToSkinShell = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиSkinShellNew.xlsx'
         self.pathToCategoryPrint = r'E:\MyProduct\Python\WB\MakePrint\cat.xlsx'
         self.pathToAddinFile = ''
         self.topPrint = ''

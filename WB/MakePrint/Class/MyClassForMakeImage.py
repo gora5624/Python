@@ -32,13 +32,14 @@ class ModelWithAddin:
         self.pathToBookAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКнижки.txt'
         self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.txt'
         self.pathToSkinShellAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиSkinShell.txt'
+        self.pathToSkinShellAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиSkinShellNew.txt'
         self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПринтов.txt'
         self.pathToCategoryPrint = r'E:\MyProduct\Python\WB\MakePrint\cat.txt'
         if 'под карту' in maskFolderName:
             self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToCardhonlderAddin,sep='\t'))
         elif 'книга' in maskFolderName:
             self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToBookAddin,sep='\t'))
-        elif 'SkinShell' in maskFolderName and 'проз' in maskFolderName:
+        elif 'SkinShell' in maskFolderName and 'черный' in maskFolderName:
             self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToSkinShellAddin,sep='\t'))
         elif 'силикон ' in maskFolderName and 'мат' in maskFolderName:
             self.dfAddinFromFile = pandas.DataFrame(pandas.read_csv(self.pathToSiliconMTAddin,sep='\t'))
@@ -248,6 +249,20 @@ class ModelWithAddin:
                 description = description.replace('***',self.compatibility.split(';')[0],1)
         return description
 
+    def getDescriptionNew(self, printNameRus):
+        description = self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Описание'].values[0]
+        countReplace = description.count('***')
+        listcompatibility=self.compatibility.split(';')
+        for i in range(countReplace):
+            try:
+                if len(listcompatibility)>i:
+                    description = description.replace('***',self.compatibility.split(';')[i],1)
+                else:
+                    description = description.replace('***',self.compatibility.split(';')[0],1)
+            except IndexError:
+                description = description.replace('***',self.compatibility.split(';')[0],1)
+        return description
+
 
     def getEquipmentCase(self, category):
         for line in self.dfAddinFromFileDict:
@@ -330,18 +345,50 @@ class ModelWithAddin:
             #     if line['Принт'] == printName:
             #         category = line['Категория']
             #         categoryCode = line['Код категории']
-            currentPictureCategoryList = self.dfCategoryPrint[self.dfCategoryPrint.Принт == printNameRus].values.tolist()
             #for categoryData in currentPictureCategoryList.values:
             # category = categoryData[1]
             # categoryCode = categoryData[2]
-            category = currentPictureCategoryList[0][1]
             # categoryCode = currentPictureCategoryList[0][2]
             color = self.getColor()
             if not self.existsFlag:
                 vendorCode = self.getVendorCode(color, printName)
             else:
                 vendorCode = self.vendorCodeList[i]
-            datapicture = {
+            if 'skinshell' in self.maskFolderName.lower():
+                # a = self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Комплектация (префикс)'].values[0].replace('***',random.choice(self.modelAddin.split(';')).strip())
+                datapicture={
+                    'Номер карточки': 1,
+                    'Принт': printNameRus,
+                    'Категория': 'None',
+                    'Цвет': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Цвет'].values.tolist()),
+                    'Баркод товара': '',
+                    'Бренд': self.brand,
+                    'Наименование': self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Наименование (префикс)'].values[0].replace('***',random.choice(self.modelAddin.split(';')).strip()),
+                    'Цена': price,
+                    'Артикул товара': vendorCode,
+                    'Описание': self.getDescriptionNew(printNameRus),
+                    'Производитель телефона': self.modelAddin.split(' ')[0],
+                    'Комплектация': self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Комплектация (префикс)'].values[0].replace('***',random.choice(self.modelAddin.split(';')).strip()),
+                    'Особенности чехла': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Особенности чехла'].values.tolist()),
+                    'Вид застежки': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Вид застежки'].values.tolist()),
+                    'Рисунок': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Рисунок'].values.tolist()),
+                    'Любимые герои': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Любимые герои'].values.tolist()),
+                    'Совместимость': self.chekCountField('Совместимость',self.compatibility),
+                    'Тип чехлов': 'Противоударный чехол',
+                    'Модель': self.chekCountField('Модель',self.modelAddin),
+                    'Страна производства': 'Китай',
+                    'Декоративные элементы': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Декоративные элементы'].values.tolist()),
+                    'Материал изделия': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Материал изделия'].values.tolist()),
+                    'Высота упаковки': 19,
+                    'Ширина упаковки': 12,
+                    'Глубина упаковки': 2,
+                    'Предмет': stuff,
+                    'Медиафайлы': r'http://95.78.233.163:8001/wp-content/uploads/Готовые принты/Силикон/{0}/{1};http://95.78.233.163:8001/wp-content/uploads/Вторые картинки/{0}/1.jpg;http://95.78.233.163:8001/wp-content/uploads/Вторые картинки/{0}/2.jpg;http://95.78.233.163:8001/wp-content/uploads/Вторые картинки/{0}/3.jpg;http://95.78.233.163:8001/wp-content/uploads/Вторые картинки/{0}/4.jpg;http://95.78.233.163:8001/wp-content/uploads/Вторые картинки/{0}/5.jpg;http://95.78.233.163:8001/wp-content/uploads/Вторые картинки/{0}/6.jpg'.format(self.maskFolderName, pictures)
+                }
+            else:
+                currentPictureCategoryList = self.dfCategoryPrint[self.dfCategoryPrint.Принт == printNameRus].values.tolist()
+                category = currentPictureCategoryList[0][1]
+                datapicture = {
                         # 'Номер карточки': listCategory.index(category),
                         'Номер карточки': 1,
                         'Принт': printNameRus,

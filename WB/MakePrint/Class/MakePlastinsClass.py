@@ -7,29 +7,29 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 class MakePlastins():
     def __init__(self) -> None:
-        self.pathToPlastinBackground = r"\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Маски пластины\bakcgroung.png"
+        self.pathToPlastinBackground = r"D:\OpenServer\domains\wordpress\wp-content\uploads\Комплекты бейдж\fonLenta.png"
         # self.pathToPlastinBackground = r"\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Комплекты бейдж\fonSize.png"
-        self.pathToPlastinRetangleMask = r"\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Маски пластины\rectangleMask.png"
-        # self.pathToPlastinRetangleMask = r"\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Комплекты бейдж\maskSize.png"
+        #self.pathToPlastinRetangleMask = r"\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Маски пластины\rectangleMask.png"
+        self.pathToPlastinRetangleMask = r"D:\OpenServer\domains\wordpress\wp-content\uploads\Комплекты бейдж\maskLenta.png"
         self.pathToPlastinCircleMask = r"\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Маски пластины\circleMask.png"
         self.pathToLogoPrint = r'F:\Принты пластины смешанные\лого'
         self.pathToFullPrint = r'F:\Принты пластины смешанные\полные'
         self.pathToDonePlastins = r'F:\Пластины принты готовые'
-        self.leftPointToRect = 55
-        self.rightPointToRect = 295
-        self.topPointToRect = 235
-        self.bottPointToRect = 578
-        self.centerCircleX = 436
-        self.centerCircleY = 459
-        self.radiusCircle = 118
-
-        # self.leftPointToRect = 313
-        # self.rightPointToRect = 727
-        # self.topPointToRect = 351
-        # self.bottPointToRect = 984
+        # self.leftPointToRect = 55
+        # self.rightPointToRect = 295
+        # self.topPointToRect = 235
+        # self.bottPointToRect = 578
         # self.centerCircleX = 436
         # self.centerCircleY = 459
-        # self.radiusCircle = 118    
+        # self.radiusCircle = 118
+
+        self.leftPointToRect = 212
+        self.rightPointToRect = 640
+        self.topPointToRect = 222
+        self.bottPointToRect = 874
+        self.centerCircleX = 436
+        self.centerCircleY = 459
+        self.radiusCircle = 118    
 
     def makePlastin(self, i):
         if i == 1:
@@ -215,4 +215,4 @@ class MakePlastins():
 
 if __name__ == '__main__':
     a = MakePlastins()
-    a.makePlastin(1)
+    a.makePlastin(2)

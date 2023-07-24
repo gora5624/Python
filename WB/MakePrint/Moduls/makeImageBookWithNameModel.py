@@ -77,8 +77,6 @@ def makeImageColorNew(color, modelBrand, modelModel):
     pathToColor = joinPath(pathToBookImageWithOutModelNew, color)
     maxWidth = 650
     maxHeight =110
-    customFontBrand = ImageFont.truetype(fontPath, 100)
-    customFontModel = ImageFont.truetype(fontPath, 100)
     # topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:200]['Принт'].values.tolist()
     for pic in listdir(pathToColor):
         # if pic.replace('.png',')').replace('print','(Принт') in topPrint:
@@ -87,19 +85,36 @@ def makeImageColorNew(color, modelBrand, modelModel):
         imageDone = Image.new('RGB', imagePrint.size)
         imageDone.paste(imagePrint)
         # Написать бренд
+        
         drawText = ImageDraw.Draw(imageDone)
-        widthImage, heightImage = imageDone.size
-        widthText, heightText = drawText.textsize(modelBrand, font=customFontBrand)
+        fontSizeDef = 100
+        customFont = ImageFont.truetype(fontPath, fontSizeDef)
+        while True:
+            left, top, right, bottom = drawText.textbbox((0,0),text=modelBrand, font=customFont)
+            widthText, heightText = right - left, bottom - top
+            if (widthText < maxWidth) and (heightText < maxHeight):
+                break
+            else:
+                fontSizeDef-=5
+                customFont = ImageFont.truetype(fontPath, fontSizeDef)
         drawText = ImageDraw.Draw(imageDone)
-        drawText.text((widthImage-XPasteBrand-widthText,heightImage-YPasteBrand-heightText), modelBrand, font=customFontBrand,fill='#000000')
+        drawText.text((368-(int(widthText/2)),1350), modelBrand, font=customFont,fill='#000000')
+        # imageDone.show()
         # написать Модель
+        fontSizeDef = 100
+        customFont = ImageFont.truetype(fontPath, fontSizeDef)
         drawText = ImageDraw.Draw(imageDone)
-        widthImage, heightImage = imageDone.size
-        widthText, heightText = drawText.textsize(modelModel, font=customFontModel)
-        if widthText>800:
-            customFontModel = ImageFont.truetype(fontPath, 55)
+        while True:
+            left, top, right, bottom = drawText.textbbox((0,0),text=modelModel, font=customFont)
+            widthText, heightText = right - left, bottom - top
+            if (widthText < maxWidth) and (heightText < maxHeight):
+                break
+            else:
+                fontSizeDef-=5
+                customFont = ImageFont.truetype(fontPath, fontSizeDef)
         drawText = ImageDraw.Draw(imageDone)
-        drawText.text((widthImage-XPasteModel-widthText,heightImage-YPasteModel-heightText), modelModel, font=customFontModel,fill='#000000')
+        drawText.text((368-(int(widthText/2)),1470), modelModel, font=customFont,fill='#000000')
+        # imageDone.show()
         fullPathToSave = joinPath(pathToDoneBookImageWithName, 'Чехол книга ' + modelBrand + ' ' + modelModel +' черный с сил. вставкой Fashion')
         if not exists(fullPathToSave.replace('/','&')):
             makedirs(fullPathToSave.replace('/','&'))

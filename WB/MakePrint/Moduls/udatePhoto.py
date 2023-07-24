@@ -25,9 +25,9 @@ def pushPhoto(line, token, requestUrl, countTry=0):
         data = [url[0]]
         # for i in range(1,6,1):
         #     data.append(re.sub(r'print.+\d\.jpg', str(i)+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки'))
-        if len(data) ==3:
-            tmp = [data[-1].replace('2.jpg', '3.jpg'), data[-1].replace('2.jpg', '4.jpg'), data[-1].replace('2.jpg', '5.jpg')]
-            data.extend(tmp)
+        # if len(data) ==3:
+        #     tmp = [data[-1].replace('2.jpg', '3.jpg'), data[-1].replace('2.jpg', '4.jpg'), data[-1].replace('2.jpg', '5.jpg')]
+        #     data.extend(tmp)
         jsonRequest = {
             "vendorCode": line['Артикул поставщика'],
             "data": data
@@ -35,6 +35,7 @@ def pushPhoto(line, token, requestUrl, countTry=0):
             }
         headersRequest = {'Authorization': '{}'.format(token)}
     try:
+        # print(jsonRequest)
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=5)  
         r
         time.sleep(1.5)
