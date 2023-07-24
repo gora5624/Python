@@ -10,7 +10,7 @@ config = configparser.ConfigParser()
 config.read(os.path.abspath(os.path.join(__file__,'..', 'settings.ini')), "utf8")
 botToken = open(os.path.abspath(os.path.join(__file__,'..', 'token')), 'r').read()
 bot = telebot.TeleBot(botToken)
-bot.config['api_key'] = botToken
+# bot.config['api_key'] = botToken
 
 def Start(Token):
     stop_list = json.loads(config.get("MainSettings", "stop_list"))
