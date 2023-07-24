@@ -15,7 +15,7 @@ import pickle
 import psutil
 import warnings
 
-"""Test version 3.3.1 with rotate 90"""
+"""Test version 3.4.0 with rotate 90"""
 
 # pyuic6 D:\Python\WB\PrintHelper\ui\printHelperUIV3.ui -o D:\Python\WB\PrintHelper\ui\ui_printHelperUIV3.py
 pathToOrderFile = ''
@@ -26,7 +26,7 @@ class PrintHelper(QtWidgets.QMainWindow):
     dataDefault = {
         'bigButtInt': {'bigAcsButt': True},
         'medButtInt': {'medAcsButt': True},
-        'smallButtInt': {'smallAcsButt': True},
+        # 'smallButtInt': {'smallAcsButt': True},
         'bigButt': {'bigSilAcsButt': True},
         'medButt': {'medSilAcsButt': True},
         'smallButt': {'smallSilAcsButt': True}, 
@@ -43,7 +43,8 @@ class PrintHelper(QtWidgets.QMainWindow):
     pathToPklSizeV3Loc = r"C:\Users\Public\Documents\WBHelpTools\PrintHelper\sizesV3.pkl"
     pathToPklSizeV3Back = r"\\192.168.0.111\shared\Отдел производство\обновления программы печати\backUp\sizesV3_BACKUP {}.pkl".format(datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S"))
     # pathToFolderPrint = r'\\192.168.0.111\shared\Отдел производство\макеты для принтера\Макеты для 6090\Оригиналы'
-    chekKeys = ['medButtHld', 'medButtPlastin', 'bigButtInt', 'medButtInt', 'smallButtInt', 'bigButt', 'medButt', 'smallButt', 'medButtBooks', 'smallButtBooks', 'smallButtPlastins', 'smallButtCartholders']
+    # chekKeys = ['medButtHld', 'medButtPlastin', 'bigButtInt', 'medButtInt', 'smallButtInt', 'bigButt', 'medButt', 'smallButt', 'medButtBooks', 'smallButtBooks', 'smallButtPlastins', 'smallButtCartholders']
+    chekKeys = ['medButtHld', 'medButtPlastin', 'bigButtInt', 'medButtInt', 'bigButt', 'medButt', 'smallButt', 'medButtBooks', 'smallButtBooks', 'smallButtPlastins', 'smallButtCartholders']
     def __init__(self,parent=None):
         super(PrintHelper, self).__init__(parent)
         self.ui = Ui_PrintHelper()
@@ -78,7 +79,7 @@ class PrintHelper(QtWidgets.QMainWindow):
         self.mainPageButt()
         self.ui.bigButtInt.clicked.connect(self.bigButtInt)
         self.ui.medButtInt.clicked.connect(self.medButtInt)
-        self.ui.smallButtInt.clicked.connect(self.smallButtInt)
+        # self.ui.smallButtInt.clicked.connect(self.smallButtInt)
         self.ui.mainPageButt.clicked.connect(self.mainPageButt)
         self.ui.frameSettings.setVisible(False)
         self.ui.frameSettings2.setVisible(False)
@@ -248,7 +249,7 @@ class PrintHelper(QtWidgets.QMainWindow):
         self.data = {
             'bigButtInt': {'bigAcsButt': self.ui.bigAcsButt.isChecked()},
             'medButtInt': {'medAcsButt': self.ui.medAcsButt.isChecked()},
-            'smallButtInt': {'smallAcsButt': self.ui.smallAcsButt.isChecked()},
+            # 'smallButtInt': {'smallAcsButt': self.ui.smallAcsButt.isChecked()},
             'bigButt': {'bigSilAcsButt': self.ui.bigSilAcsButt.isChecked()},
             'bigButtBooks': {'bigBkAcsButt': self.ui.bigBkAcsButt.isChecked()},
             'medButt': {'medSilAcsButt': self.ui.medSilAcsButt.isChecked()},
@@ -355,12 +356,12 @@ class PrintHelper(QtWidgets.QMainWindow):
         self.ui.medButtInt.setIconSize(QtCore.QSize(119, 200))
         self.ui.medButtInt.setShortcut("")
         self.ui.medButtInt.setObjectName("medButtInt")
-        a = joinpath(r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\ui\image',r'smallButtInt.gif')
+        # a = joinpath(r'C:\Users\Public\Documents\WBHelpTools\PrintHelper\ui\image',r'smallButtInt.gif')
         icon.addPixmap(QtGui.QPixmap(a), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.ui.smallButtInt.setIcon(icon)
-        self.ui.smallButtInt.setIconSize(QtCore.QSize(112, 200))
-        self.ui.smallButtInt.setShortcut("")
-        self.ui.smallButtInt.setObjectName("smallButtInt")
+        # self.ui.smallButtInt.setIcon(icon)
+        # self.ui.smallButtInt.setIconSize(QtCore.QSize(112, 200))
+        # self.ui.smallButtInt.setShortcut("")
+        # self.ui.smallButtInt.setObjectName("smallButtInt")
 
     def mainPageButt(self):
         self.resize(QtCore.QSize(422, 387).expandedTo(self.minimumSizeHint()))
@@ -380,10 +381,10 @@ class PrintHelper(QtWidgets.QMainWindow):
         # self.ui.frameOther.setVisible(False)
         self.ui.frameMain.setVisible(True)
 
-    def smallButtInt(self):
-        self.ui.label_2.setText('Выберите программу для запуска на маленьком принтере')
-        self.ui.frameSmall.setVisible(True)
-        self.ui.frameMain.setVisible(False)
+    # def smallButtInt(self):
+    #     self.ui.label_2.setText('Выберите программу для запуска на маленьком принтере')
+    #     self.ui.frameSmall.setVisible(True)
+    #     self.ui.frameMain.setVisible(False)
 
     def medButtInt(self):
         self.ui.label_2.setText('Выберите программу для запуска на среднем принтере')

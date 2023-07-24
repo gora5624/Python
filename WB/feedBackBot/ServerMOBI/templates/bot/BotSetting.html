@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Настройка и запуск бота</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <script src="{{url_for('static', filename='bot/js/botJSscripts.js')}}"></script>
+</head>
+<body>
+<select id="selectIP">
+
+<option value=”Abr”>Абраамян М. С.</option>
+
+<option value=”Kar”>Карахнян Э. С.</option>
+
+<option value=”Fed”>Федоров И. И.</option>
+
+<option value=”Sam”>Абраамян С. М.</option>
+
+<option value=”All”>Все</option>
+
+</select>
+
+<input type="button" onclick="sendReqToServer()" value="Начать"/>
+</body>
+</html>
