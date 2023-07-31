@@ -1,6 +1,6 @@
 import os, json
 import configparser
-import sys
+import time
 import telebot
 
 
@@ -32,6 +32,7 @@ def Start(Token):
         WriteAnswer(answer, feedback, Token)
         # print('--------------------------------------------------')
         bot.send_message(-1001550015840, r'Отзыв: {}. ----- Ответ: {}'.format(feedback['Text'],answer))
+        time.sleep(3)
     # print('Итог:', answerLen)
     
 

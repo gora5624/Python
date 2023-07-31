@@ -4,9 +4,9 @@ from PIL import ImageEnhance
 from PIL import ImageOps
 
 
-backgroundPath = r"F:\Downloads\Render\Case_.1.png"
-printImgPath = r"F:\Downloads\Render\Varnish_.1_1.png"
-image_path = r"\\192.168.0.33\shared\_Общие документы_\Егор\Модели SkinShell\Рендеры\Чехол Xiaomi 13 Lite силикон с зак.кам. черный противоуд\1_clown.png"
+backgroundPath = r"D:\Case\Чехол Honor X9a силикон с зак.кам. черный противоуд. SkinShell\1.png"
+printImgPath = r"D:\Prints — копия\4206.1.png"
+image_path = r"D:\Case\Чехол Honor X9a силикон с зак.кам. черный противоуд. SkinShell\1_clown.png"
 
 
 
@@ -24,10 +24,11 @@ def overlayImage(backgroundPath, printImgPath, maskPaste):
                                                     -1, -1, -1, -1, -1))
     # print(ImageFilter.CONTOUR.filterargs)
     mask = img.filter(ImageFilter.EMBOSS)
-
-    mask = ImageEnhance.Color(mask).enhance(1)
-    mask = ImageEnhance.Contrast(mask).enhance(5)
-    mask = ImageEnhance.Brightness(mask).enhance(1.1)
+    # mask.show()
+    mask = ImageEnhance.Color(mask).enhance(3)
+    mask = ImageEnhance.Contrast(mask).enhance(2)
+    mask = ImageEnhance.Brightness(mask).enhance(1.5)
+    mask.show()
     # открываем изображение, которое нужно наложить
     print_img = Image.open(printImgPath)
     # # изменяем размер картинки для соответствия размеру оригинального изображения
@@ -68,6 +69,7 @@ def overlayImage(backgroundPath, printImgPath, maskPaste):
 # img.save(r"D:\output.png")
 def create_mask(image_path):
     image = Image.open(image_path)
+    image = image.resize((1200,1601))
     width, height = image.size
     mask = Image.new("1", (width, height))
     pixels = image.load()
@@ -91,4 +93,5 @@ def tmp(pix):
 
 if __name__ =='__main__':
     maskPaste = create_mask(image_path)
+    maskPaste.show()
     overlayImage(backgroundPath, printImgPath, maskPaste)

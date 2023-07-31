@@ -96,40 +96,40 @@
 #     #imgBack.show()
 #     imgBack.save(r'D:\test3\{}'.format(str(prPath)))
 
-import photoshop.api as ps
+# import photoshop.api as ps
 
 
-app = ps.Application()
-app.displayDialogs = ps.DialogModes.DisplayNoDialogs
-#app.displayDialogs = ps.
-png_doc = app.open(r"D:\newPrint\print 5001.png")
-# startRulerUnits = app.preferences.rulerUnits
-# if png_doc.activeLayer.kind != ps.LayerKind.TextLayer:
-#     x2 = (png_doc.width * png_doc.resolution) / 2
-#     y2 = png_doc.height * png_doc.resolution
-#     sel_area = ((0, 0), (x2, 0), (x2, y2), (0, y2))
-#     png_doc.selection.select(sel_area, ps.SelectionType.ReplaceSelection, 0, False)
+# app = ps.Application()
+# app.displayDialogs = ps.DialogModes.DisplayNoDialogs
+# #app.displayDialogs = ps.
+# png_doc = app.open(r"D:\newPrint\print 5001.png")
+# # startRulerUnits = app.preferences.rulerUnits
+# # if png_doc.activeLayer.kind != ps.LayerKind.TextLayer:
+# #     x2 = (png_doc.width * png_doc.resolution) / 2
+# #     y2 = png_doc.height * png_doc.resolution
+# #     sel_area = ((0, 0), (x2, 0), (x2, y2), (0, y2))
+# #     png_doc.selection.select(sel_area, ps.SelectionType.ReplaceSelection, 0, False)
 
-#     png_doc.selection.copy()
-#     app.preferences.rulerUnits = ps.Units.Pixels
-#     #pasteDoc = doc.add(x2, y2, doc.resolution, "Paste Target")
+# #     png_doc.selection.copy()
+# #     app.preferences.rulerUnits = ps.Units.Pixels
+# #     #pasteDoc = doc.add(x2, y2, doc.resolution, "Paste Target")
 
-png_doc.activeLayer = png_doc.layers[0]
-png_doc.width
-png_doc.height
-png_doc.resizeImage(png_doc.width*(1277/png_doc.height) ,1277)
-png_doc.activeLayer.copy()
+# png_doc.activeLayer = png_doc.layers[0]
+# png_doc.width
+# png_doc.height
+# png_doc.resizeImage(png_doc.width*(1277/png_doc.height) ,1277)
+# png_doc.activeLayer.copy()
 
-doc = app.load(r"\\192.168.0.33\shared\_Общие документы_\Егор\книги_test.psd")
-doc.paste()
-png_doc.close()
-layer_index = 1
-doc.activeLayer = doc.layers[layer_index]
-doc.activeLayer.move(doc.layers[layer_index + 2], ps.ElementPlacement.PlaceBefore)
-a = doc.activeLayer.bounds
-x,y = 371,669
-x2,y2 = (a[2]-a[0])/2+a[0], (a[3]-a[1])/2+a[1]
-doc.activeLayer.translate(x-x2, y-y2)
+# doc = app.load(r"\\192.168.0.33\shared\_Общие документы_\Егор\книги_test.psd")
+# doc.paste()
+# png_doc.close()
+# layer_index = 1
+# doc.activeLayer = doc.layers[layer_index]
+# doc.activeLayer.move(doc.layers[layer_index + 2], ps.ElementPlacement.PlaceBefore)
+# a = doc.activeLayer.bounds
+# x,y = 371,669
+# x2,y2 = (a[2]-a[0])/2+a[0], (a[3]-a[1])/2+a[1]
+# doc.activeLayer.translate(x-x2, y-y2)
 # doc.activeLayer.resize(100,100,ps.AnchorPosition.BottomCenter)
 # doc.selection.resize(100,100,ps.AnchorPosition.BottomCenter)
 
@@ -156,3 +156,39 @@ doc.activeLayer.translate(x-x2, y-y2)
 # jpg = 'd:/hello_world.jpg'
 # # doc.saveAs(jpg, options, asCopy=True)
 # app.doJavaScript(f'alert("save to jpg: {jpg}")')
+
+# import os
+
+# for i in os.listdir(r'D:\Prints'):
+#     if 'Thumbs' not in i:
+#         fullpathold = os.path.join(r'D:\Prints',i)
+#         a = int(i.split('.')[0])
+#         newName = str(4200+int(i.split('.')[0]))+'.'+i.split('.')[1].replace('_label','')+'.png'
+#         fullpathnew = os.path.join(r'D:\Prints',newName)
+#         os.rename(fullpathold,fullpathnew)
+
+from PIL import Image
+import numpy as np
+
+# Загрузите изображение
+image = Image.open(r"D:\Case\Чехол Honor X5 силикон с зак.кам. черный противоуд. SkinShell\1_clown.png")
+
+# Получите цвет пикселя по координатам x, y
+x = 1
+y = 1
+color = image.getpixel((x, y))
+
+# Преобразуйте изображение в массив
+data = np.array(image)
+
+# Создайте маску с тем же цветом по координатам x, y
+mask = np.full(data.shape, color)
+
+# Найдите все пиксели, где цвет пикселя совпадает с mask
+result = (data == mask).all(-1)
+
+# Преобразуйте результат обратно в изображение
+new_image = Image.fromarray(np.uint8(result * 255) , 'L')
+
+# Сохраните новое изображение
+new_image.show()
