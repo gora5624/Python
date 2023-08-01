@@ -17,6 +17,22 @@ relations = {'1.png':'.1',
              '4.png':'.6',
              '5.png':'.4',
              '6.png':'.7',}
+bigPrintList = ['4204.png','4205.png','4206.png','4208.png','4209.png','4211.png','4229.png','4231.png','4232.png','4237.png','4250.png','4252.png','4254.png','4264.png','4265.png','4266.png','4270.png','4275.png','4283.png','4287.png','4289.png','4292.png','4299.png','4302.png','4314.png','4319.png','4325.png','4326.png','4330.png','4339.png','4344.png','4353.png','4360.png','4362.png','4363.png', '4369.png', '4379.png', '4382.png']
+
+#1 <6780
+def findBotMask(clownPath):
+    clownImage = Image.open(clownPath)
+    # clownImage.show()
+    if "1_clown.png" in clownPath:
+        for y in reversed(range(6500,7500,1)):
+            color=clownImage.getpixel((4554,y))
+            if color!=(0,0,0):
+                if y < 6780:
+                    return True
+                else:
+                    return False
+
+
 
 
 def create_mask(case, clownPath):
@@ -31,9 +47,25 @@ def create_mask(case, clownPath):
     new_image = Image.fromarray(np.uint8(result * 255) , 'L')
     # new_image.show()
     #new_image = ImageOps.invert(new_image)
-    return new_image
+    #new_image.show()
+    #y = findBotMask(new_image, clownPath)
+    return new_image#, y
 
-def overlayImage(backgroundPath, printImgPath, maskPaste):
+def overlayImage(backgroundPath, print_img, maskPaste, smallFlag):
+    if smallFlag:
+        if '1.png' in backgroundPath:
+            coordsToPaste = (-84,-335)
+        elif '2.png' in backgroundPath:
+            coordsToPaste = (-60,-287)
+        elif '3.png' in backgroundPath:
+            coordsToPaste = (-84, 287)
+        elif '5.png' in backgroundPath:
+            coordsToPaste = (-420, -190)
+        else:
+            coordsToPaste = (0,0)
+    else:
+        coordsToPaste = (0,0)
+        # coordsToPaste = (-84,-335)
     img = Image.open(backgroundPath)
     #img = img.resize((1500,2000))
 
@@ -49,24 +81,36 @@ def overlayImage(backgroundPath, printImgPath, maskPaste):
     mask = ImageEnhance.Color(mask).enhance(3)
     mask = ImageEnhance.Contrast(mask).enhance(2)
     mask = ImageEnhance.Brightness(mask).enhance(1.5)
-    print_img = printImgPath
-    print_img = print_img.resize(img.size)
+    #mask.show()
     maskNew = Image.new("RGBA", img.size, (255, 255, 255, 0))
-    maskNew.paste(mask, mask=print_img)
-    background = Image.new("RGBA", img.size, (255, 255, 255))
-    tmp = Image.new("RGBA", img.size, (255, 255, 255,0))
-    tmp.paste(background,mask=print_img)
+    #print_img.show()
+    printDisplacement = Image.new("RGBA", print_img.size, (255, 255, 255, 0))
+    printDisplacement.paste(print_img, coordsToPaste, print_img)
+    maskNew.paste(mask, mask=printDisplacement)
+    # maskNew.show()
+    #maskNew.show()
+    # background = Image.new("RGBA", img.size, (255, 255, 255))
+    # tmp = Image.new("RGBA", img.size, (255, 255, 255,0))
+    # tmp.paste(background,mask=print_img)
+    #tmp.show()
+    # printDisplacement = Image.new("RGBA", print_img.size, (255, 255, 255, 0))
+    # printDisplacement.paste(print_img, coordsToPaste, print_img)
     if '4.png' in backgroundPath:
-        result = Image.blend(print_img, maskNew, 1)
+        result = Image.blend(printDisplacement, maskNew, 1)
     else:
-        result = Image.blend(print_img, maskNew, 0.1)
+        result = Image.blend(printDisplacement, maskNew, 0.1)
+        #result.show()
         result = ImageEnhance.Color(result).enhance(1.20)
         result = ImageEnhance.Contrast(result).enhance(1.2)
         result = ImageEnhance.Brightness(result).enhance(1.0)
     maskPaste = ImageOps.invert(maskPaste)
-    tmp2 = Image.new("RGBA", img.size, (255, 255, 255,0))
+    tmp2 = Image.new("RGBA", img.size, (255, 255, 255, 0))
+    # result.show()
     tmp2.paste(result,mask=maskPaste)
+    #tmp2.show()
+    #coordsToPaste = (0,0)
     img.paste(tmp2,mask=tmp2)
+    # img.show()
     return img
 
 
@@ -85,7 +129,7 @@ def createBackPrint(printImage):
     return new_image
 
 
-def main(caseImageNum, printImageNum, case, clownPath):
+def main(caseImageNum, printImageNum, case, clownPath, smallFlag):
         #caseImage = Image.open(os.path.join(caseDir, case , caseImageNum)).convert('RGBA')
         mask = create_mask(case, clownPath)
         for image in os.listdir(imageDir):
@@ -96,7 +140,7 @@ def main(caseImageNum, printImageNum, case, clownPath):
                     if '4' in caseImageNum:
                         printImage = createBackPrint(printImage)
                     #printImage.resize((1500,2000))
-                    final = overlayImage(os.path.join(caseDir, case , caseImageNum), printImage, mask)
+                    final = overlayImage(os.path.join(caseDir, case , caseImageNum), printImage, mask, False if image not in bigPrintList else smallFlag )
                     #final.show()
                     #printImageNew = Image.composite(printImage,caseImage, mask)
                     #printImageNew.show()
@@ -123,11 +167,12 @@ def returnClownPath(caseImageNum):
 if __name__ == '__main__':
     for case in os.listdir(caseDir):
         # if not os.path.exists(os.path.join(donePath, case)):
+            smallFlag = findBotMask(os.path.join(caseDir, case , '1_clown.png'))
             pool = multiprocessing.Pool(6)
             for caseImageNum, printImageNum in relations.items():
                 clownPath = returnClownPath(caseImageNum)
                 # clownPath = caseImageNum.replace('.png','_clown.png')
-                pool.apply_async(main, args=(caseImageNum, printImageNum, case, clownPath,))
+                pool.apply_async(main, args=(caseImageNum, printImageNum, case, clownPath,smallFlag,))
                 # main(caseImageNum, printImageNum, case)
             pool.close()
             pool.join()
