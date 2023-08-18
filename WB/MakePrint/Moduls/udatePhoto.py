@@ -36,6 +36,7 @@ def pushPhoto(line, token, requestUrl, countTry=0):
         headersRequest = {'Authorization': '{}'.format(token)}
     try:
         # print(jsonRequest)
+        #jsonRequest['data'][0]= jsonRequest['data'][0].replace("/print ","/(Принт ").replace(".jpg",").jpg")
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=5)  
         r
         time.sleep(1.5)
@@ -60,12 +61,15 @@ def pushPhoto(line, token, requestUrl, countTry=0):
 
 
 def main():
-    print('work')
-    pathToFile = sys.argv[1:][0].replace('#', ' ')
-    token = sys.argv[1:][1].replace('#', ' ')
-    # if __name__ == '__main__':
-    # pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол книга Tecno Pova 2 черный с сил. вставкой Fashion.xlsx"
-    # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgxYjczNGVmLWI2OWUtNGRhMi1iNTBiLThkMTEyYWM4MjhkMCJ9.pU1YOOirgRe3Om-WRYT61AofToggCLbV3na7GbXKGqU'
+    
+    if len(sys.argv) > 1:
+        pathToFile = sys.argv[1:][0].replace('#', ' ')
+        token = sys.argv[1:][1].replace('#', ' ')
+        print(pathToFile)
+    else:
+        if __name__ == '__main__':
+            pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол Samsung Galaxy M33 5G силикон с зак.кам. проз. под карту.xlsx"
+            token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImUyZTIyZGE1LTYxYWYtNDgyMi1hMDVkLTZiNzVlMTBiNzlmMiJ9.yDq9XasZjs-oB1PapNbD_NWIH8tgWEz_WyKLvVTNgBs'
     # else:
     # pathToFile = sys.argv[1:][0].replace('#', ' ')
     # token = sys.argv[1:][1].replace('#', ' ')

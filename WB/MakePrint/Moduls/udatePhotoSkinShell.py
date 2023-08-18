@@ -25,6 +25,7 @@ def makeUrls(oldUrl, printName):
 def pushPhoto(line, token, requestUrl, countTry=0):
     data = makeUrls(line['Медиафайлы'].split(';')[0], line['Принт'])
     # print(data)
+    # print(line['Артикул товара'])
     jsonRequest = {
         "vendorCode": line['Артикул товара'],
         "data": data
@@ -38,7 +39,7 @@ def pushPhoto(line, token, requestUrl, countTry=0):
             print('Не нашлось карточки товара '+jsonRequest['vendorCode'])
         if '"Внутренняя ошибка сервиса","additionalErrors' in r.text:
             print('1')
-        if 'не удалось' in r.text:
+        if 'не удалось' in r.text.lower():
             print(r.text + ' ' + jsonRequest['vendorCode'])
         else:
             pass
@@ -49,32 +50,31 @@ def pushPhoto(line, token, requestUrl, countTry=0):
         print('requests.ReadTimeout')
     except requests.exceptions.ReadTimeout:
 
-        print('requests.ReadTimeout' + jsonRequest['vendorCode'])
+        print('requests.ReadTimeout'+ ' ' + jsonRequest['vendorCode'])
 
     except:
         print('TimeoutError')
 
 def checkImage(art, token):
+    time.sleep(0.6)
     requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/cards/cursor/list'
     headersRequest = {'Authorization': '{}'.format(token)}
     json = {
             "sort": {
                 "cursor": {
-                "limit": 1000
+                "limit": 1
                 },
                 "filter": {
-                "textSearch": art
-                },
-                "sort": {
-                "sortColumn": "updateAt",
-                "ascending": False
+                "textSearch": str(art),
+                "withPhoto": -1,
+                "allowedCategoriesOnly": True
                 }
             }
             }
-    r = requests.post(url=requestUrl, params=json, headers=headersRequest)
+    r = requests.post(url=requestUrl, json=json, headers=headersRequest)
     try:
         urlListCount = len(r.json()['data']['cards'][0]['mediaFiles'])
-        if urlListCount<6:
+        if urlListCount==6:
             return True
         else:
             return False
@@ -87,16 +87,16 @@ def checkImage(art, token):
 
 def main():
     print('work')
-    # pathToFile = sys.argv[1:][0].replace('#', ' ')
-    # token = sys.argv[1:][1].replace('#', ' ')
-    pathToFile = r"F:\Для загрузки\Готовые принты\skin\Чехол Honor X5 силикон с зак.кам. черный противоуд. SkinShell.xlsx"
-    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImU4NjQ1YWI5LWFjM2UtNGFkOS1hYmIyLThkMTMzMGM1YTU3NyJ9.8nz9gIHurlCVKIhruG6hY8MRBtMLvLYggVzisxgKivY'
+    pathToFile = sys.argv[1:][0].replace('#', ' ')
+    token = sys.argv[1:][1].replace('#', ' ')
+    # pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол Honor X7a силикон с зак.кам. черный противоуд. SkinShell.xlsx"
+    # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImU4NjQ1YWI5LWFjM2UtNGFkOS1hYmIyLThkMTMzMGM1YTU3NyJ9.8nz9gIHurlCVKIhruG6hY8MRBtMLvLYggVzisxgKivY'
     df = pandas.DataFrame(pandas.read_excel(pathToFile))
     requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/media/save'
     if __name__ == '__main__':
         pool = multiprocessing.Pool(2)
         for line in df.to_dict('records'):
-            if not checkImage(line['Артикул товара'],token):
+            if not checkImage(line['Баркод товара'],token):
                 pool.apply_async(pushPhoto, args=(line, token, requestUrl,))
         pool.close()
         pool.join()

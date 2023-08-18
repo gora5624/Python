@@ -50,13 +50,13 @@ siliconCaseColorDict = {'белый': 'WHT',
 def getSizeAndPos(image):
     # image = Image.open(pathToMask).convert("RGBA")
     size = image.size
-    for xLeft in range(25, size[0]):
-        rgba = image.getpixel((xLeft, 600))
+    for xLeft in range(10, size[0]):
+        rgba = image.getpixel((xLeft, 350))
         if rgba[3] != 255:
             break
         xLeft += 1
     for xRight in reversed(range(size[0]-20)):
-        rgba = image.getpixel((xRight, 600))
+        rgba = image.getpixel((xRight, 350))
         if rgba[3] != 255:
             break
         xRight += 1
