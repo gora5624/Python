@@ -4,12 +4,12 @@ from PIL import ImageEnhance
 from PIL import ImageOps
 import os
 import multiprocessing
-import shutil
+import re
 import numpy as np
 
 
-caseDir = r'D:\Case'
-imageDir = r'D:\Prints'
+skinshellCaseDirPath = r'\\192.168.0.33\shared\_Общие документы_\_Фото\Татьяна рендеры\SkinShell'
+imageDir = r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\SkinShell done print'
 donePath = r'F:\done'
 relations = {'1.png':'.1',
              '2.png':'.2',
@@ -17,7 +17,7 @@ relations = {'1.png':'.1',
              '4.png':'.6',
              '5.png':'.4',
              '6.png':'.7',}
-bigPrintList = ['4204.png','4205.png','4206.png','4208.png','4209.png','4211.png','4229.png','4231.png','4232.png','4237.png','4250.png','4252.png','4254.png','4264.png','4265.png','4266.png','4270.png','4275.png','4283.png','4287.png','4289.png','4292.png','4299.png','4302.png','4314.png','4319.png','4325.png','4326.png','4330.png','4339.png','4344.png','4353.png','4360.png','4362.png','4363.png', '4369.png', '4379.png', '4382.png']
+bigPrintList = ['4204.png','4205.png','4206.png','4208.png','4209.png','4211.png','4229.png','4231.png','4232.png','4237.png','4250.png','4252.png','4254.png','4262.png','4264.png','4265.png','4266.png', '4267.png','4270.png','4275.png','4283.png','4287.png','4289.png','4292.png','4299.png','4302.png','4314.png','4319.png','4325.png','4326.png','4330.png','4339.png','4344.png','4353.png','4360.png','4362.png','4363.png', '4369.png', '4379.png', '4382.png']
 
 #1 <6780
 def findBotMask(clownPath):
@@ -36,7 +36,7 @@ def findBotMask(clownPath):
 
 
 def create_mask(case, clownPath):
-    image = Image.open(os.path.join(caseDir, case , clownPath))
+    image = Image.open(os.path.join(skinshellCaseDirPath, case , clownPath))
     #image = image.resize((1500,2000))
     x = 5999
     y = 0
@@ -140,7 +140,7 @@ def main(caseImageNum, printImageNum, case, clownPath, smallFlag):
                     if '4' in caseImageNum:
                         printImage = createBackPrint(printImage)
                     #printImage.resize((1500,2000))
-                    final = overlayImage(os.path.join(caseDir, case , caseImageNum), printImage, mask, False if image not in bigPrintList else smallFlag )
+                    final = overlayImage(os.path.join(skinshellCaseDirPath, case , caseImageNum), printImage, mask, False if re.sub(r'\.\d\.png','.png',image) not in bigPrintList else smallFlag )
                     #final.show()
                     #printImageNew = Image.composite(printImage,caseImage, mask)
                     #printImageNew.show()
@@ -165,13 +165,14 @@ def returnClownPath(caseImageNum):
         return caseImageNum.replace('.png','_clown.png')
 
 if __name__ == '__main__':
-    for case in os.listdir(caseDir):
+    for case in os.listdir(skinshellCaseDirPath):
         # if not os.path.exists(os.path.join(donePath, case)):
-            smallFlag = findBotMask(os.path.join(caseDir, case , '1_clown.png'))
+            smallFlag = findBotMask(os.path.join(skinshellCaseDirPath, case , '1_clown.png'))
             pool = multiprocessing.Pool(6)
             for caseImageNum, printImageNum in relations.items():
                 clownPath = returnClownPath(caseImageNum)
                 # clownPath = caseImageNum.replace('.png','_clown.png')
+                # if caseImageNum == '1.png':
                 pool.apply_async(main, args=(caseImageNum, printImageNum, case, clownPath,smallFlag,))
                 # main(caseImageNum, printImageNum, case)
             pool.close()
