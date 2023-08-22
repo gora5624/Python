@@ -8,7 +8,7 @@ import re
 import numpy as np
 
 
-skinshellCaseDirPath = r'\\192.168.0.33\shared\_Общие документы_\_Фото\Татьяна рендеры\SkinShell'
+skinshellCaseDirPath = r'D:\case'
 imageDir = r'\\192.168.0.33\shared\_Общие документы_\Егор\Все принты\SkinShell done print'
 donePath = r'F:\done'
 relations = {'1.png':'.1',
