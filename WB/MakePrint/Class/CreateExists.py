@@ -4,7 +4,7 @@ sys.path.insert(1, joinPath(sys.path[0], '../..'))
 import requests
 import pandas
 import copy
-import numpy
+import time
 import asyncio
 import aiohttp
 from aiohttp import ClientConnectorError
@@ -29,6 +29,7 @@ class ExistsNomenclaturesCreater:
         self.listDoneVendorCode = []
         self.alredyGetVendorCode = []
         self.listCardToChange = []
+        self.nmIdsList = []
         if mode =='Караханян':
             self.DBpath = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Караханян.txt'
             self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImU4NjQ1YWI5LWFjM2UtNGFkOS1hYmIyLThkMTMzMGM1YTU3NyJ9.8nz9gIHurlCVKIhruG6hY8MRBtMLvLYggVzisxgKivY'
@@ -49,6 +50,7 @@ class ExistsNomenclaturesCreater:
         self.changeCards()
         self.pushChanges()
         self.updateFileForUpload()
+        self.splitNom()
         # self.createFileFor1C()
 
 
@@ -155,6 +157,7 @@ class ExistsNomenclaturesCreater:
                     line = dataFromDB.loc[dataFromDB['vendorCode'] == vendorCode]
                     imtID = line['imtID'].values.tolist()[0]
                     nmID = line['nmID'].values.tolist()[0]
+                    self.nmIdsList.append(nmID)
                     chrtID = line['chrtID'].values.tolist()[0]
                     price = line['price'].values.tolist()[0]
                     skus = line['skus'].values.tolist()[0].strip('[]\'\"').split(',')
@@ -250,3 +253,21 @@ class ExistsNomenclaturesCreater:
                 except requests.exceptions.ConnectionError:
                     timeout+=5
                     continue
+            time.sleep(1)
+
+    def splitNom(self):
+        url = 'https://suppliers-api.wildberries.ru/content/v1/cards/moveNm'
+        headers = {'Authorization': '{}'.format(self.token)} 
+        for i in range(0,len(self.nmIdsList),30):
+            x = self.nmIdsList[i:i+30]
+            json = {
+                'nmIDs':x
+            }
+            r = requests.post(url=url, json=json, headers=headers, timeout=10)
+            if r.status_code == 200:
+                print('объеденил успешно ' + str(x))
+            elif r.status_code == 400 and "Все карточки находятся в одной группе" in r.text:
+                print('уже вместе ' + str(x))
+            else:
+                print('ОШИБКА ' + str(x))
+            time.sleep(1)
