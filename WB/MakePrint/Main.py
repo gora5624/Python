@@ -11,10 +11,11 @@ from my_mod.my_lib import file_exists
 from ui.ui_MakeBookPrintUi import Ui_Form
 # импортируем дополнительные скрипты
 from Moduls.makeImageBookWithNameModel import makeImageBookWithNameModel, makeImageBookWithNameModelNew
-from Moduls.AddSkriptForMakeBookImage import createExcel, deleteImage, copyImage
+from Moduls.AddSkriptForMakeBookImage import createExcel, deleteImage
+from Moduls.makeImageBookWithNameModel import copyImage as copyBooks
 from Moduls.makeImageSilicon import createAllSiliconImage, fakecreateAllSiliconImage
 from Folders import pathToDoneBookImageWithName, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToTopPrint
-from Moduls.AddSkriptForMakeSiliconImage import createExcelSilicon, markerForAllModel, copyImage, chekImage, siliconCaseColorDict, CreateExcelForFolder
+from Moduls.AddSkriptForMakeSiliconImage import createExcelSilicon, markerForAllModel, chekImage, siliconCaseColorDict, CreateExcelForFolder
 from Moduls.GetCardAsincio import getListCard
 # импортируем дополнительные классы
 from Class.MyClassForMakeImage import ModelWithAddin
@@ -65,6 +66,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.pathToSiliconMTAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликонМат.xlsx'
         self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.xlsx'
         self.pathToBookAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКнижки.xlsx'
+        self.pathToBookAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКнижкиNew.xlsx'
         self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПринтов.xlsx'
         self.pathToSkinShell = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиSkinShell.xlsx'
         self.pathToSkinShell = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиSkinShellNew.xlsx'
@@ -534,6 +536,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
             #self.ui.textLog.setText(self.ui.textLog.toPlainText() + modelBrand +' ' + modelModel + ' добавлен в очередь\n')
             p.start()
             p.join()
+        copyBooks()
 
 
 

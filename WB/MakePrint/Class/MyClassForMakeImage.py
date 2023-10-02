@@ -30,6 +30,7 @@ class ModelWithAddin:
         self.pathToSiliconCLRAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликонПроз.txt'
         self.pathToPlasticAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПластик.txt'
         self.pathToBookAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКнижки.txt'
+        self.pathToBookAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКнижкиNew.txt'
         self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.txt'
         self.pathToSkinShellAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиSkinShell.txt'
         self.pathToSkinShellAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиSkinShellNew.txt'
@@ -146,7 +147,6 @@ class ModelWithAddin:
                     return 'прозрачный'
                 return color
 
-
     def getName(self, category):
         for line in self.dfAddinFromFileDict:
             if line['Категория'] == category:
@@ -161,6 +161,16 @@ class ModelWithAddin:
                 continue
         return 'Чехол для телефона'
 
+    def getName2(self, printNameRus):
+        name = None
+        for i in range(len(listModelAddin:=self.modelAddin.split(';'))):
+            name = self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Наименование (префикс)'].values[0].replace('***',listModelAddin[i].strip())
+            if len(name) < 60:
+                return name
+            else:
+                continue            
+        if not name:
+            return 'Чехол для телефона'
 
     def getVendorCode(self, colorCase, printName):
         vendorCode2 = ''
@@ -363,7 +373,38 @@ class ModelWithAddin:
                     'Цвет': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Цвет'].values.tolist()),
                     'Баркод товара': '',
                     'Бренд': self.brand,
-                    'Наименование': self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Наименование (префикс)'].values[0].replace('***',random.choice(self.modelAddin.split(';')).strip()),
+                    'Наименование': self.getName2(printNameRus),
+                    'Цена': price,
+                    'Артикул товара': vendorCode,
+                    'Описание': self.getDescriptionNew(printNameRus),
+                    'Производитель телефона': self.modelAddin.split(' ')[0],
+                    'Комплектация': self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Комплектация (префикс)'].values[0].replace('***',random.choice(self.modelAddin.split(';')).strip()),
+                    'Особенности чехла': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Особенности чехла'].values.tolist()),
+                    'Вид застежки': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Вид застежки'].values.tolist()),
+                    'Рисунок': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Рисунок'].values.tolist()),
+                    'Любимые герои': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Любимые герои'].values.tolist()),
+                    'Совместимость': self.chekCountField('Совместимость',self.compatibility),
+                    'Тип чехлов': 'Противоударный чехол',
+                    'Модель': self.chekCountField('Модель',self.modelAddin),
+                    'Страна производства': 'Китай',
+                    'Декоративные элементы': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Декоративные элементы'].values.tolist()),
+                    'Материал изделия': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Материал изделия'].values.tolist()),
+                    'Высота упаковки': 19,
+                    'Ширина упаковки': 12,
+                    'Глубина упаковки': 2,
+                    'Предмет': stuff,
+                    'Медиафайлы': r'http://95.78.233.163:8001/wp-content/uploads/Готовые принты/Силикон/{0}/{1};http://95.78.233.163:8001/wp-content/uploads/Вторые картинки/{0}/1.jpg;http://95.78.233.163:8001/wp-content/uploads/Вторые картинки/{0}/2.jpg;http://95.78.233.163:8001/wp-content/uploads/Вторые картинки/{0}/3.jpg;http://95.78.233.163:8001/wp-content/uploads/Вторые картинки/{0}/4.jpg;http://95.78.233.163:8001/wp-content/uploads/Вторые картинки/{0}/5.jpg;http://95.78.233.163:8001/wp-content/uploads/Вторые картинки/{0}/6.jpg'.format(self.maskFolderName, pictures)
+                }
+            elif 'fashion' in self.maskFolderName.lower():
+                # a = self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Комплектация (префикс)'].values[0].replace('***',random.choice(self.modelAddin.split(';')).strip())
+                datapicture={
+                    'Номер карточки': 1,
+                    'Принт': printNameRus,
+                    'Категория': 'None',
+                    'Цвет': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Цвет'].values.tolist()),
+                    'Баркод товара': '',
+                    'Бренд': self.brand,
+                    'Наименование': self.getName2(printNameRus),
                     'Цена': price,
                     'Артикул товара': vendorCode,
                     'Описание': self.getDescriptionNew(printNameRus),

@@ -87,16 +87,16 @@ def checkImage(art, token):
 
 def main():
     print('work')
-    pathToFile = sys.argv[1:][0].replace('#', ' ')
-    token = sys.argv[1:][1].replace('#', ' ')
-    # pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол Honor X7a силикон с зак.кам. черный противоуд. SkinShell.xlsx"
-    # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImU4NjQ1YWI5LWFjM2UtNGFkOS1hYmIyLThkMTMzMGM1YTU3NyJ9.8nz9gIHurlCVKIhruG6hY8MRBtMLvLYggVzisxgKivY'
+    # pathToFile = sys.argv[1:][0].replace('#', ' ')
+    # token = sys.argv[1:][1].replace('#', ' ')
+    pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол Honor X8a силикон с зак.кам. черный противоуд. SkinShell.xlsx"
+    token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImU4NjQ1YWI5LWFjM2UtNGFkOS1hYmIyLThkMTMzMGM1YTU3NyJ9.8nz9gIHurlCVKIhruG6hY8MRBtMLvLYggVzisxgKivY'
     df = pandas.DataFrame(pandas.read_excel(pathToFile))
     requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/media/save'
     if __name__ == '__main__':
         pool = multiprocessing.Pool(2)
         for line in df.to_dict('records'):
-            if not checkImage(line['Баркод товара'],token):
+            #if not checkImage(line['Баркод товара'],token):
                 pool.apply_async(pushPhoto, args=(line, token, requestUrl,))
         pool.close()
         pool.join()

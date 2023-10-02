@@ -1,7 +1,6 @@
 
 import sys
-from os.path import join as joinPath
-sys.path.insert(1, joinPath(sys.path[0], '../..'))
+from os.path import join as joinPath, abspath
 import requests
 import pandas
 import time
@@ -10,6 +9,8 @@ import asyncio
 import aiohttp
 from aiohttp import ClientConnectorError
 import subprocess
+sys.path.append(abspath(joinPath(__file__, '...')))
+from Moduls.udatePhoto import updatePhotoMain
 
 
 class WBnomenclaturesCreater:    
@@ -32,8 +33,15 @@ class WBnomenclaturesCreater:
             args = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\udatePhotoSkinShell.py', path.replace(' ', '#'), token]
             subprocess.Popen(args, shell=True).wait()
         else:
-            args = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\udatePhoto.py', path.replace(' ', '#'), token]
-            subprocess.Popen(args, shell=True).wait()            
+            try:
+                updatePhotoMain(path, token)
+                # p = multiprocessing.Process(target=updatePhotoMain, args=(path, token))
+                # p.start()
+                # p.join()
+            except:
+                print('_______ERROR________' + path)
+            #args = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\udatePhoto.py', path.replace(' ', '#'), token]
+            #subprocess.Popen(args, shell=True).wait()            
         # args2 = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\chekUdatePhoto.py', path.replace(' ', '#'), token]
         # subprocess.Popen(args2, shell=True)
 
