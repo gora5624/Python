@@ -49,10 +49,10 @@ def makeImageColor(color, modelBrand, modelModel):
                 makedirs(fullPathToSave.replace('/','&'))
             imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic[0:-4] + '.jpg'), quality=75)
 
-pathToExcelWithName = r"F:\Downloads\8 партия_смартфоны медиафайлы.xlsx"
+pathToExcelWithName = r"F:\Downloads\9 Партия_планшеты и электронные книги_медиафайлы (1).xlsx"
 pathToImagesToPaste = ''
-pathToImagesToPasteFolder = r'\\192.168.0.33\shared\_Общие документы_\Егор\Бронепленки\Бронепленки смартфон\Глянцевая'
-listValidImageName = ["1",'2','3']
+pathToImagesToPasteFolder = r'\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Бронепленки\Бронепленки планшет\Глянцевая'
+listValidImageName = ["1"]#,'2','3']
 listValidFileTypes = ['.jpg']
 fontPath = r'D:\Python\WB\makeNanoFilm\Fonts\CarosSoftBold.ttf'
 columnName = 'Модель'
@@ -68,21 +68,21 @@ deltaTextSize = 5
 # YPasteModel = 1153
 
 # # Планшеты
-# XPasteBrand = 1812
-# YPasteBrand = 3277
-# XPasteModel = XPasteBrand
-# YPasteModel = 3505
+XPasteBrand = 1812
+YPasteBrand = 3277
+XPasteModel = XPasteBrand
+YPasteModel = 3505
 
 # Смартфоны
-XPasteBrand = 1662
-YPasteBrand = 3345
-XPasteModel = XPasteBrand
-YPasteModel = 3591
+# XPasteBrand = 1662
+# YPasteBrand = 3345
+# XPasteModel = XPasteBrand
+# YPasteModel = 3591
 
 def startPasteText(pathToFile=''):
-    #listModels = pandas.read_excel(pathToExcelWithName)
-    #listModelsDict = listModels.to_dict('records')
-    listModelsDict = [{'Модель':'Tecno Camon 20/20 Pro 4G'}]
+    listModels = pandas.read_excel(pathToExcelWithName)
+    listModelsDict = listModels.to_dict('records')
+    # listModelsDict = [{'Модель':'Tecno Camon 20/20 Pro 4G'}]
     for line in listModelsDict:
         deltaTextSize = 5
         customFontBrand = ImageFont.truetype(fontPath, textSizeBrand)
