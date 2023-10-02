@@ -2,6 +2,9 @@ import requests
 import sys
 import pandas
 import time
+import io
+from PIL import Image, ImageChops
+import math, operator, functools
 
 # url = re.sub(r'print.+\d\.jpg', number+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки')
 countReqPMin = 100
@@ -46,6 +49,18 @@ def pushPhoto(line, token, requestUrl, countTry=0):
             print('1')
         if '"additionalErrors":null' not in r.text:
             print(r.text + ' ' + jsonRequest['vendorCode'])
+        while countTry <5:
+            if not checkImage(line['Артикул товара'], token):
+                deletPhoto(line['Артикул товара'], token)
+                time.sleep(1)
+                pushPhoto(line, token, requestUrl)
+                time.sleep(5)
+            if checkImage(line['Артикул товара'], token):
+                break
+            else:
+                countTry+=1
+                continue
+
     except requests.ConnectionError:
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=50) 
         print(r.text + jsonRequest['vendorCode'])
@@ -59,6 +74,66 @@ def pushPhoto(line, token, requestUrl, countTry=0):
     #     pushPhoto(line, token, requestUrl, countTry)
 
 
+def checkImage(art, token):
+    time.sleep(0.6)
+    requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/cards/cursor/list'
+    headersRequest = {'Authorization': '{}'.format(token)}
+    json = {
+            "sort": {
+                "cursor": {
+                "limit": 1
+                },
+                "filter": {
+                "textSearch": str(art),
+                "withPhoto": -1,
+                "allowedCategoriesOnly": True
+                }
+            }
+            }
+    r = requests.post(url=requestUrl, json=json, headers=headersRequest)
+    try:
+        urlListCount = len(urlList:=r.json()['data']['cards'][0]['mediaFiles'])
+        if urlListCount<0:
+            return False
+        elif urlListCount==1:
+            return complImage(urlList[0])
+        else:
+            return True
+    except:
+        return False
+
+
+def deletPhoto(vendorCode, token):
+    token = token
+    headers = {'Authorization': '{}'.format(token)} 
+    url = 'https://suppliers-api.wildberries.ru/content/v1/media/save'
+    json = {
+    "vendorCode": vendorCode,
+    "data": [
+    ]
+    }
+    try:
+        r = requests.post(url=url, json=json, headers=headers, timeout=10)
+    except:
+         pass
+
+
+def complImage(link):
+    refImage1=Image.open(r"\\rab\uploads\1.jpg")
+    refImage2=Image.open(r"\\rab\uploads\2.jpg")
+    stuffImage = io.BytesIO((r:=requests.get(link)).content)
+    stuffImage=Image.open(stuffImage)
+    h = ImageChops.difference(refImage1, stuffImage).histogram()
+    diff = math.sqrt(functools.reduce(operator.add, map(lambda h, i: h*(i**2), h, range(256))) / (float(refImage1.size[0]) * refImage1.size[1]))
+    if diff >1:
+        h = ImageChops.difference(refImage2, stuffImage).histogram()
+        diff = math.sqrt(functools.reduce(operator.add, map(lambda h, i: h*(i**2), h, range(256))) / (float(refImage2.size[0]) * refImage2.size[1]))
+    else:
+        return False
+    if diff <1:
+        return False
+    else:
+        return True
 
 
 def updatePhotoMain(pathToFile=None, token=None):
