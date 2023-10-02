@@ -25,7 +25,7 @@ def makeImageBookWithNameModel(colorList, modelBrand, modelModel):
         pool.apply_async(makeImageColor, args=(color, modelBrand, modelModel,))
     pool.close()
     pool.join()
-    copyImage()
+    # copyImage()
     # for color in colorList:
     #     makeImageColor(color, modelBrand, modelModel)
     print(modelBrand + ' ' + modelModel + ' готов!')
@@ -37,7 +37,7 @@ def makeImageBookWithNameModelNew(colorList, modelBrand, modelModel):
         pool.apply_async(makeImageColorNew, args=(color, modelBrand, modelModel,))
     pool.close()
     pool.join()
-    copyImage()
+    # copyImage()
     # for color in colorList:
     #     makeImageColor(color, modelBrand, modelModel)
     print(modelBrand + ' ' + modelModel + ' готов!')
@@ -51,6 +51,7 @@ def makeImageColor(color, modelBrand, modelModel):
     for pic in listdir(pathToColor):
         if pic.replace('.png',')').replace('print','(Принт') in topPrint:
             imagePrint = Image.open(joinPath(pathToColor, pic))
+            imagePrint = imagePrint.resize((1200, 1601))
             imageDone = Image.new('RGB', imagePrint.size)
             imageDone.paste(imagePrint)
             # Написать бренд
@@ -70,6 +71,7 @@ def makeImageColor(color, modelBrand, modelModel):
             fullPathToSave = joinPath(pathToDoneBookImageWithName, 'Чехол книга ' + modelBrand + ' ' + modelModel +' черный с сил. вставкой Fashion')
             if not exists(fullPathToSave.replace('/','&')):
                 makedirs(fullPathToSave.replace('/','&'))
+            (x,y) = imageDone.size
             imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic.replace('print ','(Принт ').replace('.png',')') + '.jpg'), quality=75)
 
 
@@ -79,6 +81,8 @@ def makeImageColorNew(color, modelBrand, modelModel):
     maxHeight =110
     # topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:200]['Принт'].values.tolist()
     for pic in listdir(pathToColor):
+        if pic == 'Thumbs.db':
+            continue
         # if pic.replace('.png',')').replace('print','(Принт') in topPrint:
         imagePrint = Image.open(joinPath(pathToColor, pic))
         imagePrint = imagePrint.resize((1200, 1601))
@@ -118,4 +122,4 @@ def makeImageColorNew(color, modelBrand, modelModel):
         fullPathToSave = joinPath(pathToDoneBookImageWithName, 'Чехол книга ' + modelBrand + ' ' + modelModel +' черный с сил. вставкой Fashion')
         if not exists(fullPathToSave.replace('/','&')):
             makedirs(fullPathToSave.replace('/','&'))
-        imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic.replace('print ','(Принт ').replace('.png',')') + '.jpg'), quality=75)
+        imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic.replace('print ','(Принт ').replace('.png',')') + '.jpg'), quality=100)
