@@ -9,6 +9,7 @@ import asyncio
 import aiohttp
 from aiohttp import ClientConnectorError
 import subprocess
+from Class.priceModif import priceMod
 
 
 class ExistsNomenclaturesCreater:    
@@ -46,13 +47,33 @@ class ExistsNomenclaturesCreater:
 
 
     def start(self):
+        print("Начал делать " + self.pathToFileForUpload)
         self.getNomFromWB()
         self.changeCards()
         self.pushChanges()
         self.updateFileForUpload()
         self.splitNom()
+        self.changePrice()
         # self.createFileFor1C()
 
+
+    def changePrice(self):
+        price = 999
+        if 'fashion' in self.pathToFileForUpload.lower():
+            discount = 35
+        elif 'под карту' in self.pathToFileForUpload.lower():
+            discount = 45
+        elif 'проз' in self.pathToFileForUpload.lower():
+            discount = 60
+        elif 'мат' in self.pathToFileForUpload.lower():
+            discount = 60
+        elif 'skinshell' in self.pathToFileForUpload.lower():
+            discount = 50
+            price = 1000
+
+        pr = priceMod(self.nmIdsList ,self.token, price, discount)
+        pr.pushPrice()
+        pr.pushDiscounts()
 
     
     def createFileFor1C(self):
@@ -215,7 +236,7 @@ class ExistsNomenclaturesCreater:
                                 {'Наименование': case['Наименование']},
                                 {'Предмет':'Чехлы для телефонов'},
                                 # {'Предмет':case['Предмет']},
-                                {'Цвет': case['Цвет'].split(';')},
+                                {'Цвет': case['Цвет'].lower().split(';')},
                                 {'Описание': case['Описание']},
                                 {'Высота упаковки': 19},
                                 {'Ширина упаковки': 12},

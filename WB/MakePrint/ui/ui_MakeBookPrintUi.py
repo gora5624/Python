@@ -242,6 +242,7 @@ class Ui_Form(object):
         self.IPSelector.setItemText(1, _translate("Form", "Караханян"))
         self.IPSelector.setItemText(2, _translate("Form", "Абраамян"))
         self.IPSelector.setItemText(3, _translate("Form", "Самвел"))
+        self.IPSelector.setCurrentIndex(1)
         self.updateListModel.setText(_translate("Form", "Обновить список"))
         self.ForceUpdate.setText(_translate("Form", "Обновить принудительно"))
         self.ApplyAddinFromFile.setText(_translate("Form", "Выбрать файл со свойсвами"))
@@ -251,4 +252,5 @@ class Ui_Form(object):
         self.ChekImageAll.setText(_translate("Form", "Перезалить фото"))
         self.chooseExistsCardsBtn.setText(_translate("Form", "Существующие чехлы"))
         self.toExistsCardsChek.setText(_translate("Form", "В существующие карточки"))
+        self.toExistsCardsChek.setChecked(True)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Form", "Создание товара"))
