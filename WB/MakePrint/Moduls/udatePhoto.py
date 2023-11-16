@@ -10,32 +10,17 @@ import math, operator, functools
 countReqPMin = 100
 delay = 60/countReqPMin
 def pushPhoto(line, token, requestUrl, countTry=0):
-    if 'Артикул товара' in list(line.keys()):
-        url = line['Медиафайлы'].split(';')
-        data = [url[0]]
-        # for i in range(1,6,1):
-        #     data.append(re.sub(r'print.+\d\.jpg', str(i)+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки'))
-        jsonRequest = {
-            "vendorCode": line['Артикул товара'],
-            #"data": line['Медиафайлы'].split(';')
-            "data": data
-            }
-        headersRequest = {'Authorization': '{}'.format(token)}
-    else:
-        # data = line['Медиафайлы'].split(';')
-        url = line['Медиафайлы'].split(';')
-        data = [url[0]]
-        # for i in range(1,6,1):
-        #     data.append(re.sub(r'print.+\d\.jpg', str(i)+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки'))
-        # if len(data) ==3:
-        #     tmp = [data[-1].replace('2.jpg', '3.jpg'), data[-1].replace('2.jpg', '4.jpg'), data[-1].replace('2.jpg', '5.jpg')]
-        #     data.extend(tmp)
-        jsonRequest = {
-            "vendorCode": line['Артикул поставщика'],
-            "data": data
-            # "data": line['Медиафайлы'].split(';')
-            }
-        headersRequest = {'Authorization': '{}'.format(token)}
+    urlsLsit = line['Медиафайлы'].split(';')
+    data = checkUrlsImage(urlsLsit)
+    if len(data) == 0:
+        print(line['Артикул товара'] + ' нет доступных фото для загрузки')
+        return 404
+    jsonRequest = {
+        "vendorCode": line['Артикул товара'] if 'Артикул товара' in list(line.keys()) else line['Артикул поставщика'],
+        #"data": line['Медиафайлы'].split(';')
+        "data": data
+        }
+    headersRequest = {'Authorization': '{}'.format(token)}
     try:
         # print(jsonRequest)
         #jsonRequest['data'][0]= jsonRequest['data'][0].replace("/print ","/(Принт ").replace(".jpg",").jpg")
@@ -49,17 +34,15 @@ def pushPhoto(line, token, requestUrl, countTry=0):
             print('1')
         if '"additionalErrors":null' not in r.text:
             print(r.text + ' ' + jsonRequest['vendorCode'])
-        while countTry <5:
-            if not checkImage(line['Артикул товара'], token):
-                deletPhoto(line['Артикул товара'], token)
-                time.sleep(1)
-                pushPhoto(line, token, requestUrl)
-                time.sleep(5)
-            if checkImage(line['Артикул товара'], token):
-                break
-            else:
-                countTry+=1
-                continue
+        time.sleep(5)
+        while not checkImage(line['Артикул товара'], token) and countTry <5:
+            deletPhoto(line['Артикул товара'], token)
+            time.sleep(1)
+            pushPhoto(line, token, requestUrl)
+            time.sleep(5)
+            countTry +=1
+        if countTry == 5:
+            print(line['Артикул товара'] + ' хз что с фото, надо проверить')
 
     except requests.ConnectionError:
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=50) 
@@ -74,8 +57,28 @@ def pushPhoto(line, token, requestUrl, countTry=0):
     #     pushPhoto(line, token, requestUrl, countTry)
 
 
+def checkUrlsImage(urlList):
+    urlListChecked = []
+    for url in urlList:
+        if requests.get(url).status_code == 200:
+            urlListChecked.append(url)
+            continue
+        elif requests.get(url.replace('.jpg', '.png')).status_code == 200:
+            urlListChecked.append(url.replace('.jpg', '.png'))
+            continue
+        if 'Силикон' not in url:
+            url = url.replace('Вторые картинки', 'Вторые картинки/Силикон')
+            if requests.get(url).status_code == 200:
+                urlListChecked.append(url)
+                continue
+            elif requests.get(url.replace('.jpg', '.png')).status_code == 200:
+                urlListChecked.append(url.replace('.jpg', '.png'))
+                continue
+    return urlListChecked# [i for i in urlList if requests.get(i).status_code==200]
+
+
 def checkImage(art, token):
-    time.sleep(0.6)
+    # time.sleep(0.6)
     requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/cards/cursor/list'
     headersRequest = {'Authorization': '{}'.format(token)}
     json = {
@@ -90,15 +93,15 @@ def checkImage(art, token):
                 }
             }
             }
-    r = requests.post(url=requestUrl, json=json, headers=headersRequest)
     try:
-        urlListCount = len(urlList:=r.json()['data']['cards'][0]['mediaFiles'])
-        if urlListCount<0:
+        r = requests.post(url=requestUrl, json=json, headers=headersRequest)
+        urlList = r.json()['data']['cards'][0]['mediaFiles']
+        urlListCount = len(urlList)
+        if urlListCount<1:
             return False
-        elif urlListCount==1:
-            return complImage(urlList[0])
         else:
-            return True
+            res = compImage(urlList[0])
+            return not res
     except:
         return False
 
@@ -118,22 +121,27 @@ def deletPhoto(vendorCode, token):
          pass
 
 
-def complImage(link):
-    refImage1=Image.open(r"\\rab\uploads\1.jpg")
-    refImage2=Image.open(r"\\rab\uploads\2.jpg")
-    stuffImage = io.BytesIO((r:=requests.get(link)).content)
-    stuffImage=Image.open(stuffImage)
-    h = ImageChops.difference(refImage1, stuffImage).histogram()
-    diff = math.sqrt(functools.reduce(operator.add, map(lambda h, i: h*(i**2), h, range(256))) / (float(refImage1.size[0]) * refImage1.size[1]))
-    if diff >1:
-        h = ImageChops.difference(refImage2, stuffImage).histogram()
-        diff = math.sqrt(functools.reduce(operator.add, map(lambda h, i: h*(i**2), h, range(256))) / (float(refImage2.size[0]) * refImage2.size[1]))
-    else:
-        return False
-    if diff <1:
-        return False
-    else:
-        return True
+def compImage(link):
+    refImageList = [Image.open(r"\\rab\uploads\1.jpg"), Image.open(r"\\rab\uploads\2.jpg")]
+    # refImage1=Image.open(r"\\rab\uploads\1.jpg")
+    # refImage2=Image.open(r"\\rab\uploads\2.jpg")
+    stuffImage=Image.open(io.BytesIO((r:=requests.get(link)).content))
+    for refImage in refImageList:
+        h = ImageChops.difference(refImage, stuffImage).histogram()
+        diff = math.sqrt(functools.reduce(operator.add, map(lambda h, i: h*(i**2), h, range(256))) / (float(refImage.size[0]) * refImage.size[1]))
+        if diff >1:
+            continue
+        else:
+            return True
+    return False
+    #     h = ImageChops.difference(refImage2, stuffImage).histogram()
+    #     diff = math.sqrt(functools.reduce(operator.add, map(lambda h, i: h*(i**2), h, range(256))) / (float(refImage2.size[0]) * refImage2.size[1]))
+    #     if diff > 1:
+    #         return False
+    #     else:
+    #         return True
+    # else:
+    #     return True
 
 
 def updatePhotoMain(pathToFile=None, token=None):
@@ -147,9 +155,9 @@ def updatePhotoMain(pathToFile=None, token=None):
     requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/media/save'
     #if __name__ == '__main__':
     passedTime = 1
-    tmp = pandas.DataFrame(pandas.read_excel(r"F:\книжки без фото.xlsx"))['Артикул продавца'].to_list()
+    # tmp = pandas.DataFrame(pandas.read_excel(r"F:\книжки без фото.xlsx"))['Артикул продавца'].to_list()
     for line in df.to_dict('records'):
-        if line['Артикул товара'] in tmp:
+        # if line['Артикул товара'] in tmp:
             if passedTime > 0.7:
                 startTime = time.time()
                 pushPhoto(line, token, requestUrl)
