@@ -49,9 +49,9 @@ def makeImageColor(color, modelBrand, modelModel):
                 makedirs(fullPathToSave.replace('/','&'))
             imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic[0:-4] + '.jpg'), quality=75)
 
-pathToExcelWithName = r"F:\Downloads\9 Партия_планшеты и электронные книги_медиафайлы (1).xlsx"
+pathToExcelWithName = r"F:\Downloads\10 партия_планшеты и электронные книги_медиафайлы.xlsx"
 pathToImagesToPaste = ''
-pathToImagesToPasteFolder = r'\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Бронепленки\Бронепленки планшет\Глянцевая'
+pathToImagesToPasteFolder = r'\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Бронепленки\Бронепленки планшет\Матовая'
 listValidImageName = ["1"]#,'2','3']
 listValidFileTypes = ['.jpg']
 fontPath = r'D:\Python\WB\makeNanoFilm\Fonts\CarosSoftBold.ttf'
@@ -67,7 +67,7 @@ deltaTextSize = 5
 # XPasteModel = 2662
 # YPasteModel = 1153
 
-# # Планшеты
+# Планшеты
 XPasteBrand = 1812
 YPasteBrand = 3277
 XPasteModel = XPasteBrand

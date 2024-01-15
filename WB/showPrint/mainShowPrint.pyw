@@ -42,7 +42,7 @@ class ShowPrint(QtWidgets.QMainWindow):
     pathToBarcodeList1c = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt'
     pathToCatalogPrints = r'\\192.168.0.111\shared\_Общие документы_\Каталог принтов'
     pathToCaseImage = r'\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Маски новые'
-    pathToNoImege =r'C:\Users\Георгий\Desktop\flat,1000x1000,075,f.jpg'
+    # pathToNoImege =r'C:\Users\Георгий\Desktop\flat,1000x1000,075,f.jpg'
     pathToPickleDBImages = joinPath(dirname(__file__),'printPicle.pkl')
     pool = QThreadPool().globalInstance()
     
