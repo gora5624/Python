@@ -10,7 +10,7 @@ from shutil import copytree, ignore_patterns
 from PIL import Image
 import time
 import requests
-from Folders import pathToDoneBookImageWithName, pathToCategoryList, pathToUploadFolderLocal, pathToSecondImageUploadFolder, pathToSecondImagesBook
+from Folders import pathToDoneBookImageWithName, pathToCategoryList, pathToUploadFolderLocal
 
 
 bookCaseColorDict = {'бордовый': 'VNS',
@@ -86,7 +86,7 @@ def createModelExcel(model):
 
 def copyImage():
     copytree(pathToDoneBookImageWithName, pathToUploadFolderLocal + r'\\Fashion', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
-    copytree(pathToSecondImagesBook, pathToSecondImageUploadFolder + r'\\Fashion', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
+    #copytree(pathToSecondImagesBook, pathToSecondImageUploadFolder + r'\\Fashion', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
 
 
 def createExcel(resp):

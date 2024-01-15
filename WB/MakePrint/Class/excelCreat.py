@@ -2,7 +2,7 @@ from genericpath import isdir
 import os
 import pandas
 
-mainPath = r'F:\Для загрузки\Готовые принты\Силикон'
+mainPath = r'F:\Для загрузки\Готовые принты'
 df = pandas.DataFrame()
 dbNodenclatures = pandas.DataFrame(pandas.read_table(r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\Список стандартный поиск номенклатура.txt'))
 data = []

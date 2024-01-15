@@ -132,7 +132,13 @@ dmypy.json
 \c#\ConsoleApp1\.vs
 
 # MyFiles
+*.pkl
+.pkl
+Караханян.pkl
+wipeListDict.pkl
+dataBase.pkl
 token
+tokens.pkl
 autorz.py
 printPicle.pkl
 compImage.pkl

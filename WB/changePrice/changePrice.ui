@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ChangePrice</class>
+ <widget class="QMainWindow" name="ChangePrice">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>605</width>
+    <height>451</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="4" column="1">
+     <widget class="QLabel" name="labelSearchLine">
+      <property name="text">
+       <string>Найти номенклатуру</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="2">
+     <widget class="QPushButton" name="pushButtonPushPrice">
+      <property name="text">
+       <string>Отправить новые цены и скидки</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QPushButton" name="pushButtoGetCurPrice">
+      <property name="text">
+       <string>Получить текущие цены</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLabel" name="labelChooseExcel">
+      <property name="text">
+       <string>Выберите Excel файл из 1С</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1" colspan="2">
+     <widget class="QLabel" name="labelTableListNom">
+      <property name="text">
+       <string>Список номенклатур в файле</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1" colspan="2">
+     <widget class="QTableWidget" name="tableWidgetListNom"/>
+    </item>
+    <item row="8" column="1">
+     <widget class="QPushButton" name="pushButtonCancel">
+      <property name="text">
+       <string>Отменить изменения</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QPushButton" name="pushButtonChoisExcel">
+      <property name="text">
+       <string>Выбрать файл</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="2">
+     <widget class="QLineEdit" name="lineEditSearchInTable"/>
+    </item>
+    <item row="5" column="2">
+     <widget class="QPushButton" name="pushButtonSortTable">
+      <property name="text">
+       <string>Отсортировать список</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>605</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Меню</string>
+    </property>
+    <addaction name="updateDB"/>
+    <addaction name="separator"/>
+    <addaction name="updateTokens"/>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="updateDB">
+   <property name="text">
+    <string>Обновить базу данных</string>
+   </property>
+  </action>
+  <action name="updateTokens">
+   <property name="text">
+    <string>Обновить токены</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

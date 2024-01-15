@@ -7,25 +7,27 @@ workDisk = 'F'
 pathToCategoryList = abspath(joinPath(__file__, '..','cat.xlsx'))
 pathToUploadWeb = r'http://95.78.233.163:8001/wp-content/uploads\Готовые принты'
 pathToUploadFolderLocal = r'D:\OpenServer\domains\wordpress\wp-content\uploads\Готовые принты'
-pathToUploadSecondWeb = r'http://80.237.77.44/joomla/images/mobi/Вторые картинки'
-pathToSecondImageUploadFolder = r'D:\OpenServer\domains\wordpress\wp-content\uploads\Вторые картинки'
+# pathToUploadSecondWeb = r'http://80.237.77.44/joomla/images/mobi/Вторые картинки'
+# pathToSecondImageUploadFolder = r'D:\OpenServer\domains\wordpress\wp-content\uploads\Вторые картинки'
 # пути для книжек
 pathToBookImageWithOutModel = r'F:\книжки'
 pathToBookImageWithOutModelNew = r'F:\книжки новые'
 pathToBookEffect = abspath(joinPath(__file__, '..', r'MakeBookImage',r'Effect',r'light.png'))
 pathToBookMasks = abspath(joinPath(__file__, '..',r'MakeBookImage',r'BookPic',r'BookMask'))
 pathToBookBacks = abspath(joinPath(__file__, '..', r'MakeBookImage',r'BookPic',r'BookBack'))
-pathToDoneBookImageWithName = r'{}:\Для загрузки\Готовые принты\Силикон'.format(workDisk)
+pathToDoneBookImageWithName = r'{}:\Для загрузки\Готовые принты'.format(workDisk)
 fontPath = abspath(joinPath(__file__, '..', r'MakeBookImage',r'Fonts',r'CarosSoftBold.ttf'))
-pathToSecondImagesBook = r'{}:\Для загрузки\Вторые картинки\Fashoin'.format(workDisk)
+# pathToSecondImagesBook = r'{}:\Для загрузки\Вторые картинки\Fashoin'.format(workDisk)
 # пути для силикона
 pathToMaskFolderSilicon = r'{}:\Маски силикон'.format(workDisk)
-pathToSecondImagesFolderSilicon = r'{}:\Для загрузки\Вторые картинки\Силикон'.format(workDisk)
-pathToDoneSiliconImageSilicon = r'{}:\Для загрузки\Готовые принты\Силикон'.format(workDisk)
+# pathToSecondImagesFolderSilicon = r'{}:\Для загрузки\Вторые картинки\Силикон'.format(workDisk)
+pathToDoneSiliconImageSilicon = r'{}:\Для загрузки\Готовые принты'.format(workDisk)
 pathToPrintImageFolderAllSil = r'{}:\Принты со светом все\Все'.format(workDisk)
 #pathToPrintImageFolderWithOutBackSil = r'{}:\Принты со светом\Все'.format(workDisk)
 pathToPrintImageFolderWithOutBackSil = r'{}:\Принты со светом все\Без фона'.format(workDisk)
 # pathToPrintImageFolderAllSil = r'F:\Картинки китай\натянуть временно'
 # pathToPrintImageFolderWithOutBackSil = r'F:\Картинки китай\натянуть временно'
 pathToTopPrint = abspath(joinPath(__file__, '..', r'topPrint.xlsx'))
+pathToTopPrintSkin = abspath(joinPath(__file__, '..', r'topPrintSkin.xlsx'))
+
 

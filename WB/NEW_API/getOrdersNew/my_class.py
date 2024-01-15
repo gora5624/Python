@@ -120,7 +120,8 @@ class OrdersGetter():
             fixed_text = fix_text(response.text)
             data = json.loads(fixed_text)
             self.orders.extend(data['orders'])
-            if 'next' not in data:
+            # if 'next' not in data:
+            if data['next'] == 0:
                 break
             params['next'] = data['next']
             countTry = 0

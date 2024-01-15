@@ -68,7 +68,7 @@ def main():
     print('work')
     pathToFile = sys.argv[1:][0].replace('#', ' ')
     token = sys.argv[1:][1].replace('#', ' ')
-    # pathToFile = r'F:\Для загрузки\Готовые принты\Силикон\Чехол iPhone 6 силикон с отк.кам. проз. под карту.xlsx'
+    # pathToFile = r'F:\Для загрузки\Готовые принты\Чехол iPhone 6 силикон с отк.кам. проз. под карту.xlsx'
     # token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjEyODkyYmRkLTEwMTgtNDJhNi1hYzExLTExODExYjVhYjg4MiJ9.nJ82nhs9BY4YehzZcO5ynxB0QKI-XmHj16MBQlc2X3w'
     # pathToFile = sys.argv[1:][0].replace('#', ' ')
     df = pandas.DataFrame(pandas.read_excel(pathToFile))

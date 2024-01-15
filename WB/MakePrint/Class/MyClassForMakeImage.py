@@ -162,15 +162,32 @@ class ModelWithAddin:
         return 'Чехол для телефона'
 
     def getName2(self, printNameRus):
-        name = None
+        namePrint = None
         for i in range(len(listModelAddin:=self.modelAddin.split(';'))):
-            name = self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Наименование (префикс)'].values[0].replace('***',listModelAddin[i].strip())
-            if len(name) < 60:
-                return name
-            else:
-                continue            
-        if not name:
+            nameList = self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Наименование (префикс)'].values.tolist()
+            for name in nameList:
+                namePrint = name.replace('***',listModelAddin[i].strip())
+                if len(namePrint) < 60:
+                    return namePrint
+                else:
+                    continue            
+        if len(namePrint) > 60:
             return 'Чехол для телефона'
+
+    def getName3(self, category):
+            for line in self.dfAddinFromFileDict:
+                if line['Категория'] == category:
+                    nameCasePrefix = random.choice(line['Наименование (суффикс)'].split(';')).strip()
+                    break
+            # nameCasePrefix = random.choice(self.dfAddinFromFile[self.dfAddinFromFile.Категория == category]['Наименование (префикс)'].values.tolist()[0].split(';')).strip()
+            model = self.modelAddin.split(';')[0]
+            nameCase = model + ' ' + nameCasePrefix
+            if len(nameCase) <= 60:
+                return nameCase
+            if len(a:=model + " чехол")<=60:
+                return a
+            return 'Чехол для телефона'
+
 
     def getVendorCode(self, colorCase, printName):
         vendorCode2 = ''
@@ -419,6 +436,7 @@ class ModelWithAddin:
                     'Модель': self.chekCountField('Модель',self.modelAddin),
                     'Страна производства': 'Китай',
                     'Декоративные элементы': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Декоративные элементы'].values.tolist()),
+                    # 'Декоративные элементы': self.getPrintAddin(printNameRus, 'Декоративные элементы', category),
                     'Материал изделия': ';'.join(self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Материал изделия'].values.tolist()),
                     'Высота упаковки': 19,
                     'Ширина упаковки': 12,
@@ -437,6 +455,7 @@ class ModelWithAddin:
                         'Цвет': color if (colorAddin:=self.getPrintAddin(printNameRus, 'Цвет', category)) == 0 else colorAddin,# color,
                         'Баркод товара': '',
                         'Бренд': self.brand,
+                        #'Наименование': self.getName(category),
                         'Наименование': self.getName(category),
                         'Цена': price,
                         'Артикул товара': vendorCode,

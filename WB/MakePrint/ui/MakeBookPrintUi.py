@@ -242,6 +242,7 @@ class Ui_Form(object):
         self.IPSelector.setItemText(1, _translate("Form", "Караханян"))
         self.IPSelector.setItemText(2, _translate("Form", "Абраамян"))
         self.IPSelector.setItemText(3, _translate("Form", "Самвел"))
+        self.IPSelector.setCurrentIndex(1)
         self.updateListModel.setText(_translate("Form", "Обновить список"))
         self.ForceUpdate.setText(_translate("Form", "Обновить принудительно"))
         self.ApplyAddinFromFile.setText(_translate("Form", "Выбрать файл со свойсвами"))

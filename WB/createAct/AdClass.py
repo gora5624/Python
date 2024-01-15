@@ -15,21 +15,21 @@ class SuppliesWorker(QRunnable):
     tokens = [
             {
                 'IPName': 'Караханян',
-                'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjgxYjczNGVmLWI2OWUtNGRhMi1iNTBiLThkMTEyYWM4MjhkMCJ9.pU1YOOirgRe3Om-WRYT61AofToggCLbV3na7GbXKGqU'
+                'token': 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjMxMDI1djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcxNjM0NzA2MSwiaWQiOiIwMmE5ODU1ZS1mMjU3LTQ0NWItYjhkZC0zYTM3ODAwZGM0NGQiLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjEwMTA2MiwicyI6MTYsInNpZCI6IjNhOTNkZGMxLWFhNTctNWMyYi05YzVjLWRkZDIyMTg4OTQ0MCIsInVpZCI6NDUzMjI5MjB9.QjUqQn7fEgOb4RKBIrYaXRB89mVnauWAK1H8xPOxbLZfSv2MEnhPETAYYZuM47cgYxEBp9-z8XqnuxMUV16Gzg'
             },
             {
                 'IPName': 'Самвел',
-                'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImUxNGFmM2UxLTc0YTctNDlkOC1hNGIyLTI1Y2Q4ZDc2YmM4NSJ9.bCTyIoPVS3wpbzy7TdK-Gt8Sgz3iyPamzJjnA_EH3Iw'
+                'token': 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjMxMDI1djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcxODY1MDUzOCwiaWQiOiJmNWNjODRhOC01Mjk1LTRjZTAtOTUwOC1mYjQ1OTdmNTY3OGEiLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjgxOTI0NiwicyI6MTYsInNhbmRib3giOmZhbHNlLCJzaWQiOiIwYWI4YjEwNS0wNTFmLTRlZDYtODcwYi0zOTllNzVlMTAyODYiLCJ1aWQiOjQ1MzIyOTIwfQ.M-0NluWSI0bXaLVEGivROAG4D9h64GIi-JTRTE4JEtgDyfGOBRk4CfDHJz75ydaTntvmgZAoVXC1wswH5xBmiw'
             },
             
             {
                 'IPName': 'Манвел',
-                'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjNhZmUzMzMzLWFmYjEtNDI5Yi1hN2Q1LTE1Yjc4ODg4MmU5MSJ9.kWUDkHkGrtD8WxE9sQHto5B7L3bQh-XRDf7EeZQiw7A'
+                'token': 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjMxMDI1djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcxNjM0NzExNywiaWQiOiJjZjc1MDAxMS1jZDhkLTRmMjAtYmE3Ny0yNjMwZmEwMjBkMGYiLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjUyNzczNiwicyI6MTYsInNpZCI6ImFhNDdlNDg5LTU5ZTAtNDIzMi1hMWJmLTBlMTIzOWYwNDJmMSIsInVpZCI6NDUzMjI5MjB9.__KBNiAn545q-hdg1veDPaHSL0bX4G93ZqS4z2xVGT0SZageOCbEbPesn1ePoUQ0pQcCay46xcD-J1_zUpepDQ'
             } ,
             
             {
                 'IPName': 'Федоров',
-                'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImIxYjQ3YjQzLTFhMTYtNGQ0Ni1iZTA1LWRlY2ExZTcxMTU0MSJ9.qTIJF6fEgbRux3Ps30ciMQ802UWqtAER-y94ALvE3PI'
+                'token': 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjMxMDI1djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcxNjM0NzE3NSwiaWQiOiIwZWFjMmU0Ni1lZmMwLTQxZmEtOGNhMy1kODllZjhlMzNhYTAiLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjExNzEwNDQsInMiOjE2LCJzaWQiOiJkOWU0OGUxZi05ZjgxLTQ1MmMtODRiYy05ZGYxZWRiMzNmNDkiLCJ1aWQiOjQ1MzIyOTIwfQ.AWhYAeVcj2dNdY_qTY2gfFbB7x3SdxPRKLdE2ycSs9PSxF7XoCLwJEtt10eBymRMuD2bmpGpVoA2R0FKn-aTgA'
             }             
         ]
     

@@ -49,10 +49,13 @@ def makeImageColor(color, modelBrand, modelModel):
                 makedirs(fullPathToSave.replace('/','&'))
             imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic[0:-4] + '.jpg'), quality=75)
 
-pathToExcelWithName = r"F:\Downloads\10 партия_планшеты и электронные книги_медиафайлы.xlsx"
+pathToExcelWithName = r"F:\Downloads\11 партия_Макет_Медиафайлы.xlsx"
 pathToImagesToPaste = ''
-pathToImagesToPasteFolder = r'\\192.168.0.33\shared\_Общие документы_\Егор\Архив масок ВБ\Бронепленки\Бронепленки планшет\Матовая'
-listValidImageName = ["1"]#,'2','3']
+# pathToImagesToPasteFolder = r'\\rab\uploads\пленки\Планшеты\Матовая'
+# pathToImagesToPasteFolder = r'\\rab\uploads\пленки\Планшеты\Глянцевая'
+# pathToImagesToPasteFolder = r'\\rab\uploads\пленки\Смартфоны\Матовая'
+pathToImagesToPasteFolder = r'\\rab\uploads\пленки\Смартфоны\Глянцевая'
+listValidImageName = ["1",'2','3']
 listValidFileTypes = ['.jpg']
 fontPath = r'D:\Python\WB\makeNanoFilm\Fonts\CarosSoftBold.ttf'
 columnName = 'Модель'
@@ -122,6 +125,7 @@ def startPasteText(pathToFile=''):
             makedirs(fullPathToSave)
         imageDone = imageDone.resize((900,int(imageDone.size[1]*(900/imageDone.size[0]))))
         imageDone.save(joinPath(fullPathToSave, re.sub(r'[^\w_.)()-]', '_', line[columnName]) + '.jpg'), quality=75)
+        print(str(line[columnName]) + ';' + joinPath(fullPathToSave, re.sub(r'[^\w_.)()-]', '_', line[columnName]) + '.jpg').replace(r'\\rab', r'http://95.78.233.163:8001/wp-content').replace('\\','/'))
 
 
 def main():

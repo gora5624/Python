@@ -94,66 +94,66 @@
 # # #     #imgBack.show()
 # # #     imgBack.save(r'D:\test3\{}'.format(str(prPath)))
 
-# import photoshop.api as ps
-# import os
+import photoshop.api as ps
+import os
 
-# app = ps.Application()
-# app.displayDialogs = ps.DialogModes.DisplayNoDialogs
-# #app.displayDialogs = ps.
-# for file in os.listdir(r'D:\Новые принты на книжки'):
-#     if not os.path.exists(os.path.join(r'\\rab\Диск для принтов сервак Егор\книжки новые\Черный',file.replace('.jpg.png',''))):
-#         png_doc = app.open(os.path.join(r'D:\Новые принты на книжки',file))
-#         startRulerUnits = app.preferences.rulerUnits
-#         if png_doc.activeLayer.kind != ps.LayerKind.TextLayer:
-#             x2 = (png_doc.width * png_doc.resolution) / 2
-#             y2 = png_doc.height * png_doc.resolution
-#             sel_area = ((0, 0), (x2, 0), (x2, y2), (0, y2))
-#             png_doc.selection.select(sel_area, ps.SelectionType.ReplaceSelection, 0, False)
+app = ps.Application()
+app.displayDialogs = ps.DialogModes.DisplayNoDialogs
+#app.displayDialogs = ps.
+for file in os.listdir(r'D:\Новые принты на книжки'):
+    if not os.path.exists(os.path.join(r'\\rab\Диск для принтов сервак Егор\книжки новые2\Черный',file.replace('.jpg.png',''))):
+        png_doc = app.open(os.path.join(r'D:\Новые принты на книжки',file))
+        startRulerUnits = app.preferences.rulerUnits
+        if png_doc.activeLayer.kind != ps.LayerKind.TextLayer:
+            x2 = (png_doc.width * png_doc.resolution) / 2
+            y2 = png_doc.height * png_doc.resolution
+            sel_area = ((0, 0), (x2, 0), (x2, y2), (0, y2))
+            png_doc.selection.select(sel_area, ps.SelectionType.ReplaceSelection, 0, False)
 
-#             png_doc.selection.copy()
-#             app.preferences.rulerUnits = ps.Units.Pixels
-#             #pasteDoc = doc.add(x2, y2, doc.resolution, "Paste Target")
+            png_doc.selection.copy()
+            app.preferences.rulerUnits = ps.Units.Pixels
+            #pasteDoc = doc.add(x2, y2, doc.resolution, "Paste Target")
 
-#         png_doc.activeLayer = png_doc.layers[0]
-#         png_doc.width
-#         png_doc.height
-#         png_doc.resizeImage(png_doc.width*(1277/png_doc.height) ,1277)
-#         png_doc.activeLayer.copy()
+        png_doc.activeLayer = png_doc.layers[0]
+        png_doc.width
+        png_doc.height
+        png_doc.resizeImage(png_doc.width*(1195/png_doc.height) ,1195)
+        png_doc.activeLayer.copy()
 
-#         doc = app.load(r"\\192.168.0.33\shared\_Общие документы_\Егор\книги_test.psd")
-#         doc.paste()
-#         png_doc.close()
-#         layer_index = 3
-#         doc.activeLayer = doc.layers[layer_index]
-#         # doc.activeLayer.move(doc.layers[layer_index + 2], ps.ElementPlacement.PlaceBefore)
-#         a = doc.activeLayer.bounds
-#         x,y = 371,669
-#         x2,y2 = (a[2]-a[0])/2+a[0], (a[3]-a[1])/2+a[1]
-#         doc.activeLayer = doc.layers[layer_index]
-#         doc.activeLayer.translate(x-x2, y-y2)
-#         doc.activeLayer.resize(100,100,ps.AnchorPosition.BottomCenter)
-#         # doc.selection.resize(100,100,ps.AnchorPosition.BottomCenter)
+        doc = app.load(r"\\192.168.0.33\shared\_Общие документы_\Егор\книги_test.psd")
+        doc.paste()
+        png_doc.close()
+        layer_index = 3
+        doc.activeLayer = doc.layers[layer_index]
+        # doc.activeLayer.move(doc.layers[layer_index + 2], ps.ElementPlacement.PlaceBefore)
+        a = doc.activeLayer.bounds
+        x,y = 839,681
+        x2,y2 = (a[2]-a[0])/2+a[0], (a[3]-a[1])/2+a[1]
+        doc.activeLayer = doc.layers[layer_index]
+        doc.activeLayer.translate(x-x2, y-y2)
+        doc.activeLayer.resize(100,100,ps.AnchorPosition.BottomCenter)
+        # doc.selection.resize(100,100,ps.AnchorPosition.BottomCenter)
 
-#         if startRulerUnits != app.preferences.rulerUnits:
-#             app.preferences.rulerUnits = startRulerUnits
+        if startRulerUnits != app.preferences.rulerUnits:
+            app.preferences.rulerUnits = startRulerUnits
 
-#         # doc.lKayers.
-#         # text_color = ps.SolidColor()
-#         # text_color.rgb.red = 0
-#         # text_color.rgb.green = 255
-#         # text_color.rgb.blue = 0
-#         # # new_text_layer = new_doc
-#         # # new_text_layer.kind = ps.LayerKind.TextLayer
-#         # # new_text_layer.textItem.contents = 'Hello, World!'
-#         # # new_text_layer.textItem.position = [160, 167]
-#         # # new_text_layer.textItem.size = 40
-#         # # new_text_layer.textItem.color = text_color
-#         options = ps.PNGSaveOptions()
-#         # # # save to jpg
-#         jpg = os.path.join(r'\\rab\Диск для принтов сервак Егор\книжки новые\Черный',file.replace('.jpg.png',''))
-#         doc.saveAs(jpg, options, asCopy=True)
-#         doc.activeLayer.remove()
-# # app.doJavaScript(f'alert("save to jpg: {jpg}")')
+        # doc.lKayers.
+        # text_color = ps.SolidColor()
+        # text_color.rgb.red = 0
+        # text_color.rgb.green = 255
+        # text_color.rgb.blue = 0
+        # # new_text_layer = new_doc
+        # # new_text_layer.kind = ps.LayerKind.TextLayer
+        # # new_text_layer.textItem.contents = 'Hello, World!'
+        # # new_text_layer.textItem.position = [160, 167]
+        # # new_text_layer.textItem.size = 40
+        # # new_text_layer.textItem.color = text_color
+        options = ps.PNGSaveOptions()
+        # # # save to jpg
+        jpg = os.path.join(r'\\rab\Диск для принтов сервак Егор\книжки новые2\Черный',file.replace('.jpg.png',''))
+        doc.saveAs(jpg, options, asCopy=True)
+        doc.activeLayer.remove()
+# app.doJavaScript(f'alert("save to jpg: {jpg}")')
 
 # # # import os
 

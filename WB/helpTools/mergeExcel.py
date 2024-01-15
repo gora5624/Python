@@ -2,7 +2,7 @@ import os
 import pandas
 import requests
 
-mainPath = r'F:\Downloads\report_2023_10_30.xlsx'
+mainPath = r'\\rab\Диск для принтов сервак Егор\Для загрузки\Готовые принты'
 df = pandas.DataFrame()
 for file in os.listdir(mainPath):
     if not os.path.isdir(os.path.join(mainPath,file)):

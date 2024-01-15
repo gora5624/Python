@@ -16,7 +16,7 @@ from Class.MyClassForMakeImage import ModelWithAddin
 from Class.ChekPhotoClass import ImageCheker
 from shutil import copytree, ignore_patterns
 # from Main import mameBookPrint
-from Folders import pathToCategoryList, pathToUploadFolderLocal, pathToUploadSecondWeb, pathToUploadFolderLocal, pathToSecondImagesFolderSilicon, pathToSecondImageUploadFolder, pathToDoneSiliconImageSilicon, pathToUploadWeb, pathToDoneBookImageWithName, pathToTopPrint
+from Folders import pathToCategoryList, pathToUploadFolderLocal, pathToUploadFolderLocal, pathToDoneSiliconImageSilicon, pathToUploadWeb, pathToDoneBookImageWithName, pathToTopPrint, pathToTopPrintSkin
 
 TokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
 TokenArb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6IjQ3YjBiYmJkLWQ2NWMtNDNhMi04NDZjLWU1ZDliMDVjZDE4NiJ9.jcFv0PeJTKMzovcugC5i0lmu3vKBYMqoKHi_1jPGqjM'
@@ -176,7 +176,11 @@ def CreateExcelForFolder(modelClass=ModelWithAddin, topPrint=''):
     listColorpd = pandas.DataFrame(modelClass.data)
     if type(topPrint) == str:
         # a=len(listColorpd['Принт'])
-        topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:len(listColorpd['Принт'])]
+        if 'SkinShell'.lower() not in modelClass.maskFolderName.lower():
+            topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:len(listColorpd['Принт'])]
+        else:
+            topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrintSkin))[0:len(listColorpd['Принт'])]
+
     listColorpd = pandas.merge(listColorpd, topPrint, how='left', left_on='Принт', right_on='Принт')
     listColorpd.sort_values(by=['Позиция'], inplace=True)
     listColorpd.to_excel(joinPath(pathToDoneSiliconImageSilicon, modelClass.maskFolderName)+'.xlsx', index=False)
@@ -192,10 +196,10 @@ def CreateExcelForFolderNew(modelClass=ModelWithAddin, color=str, addImage=str):
     nameFor1C = 'Чехол {} силикон {} {}'.format(model, modelClass.cameraType, colorCase)
     for i, VendorCode in enumerate(listVendorCode):
         imageList = [VendorCode['Путь к картинке'].replace(pathToDone, pathToUploadWeb + '/Силикон').replace('\\','/')]
-        if exists(joinPath(pathToSecondImagesFolderSilicon, model, color, '2.jpg')):
-            imageList.append(joinPath(pathToSecondImagesFolderSilicon, model, color, '2.jpg').replace(pathToSecondImagesFolderSilicon, pathToUploadSecondWeb + '/Силикон').replace('\\','/'))
-        elif exists(joinPath(pathToSecondImagesFolderSilicon, model, color, '3.jpg')):
-            imageList.append(joinPath(pathToSecondImagesFolderSilicon, model, color, '3.jpg').replace(pathToSecondImagesFolderSilicon, pathToUploadSecondWeb + '/Силикон').replace('\\','/'))    
+        # if exists(joinPath(pathToSecondImagesFolderSilicon, model, color, '2.jpg')):
+        #     imageList.append(joinPath(pathToSecondImagesFolderSilicon, model, color, '2.jpg').replace(pathToSecondImagesFolderSilicon, pathToUploadSecondWeb + '/Силикон').replace('\\','/'))
+        # elif exists(joinPath(pathToSecondImagesFolderSilicon, model, color, '3.jpg')):
+        #     imageList.append(joinPath(pathToSecondImagesFolderSilicon, model, color, '3.jpg').replace(pathToSecondImagesFolderSilicon, pathToUploadSecondWeb + '/Силикон').replace('\\','/'))    
             # data = {
             #     'Номер карточки': cardNumber,
             #     'Категория': categoryCase,
@@ -251,7 +255,7 @@ def CreateExcelForFolderNew(modelClass=ModelWithAddin, color=str, addImage=str):
 
 def copyImage():
     copytree(pathToDoneSiliconImageSilicon, pathToUploadFolderLocal + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
-    copytree(pathToSecondImagesFolderSilicon, pathToSecondImageUploadFolder + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
+    # copytree(pathToSecondImagesFolderSilicon, pathToSecondImageUploadFolder + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
 
 
 
@@ -316,7 +320,7 @@ def chekImage(fileName, supplier, force):
 
 if __name__ == '__main__':
     listImageAll = []
-    pathToDoneSiliconImageSilicon = r'F:\Для загрузки\Готовые принты\Силикон'
+    pathToDoneSiliconImageSilicon = r'F:\Для загрузки\Готовые принты'
     for folder in listdir(pathToDoneSiliconImageSilicon):
         if '.xlsx' in folder and '~' not in folder:
             listModel = read_xlsx(joinPath(pathToDoneSiliconImageSilicon, folder))
