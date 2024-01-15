@@ -14,7 +14,7 @@ from Moduls.makeImageBookWithNameModel import makeImageBookWithNameModel, makeIm
 from Moduls.AddSkriptForMakeBookImage import createExcel, deleteImage
 from Moduls.makeImageBookWithNameModel import copyImage as copyBooks
 from Moduls.makeImageSilicon import createAllSiliconImage, fakecreateAllSiliconImage
-from Folders import pathToDoneBookImageWithName, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToTopPrint, pathToTopPrintSkin
+from Folders import pathToDoneBookImageWithName, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToTopPrint
 from Moduls.AddSkriptForMakeSiliconImage import createExcelSilicon, markerForAllModel, chekImage, siliconCaseColorDict, CreateExcelForFolder
 from Moduls.GetCardAsincio import getListCard
 # импортируем дополнительные классы
@@ -80,7 +80,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.pathToCategoryPrint = r'E:\MyProduct\Python\WB\MakePrint\cat.xlsx'
         self.pathToAddinFile = ''
         self.topPrint = ''
-        self.ui.toExistsCardsChek.setChecked(True)
+        self.ui.toExistsCardsChek.setChecked(False)
         self.dfExistCase = ''
         self.updeteListFile()
         # self.updateModelList()
@@ -192,7 +192,6 @@ class mameBookPrint(QtWidgets.QMainWindow):
                             pool.close()
                             pool.join()
                             print("--- %s seconds ---" % (time.time() - start_time))
-        self.ui.CreateCaseAll.setStyleSheet("background-color : green")
 
 
 
@@ -326,24 +325,17 @@ class mameBookPrint(QtWidgets.QMainWindow):
         addImage = self.ui.AddPhotoSelector.currentText()
         mode = 'all'
         countPrint = self.ui.countPrints.value()
-        # if 'SkinShell'.lower() not in pathToMaskFolderSilicon.lower(): 
-        #     self.topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:countPrint]# ['Принт'].values.tolist()
-        # else:
-        #     self.topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrintSkin))[0:countPrint]# ['Принт'].values.tolist()
+        self.topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:countPrint]# ['Принт'].values.tolist()
         if self.ui.FakeModeChekBox.checkState() == 2:
             self.makeFakeDirsWithMask()
-            fakecreateAllSiliconImage(pathToMaskFolderSilicon, mode, countPrint=countPrint)
+            fakecreateAllSiliconImage(pathToMaskFolderSilicon, mode, topPrint=self.topPrint)
         else:
-            createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode, countPrint=countPrint)
+            createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode, topPrint=self.topPrint)
         # self.updateModelList()
 
 
     def chooseExistsCardsBtn(self):
         pathToListExistCaseFile = QFileDialog.getOpenFileName(self, ("Выберите файл с существующими карточками"), "", ("xlsx files (*.xlsx)"))[0]
-        if not pathToListExistCaseFile:
-            QtWidgets.QMessageBox.warning('Файл с карточками ВБ не выбран')
-            return
-        self.ui.chooseExistsCardsBtn.setText(pathToListExistCaseFile)
         countCase = 0
         for case in listdir(pathToDoneSiliconImageSilicon):
             if isdir(pathTMP:=joinPath(pathToDoneSiliconImageSilicon,case)):
@@ -361,18 +353,12 @@ class mameBookPrint(QtWidgets.QMainWindow):
             return 0
         else:
             self.ui.toExistsCardsChek.setChecked(True)
-        self.ui.chooseExistsCardsBtn.setStyleSheet("background-color : green")
-
         
 
 
     def btnApplyAddinFromFile(self):
         # print('tst')
-        self.pathToAddinFile = QFileDialog.getOpenFileName(self, ("Выберите файл с совместимостью"), r'F:\Маски силикон', ("xlsx files (*.xlsx)"))[0]
-        if not self.pathToAddinFile:
-            QtWidgets.QMessageBox.warning('файл с совместимостью не выбран')
-            return 
-        self.ui.ApplyAddinFromFile.setText(self.pathToAddinFile)
+        self.pathToAddinFile = QFileDialog.getOpenFileName(self, ("Выберите файл свойств"), r'F:\Маски силикон', ("xlsx files (*.xlsx)"))[0]
         dfAddinFile = pandas.DataFrame(pandas.read_excel(self.pathToAddinFile))
         existsFlag = self.ui.toExistsCardsChek.isChecked()
         counter = 0
@@ -414,7 +400,6 @@ class mameBookPrint(QtWidgets.QMainWindow):
                     self.listModelForExcel.append(modelWithAddin)
             except:
                 print('Для {} не удалось получить свойства.'.format(maskNew))
-        self.ui.ApplyAddinFromFile.setStyleSheet("background-color : green")
 
 
 
@@ -515,7 +500,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         # for item in self.listModelForExcel:
         #     CreateExcelForFolder(item, self.topPrint)
         self.updeteListFile()
-        self.ui.CreateExcelForSilicon.setStyleSheet("background-color : green")
+
 
     def btnMakeExcelClicked(self):
         resp = multiprocessing.Queue()

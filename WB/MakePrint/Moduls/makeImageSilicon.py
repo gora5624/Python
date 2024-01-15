@@ -1,4 +1,5 @@
 from genericpath import isdir
+import pandas
 from os.path import join as joinPath, abspath, exists
 from os import listdir, makedirs
 import multiprocessing
@@ -8,7 +9,7 @@ from PIL import Image
 import time
 from copy import copy
 from shutil import copytree, ignore_patterns
-from Folders import pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToPrintImageFolderAllSil, pathToPrintImageFolderWithOutBackSil, pathToSecondImagesFolderSilicon, pathToUploadFolderLocal, pathToSecondImageUploadFolder
+from Folders import pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToPrintImageFolderAllSil, pathToPrintImageFolderWithOutBackSil, pathToUploadFolderLocal, pathToTopPrint, pathToTopPrintSkin
 
 maxCPUUse = 6
 reductionDict = {'закрытой камерой': 'зак.кам.',
@@ -99,15 +100,15 @@ def createSiliconImage(pathToMaskFolder, countCPU, addImage, mode, topPrint):
     elif 'книга' in pathToMaskFolder.lower():
         pathToPrintFolder = pathToPrintImageFolderAllSil
     else:
-        try:
-            pathToSecondImageFolder = pathToMaskFolder.replace(pathToMaskFolderSilicon,pathToSecondImagesFolderSilicon)
-            chekPath(pathToSecondImageFolder)
-            secondImage = Image.open(joinPath(pathToMaskFolder, addImage))
-            sk = int(secondImage.size[0]/900)
-            secondImage = secondImage.resize((secondImage.size[0]//sk, secondImage.size[1]//sk))
-            secondImage.save(joinPath(pathToSecondImageFolder, addImage),"JPEG",optimize=True, progressive=True, quality=70)
-        except:
-            print('Не удалось скопировать 2е фото для {}'.format(pathToMaskFolder))
+        # try:
+        #     pathToSecondImageFolder = pathToMaskFolder.replace(pathToMaskFolderSilicon,pathToSecondImagesFolderSilicon)
+        #     chekPath(pathToSecondImageFolder)
+        #     secondImage = Image.open(joinPath(pathToMaskFolder, addImage))
+        #     sk = int(secondImage.size[0]/900)
+        #     secondImage = secondImage.resize((secondImage.size[0]//sk, secondImage.size[1]//sk))
+        #     secondImage.save(joinPath(pathToSecondImageFolder, addImage),"JPEG",optimize=True, progressive=True, quality=70)
+        # except:
+        #     print('Не удалось скопировать 2е фото для {}'.format(pathToMaskFolder))
         pathToPrintFolder = pathToPrintImageFolderAllSil if mode != 'all' else pathToPrintImageFolderAllSil
     chekPath(pathToMaskFolder)
     pathToMask = joinPath(pathToMaskFolder,'mask.png')
@@ -206,12 +207,16 @@ def FakeCombineImage(imagePrintName, pathToSave):
 
 def copyImage():
     copytree(pathToDoneSiliconImageSilicon, pathToUploadFolderLocal + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
-    copytree(pathToSecondImagesFolderSilicon, pathToSecondImageUploadFolder + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
+    # copytree(pathToSecondImagesFolderSilicon, pathToSecondImageUploadFolder + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
 
 
-def fakecreateAllSiliconImage(pathToSiliconMask, mode, topPrint=''):
+def fakecreateAllSiliconImage(pathToSiliconMask, mode, countPrint=200):
     pool = multiprocessing.Pool()
     for model in listdir(pathToSiliconMask):
+        if 'SkinShell'.lower() not in model.lower(): 
+            topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:countPrint]# ['Принт'].values.tolist()
+        else:
+            topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrintSkin))[0:countPrint]# ['Принт'].values.tolist()
         pathToModel = joinPath(pathToSiliconMask, model)
         if isdir(pathToModel):
             pool.apply_async(fakeCreateSiliconImage, args=(pathToModel, mode, topPrint,))
@@ -220,11 +225,17 @@ def fakecreateAllSiliconImage(pathToSiliconMask, mode, topPrint=''):
     # copyImage()
 
 
-def createAllSiliconImage(pathToSiliconMask, maxCPUUse, addImage, mode, topPrint='',):
+def createAllSiliconImage(pathToSiliconMask, maxCPUUse, addImage, mode, countPrint=200):
     start_time = time.time()
     #i = 0
+    
+    pool = multiprocessing.Pool()
     pool = multiprocessing.Pool(maxCPUUse)
     for model in listdir(pathToSiliconMask):
+        if 'SkinShell'.lower() not in model.lower(): 
+            topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:countPrint]# ['Принт'].values.tolist()
+        else:
+            topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrintSkin))[0:countPrint]# ['Принт'].values.tolist()
         pathToModel = joinPath(pathToSiliconMask, model)
         if isdir(pathToModel):
             # for color in listdir(pathToModel):

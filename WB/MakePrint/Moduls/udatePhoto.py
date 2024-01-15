@@ -147,7 +147,7 @@ def compImage(link):
 def updatePhotoMain(pathToFile=None, token=None):
     
     if (pathToFile == None) and (token ==None):
-        pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол Samsung Galaxy M33 5G силикон с зак.кам. проз. под карту.xlsx"
+        pathToFile = r"F:\Для загрузки\Готовые принты\Чехол Samsung Galaxy M33 5G силикон с зак.кам. проз. под карту.xlsx"
         token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImUyZTIyZGE1LTYxYWYtNDgyMi1hMDVkLTZiNzVlMTBiNzlmMiJ9.yDq9XasZjs-oB1PapNbD_NWIH8tgWEz_WyKLvVTNgBs'
         # pathToFile = sys.argv[1:][0].replace('#', '
     print(pathToFile)

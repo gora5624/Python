@@ -2,6 +2,7 @@ import os, json
 import configparser
 import time
 import telebot
+import datetime
 
 
 from Func import *
@@ -31,10 +32,16 @@ def Start(Token):
         # print('ответ:', answer)
         WriteAnswer(answer, feedback, Token)
         # print('--------------------------------------------------')
-        bot.send_message(-1001550015840, r'Отзыв: {}. ----- Ответ: {}'.format(feedback['Text'],answer))
+        # bot.send_message(-1001550015840, r'Отзыв: {}. ----- Ответ: {}'.format(feedback['Text'],answer))
+        log(r'Отзыв: {}. ----- Ответ: {}'.format(feedback['Text'],answer))
         time.sleep(3)
     # print('Итог:', answerLen)
     
+
+def log(mess):
+    with open(os.path.join(os.path.dirname(__file__), r'log'), 'a', encoding='utf-8') as logFile:
+        logFile.write(mess + ' ' + datetime.datetime.now().strftime('%d.%m.%y, %H:%M:%S') + '\n')
+        logFile.close()
 
 def StartAbr():
     try: Start(Token = config["MainSettings"]["tokenAbr"])
@@ -56,10 +63,10 @@ def StartAll():
     try: Start(Token=config["MainSettings"]["tokenKar"])
     except : bot.send_message(-1001550015840, 'Ошибка при запуске на Караханян')
     try: Start(Token=config["MainSettings"]["tokenSam"])
-    except : bot.send_message(-1001550015840, 'Ошибка при запуске на Самвед')
+    except : bot.send_message(-1001550015840, 'Ошибка при запуске на Самвел')
     try: Start(Token=config["MainSettings"]["tokenFed"])
     except : bot.send_message(-1001550015840, 'Ошибка при запуске на Федоров')
-    bot.send_message(-1001550015840, 'Закончил отвечать')
+    bot.send_message(-1001550015840, 'Закончил отвечать без ошибок')
 
 if __name__ == '__main__':
     StartAll()

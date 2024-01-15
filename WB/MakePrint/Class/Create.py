@@ -11,6 +11,7 @@ from aiohttp import ClientConnectorError
 import subprocess
 sys.path.append(abspath(joinPath(__file__, '...')))
 from Moduls.udatePhoto import updatePhotoMain
+from Moduls.udatePhotoSkinShell import udatePhotoSkinShellMain
 
 
 class WBnomenclaturesCreater:    
@@ -30,8 +31,7 @@ class WBnomenclaturesCreater:
     @staticmethod
     def uplaodImage(path, token):
         if "skinshell" in path.lower():
-            args = [sys.executable, r'E:\MyProduct\Python\WB\MakePrint\Moduls\udatePhotoSkinShell.py', path.replace(' ', '#'), token]
-            subprocess.Popen(args, shell=True).wait()
+            udatePhotoSkinShellMain(path, token)
         else:
             try:
                 updatePhotoMain(path, token)

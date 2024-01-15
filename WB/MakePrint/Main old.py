@@ -14,7 +14,7 @@ from Moduls.makeImageBookWithNameModel import makeImageBookWithNameModel, makeIm
 from Moduls.AddSkriptForMakeBookImage import createExcel, deleteImage
 from Moduls.makeImageBookWithNameModel import copyImage as copyBooks
 from Moduls.makeImageSilicon import createAllSiliconImage, fakecreateAllSiliconImage
-from Folders import pathToDoneBookImageWithName, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToTopPrint, pathToTopPrintSkin
+from Folders import pathToDoneBookImageWithName, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToTopPrint
 from Moduls.AddSkriptForMakeSiliconImage import createExcelSilicon, markerForAllModel, chekImage, siliconCaseColorDict, CreateExcelForFolder
 from Moduls.GetCardAsincio import getListCard
 # импортируем дополнительные классы
@@ -54,14 +54,14 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.CreateExcelForSilicon.clicked.connect(self.btnCreateExcelForSilicon)
         self.ui.ChekImage.clicked.connect(self.btnChekImage)
         self.ui.ChekImageAll.clicked.connect(self.ChekImageAll)
-        # self.ui.ApplyAddin.clicked.connect(self.btnApplyAddin)
+        self.ui.ApplyAddin.clicked.connect(self.btnApplyAddin)
         self.ui.ApplyAddinFromFile.clicked.connect(self.btnApplyAddinFromFile)
         self.ui.CreateCase.clicked.connect(self.btnCreateCase)
         self.ui.CreateCaseAll.clicked.connect(self.btnCreateCaseAll)
-        # self.ui.updateListModel.clicked.connect(self.updateModelList)
+        self.ui.updateListModel.clicked.connect(self.updateModelList)
         self.ui.makePlastinsBut.clicked.connect(self.makeplastins)
-        # self.ui.ClearAddin.clicked.connect(self.crearAdiin)
-        # self.ui.CreateDB.clicked.connect(self.crateDB)
+        self.ui.ClearAddin.clicked.connect(self.crearAdiin)
+        self.ui.CreateDB.clicked.connect(self.crateDB)
         self.ui.chooseExistsCardsBtn.clicked.connect(self.chooseExistsCardsBtn)
         self.ui.makeCartholdersButt.clicked.connect(self.btnCreateCartholders)
         self.tokenAb = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjMxMDI1djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcxNzA5Njk1MSwiaWQiOiIyMzUyZGFmYS05NTdhLTQ0MzAtYWFhMi1lZGM5NDZkZDY0ODEiLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjUyNzczNiwicyI6MTAsInNpZCI6ImFhNDdlNDg5LTU5ZTAtNDIzMi1hMWJmLTBlMTIzOWYwNDJmMSIsInVpZCI6NDUzMjI5MjB9.j9s_VtDpTEWceEd1vUTWf6uofUuSY30q0UrR-H047qZE40sb8atwtAviABB7eoeLQdu3T69UosBdn_Bvj2-2ZQ'   
@@ -80,10 +80,10 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.pathToCategoryPrint = r'E:\MyProduct\Python\WB\MakePrint\cat.xlsx'
         self.pathToAddinFile = ''
         self.topPrint = ''
-        self.ui.toExistsCardsChek.setChecked(True)
+        self.ui.toExistsCardsChek.setChecked(False)
         self.dfExistCase = ''
         self.updeteListFile()
-        # self.updateModelList()
+        self.updateModelList()
 
 
     def crateDB(self):
@@ -192,7 +192,6 @@ class mameBookPrint(QtWidgets.QMainWindow):
                             pool.close()
                             pool.join()
                             print("--- %s seconds ---" % (time.time() - start_time))
-        self.ui.CreateCaseAll.setStyleSheet("background-color : green")
 
 
 
@@ -288,22 +287,22 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 return False
 
 
-    # def updateModelList(self):
-    #     # self.ui.ModelSelector.clear()
-    #     # self.ui.ModelSelector.addItem(markerForAllModel)
-    #     if exists(pathToDoneSiliconImageSilicon):
-    #         listModel = listdir(pathToDoneSiliconImageSilicon)
-    #         for model in listModel:
-    #             for maskFolder in listdir(pathToMaskFolderSilicon):
-    #                 if isdir(joinPath(pathToMaskFolderSilicon, maskFolder)):
-    #                     if model in maskFolder:
-    #                         if isdir(joinPath(pathToMaskFolderSilicon,model)):
-    #                             self.ui.ModelSelector.addItem(model)
-    #     if exists(pathToDoneBookImageWithName):
-    #         listModel = listdir(pathToDoneBookImageWithName)
-    #         for model in listModel:
-    #             if isdir(joinPath(pathToDoneBookImageWithName,model)):
-    #                 self.ui.ModelSelector.addItem(model)
+    def updateModelList(self):
+        self.ui.ModelSelector.clear()
+        self.ui.ModelSelector.addItem(markerForAllModel)
+        if exists(pathToDoneSiliconImageSilicon):
+            listModel = listdir(pathToDoneSiliconImageSilicon)
+            for model in listModel:
+                for maskFolder in listdir(pathToMaskFolderSilicon):
+                    if isdir(joinPath(pathToMaskFolderSilicon, maskFolder)):
+                        if model in maskFolder:
+                            if isdir(joinPath(pathToMaskFolderSilicon,model)):
+                                self.ui.ModelSelector.addItem(model)
+        if exists(pathToDoneBookImageWithName):
+            listModel = listdir(pathToDoneBookImageWithName)
+            for model in listModel:
+                if isdir(joinPath(pathToDoneBookImageWithName,model)):
+                    self.ui.ModelSelector.addItem(model)
 
     def makeFakeDirsWithMask(self):
         pathToFile = QFileDialog.getOpenFileName(self, 'Выберите файл со свойствами', r'F:\Маски силикон', '*.xlsx',)[0]
@@ -319,31 +318,24 @@ class mameBookPrint(QtWidgets.QMainWindow):
             fakecreateAllSiliconImage(pathToMaskFolderSilicon, mode)
         else:
             createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode)
-        # self.updateModelList()
+        self.updateModelList()
 
 
     def btnCreateSiliconImageTop(self):
         addImage = self.ui.AddPhotoSelector.currentText()
         mode = 'all'
         countPrint = self.ui.countPrints.value()
-        # if 'SkinShell'.lower() not in pathToMaskFolderSilicon.lower(): 
-        #     self.topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:countPrint]# ['Принт'].values.tolist()
-        # else:
-        #     self.topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrintSkin))[0:countPrint]# ['Принт'].values.tolist()
+        self.topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:countPrint]# ['Принт'].values.tolist()
         if self.ui.FakeModeChekBox.checkState() == 2:
             self.makeFakeDirsWithMask()
-            fakecreateAllSiliconImage(pathToMaskFolderSilicon, mode, countPrint=countPrint)
+            fakecreateAllSiliconImage(pathToMaskFolderSilicon, mode, topPrint=self.topPrint)
         else:
-            createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode, countPrint=countPrint)
-        # self.updateModelList()
+            createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode, topPrint=self.topPrint)
+        self.updateModelList()
 
 
     def chooseExistsCardsBtn(self):
         pathToListExistCaseFile = QFileDialog.getOpenFileName(self, ("Выберите файл с существующими карточками"), "", ("xlsx files (*.xlsx)"))[0]
-        if not pathToListExistCaseFile:
-            QtWidgets.QMessageBox.warning('Файл с карточками ВБ не выбран')
-            return
-        self.ui.chooseExistsCardsBtn.setText(pathToListExistCaseFile)
         countCase = 0
         for case in listdir(pathToDoneSiliconImageSilicon):
             if isdir(pathTMP:=joinPath(pathToDoneSiliconImageSilicon,case)):
@@ -361,18 +353,12 @@ class mameBookPrint(QtWidgets.QMainWindow):
             return 0
         else:
             self.ui.toExistsCardsChek.setChecked(True)
-        self.ui.chooseExistsCardsBtn.setStyleSheet("background-color : green")
-
         
 
 
     def btnApplyAddinFromFile(self):
         # print('tst')
-        self.pathToAddinFile = QFileDialog.getOpenFileName(self, ("Выберите файл с совместимостью"), r'F:\Маски силикон', ("xlsx files (*.xlsx)"))[0]
-        if not self.pathToAddinFile:
-            QtWidgets.QMessageBox.warning('файл с совместимостью не выбран')
-            return 
-        self.ui.ApplyAddinFromFile.setText(self.pathToAddinFile)
+        self.pathToAddinFile = QFileDialog.getOpenFileName(self, ("Выберите файл свойств"), r'F:\Маски силикон', ("xlsx files (*.xlsx)"))[0]
         dfAddinFile = pandas.DataFrame(pandas.read_excel(self.pathToAddinFile))
         existsFlag = self.ui.toExistsCardsChek.isChecked()
         counter = 0
@@ -414,92 +400,91 @@ class mameBookPrint(QtWidgets.QMainWindow):
                     self.listModelForExcel.append(modelWithAddin)
             except:
                 print('Для {} не удалось получить свойства.'.format(maskNew))
-        self.ui.ApplyAddinFromFile.setStyleSheet("background-color : green")
 
 
 
 
-    # def btnApplyAddin(self, curModel = False):
-    #     # if curModel == False:
-    #     #     curModel = self.ui.ModelSelector.currentText()
-    #     # else:
-    #     curModel = markerForAllModel
-    #     listModel = []
-    #     for i in range(1,self.ui.ModelSelector.count()):
-    #         listModel.append(self.ui.ModelSelector.itemText(i))
-    #     counter =0
-    #     if curModel == markerForAllModel:
-    #         existsFlag = self.ui.toExistsCardsChek.isChecked()
-    #         self.listModelForExcel = []
-    #         brand = self.ui.textSiliconBrand.toPlainText()
-    #         compability = self.ui.textSiliconCompability.toPlainText()
-    #         # name = self.ui.textSiliconName.toPlainText()
-    #         modelAddin = self.ui.textSiliconModel.toPlainText()
-    #         # cameraType = self.ui.CameraType.currentText()
-    #         price = self.ui.textPrice.toPlainText()
-    #         for modelTMP in listModel:
-    #             # model = modelTMP.replace(caseType,'').strip()
-    #             delta = len(listdir(joinPath(pathToDoneSiliconImageSilicon, modelTMP)))
-    #             if existsFlag:
-    #                 listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
-    #             else:
-    #                 listDataVendorCode = ''
-    #             counter+=delta
-    #             modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, modelTMP, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
-    #             # if caseType == self.bookName:
-    #             #     modelWithAddin.colorList = listdir(joinPath(pathToDoneBookImageWithName, model.replace(caseType,'').strip()))
-    #             # else:
-    #             #     modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, model.replace(caseType,'').strip()))
-    #             self.listModelForExcel.append(modelWithAddin)
-    #             self.ui.textSiliconMask.setText('Все модели из списка записаны\n')
-    #     else:
-    #         if self.listModelForExcel != []:
-    #             for i, item in enumerate(self.listModelForExcel):
-    #                 # if item.model == curModel:
-    #                     # if self.acceptEvent("Свойства для {} уже записаны, перезаписать?".format(item.model)):
-    #                 delta = len(listdir(joinPath(pathToDoneSiliconImageSilicon, modelTMP)))
-    #                 if existsFlag:
-    #                     listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
-    #                 else:
-    #                     listDataVendorCode = ''
-    #                 counter+=delta
-    #                 brand = self.ui.textSiliconBrand.toPlainText()
-    #                 compability = self.ui.textSiliconCompability.toPlainText()
-    #                 modelAddin = self.ui.textSiliconModel.toPlainText()
-    #                 price = self.ui.textPrice.toPlainText()
-    #                 self.listModelForExcel[i] = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
+    def btnApplyAddin(self, curModel = False):
+        if curModel == False:
+            curModel = self.ui.ModelSelector.currentText()
+        else:
+            curModel = markerForAllModel
+        listModel = []
+        for i in range(1,self.ui.ModelSelector.count()):
+            listModel.append(self.ui.ModelSelector.itemText(i))
+        counter =0
+        if curModel == markerForAllModel:
+            existsFlag = self.ui.toExistsCardsChek.isChecked()
+            self.listModelForExcel = []
+            brand = self.ui.textSiliconBrand.toPlainText()
+            compability = self.ui.textSiliconCompability.toPlainText()
+            # name = self.ui.textSiliconName.toPlainText()
+            modelAddin = self.ui.textSiliconModel.toPlainText()
+            # cameraType = self.ui.CameraType.currentText()
+            price = self.ui.textPrice.toPlainText()
+            for modelTMP in listModel:
+                # model = modelTMP.replace(caseType,'').strip()
+                delta = len(listdir(joinPath(pathToDoneSiliconImageSilicon, modelTMP)))
+                if existsFlag:
+                    listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                else:
+                    listDataVendorCode = ''
+                counter+=delta
+                modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, modelTMP, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
+                # if caseType == self.bookName:
+                #     modelWithAddin.colorList = listdir(joinPath(pathToDoneBookImageWithName, model.replace(caseType,'').strip()))
+                # else:
+                #     modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, model.replace(caseType,'').strip()))
+                self.listModelForExcel.append(modelWithAddin)
+                self.ui.textSiliconMask.setText('Все модели из списка записаны\n')
+        else:
+            if self.listModelForExcel != []:
+                for i, item in enumerate(self.listModelForExcel):
+                    # if item.model == curModel:
+                        # if self.acceptEvent("Свойства для {} уже записаны, перезаписать?".format(item.model)):
+                    delta = len(listdir(joinPath(pathToDoneSiliconImageSilicon, modelTMP)))
+                    if existsFlag:
+                        listDataVendorCode = self.dfExistCase['vendorCode'].values.tolist()[counter:counter+delta]
+                    else:
+                        listDataVendorCode = ''
+                    counter+=delta
+                    brand = self.ui.textSiliconBrand.toPlainText()
+                    compability = self.ui.textSiliconCompability.toPlainText()
+                    modelAddin = self.ui.textSiliconModel.toPlainText()
+                    price = self.ui.textPrice.toPlainText()
+                    self.listModelForExcel[i] = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
 
-    #                 # self.listModelForExcel[i].colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
-    #                 self.ui.textSiliconMask.setText(curModel+' перезаписана\n')
-    #                 break
-    #                     # else:
-    #                     #     return None
-    #             brand = self.ui.textSiliconBrand.toPlainText()
-    #             compability = self.ui.textSiliconCompability.toPlainText()
-    #             modelAddin = self.ui.textSiliconModel.toPlainText()
-    #             price = self.ui.textPrice.toPlainText()
-    #             modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
-    #             # modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
-    #             self.listModelForExcel.append(modelWithAddin)
-    #             self.ui.textSiliconMask.setText(curModel+' записан\n')
-    #             return None
-    #         else:
-    #             brand = self.ui.textSiliconBrand.toPlainText()
-    #             compability = self.ui.textSiliconCompability.toPlainText()
-    #             modelAddin = self.ui.textSiliconModel.toPlainText()
-    #             price = self.ui.textPrice.toPlainText()
-    #             modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
-    #             # modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
-    #             self.listModelForExcel.append(modelWithAddin)
-    #             self.ui.textSiliconMask.setText(curModel+' записан\n')
-    #             return None
+                    # self.listModelForExcel[i].colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
+                    self.ui.textSiliconMask.setText(curModel+' перезаписана\n')
+                    break
+                        # else:
+                        #     return None
+                brand = self.ui.textSiliconBrand.toPlainText()
+                compability = self.ui.textSiliconCompability.toPlainText()
+                modelAddin = self.ui.textSiliconModel.toPlainText()
+                price = self.ui.textPrice.toPlainText()
+                modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
+                # modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
+                self.listModelForExcel.append(modelWithAddin)
+                self.ui.textSiliconMask.setText(curModel+' записан\n')
+                return None
+            else:
+                brand = self.ui.textSiliconBrand.toPlainText()
+                compability = self.ui.textSiliconCompability.toPlainText()
+                modelAddin = self.ui.textSiliconModel.toPlainText()
+                price = self.ui.textPrice.toPlainText()
+                modelWithAddin = ModelWithAddin(brand, compability, modelAddin, price, curModel, pathToDoneSiliconImageSilicon, siliconCaseColorDict, existsFlag=existsFlag, listDataVendorCode=listDataVendorCode)
+                # modelWithAddin.colorList = listdir(joinPath(pathToMaskFolderSilicon, curModel.replace(caseType,'').strip()))
+                self.listModelForExcel.append(modelWithAddin)
+                self.ui.textSiliconMask.setText(curModel+' записан\n')
+                return None
         
 
 
     def btnCreateExcelForSilicon(self):
         addImage = self.ui.AddPhotoSelector.currentText()
-        # if self.listModelForExcel == []:
-        #     self.btnApplyAddin(True)
+        if self.listModelForExcel == []:
+            self.btnApplyAddin(True)
         # procList = []
         # for item in self.listModelForExcel:
         #     p = multiprocessing.Process(target=CreateExcelForFolder, args=(item, addImage, ))
@@ -515,7 +500,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
         # for item in self.listModelForExcel:
         #     CreateExcelForFolder(item, self.topPrint)
         self.updeteListFile()
-        self.ui.CreateExcelForSilicon.setStyleSheet("background-color : green")
+
 
     def btnMakeExcelClicked(self):
         resp = multiprocessing.Queue()
@@ -551,7 +536,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
             tmpListName = line['Номенклатура'].replace('Чехол книга ','').replace(' черный с сил. вставкой Fashion','').split(' ')
             modelBrand = tmpListName[0]
             modelModel = ' '.join(tmpListName[1:])
-            if not self.ui.newDesignChek.checkState():
+            if not self.ui.checkBox_NewDes.checkState():
                 p = multiprocessing.Process(target=makeImageBookWithNameModel, args=(colorList, modelBrand, modelModel,))
             else:
                 p = multiprocessing.Process(target=makeImageBookWithNameModelNew, args=(colorList, modelBrand, modelModel,))

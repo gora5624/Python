@@ -132,6 +132,8 @@ dmypy.json
 \c#\ConsoleApp1\.vs
 
 # MyFiles
+*.pkl
+.pkl
 token
 autorz.py
 printPicle.pkl
