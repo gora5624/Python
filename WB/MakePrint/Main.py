@@ -434,8 +434,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
     #         brand = self.ui.textSiliconBrand.toPlainText()
     #         compability = self.ui.textSiliconCompability.toPlainText()
     #         # name = self.ui.textSiliconName.toPlainText()
-    #         modelAddin = self.ui.textSiliconModel.toPlainText()
-    #         # cameraType = self.ui.CameraType.currentText()
+    #         modelAddin = self.ui.textSiliconModel.toPlainText()2
     #         price = self.ui.textPrice.toPlainText()
     #         for modelTMP in listModel:
     #             # model = modelTMP.replace(caseType,'').strip()
