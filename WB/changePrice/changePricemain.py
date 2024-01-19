@@ -40,7 +40,7 @@ class PrintHelper(QtWidgets.QMainWindow):
     
     def openFileExcelFor1c(self):
         # open and validate "xlsx" file for 1c and add contents to temporary variable and then run func that get info from this file
-        self.pathToExcelFor1CFile = QFileDialog.getOpenFileName(self, ("Выберите файл со списком номенклатуры из 1С"), os.path.expanduser('~/Desktop'), ("Excel Files (*.xlsx)"))[0]
+        self.pathToExcelFor1CFile = QFileDialog.getOpenFileName(self, ("Выберите файл со списком номенклатуры из 1С"), r'C:\Users\Георгий\Documents\цены', ("Excel Files (*.xlsx)"))[0]
         if not self.pathToExcelFor1CFile:
             QMessageBox.warning(self,'Не выбран файл', 'Файл Excel не выбран')
             return

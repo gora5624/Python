@@ -151,7 +151,7 @@ def main(caseImageNum, printImageNum, case, clownPath, smallFlag):
                         os.makedirs(os.path.join(donePath, case))                      
                     # x,y = final.size
                     final = final.resize((1500,2000), Image.LANCZOS)
-                    final.save(finalImagePath)
+                    final.save(finalImagePath, optimize=True)
                     # shutil.copy(os.path.join(caseDir, case , '5.png'), os.path.join(donePath, case))
 
                     #caseImage
@@ -179,5 +179,5 @@ if __name__ == '__main__':
                 # main(caseImageNum, printImageNum, case)
             pool.close()
             pool.join()
-    copytree(r'F:\done', r'\\rab\uploads\Готовые принты\Силикон', dirs_exist_ok=True)
+    copytree(r'D:\done', r'\\rab\uploads\Готовые принты\Силикон', dirs_exist_ok=True)
     
