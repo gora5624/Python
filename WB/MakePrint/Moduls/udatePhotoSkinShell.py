@@ -32,7 +32,9 @@ def pushPhoto(line, token, requestUrl, countTry=0):
         }
     headersRequest = {'Authorization': '{}'.format(token)}
     try:
-        r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=50)  
+        r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=50)
+        if r.status_code ==400:
+            print('Проверь ссылки {}'.format(';'.join(data)))
         r
         time.sleep(0.7)
         if '"Неверный запрос: по данному артикулу не нашлось карточки товара","additionalErrors' in r.text:
@@ -40,7 +42,8 @@ def pushPhoto(line, token, requestUrl, countTry=0):
         if '"Внутренняя ошибка сервиса","additionalErrors' in r.text:
             print('1')
         if 'не удалось' in r.text.lower():
-            print(r.text + ' ' + jsonRequest['vendorCode'])
+            pass
+            #print(r.text + ' ' + jsonRequest['vendorCode'])
         else:
             pass
     except requests.ConnectionError:
@@ -86,7 +89,7 @@ def checkImage(art, token):
 
 
 def udatePhotoSkinShellMain(path, token):
-    print('work')
+    print(path)
     pathToFile = path#sys.argv[1:][0].replace('#', ' ')
     token = token# sys.argv[1:][1].replace('#', ' ')
     # pathToFile = r"F:\Для загрузки\Готовые принты\Силикон\Чехол Honor X8a силикон с зак.кам. черный противоуд. SkinShell.xlsx"
