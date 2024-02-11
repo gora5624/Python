@@ -123,3 +123,53 @@ def makeImageColorNew(color, modelBrand, modelModel):
         if not exists(fullPathToSave.replace('/','&')):
             makedirs(fullPathToSave.replace('/','&'))
         imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic.replace('print ','(Принт ').replace('.png',')') + '.jpg'), quality=100)
+
+def makeImageColorNew2(color, modelBrand, modelModel):
+    pathToBookImageWithOutModelNew2 = r'F:\книжки новые2'
+    pathToColor = joinPath(pathToBookImageWithOutModelNew, color)
+    maxWidth = 650
+    maxHeight =110
+    # topPrint = pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:200]['Принт'].values.tolist()
+    for pic in listdir(pathToColor):
+        if pic == 'Thumbs.db':
+            continue
+        # if pic.replace('.png',')').replace('print','(Принт') in topPrint:
+        imagePrint = Image.open(joinPath(pathToColor, pic))
+        imagePrint = imagePrint.resize((1200, 1601))
+        imageDone = Image.new('RGB', imagePrint.size)
+        imageDone.paste(imagePrint)
+        # Написать бренд
+        
+        drawText = ImageDraw.Draw(imageDone)
+        fontSizeDef = 100
+        customFont = ImageFont.truetype(fontPath, fontSizeDef)
+        while True:
+            left, top, right, bottom = drawText.textbbox((0,0),text=modelBrand, font=customFont)
+            widthText, heightText = right - left, bottom - top
+            if (widthText < maxWidth) and (heightText < maxHeight):
+                break
+            else:
+                fontSizeDef-=5
+                customFont = ImageFont.truetype(fontPath, fontSizeDef)
+        drawText = ImageDraw.Draw(imageDone)
+        drawText.text((368-(int(widthText/2)),1350), modelBrand, font=customFont,fill='#000000')
+        # imageDone.show()
+        # написать Модель
+        fontSizeDef = 100
+        customFont = ImageFont.truetype(fontPath, fontSizeDef)
+        drawText = ImageDraw.Draw(imageDone)
+        while True:
+            left, top, right, bottom = drawText.textbbox((0,0),text=modelModel, font=customFont)
+            widthText, heightText = right - left, bottom - top
+            if (widthText < maxWidth) and (heightText < maxHeight):
+                break
+            else:
+                fontSizeDef-=5
+                customFont = ImageFont.truetype(fontPath, fontSizeDef)
+        drawText = ImageDraw.Draw(imageDone)
+        drawText.text((368-(int(widthText/2)),1470), modelModel, font=customFont,fill='#000000')
+        # imageDone.show()
+        fullPathToSave = joinPath(pathToDoneBookImageWithName, 'Чехол книга ' + modelBrand + ' ' + modelModel +' черный с сил. вставкой Fashion')
+        if not exists(fullPathToSave.replace('/','&')):
+            makedirs(fullPathToSave.replace('/','&'))
+        imageDone.save(joinPath(fullPathToSave.replace('/','&'), pic.replace('print ','(Принт ').replace('.png',')') + '.jpg'), quality=100)

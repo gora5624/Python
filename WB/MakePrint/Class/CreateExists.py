@@ -280,7 +280,7 @@ class ExistsNomenclaturesCreater:
        # for card in self.listCardToChange:
        step = 10
        for i in range(0, len(self.listCardToChange), step):
-            timeout = 10              
+            timeout = 20              
             jsonRequestsUpdateCard = self.listCardToChange[i:i+step]
             while timeout < 60:
                 try:
@@ -307,7 +307,7 @@ class ExistsNomenclaturesCreater:
             json = {
                 'nmIDs':x
             }
-            r = requests.post(url=url, json=json, headers=headers, timeout=10)
+            r = requests.post(url=url, json=json, headers=headers, timeout=30)
             if r.status_code == 200:
                 print('объеденил успешно ' + str(x))
             elif r.status_code == 400 and "Все карточки находятся в одной группе" in r.text:
