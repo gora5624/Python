@@ -28,7 +28,7 @@ for file in os.listdir(mainPath):
                     fullName = fullName.replace(word[0],word[1])
                 size = ''
             dataTMP = {
-                'Баркод':line['Баркод товара'],
+                'Баркод товара':line['Баркод товара'],
                 'Группа':'Чехол производство (принт)',
                 'Основная характеристика':line['Принт'],
                 'Название 1С':name,

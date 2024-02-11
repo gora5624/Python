@@ -3,9 +3,9 @@ import os
 
 app = ps.Application()
 app.displayDialogs = ps.DialogModes.DisplayNoDialogs
-for file in os.listdir(r'D:\Новые принты на книжки'):
+for file in os.listdir(r'\\192.168.0.33\shared\_Общие документы_\Егор\_Принты книги 1000_10012024\под натяжку'):
     if not os.path.exists(os.path.join(r'\\rab\Диск для принтов сервак Егор\книжки новые2\Черный',file.replace('.jpg.png',''))):
-        png_doc = app.open(os.path.join(r'D:\Новые принты на книжки',file))
+        png_doc = app.open(os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\_Принты книги 1000_10012024\под натяжку',file))
         startRulerUnits = app.preferences.rulerUnits
         if png_doc.activeLayer.kind != ps.LayerKind.TextLayer:
             x2 = (png_doc.width * png_doc.resolution) / 2

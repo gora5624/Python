@@ -94,48 +94,48 @@
 # # #     #imgBack.show()
 # # #     imgBack.save(r'D:\test3\{}'.format(str(prPath)))
 
-import photoshop.api as ps
-import os
+# import photoshop.api as ps
+# import os
 
-app = ps.Application()
-app.displayDialogs = ps.DialogModes.DisplayNoDialogs
-#app.displayDialogs = ps.
-for file in os.listdir(r'D:\Новые принты на книжки'):
-    if not os.path.exists(os.path.join(r'\\rab\Диск для принтов сервак Егор\книжки новые2\Черный',file.replace('.jpg.png',''))):
-        png_doc = app.open(os.path.join(r'D:\Новые принты на книжки',file))
-        startRulerUnits = app.preferences.rulerUnits
-        if png_doc.activeLayer.kind != ps.LayerKind.TextLayer:
-            x2 = (png_doc.width * png_doc.resolution) / 2
-            y2 = png_doc.height * png_doc.resolution
-            sel_area = ((0, 0), (x2, 0), (x2, y2), (0, y2))
-            png_doc.selection.select(sel_area, ps.SelectionType.ReplaceSelection, 0, False)
+# app = ps.Application()
+# app.displayDialogs = ps.DialogModes.DisplayNoDialogs
+# #app.displayDialogs = ps.
+# for file in os.listdir(r'D:\Новые принты на книжки'):
+#     if not os.path.exists(os.path.join(r'\\rab\Диск для принтов сервак Егор\книжки новые2\Черный',file.replace('.jpg.png',''))):
+#         png_doc = app.open(os.path.join(r'D:\Новые принты на книжки',file))
+#         startRulerUnits = app.preferences.rulerUnits
+#         if png_doc.activeLayer.kind != ps.LayerKind.TextLayer:
+#             x2 = (png_doc.width * png_doc.resolution) / 2
+#             y2 = png_doc.height * png_doc.resolution
+#             sel_area = ((0, 0), (x2, 0), (x2, y2), (0, y2))
+#             png_doc.selection.select(sel_area, ps.SelectionType.ReplaceSelection, 0, False)
 
-            png_doc.selection.copy()
-            app.preferences.rulerUnits = ps.Units.Pixels
-            #pasteDoc = doc.add(x2, y2, doc.resolution, "Paste Target")
+#             png_doc.selection.copy()
+#             app.preferences.rulerUnits = ps.Units.Pixels
+#             #pasteDoc = doc.add(x2, y2, doc.resolution, "Paste Target")
 
-        png_doc.activeLayer = png_doc.layers[0]
-        png_doc.width
-        png_doc.height
-        png_doc.resizeImage(png_doc.width*(1195/png_doc.height) ,1195)
-        png_doc.activeLayer.copy()
+#         png_doc.activeLayer = png_doc.layers[0]
+#         png_doc.width
+#         png_doc.height
+#         png_doc.resizeImage(png_doc.width*(1195/png_doc.height) ,1195)
+#         png_doc.activeLayer.copy()
 
-        doc = app.load(r"\\192.168.0.33\shared\_Общие документы_\Егор\книги_test.psd")
-        doc.paste()
-        png_doc.close()
-        layer_index = 3
-        doc.activeLayer = doc.layers[layer_index]
-        # doc.activeLayer.move(doc.layers[layer_index + 2], ps.ElementPlacement.PlaceBefore)
-        a = doc.activeLayer.bounds
-        x,y = 839,681
-        x2,y2 = (a[2]-a[0])/2+a[0], (a[3]-a[1])/2+a[1]
-        doc.activeLayer = doc.layers[layer_index]
-        doc.activeLayer.translate(x-x2, y-y2)
-        doc.activeLayer.resize(100,100,ps.AnchorPosition.BottomCenter)
-        # doc.selection.resize(100,100,ps.AnchorPosition.BottomCenter)
+#         doc = app.load(r"\\192.168.0.33\shared\_Общие документы_\Егор\книги_test.psd")
+#         doc.paste()
+#         png_doc.close()
+#         layer_index = 3
+#         doc.activeLayer = doc.layers[layer_index]
+#         # doc.activeLayer.move(doc.layers[layer_index + 2], ps.ElementPlacement.PlaceBefore)
+#         a = doc.activeLayer.bounds
+#         x,y = 839,681
+#         x2,y2 = (a[2]-a[0])/2+a[0], (a[3]-a[1])/2+a[1]
+#         doc.activeLayer = doc.layers[layer_index]
+#         doc.activeLayer.translate(x-x2, y-y2)
+#         doc.activeLayer.resize(100,100,ps.AnchorPosition.BottomCenter)
+#         # doc.selection.resize(100,100,ps.AnchorPosition.BottomCenter)
 
-        if startRulerUnits != app.preferences.rulerUnits:
-            app.preferences.rulerUnits = startRulerUnits
+#         if startRulerUnits != app.preferences.rulerUnits:
+#             app.preferences.rulerUnits = startRulerUnits
 
         # doc.lKayers.
         # text_color = ps.SolidColor()
@@ -148,11 +148,11 @@ for file in os.listdir(r'D:\Новые принты на книжки'):
         # # new_text_layer.textItem.position = [160, 167]
         # # new_text_layer.textItem.size = 40
         # # new_text_layer.textItem.color = text_color
-        options = ps.PNGSaveOptions()
-        # # # save to jpg
-        jpg = os.path.join(r'\\rab\Диск для принтов сервак Егор\книжки новые2\Черный',file.replace('.jpg.png',''))
-        doc.saveAs(jpg, options, asCopy=True)
-        doc.activeLayer.remove()
+        # options = ps.PNGSaveOptions()
+        # # # # save to jpg
+        # jpg = os.path.join(r'\\rab\Диск для принтов сервак Егор\книжки новые2\Черный',file.replace('.jpg.png',''))
+        # doc.saveAs(jpg, options, asCopy=True)
+        # doc.activeLayer.remove()
 # app.doJavaScript(f'alert("save to jpg: {jpg}")')
 
 # # # import os
@@ -245,3 +245,43 @@ for file in os.listdir(r'D:\Новые принты на книжки'):
 # im1 = Image.open(r"\\rab\uploads\2.webp")
 # im2 = Image.open(r"\\rab\uploads\1.jpg")
 # print(rmsdiff(im1, im2))
+
+
+# import os
+# import shutil
+# import pandas
+
+# pathToPront = r'\\rab\Диск для принтов сервак Егор\книжки новые\Черный'
+# df = pandas.read_excel(r"\\192.168.0.33\shared\_Общие документы_\Егор\Top200_New\Принты_ТОП200_Книги_NEW.xlsx").to_dict('records')
+# for i, image in enumerate(df):
+#     fileName = image['Принт'].replace('(Принт ', 'print ').replace(')','.png')
+#     if fileName in os.listdir(pathToPront):
+#         shutil.copy(os.path.join(pathToPront, fileName), os.path.join(r"\\192.168.0.33\shared\_Общие документы_\Егор\Top200_New", str(i)+'.png'))
+        # os.rename()
+
+# import pandas
+# import os
+
+
+# def main():
+    # mainPath = r'\\rab\Диск для принтов сервак Егор\для 1с — копия'
+    # data = pandas.read_excel(r"\\rab\Диск для принтов сервак Егор\Маски силикон\карточки.xlsx")
+    # for file in os.listdir(mainPath):
+    #     if '.xlsx' in file:
+    #         df = pandas.read_excel(os.path.join(mainPath, file))
+    #         # data2 = data.loc['Артикул продавца' == df['Артикул товара']]
+    #         df
+    #         dfNew = df.merge(data, how='left', left_on='Артикул товара', right_on='Артикул продавца')
+    # #         dfNew.to_excel(os.path.join(r'\\rab\Диск для принтов сервак Егор\для 1с',file),index=False)
+
+    # pathToDB = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\ШК.txt"
+    # pathToDB = pandas.read_table(pathToDB)
+    # cards = pandas.read_excel(r"\\rab\Диск для принтов сервак Егор\Маски силикон\карточки.xlsx")
+    # new = cards.merge(pathToDB, how='left', left_on='Баркод', right_on='Штрихкод') 
+    # # fashionList = pdBarcodes[pdBarcodes['Номенклатура'].str.lower().str.contains('fashion')]
+    # new.to_excel(r'F:\new.xlsx', index=False)
+    # pandas.read_excel(r"F:\Первая возна на зануление.xlsx").to_excel(r"F:\Первая возна на зануление2.xlsx")
+
+# main()
+
+

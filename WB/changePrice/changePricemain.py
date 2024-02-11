@@ -282,7 +282,6 @@ if __name__ =='__main__':
     application = PrintHelper()
     application.show()
     app.exec()
-
     # def updateDB(self):
     # with open(os.path.join(os.path.dirname(__file__),'dataBase.pkl'), 'rb') as fileDBTMP:
     #             a = pickle.load(fileDBTMP)
