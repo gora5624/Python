@@ -1,0 +1,87 @@
+/* Сброс стилей */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Основные стили */
+body {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: #333;
+  background-color: #f8f8f8;
+}
+
+/* Шапка сайта */
+.header {
+  background-color: #003c89;
+  color: white;
+  padding: 20px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  width: 150px;
+}
+
+.nav {
+  list-style: none;
+}
+
+.nav ul {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav li {
+  margin-left: 20px;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 15px;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.nav a:hover {
+  background-color: #00285c;
+}
+
+/* Основная область контента */
+.main {
+  padding: 20px;
+}
+
+/* Подвал сайта */
+.footer {
+  background-color: #f8f8f8;
+  padding: 10px 0;
+  text-align: center;
+}
+@media (max-width: 768px) {
+  .header {
+    padding: 10px 0;
+  }
+
+  .nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav li {
+    margin: 10px 0;
+  }
+}

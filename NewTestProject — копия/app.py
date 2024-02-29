@@ -6,7 +6,6 @@ import time
 
 
 app = Flask(__name__)
-app = Flask(__name__, static_folder=r'static')
 turbo = Turbo(app)
 
 @app.route('/')
