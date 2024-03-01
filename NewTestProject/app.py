@@ -1,9 +1,13 @@
+# import sys
+# import os
+# sys.path.append(os.path.join(os.path.dirname(__file__),'modules'))
+
 from flask import Flask, render_template
 from turbo_flask import Turbo
 import threading
 import random
 import time
-
+from modules import orders
 
 app = Flask(__name__)
 app = Flask(__name__, static_folder=r'static')
@@ -16,6 +20,10 @@ def index():
 @app.route('/page2.html')
 def page2():
     return render_template(r'page2.html')
+
+@app.route('/orders')
+def orders_page():
+    return orders.get_orders()
 
 @app.context_processor
 def inject_load():
