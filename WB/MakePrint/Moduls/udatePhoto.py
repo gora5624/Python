@@ -10,8 +10,10 @@ import math, operator, functools
 countReqPMin = 100
 delay = 60/countReqPMin
 def pushPhoto(line, token, requestUrl, countTry=0):
+    
     urlsLsit = line['Медиафайлы'].split(';')
     data = checkUrlsImage(urlsLsit)
+    # data = [urlsLsit[0]]
     if len(data) == 0:
         print(line['Артикул товара'] + ' нет доступных фото для загрузки')
         return 404
@@ -26,7 +28,9 @@ def pushPhoto(line, token, requestUrl, countTry=0):
         #jsonRequest['data'][0]= jsonRequest['data'][0].replace("/print ","/(Принт ").replace(".jpg",").jpg")
         #print(jsonRequest)
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=50)  
-        r
+        if r.status_code == 200:
+            pass
+            # print(r.text)
         #time.sleep(0.6)
         if '"Неверный запрос: по данному артикулу не нашлось карточки товара","additionalErrors' in r.text:
             print('Не нашлось карточки товара '+jsonRequest['vendorCode'])
@@ -34,15 +38,15 @@ def pushPhoto(line, token, requestUrl, countTry=0):
             print('1')
         if '"additionalErrors":null' not in r.text:
             print(r.text + ' ' + jsonRequest['vendorCode'])
-        time.sleep(5)
-        while not checkImage(line['Артикул товара'], token) and countTry <5:
-            deletPhoto(line['Артикул товара'], token)
-            time.sleep(1)
-            pushPhoto(line, token, requestUrl)
-            time.sleep(5)
-            countTry +=1
-        if countTry == 5:
-            print(line['Артикул товара'] + ' хз что с фото, надо проверить')
+        # time.sleep(1.2)
+        # while not checkImage(line['Артикул товара'], token) and countTry <5:
+        #     deletPhoto(line['Артикул товара'], token)
+        #     time.sleep(1)
+        #     pushPhoto(line, token, requestUrl)
+        #     time.sleep(5)
+        #     countTry +=1
+        # if countTry == 5:
+        #     print(line['Артикул товара'] + ' хз что с фото, надо проверить')
 
     except requests.ConnectionError:
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=50) 
@@ -152,19 +156,19 @@ def updatePhotoMain(pathToFile=None, token=None):
         # pathToFile = sys.argv[1:][0].replace('#', '
     print(pathToFile)
     df = pandas.DataFrame(pandas.read_excel(pathToFile))
-    requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/media/save'
+    requestUrl = 'https://suppliers-api.wildberries.ru/content/v2/media/save'
     #if __name__ == '__main__':
-    passedTime = 1
+    passedTime = 1.5
     # tmp = pandas.DataFrame(pandas.read_excel(r"F:\книжки без фото.xlsx"))['Артикул продавца'].to_list()
     for line in df.to_dict('records'):
         # if line['Артикул товара'] in tmp:
-            if passedTime > 0.7:
+            if passedTime > 1.2:
                 startTime = time.time()
                 pushPhoto(line, token, requestUrl)
                 passedTime = time.time() - startTime
             else:
-                time.sleep(0.7-passedTime)
-                passedTime = 1
+                time.sleep(1.2-passedTime)
+                passedTime = 1.5
     print('Done')
 
 if __name__ == '__main__':

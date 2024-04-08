@@ -10,7 +10,7 @@ from my_mod.my_lib import file_exists
 # импортируем интерфейс
 from ui.ui_MakeBookPrintUi import Ui_Form
 # импортируем дополнительные скрипты
-from Moduls.makeImageBookWithNameModel import makeImageBookWithNameModel, makeImageBookWithNameModelNew
+from Moduls.makeImageBookWithNameModel import makeImageBookWithNameModel, makeImageBookWithNameModelNew, makeImageBookWithNameModelNew2
 from Moduls.AddSkriptForMakeBookImage import createExcel, deleteImage
 from Moduls.makeImageBookWithNameModel import copyImage as copyBooks
 from Moduls.makeImageSilicon import createAllSiliconImage, fakecreateAllSiliconImage
@@ -24,6 +24,7 @@ from Class.CreateCartholders import WBnomenclaturesCreaterHolders
 from Class.MakePlastinsClass import MakePlastins
 import pandas
 from Class.CreateExists import ExistsNomenclaturesCreater
+import os
 
 
 
@@ -83,7 +84,22 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.ui.toExistsCardsChek.setChecked(True)
         self.dfExistCase = ''
         self.updeteListFile()
+        # self.crateDB()
+        # self.tstcomp()
         # self.updateModelList()
+
+    def tstcomp(sekl):
+        tmpComp = pandas.read_excel(r"F:\Маски силикон\Новое.xlsx")
+        listNom = tmpComp.Номенклатура.unique().tolist()
+        for i in listNom:
+            for dir in os.listdir(r'\\192.168.0.33\shared\_Общие документы_\Егор\Архив принтов xlsx'):
+                if (i+'.xlsx') in os.listdir(os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\Архив принтов xlsx', dir)):
+                    compTMP = pandas.read_excel(os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\Архив принтов xlsx', dir,(i+'.xlsx'))).Совместимость.unique().tolist()[0]
+                    tmpComp.loc[tmpComp['Номенклатура']==i, 'Совместимость'] = compTMP
+        tmpComp.to_excel(r"F:\Маски силикон\Новое книги.xlsx")
+
+
+
 
 
     def crateDB(self):
@@ -339,7 +355,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
 
 
     def chooseExistsCardsBtn(self):
-        pathToListExistCaseFile = QFileDialog.getOpenFileName(self, ("Выберите файл с существующими карточками"), "", ("xlsx files (*.xlsx)"))[0]
+        pathToListExistCaseFile = QFileDialog.getOpenFileName(self, ("Выберите файл с существующими карточками"), r"F:\Маски силикон", ("xlsx files (*.xlsx)"))[0]
         if not pathToListExistCaseFile:
             QtWidgets.QMessageBox.warning('Файл с карточками ВБ не выбран')
             return
@@ -553,7 +569,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
             if not self.ui.newDesignChek.checkState():
                 p = multiprocessing.Process(target=makeImageBookWithNameModel, args=(colorList, modelBrand, modelModel,))
             else:
-                p = multiprocessing.Process(target=makeImageBookWithNameModelNew, args=(colorList, modelBrand, modelModel,))
+                p = multiprocessing.Process(target=makeImageBookWithNameModelNew2, args=(colorList, modelBrand, modelModel,))
             #self.ui.textLog.setText(self.ui.textLog.toPlainText() + modelBrand +' ' + modelModel + ' добавлен в очередь\n')
             p.start()
             p.join()
