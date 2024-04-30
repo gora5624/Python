@@ -165,10 +165,17 @@ class ModelWithAddin:
         namePrint = None
         for i in range(len(listModelAddin:=self.modelAddin.split(';'))):
             nameList = self.dfAddinFromFile[self.dfAddinFromFile['Принт номер']==printNameRus]['Наименование (префикс)'].values.tolist()
-            for name in nameList:
-                namePrint = name.replace('***',listModelAddin[i].strip())
+            if len(nameList) == 1 and ';' in nameList[0]:
+                nameListNew = nameList[0].split(';')
+            else:
+                nameListNew = nameList
+            for name in nameListNew:
+                if '***' in name:
+                    namePrint = name.replace('***',listModelAddin[i].strip())
+                else:
+                    namePrint = name + ' ' + listModelAddin[i].strip()
                 if len(namePrint) < 60:
-                    return namePrint
+                    return namePrint.replace('  ', ' ')
                 else:
                     continue            
         if len(namePrint) > 60:

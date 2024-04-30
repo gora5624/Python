@@ -1,0 +1,31 @@
+body {
+    background-color: rgb(172, 234, 53);
+    font-family: 'caros soft', sans-serif;
+}
+
+.navbar {
+    background-color: rgb(0,60,137);
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.chart {
+    margin: 20px auto;
+    width: 80%;
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 0;
+}
+
+.bar {
+    width: 50px;
+    background-color: rgb(0, 123, 255);
+    margin: 0 10px;
+}

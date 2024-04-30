@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container">
+    <h1>Отчет по заказам</h1>
+    <div class="filter">
+      <form action="/orders" method="GET">
+        <label for="seller">Продавец:</label>
+        <select name="seller" id="seller">
+            <option value="all">Все</option>
+            <option value="kar">Караханян</option>
+            <option value="man">Манвел</option>
+            <option value="Sam">Самвел</option>
+            <option value="fed">Федоров</option>
+            {% for seller in sellers %}
+            <option value="{{ seller.id }}">{{ seller.name }}</option>
+          {% endfor %}
+        </select>
+        <label for="start_date">Начало периода:</label>
+        <input type="date" name="start_date" id="start_date">
+        <label for="end_date">Конец периода:</label>
+        <input type="date" name="end_date" id="end_date">
+        <input type="submit" value="Применить">
+      </form>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Продавец</th>
+          {% for day in days %}
+            <th>{{ day }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for seller in sellers %}
+          <tr>
+            <td>{{ seller.name }}</td>
+            {% for day in days %}
+              <td>{{ orders[seller.id][day] }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

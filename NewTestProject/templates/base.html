@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flask Website</title>
+  <link rel="stylesheet" href="static/css/style.css">
+  {{ turbo() }}
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <nav class="nav">
+          <ul>
+            <li><a href="/">Главная</a></li>
+            <li><a href="/orders">Онлайн дашборд</a></li>
+            <li><a href="#">Отчеты</a></li>
+            <li><a href="#">Управление ценами</a></li>
+            <li><a href="#">Управление остатками</a></li>
+            <li><a href="#">Изменение карточек</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <main class="main">
+   <!-- {% include "loadavg.html" %} -->
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 Flask Website</p>
+    </div>
+  </footer>
+</body>

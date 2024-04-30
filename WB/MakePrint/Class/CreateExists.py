@@ -5,7 +5,7 @@ import requests
 import pandas
 import copy
 import time
-import asyncio
+import pickle
 import aiohttp
 from aiohttp import ClientConnectorError
 import subprocess
@@ -19,7 +19,7 @@ class ExistsNomenclaturesCreater:
         # self.tokenKar = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImU4NjQ1YWI5LWFjM2UtNGFkOS1hYmIyLThkMTMzMGM1YTU3NyJ9.8nz9gIHurlCVKIhruG6hY8MRBtMLvLYggVzisxgKivY'
         # self.tokenSam = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NJRCI6ImQ3ZTJkN2I4LWVjZDEtNDNiNC04ODkxLTg2ZWZhNDA0ODI0YyJ9.6qCa4264GF5uv76laTgfnvKD7RXyBLDOk8U_cHPoDDU'
         self.urlGetCards = 'https://suppliers-api.wildberries.ru/content/v1/cards/filter'
-        self.urlUpdateCards = 'https://suppliers-api.wildberries.ru/content/v1/cards/update'
+        self.urlUpdateCards = 'https://suppliers-api.wildberries.ru/content/v2/cards/update'
         self.pathTo1CNom = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\Список стандартный поиск номенклатура.txt'
         self.data = data # pandas.DataFrame(pandas.read_excel(self.pathToFileForUpload))
         self.vendorCodesAndBarcodes = pandas.DataFrame()
@@ -35,7 +35,7 @@ class ExistsNomenclaturesCreater:
             self.DBpath = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Караханян.txt'
             self.token = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjMxMDI1djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcxNzA5Njg4MiwiaWQiOiI4YjEzZWUzOC03MGIxLTQ3ZjgtYTdlNC03OTIzY2Q2ZmQ3ZTciLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjEwMTA2MiwicyI6MTAsInNpZCI6IjNhOTNkZGMxLWFhNTctNWMyYi05YzVjLWRkZDIyMTg4OTQ0MCIsInVpZCI6NDUzMjI5MjB9.DXm6RuooUieyrnNdXr3FfPPdwK5uV4aiTF5SZIryJUhbQW4uScXQLEb-n8p0iM3RT6Js6aVKijiyOkawE6r76g'
         elif mode =='Абраамян':
-            self.DBpath = r'\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Манвел.txt'
+            self.DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Манвел.txt"
             self.token = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjMxMDI1djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcxNzA5Njk1MSwiaWQiOiIyMzUyZGFmYS05NTdhLTQ0MzAtYWFhMi1lZGM5NDZkZDY0ODEiLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjUyNzczNiwicyI6MTAsInNpZCI6ImFhNDdlNDg5LTU5ZTAtNDIzMi1hMWJmLTBlMTIzOWYwNDJmMSIsInVpZCI6NDUzMjI5MjB9.j9s_VtDpTEWceEd1vUTWf6uofUuSY30q0UrR-H047qZE40sb8atwtAviABB7eoeLQdu3T69UosBdn_Bvj2-2ZQ'   
         elif mode =='Самвел':
             self.DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Самвел2.txt"
@@ -83,16 +83,18 @@ class ExistsNomenclaturesCreater:
         elif 'под карту' in self.pathToFileForUpload.lower():
             discount = 45
         elif 'проз' in self.pathToFileForUpload.lower():
-            discount = 60
+            discount = 50
+            price = 1002
         elif 'мат' in self.pathToFileForUpload.lower():
-            discount = 60
+            discount = 50
+            price = 1002
         elif 'skinshell' in self.pathToFileForUpload.lower():
             discount = 50
-            price = 1000
+            price = 1002
 
         pr = priceMod(self.nmIdsList ,self.token, price, discount)
         pr.pushPrice()
-        pr.pushDiscounts()
+        # pr.pushDiscounts()
 
     
     def createFileFor1C(self):
@@ -194,81 +196,193 @@ class ExistsNomenclaturesCreater:
 
 
     def getNomFromWB(self):
-        dataFromDB = pandas.DataFrame(pandas.read_table(self.DBpath))
+        # "\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Манвел.txt"
+        # dataFromDB = pandas.DataFrame(pandas.read_table(self.DBpath))
+        # self.DBpath = r"F:\Маски силикон\карточки.txt"
+        dataFromDB = pandas.read_table(self.DBpath)
+        # print(dataFromDB.shape)
+        # dataFromDB.to_csv(r"F:\Маски силикон\карточки.txt",index=None,sep='\t')
+        # dataFromDB = pandas.DataFrame(pandas.read_table(r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Манвел.txt"))
+        # print(self.listVendorCodeToGet)
         for vendorCode in self.listVendorCodeToGet:
-            try:
+            # try:
                 if vendorCode not in self.alredyGetVendorCode:
                     line = dataFromDB.loc[dataFromDB['vendorCode'] == vendorCode]
-                    imtID = line['imtID'].values.tolist()[0]
+                    # print(line)
+                    # imtID = line['imtID'].values.tolist()[0]
                     nmID = line['nmID'].values.tolist()[0]
                     self.nmIdsList.append(nmID)
                     chrtID = line['chrtID'].values.tolist()[0]
-                    price = line['price'].values.tolist()[0]
+                    # price = line['price'].values.tolist()[0]
+                    # skus = line['Баркод'].values.tolist()[0].strip('[]\'\"').split(',')
                     skus = line['skus'].values.tolist()[0].strip('[]\'\"').split(',')
+                    # print(skus)
                     sizes = [
                         {
-                        "techSize": "0",
+                        # "techSize": "0",
                         "chrtID": chrtID,
-                        "wbSize": "",
-                        "price": price,
+                        # "wbSize": "",
+                        # "price": 590,
                         "skus": skus
                         }
                         ]
-                    data = [{
-                            "imtID": imtID,
+                    # data = [{
+                    #         "imtID": imtID,
+                    #         "nmID": nmID,
+                    #         "vendorCode": vendorCode,
+                    #         "sizes": sizes,
+                    #         "characteristics": []
+                    #         }]
+                    dataV2 = [{
+                            # "imtID": imtID,
                             "nmID": nmID,
                             "vendorCode": vendorCode,
                             "sizes": sizes,
-                            "characteristics": []
+                            "brand": '',
+                            "title": '',
+                            "description": '',
+                            "characteristics": [],
+                            'dimensions':{
+                                'length':19,
+                                'width':12,
+                                'height':2}
                             }]
                     
                     # data = response.json()['data']
-                    for card in data:
+                    # for card in data:
+                    #     if card['vendorCode'] in self.listVendorCodeToGet:
+                    #         self.alredyGetVendorCode.append(card['vendorCode'])
+                    #         self.listCardToChange.append(card)
+                    for card in dataV2:
+                        # print(1)
                         if card['vendorCode'] in self.listVendorCodeToGet:
+                            # print(2)
                             self.alredyGetVendorCode.append(card['vendorCode'])
                             self.listCardToChange.append(card)
-            except:
-                f = open(r'E:\MyProduct\Python\WB\MakePrint\errors.txt', 'a', encoding='utf-8')
-                f.write(vendorCode + '\n')
-                f.close()
-                continue
-        self.listCardToChange
+            # except:
+                # f = open(r'E:\MyProduct\Python\WB\MakePrint\errors.txt', 'a', encoding='utf-8')
+                # f.write(vendorCode + '\n')
+                # f.close()
+                # continue
+        # print(self.listCardToChange)
                 
+
+    def multiReplace(self, string):
+        # .replace('золотистный','золотистый').replace('серебристный','серебристый').replace('корчневый','коричневый').replace('орпнжевый','оранжевый')
+        replaceList = [
+            ('золотистный','золотистый'),
+            ('серебристный','серебристый'),
+            ('корчневый','коричневый'),
+            ('орпнжевый','оранжевый'),
+            ('фоилетовый','фиолетовый'),
+            ('юежевый', 'бежевый'),
+            ('серный', 'серый')
+        ]
+        for item in replaceList:
+            string = string.replace(item[0], item[1])
+        return string.strip()
+
+
+
+
     def changeCards(self):
         chek = len(self.listCardToChange) == len(self.alredyGetVendorCode) == len(self.listVendorCodeToGet) == len(self.dataDict)
         if True:
             for i, card in enumerate(self.listCardToChange):
+                # print(len(self.listCardToChange))
                 for case in self.dataDict:
                     if case['Артикул товара'] == card['vendorCode']:
-                        char = {"characteristics": [
-                                {'Рисунок': self.chekCountField('Рисунок', case['Рисунок'])},# case['Рисунок'].split(';')},
-                                {'Тип чехлов': self.chekCountField('Тип чехлов', case['Тип чехлов'])},# case['Тип чехлов'].split(';')},
-                                #{'Повод': case['Повод'].split(';')},
-                                {'Особенности чехла': self.chekCountField('Особенности чехла', case['Особенности чехла'])},# case['Особенности чехла'].split(';')},
-                                {'Комплектация': case['Комплектация'].split(';')},
-                                {'Модель': self.chekCountField('Модель', case['Модель'])},# case['Модель'].split(';')},
-                                {'Вид застежки': self.chekCountField('Вид застежки', case['Вид застежки'])},# case['Вид застежки'].split(';')},
-                                {'Декоративные элементы': self.chekCountField('Декоративные элементы', case['Декоративные элементы'])},#case['Декоративные элементы']},
-                                {'Совместимость': case['Совместимость'].split(';')},
-                                #{'Назначение подарка': case['Назначение подарка'].split(';')},
-                                {'Любимые герои': self.chekCountField('Любимые герои', case['Любимые герои'])},# case['Любимые герои'].split(';')},
-                                {'Материал изделия': self.chekCountField('Вид застежки', case['Материал изделия'])},# case['Материал изделия'].split(';')},
-                                {'Производитель телефона': case['Производитель телефона']},
-                                {'Бренд': case['Бренд']},
-                                {'Страна производства': case['Страна производства'].split(';')},
-                                {'Наименование': case['Наименование']},
-                                {'Предмет':'Чехлы для телефонов'},
-                                # {'Предмет':case['Предмет']},
-                                {'Цвет': case['Цвет'].lower().replace('золотистный','золотистый').split(';')},
-                                {'Описание': case['Описание']},
-                                {'Высота упаковки': 19},
-                                {'Ширина упаковки': 12},
-                                {'Длина упаковки': 2},
+                        # char = {"characteristics": [
+                        #         {'Рисунок': self.chekCountField('Рисунок', case['Рисунок'])},# case['Рисунок'].split(';')},
+                        #         {'Тип чехлов': self.chekCountField('Тип чехлов', case['Тип чехлов'])},# case['Тип чехлов'].split(';')},
+                        #         #{'Повод': case['Повод'].split(';')},
+                        #         {'Особенности чехла': self.chekCountField('Особенности чехла', case['Особенности чехла'])},# case['Особенности чехла'].split(';')},
+                        #         {'Комплектация': case['Комплектация'].split(';')},
+                        #         {'Модель': self.chekCountField('Модель', case['Модель'])},# case['Модель'].split(';')},
+                        #         {'Вид застежки': self.chekCountField('Вид застежки', case['Вид застежки'])},# case['Вид застежки'].split(';')},
+                        #         {'Декоративные элементы': self.chekCountField('Декоративные элементы', case['Декоративные элементы'])},#case['Декоративные элементы']},
+                        #         {'Совместимость': case['Совместимость'].split(';')},
+                        #         #{'Назначение подарка': case['Назначение подарка'].split(';')},
+                        #         {'Любимые герои': self.chekCountField('Любимые герои', case['Любимые герои'])},# case['Любимые герои'].split(';')},
+                        #         {'Материал изделия': self.chekCountField('Вид застежки', case['Материал изделия'])},# case['Материал изделия'].split(';')},
+                        #         {'Производитель телефона': case['Производитель телефона']},
+                        #         # {'Бренд': case['Бренд']},
+                        #         # {'Бренд': '2Case'},
+                        #         {'Страна производства': case['Страна производства'].split(';')},
+                        #         # {'Наименование': case['Наименование']},
+                        #         {'Предмет':'Чехлы для телефонов'},
+                        #         # {'Предмет':case['Предмет']},
+                        #         {'Цвет': case['Цвет'].lower().replace('золотистный','золотистый').split(';')},
+                        #         # {'Описание': case['Описание']},
+                        #         # {'Высота упаковки': 19},
+                        #         # {'Ширина упаковки': 12},
+                        #         # {'Длина упаковки': 2},
+                        #     ]}
+                        charNew = {"characteristics": [
+                                {
+                                    'id':12,
+                                    'name':'Рисунок',
+                                    'value':self.chekCountField('Рисунок', case['Рисунок'])
+                                },
+                                {
+                                    'id':760,
+                                    'name':'Тип чехлов',
+                                    'value':self.chekCountField('Тип чехлов', case['Тип чехлов'])
+                                },
+                                {
+                                    'id':124080,
+                                    'name':'Особенности чехла',
+                                    'value':self.chekCountField('Особенности чехла', case['Особенности чехла'])
+                                },
+                                {
+                                    'id':378533,
+                                    'name':'Комплектация',
+                                    'value':case['Комплектация'].split(';')
+                                },
+                                {
+                                    'id':746,
+                                    'name':'Совместимость',
+                                    'value':case['Совместимость'].split(';')
+                                },
+                                {
+                                    'id':4,
+                                    'name':'Вид застежки',
+                                    'value':self.chekCountField('Вид застежки', case['Вид застежки'])
+                                },
+                                {
+                                    'id':50,
+                                    'name':'Декоративные элементы',
+                                    'value':self.chekCountField('Декоративные элементы', case['Декоративные элементы'])
+                                },
+                                {
+                                    'id':51,
+                                    'name':'Любимые герои',
+                                    'value':self.chekCountField('Любимые герои', case['Любимые герои'])
+                                },
+                                {
+                                    'id':17596,
+                                    'name':'Материал изделия',
+                                    'value':self.chekCountField('Вид застежки', case['Материал изделия'])
+                                },
+                                {
+                                    'id':14177451,
+                                    'name':'Страна производства',
+                                    'value':case['Страна производства'].split(';')
+                                },
+                                {
+                                    'id':14177449,
+                                    'name':'Цвет',
+                                    'value':self.multiReplace(case['Цвет'].lower()).split(';')
+                                },
                             ]}
                         # tmp = [{'Артикул товара': case['Артикул товара'], 'Баркоды': [f'test{i}',f'test{i+1}']}]
                         tmp = [{'Артикул товара': case['Артикул товара'], 'Баркоды': card['sizes'][0]['skus']}]
                         self.vendorCodesAndBarcodes = pandas.concat([self.vendorCodesAndBarcodes,pandas.DataFrame(tmp)])
-                        card.update(char)
+                        card.update(charNew)
+                        # card.update({'brand':case['Бренд']})
+                        card.update({'brand':"Mobi711"})
+                        card.update({'title':case['Наименование']})
+                        card.update({'description': case['Описание']})
                         
                         self.listCardToChange
             self.listCardToChange
@@ -278,17 +392,19 @@ class ExistsNomenclaturesCreater:
 
     def pushChanges(self):
        # for card in self.listCardToChange:
-       step = 10
+       step = 50
        for i in range(0, len(self.listCardToChange), step):
             timeout = 20              
             jsonRequestsUpdateCard = self.listCardToChange[i:i+step]
             while timeout < 60:
                 try:
+                    # ref = pickle.load(open(r'E:\MyProduct\Python\WB\MakePrint\Class\jsonRequestsUpdateCard.pkl', 'rb'))
                     response = requests.post(self.urlUpdateCards, headers=self.headersGetCard, json=jsonRequestsUpdateCard, timeout=timeout)
                     if response.status_code ==200:
                         print(response.text)
                         break
                     else:
+                        print('__Error__' +  ' ' +response.text)
                         timeout+=5
                         continue    
                 except requests.exceptions.ReadTimeout:
