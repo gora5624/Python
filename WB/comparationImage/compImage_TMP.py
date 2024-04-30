@@ -1,9 +1,10 @@
+import shutil
 from PIL import Image, ImageChops
 import os
 import requests
 import io
 import pickle
-import time
+import pandas
 import math, operator, functools
 import multiprocessing
 
@@ -50,34 +51,48 @@ LOAD_LIST = True
 # else:
 #     listNoPhoto = []
 #     listWithPhoto = []
-pathIm = r'\\192.168.0.33\shared\_Общие документы_\Егор\_Принты книги 1000_10012024\Выбрано_Новые — копия'
-pathRef = r'D:\te'
-def main(imageNew):
+pathIm = r'F:\Принты_05032024_Улучшить разрешение'
+pathRef = pathIm #r'D:\te'
+def main(imageNew, listImage, tmp):
     # for imageNew in os.listdir(pathIm):
     #     if 'db' not in imageNew:
-            #imageNewIO = Image.open(os.path.join(r'D:\newPrint\выбрано',imageNew)).convert('RGB')
-    imageNewIO = Image.open(os.path.join(pathIm, imageNew)).convert('RGB')
+    #         imageNewIO = Image.open(os.path.join(pathIm,imageNew)).convert('RGB')
+    try:
+        imageNewIO = Image.open(os.path.join(pathIm, imageNew)).convert('RGB')
+    except: return
     #else:continue
-    for refImage in os.listdir(pathRef):
-        if 'db' not in refImage:
-            refImageIO = Image.open(os.path.join(pathRef,refImage)).convert('RGB')
+    # listImage = os.listdir(pathRef)
+    i = listImage.index(imageNew)
+    for refImage in listImage[i:]:
+        if 'png' in refImage and refImage!= imageNew and 'SAME' not in imageNew:
+            try:
+                refImageIO = Image.open(os.path.join(pathRef,refImage)).convert('RGB')
+            except: continue    
         #else:
                 #continue
             imageNewIO = imageNewIO.resize(refImageIO.size)
             h = ImageChops.difference(refImageIO, imageNewIO).histogram()
             diff = math.sqrt(functools.reduce(operator.add, map(lambda h, i: h*(i**2), h, range(256))) / (float(refImageIO.size[0]) * refImageIO.size[1]))
-            if diff >50:
+            if diff >25:
                 continue
             else:
-                os.rename(os.path.join(pathIm,imageNew), os.path.join(pathIm,refImage))
+                shutil.copy2(os.path.join(pathIm,imageNew), os.path.join(r'F:\same', imageNew))
+                shutil.copy2(os.path.join(pathIm,refImage), os.path.join(r'F:\same', refImage))
+                # os.rename(os.path.join(pathIm,imageNew), os.path.join(pathIm,imageNew.replace('.','_SAME_{}.'.format(refImage.replace('.png','')))))
+                tmp.append({'Image1': imageNew,
+                            'Image2': refImage,
+                            'diff': str(diff)})
                 print(' '.join([imageNew, refImage, str(diff)]))
 
 if __name__ == '__main__':
     pool = multiprocessing.Pool(7)
-    for imageNew in os.listdir(pathIm):
-        if 'db' not in imageNew:
-            pool.apply_async(main, args=(imageNew,))
-
+    listImage = os.listdir(pathRef)
+    tmp = multiprocessing.Manager().list()
+    for imageNew in listImage:
+        if 'png' in imageNew and 'SAME' not in imageNew:
+            pool.apply_async(main, args=(imageNew,listImage, tmp))
             # main(imageNew)
     pool.close()
     pool.join()
+    pandas.DataFrame(tmp).to_excel(r'F:\same\same.xlsx', index=False)
+
