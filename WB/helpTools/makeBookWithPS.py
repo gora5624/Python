@@ -1,11 +1,13 @@
 import photoshop.api as ps
 import os
 
+pathToPrintImage = r'\\192.168.0.33\shared\_Общие документы_\Егор\Принты_05032024_выбрано\исправленные\Новая папка\Новая папка'
+pathToSave = r'\\rab\Диск для принтов сервак Егор\книжки новые3\Черный'
 app = ps.Application()
 app.displayDialogs = ps.DialogModes.DisplayNoDialogs
-for file in os.listdir(r'\\192.168.0.33\shared\_Общие документы_\Егор\_Принты книги 1000_10012024\под натяжку'):
-    if not os.path.exists(os.path.join(r'\\rab\Диск для принтов сервак Егор\книжки новые2\Черный',file.replace('.jpg.png',''))):
-        png_doc = app.open(os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\_Принты книги 1000_10012024\под натяжку',file))
+for file in os.listdir(pathToPrintImage):
+    if not os.path.exists(os.path.join(pathToSave,file.replace('.jpg.png',''))) and '.png'  in file:
+        png_doc = app.open(os.path.join(pathToPrintImage,file))
         startRulerUnits = app.preferences.rulerUnits
         if png_doc.activeLayer.kind != ps.LayerKind.TextLayer:
             x2 = (png_doc.width * png_doc.resolution) / 2
@@ -39,6 +41,6 @@ for file in os.listdir(r'\\192.168.0.33\shared\_Общие документы_\�
 
 
         options = ps.PNGSaveOptions()
-        jpg = os.path.join(r'\\rab\Диск для принтов сервак Егор\книжки новые2\Черный',file.replace('.jpg.png',''))
+        jpg = os.path.join(pathToSave,file.replace('.jpg.png',''))
         doc.saveAs(jpg, options, asCopy=True)
         doc.activeLayer.remove()
