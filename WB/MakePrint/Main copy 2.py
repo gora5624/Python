@@ -188,6 +188,15 @@ class mameBookPrint(QtWidgets.QMainWindow):
     def btnCreateCaseAll(self):
         pathToDoneSiliconImageSilicon = QFileDialog.getExistingDirectory(self, ("Выберите папку с файлами"), r'F:\Для загрузки\Готовые принты')
         mode = self.ui.IPSelector.currentText()
+        if mode =='Караханян':
+            DBpath = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Караханян.txt'
+        elif mode =='Абраамян':
+            DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Манвел.txt"
+        elif mode =='Самвел':
+            DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Самвел2.txt"
+        elif mode =='Иван':
+            DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Федоров.txt"
+        tmpDB = pandas.read_table(DBpath)
         for file in listdir(pathToDoneSiliconImageSilicon):
             if not isdir(joinPath(pathToDoneSiliconImageSilicon, file)):
                 pathToFileForUpload = joinPath(pathToDoneSiliconImageSilicon, file)
@@ -202,6 +211,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
                             start_time = time.time()
                             data = pandas.DataFrame(pandas.read_excel(pathToFileForUpload))
                             tmp = ExistsNomenclaturesCreater(data, mode, pathToFileForUpload)
+                            tmp.dataFromDB = tmpDB
                             pool = multiprocessing.Pool(1)
                             # pool.apply_async(ExistsNomenclaturesCreater.uplaodImage, args=(pathToFileForUpload, mode,))
                             pool.apply_async(tmp.start(), args=(pathToFileForUpload, mode,))
@@ -225,6 +235,15 @@ class mameBookPrint(QtWidgets.QMainWindow):
         fileName = self.ui.FileSelector.currentText()
         pathToFileForUpload = joinPath(pathToDoneSiliconImageSilicon, fileName)
         mode = self.ui.IPSelector.currentText()
+        if mode =='Караханян':
+            DBpath = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Караханян.txt'
+        elif mode =='Абраамян':
+            DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Манвел.txt"
+        elif mode =='Самвел':
+            DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Самвел2.txt"
+        elif mode =='Иван':
+            DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Федоров.txt"
+        tmpDB = pandas.read_table(DBpath)
         if not self.ui.toExistsCardsChek.isChecked():
             create = WBnomenclaturesCreater()
             create.pathToFileForUpload = pathToFileForUpload
@@ -233,6 +252,15 @@ class mameBookPrint(QtWidgets.QMainWindow):
             start_time = time.time()
             data = pandas.DataFrame(pandas.read_excel(pathToFileForUpload))
             tmp = ExistsNomenclaturesCreater(data, mode, pathToFileForUpload)
+            if mode =='Караханян':
+                DBpath = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Караханян.txt'
+            elif mode =='Абраамян':
+                DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Манвел.txt"
+            elif mode =='Самвел':
+                DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Самвел2.txt"
+            elif mode =='Иван':
+                DBpath = r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Федоров.txt"
+            tmp.dataFromDB = tmpDB
             pool = multiprocessing.Pool(2)
             # pool.apply_async(ExistsNomenclaturesCreater.uplaodImage, args=(pathToFileForUpload, mode,))
             pool.apply_async(tmp.start(), args=(pathToFileForUpload, mode,))

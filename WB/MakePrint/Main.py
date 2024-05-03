@@ -571,7 +571,7 @@ class mameBookPrint(QtWidgets.QMainWindow):
             else:
                 p = multiprocessing.Process(target=makeImageBookWithNameModelNew2, args=(colorList, modelBrand, modelModel,))
             #self.ui.textLog.setText(self.ui.textLog.toPlainText() + modelBrand +' ' + modelModel + ' добавлен в очередь\n')
-            p.start()
+            p.start() 
             p.join()
         copyBooks()
 
@@ -583,5 +583,6 @@ if __name__ =='__main__':
     application.show()
 
     sys.exit(app.exec())
+
 
 

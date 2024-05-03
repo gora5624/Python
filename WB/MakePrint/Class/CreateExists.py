@@ -125,17 +125,18 @@ class ExistsNomenclaturesCreater:
         self.vendorCodesAndBarcodes = self.vendorCodesAndBarcodes.reindex(index=self.data['Артикул товара'])
         self.vendorCodesAndBarcodes = self.vendorCodesAndBarcodes.reset_index()
         self.data['Баркод товара'] = self.vendorCodesAndBarcodes['Баркоды']
+        self.data['nmID'] = self.vendorCodesAndBarcodes['nmID']
         self.dataDict = self.data.to_dict('records')
         self.dataDictNew = []
         for i, line in enumerate(self.dataDict):
             if len(line['Баркод товара']) > 1:
                 for barcode in line['Баркод товара']:
                     lineNew = copy.deepcopy(line)
-                    tmp = {'Баркод товара':barcode}
+                    tmp = {'Баркод товара':barcode, 'nmID':line['nmID']}
                     lineNew.update(tmp)
                     self.dataDictNew.append(lineNew)
             else:
-                tmp = {'Баркод товара':''.join(line['Баркод товара'])}
+                tmp = {'Баркод товара':''.join(line['Баркод товара']), 'nmID':line['nmID']}
                 line.update(tmp)
                 self.dataDictNew.append(line)
         df = pandas.DataFrame(self.dataDictNew)
@@ -376,7 +377,7 @@ class ExistsNomenclaturesCreater:
                                 },
                             ]}
                         # tmp = [{'Артикул товара': case['Артикул товара'], 'Баркоды': [f'test{i}',f'test{i+1}']}]
-                        tmp = [{'Артикул товара': case['Артикул товара'], 'Баркоды': card['sizes'][0]['skus']}]
+                        tmp = [{'Артикул товара': case['Артикул товара'], 'Баркоды': card['sizes'][0]['skus'], 'nmID':card['nmID']}]
                         self.vendorCodesAndBarcodes = pandas.concat([self.vendorCodesAndBarcodes,pandas.DataFrame(tmp)])
                         card.update(charNew)
                         # card.update({'brand':case['Бренд']})
@@ -416,7 +417,7 @@ class ExistsNomenclaturesCreater:
             time.sleep(1)
 
     def splitNom(self):
-        url = 'https://suppliers-api.wildberries.ru/content/v1/cards/moveNm'
+        url = 'https://suppliers-api.wildberries.ru/content/v2/cards/moveNm'
         headers = {'Authorization': '{}'.format(self.token)} 
         for i in range(0,len(self.nmIdsList),30):
             x = self.nmIdsList[i:i+30]

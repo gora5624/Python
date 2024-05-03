@@ -18,7 +18,7 @@ def pushPhoto(line, token, requestUrl, countTry=0):
         print(line['Артикул товара'] + ' нет доступных фото для загрузки')
         return 404
     jsonRequest = {
-        "vendorCode": line['Артикул товара'] if 'Артикул товара' in list(line.keys()) else line['Артикул поставщика'],
+        "nmId": line['nmID'],
         #"data": line['Медиафайлы'].split(';')
         "data": data
         }
@@ -27,6 +27,9 @@ def pushPhoto(line, token, requestUrl, countTry=0):
         # print(jsonRequest)
         #jsonRequest['data'][0]= jsonRequest['data'][0].replace("/print ","/(Принт ").replace(".jpg",").jpg")
         #print(jsonRequest)
+        deletPhoto(line['nmID'], token)
+        r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=50)  
+        time.sleep(0.7)
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=50)  
         if r.status_code == 200:
             pass
@@ -83,7 +86,7 @@ def checkUrlsImage(urlList):
 
 def checkImage(art, token):
     # time.sleep(0.6)
-    requestUrl = 'https://suppliers-api.wildberries.ru/content/v1/cards/cursor/list'
+    requestUrl = 'https://suppliers-api.wildberries.ru/content/v3/cards/cursor/list'
     headersRequest = {'Authorization': '{}'.format(token)}
     json = {
             "sort": {
@@ -110,17 +113,18 @@ def checkImage(art, token):
         return False
 
 
-def deletPhoto(vendorCode, token):
+def deletPhoto(nmID, token):
     token = token
     headers = {'Authorization': '{}'.format(token)} 
-    url = 'https://suppliers-api.wildberries.ru/content/v1/media/save'
-    json = {
-    "vendorCode": vendorCode,
-    "data": [
-    ]
-    }
+    url = 'https://suppliers-api.wildberries.ru/content/v3/media/save'
+    jsonRequest = {
+        "nmId": nmID,
+        #"data": line['Медиафайлы'].split(';')
+        "data": []
+        }
     try:
-        r = requests.post(url=url, json=json, headers=headers, timeout=10)
+        r = requests.post(url=url, json=jsonRequest, headers=headers, timeout=10)
+        r
     except:
          pass
 
@@ -156,19 +160,21 @@ def updatePhotoMain(pathToFile=None, token=None):
         # pathToFile = sys.argv[1:][0].replace('#', '
     print(pathToFile)
     df = pandas.DataFrame(pandas.read_excel(pathToFile))
-    requestUrl = 'https://suppliers-api.wildberries.ru/content/v2/media/save'
+    requestUrl = 'https://suppliers-api.wildberries.ru/content/v3/media/save'
     #if __name__ == '__main__':
-    passedTime = 1.5
+    passedTime = 3.0
     # tmp = pandas.DataFrame(pandas.read_excel(r"F:\книжки без фото.xlsx"))['Артикул продавца'].to_list()
     for line in df.to_dict('records'):
         # if line['Артикул товара'] in tmp:
-            if passedTime > 1.2:
+            if passedTime > 2.0:
                 startTime = time.time()
                 pushPhoto(line, token, requestUrl)
                 passedTime = time.time() - startTime
             else:
-                time.sleep(1.2-passedTime)
-                passedTime = 1.5
+                time.sleep(2.0-passedTime)
+                passedTime = 3.0
+                pushPhoto(line, token, requestUrl)
+                passedTime = time.time() - startTime
     print('Done')
 
 if __name__ == '__main__':

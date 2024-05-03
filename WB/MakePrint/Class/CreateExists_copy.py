@@ -32,6 +32,7 @@ class ExistsNomenclaturesCreater:
         self.listCardToChange = []
         self.nmIdsList = []
         self.errorsList = []
+        self.dataFromDB = pandas.DataFrame()
         if mode =='Караханян':
             self.DBpath = r'\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Караханян.txt'
             self.token = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjMxMDI1djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcxNzA5Njg4MiwiaWQiOiI4YjEzZWUzOC03MGIxLTQ3ZjgtYTdlNC03OTIzY2Q2ZmQ3ZTciLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjEwMTA2MiwicyI6MTAsInNpZCI6IjNhOTNkZGMxLWFhNTctNWMyYi05YzVjLWRkZDIyMTg4OTQ0MCIsInVpZCI6NDUzMjI5MjB9.DXm6RuooUieyrnNdXr3FfPPdwK5uV4aiTF5SZIryJUhbQW4uScXQLEb-n8p0iM3RT6Js6aVKijiyOkawE6r76g'
@@ -65,11 +66,11 @@ class ExistsNomenclaturesCreater:
         try:
             print("Начал делать " + self.pathToFileForUpload)
             self.getNomFromWB()
-            # self.changeCards()
-            # self.pushChanges()
-            # self.updateFileForUpload()
-            # self.AdFunc()
-            # self.splitNom2()
+            self.changeCards()
+            self.pushChanges()
+            self.updateFileForUpload()
+            self.AdFunc()
+            self.splitNom2()
             self.changePrice()
             try:
                 if len(self.errorsList) != 0:
@@ -84,7 +85,7 @@ class ExistsNomenclaturesCreater:
         listdf = pandas.DataFrame(self.listCardToChange)
         self.CategoryAndIDs = listdf.merge(self.data,how='left',left_on='vendorCode',right_on='Артикул товара')#.merge(pandas.read_excel(r"E:\MyProduct\Python\WB\MakePrint\категории.xlsx"),'left',left_on='Принт',right_on='Принт')
         self.CategoryAndIDs = self.CategoryAndIDs.merge(pandas.read_excel(r"E:\MyProduct\Python\WB\MakePrint\категории.xlsx"),'left',left_on='Принт',right_on='Принт')
-        self.CategoryAndIDs = self.CategoryAndIDs.loc[:,['nmID','Категория_y']]
+        self.CategoryAndIDs = self.CategoryAndIDs.loc[:,['nmID_x','Категория_y']]
         test = self.CategoryAndIDs.groupby('Категория_y')
         self.CategoryAndIDsByGroup = [test.get_group(x) for x in test.groups]
         self.CategoryAndIDsByGroup
@@ -149,17 +150,18 @@ class ExistsNomenclaturesCreater:
         self.vendorCodesAndBarcodes = self.vendorCodesAndBarcodes.reindex(index=self.data['Артикул товара'])
         self.vendorCodesAndBarcodes = self.vendorCodesAndBarcodes.reset_index()
         self.data['Баркод товара'] = self.vendorCodesAndBarcodes['Баркоды']
+        self.data['nmID'] = self.vendorCodesAndBarcodes['nmID']
         self.dataDict = self.data.to_dict('records')
         self.dataDictNew = []
         for i, line in enumerate(self.dataDict):
             if len(line['Баркод товара']) > 1:
                 for barcode in line['Баркод товара']:
                     lineNew = copy.deepcopy(line)
-                    tmp = {'Баркод товара':barcode}
+                    tmp = {'Баркод товара':barcode, 'nmID':line['nmID']}
                     lineNew.update(tmp)
                     self.dataDictNew.append(lineNew)
             else:
-                tmp = {'Баркод товара':''.join(line['Баркод товара'])}
+                tmp = {'Баркод товара':''.join(line['Баркод товара']), 'nmID':line['nmID']}
                 line.update(tmp)
                 self.dataDictNew.append(line)
         df = pandas.DataFrame(self.dataDictNew)
@@ -223,15 +225,16 @@ class ExistsNomenclaturesCreater:
         # "\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Манвел.txt"
         # dataFromDB = pandas.DataFrame(pandas.read_table(self.DBpath))
         # self.DBpath = r"F:\Маски силикон\карточки.txt"
-        dataFromDB = pandas.read_table(self.DBpath)
+        if self.dataFromDB.size == 0:
+            self.dataFromDB = pandas.read_table(self.DBpath)
         # print(dataFromDB.shape)
         # dataFromDB.to_csv(r"F:\Маски силикон\карточки.txt",index=None,sep='\t')
         # dataFromDB = pandas.DataFrame(pandas.read_table(r"\\192.168.0.33\shared\_Общие документы_\Егор\ШК\db\DB_card Манвел.txt"))
         # print(self.listVendorCodeToGet)
         for vendorCode in self.listVendorCodeToGet:
             # try:
-                if vendorCode not in self.alredyGetVendorCode:
-                    line = dataFromDB.loc[dataFromDB['vendorCode'] == vendorCode]
+                # if vendorCode not in self.alredyGetVendorCode:
+                    line = self.dataFromDB.loc[self.dataFromDB['vendorCode'] == vendorCode]
                     # print(line)
                     # imtID = line['imtID'].values.tolist()[0]
                     nmID = line['nmID'].values.tolist()[0]
@@ -277,12 +280,13 @@ class ExistsNomenclaturesCreater:
                     #     if card['vendorCode'] in self.listVendorCodeToGet:
                     #         self.alredyGetVendorCode.append(card['vendorCode'])
                     #         self.listCardToChange.append(card)
-                    for card in dataV2:
+                    # for card in dataV2:
                         # print(1)
-                        if card['vendorCode'] in self.listVendorCodeToGet:
+                        # if card['vendorCode'] in self.listVendorCodeToGet:
                             # print(2)
-                            self.alredyGetVendorCode.append(card['vendorCode'])
-                            self.listCardToChange.append(card)
+                            # self.alredyGetVendorCode.append(card['vendorCode'])
+                    self.listCardToChange.append(dataV2[0])
+        # return [self.listCardToChange, self.nmIdsList]
             # except:
                 # f = open(r'E:\MyProduct\Python\WB\MakePrint\errors.txt', 'a', encoding='utf-8')
                 # f.write(vendorCode + '\n')
@@ -310,7 +314,7 @@ class ExistsNomenclaturesCreater:
 
 
     def changeCards(self):
-        chek = len(self.listCardToChange) == len(self.alredyGetVendorCode) == len(self.listVendorCodeToGet) == len(self.dataDict)
+        # chek = len(self.listCardToChange) == len(self.alredyGetVendorCode) == len(self.listVendorCodeToGet) == len(self.dataDict)
         if True:
             for i, card in enumerate(self.listCardToChange):
                 # print(len(self.listCardToChange))
@@ -400,7 +404,7 @@ class ExistsNomenclaturesCreater:
                                 },
                             ]}
                         # tmp = [{'Артикул товара': case['Артикул товара'], 'Баркоды': [f'test{i}',f'test{i+1}']}]
-                        tmp = [{'Артикул товара': case['Артикул товара'], 'Баркоды': card['sizes'][0]['skus']}]
+                        tmp = [{'Артикул товара': case['Артикул товара'], 'Баркоды': card['sizes'][0]['skus'], 'nmID':card['nmID']}]
                         self.vendorCodesAndBarcodes = pandas.concat([self.vendorCodesAndBarcodes,pandas.DataFrame(tmp)])
                         card.update(charNew)
                         # card.update({'brand':case['Бренд']})
@@ -416,7 +420,7 @@ class ExistsNomenclaturesCreater:
 
     def pushChanges(self):
        # for card in self.listCardToChange:
-       step = 50
+       step = 100
        for i in range(0, len(self.listCardToChange), step):
             timeout = 20              
             jsonRequestsUpdateCard = self.listCardToChange[i:i+step]
@@ -431,23 +435,30 @@ class ExistsNomenclaturesCreater:
                         if 'Failed to update, nm' in response.text:
                             print('__Error__' +  ' ' +response.text)
                             nmError = int(response.json()['errorText'].replace('Failed to update, nm ','').replace(' can not be found', ''))
-                            self.errorsList.append({'nmID':nmError},
-                                                    {'Файл':self.pathToFileForUpload}
+                            self.errorsList.append({'nmID':nmError,
+                                                    'Файл':self.pathToFileForUpload}
                             )
                             for i, card in enumerate(jsonRequestsUpdateCard):
                                 if card['nmID'] == nmError:
                                     jsonRequestsUpdateCard.pop(i)
+                                    # print('Исправляю')
+                                    break
+                                continue
+                            for i, card in enumerate(self.listCardToChange):
+                                if card['nmID'] == nmError:
+                                    self.listCardToChange.pop(i)
                                     print('Исправляю')
                                     break
-                                time.sleep(1)
                                 continue
                         timeout+=5
                         time.sleep(2)
                         continue    
                 except requests.exceptions.ReadTimeout:
+                    time.sleep(2)
                     timeout+=5
                     continue
                 except requests.exceptions.ConnectionError:
+                    time.sleep(2)
                     timeout+=5
                     continue
             time.sleep(2)
@@ -464,33 +475,50 @@ class ExistsNomenclaturesCreater:
             if r.status_code == 200:
                 print('объеденил успешно ' + str(x))
             elif r.status_code == 400 and "Все карточки находятся в одной группе" in r.text:
+                time.sleep(1.2)
                 print('уже вместе ' + str(x))
             else:
+                time.sleep(1.2)
                 print('ОШИБКА ' + str(x) + r.text)
             time.sleep(5)
     
 
     def splitNom2(self):
-        url = 'https://suppliers-api.wildberries.ru/content/v1/cards/moveNm'
+        url = 'https://suppliers-api.wildberries.ru/content/v2/cards/moveNm'
         headers = {'Authorization': '{}'.format(self.token)} 
         step = 30
         print('Начал объединять')
         for group in self.CategoryAndIDsByGroup:
-            nmIDList = group['nmID'].values.tolist()
+            nmIDList = group['nmID_x'].values.tolist()
+            for line in self.errorsList:
+                for i in nmIDList:
+                    if i == line['nmID']:
+                        print('1')
             for i in range(0,len(nmIDList),step):
                 x = nmIDList[i:i+step]
                 json = {
                     'nmIDs':x
                 }
-                r = requests.post(url=url, json=json, headers=headers, timeout=60)
-                if r.status_code == 200:
-                    pass
-                    # print('объеденил успешно ' + str(x))
-                elif r.status_code == 400 and "All cards are in the same group" in r.text:
-                    pass
-                    # print('уже вместе ' + str(x))
-                else:
-                    print('ОШИБКА ' + str(x))
+                countTry = 0
+                while countTry < 5:
+                    r = requests.post(url=url, json=json, headers=headers, timeout=60)
+                    if r.status_code == 200:
+                        break
+                        pass
+                        # print('объеденил успешно ' + str(x))
+                    elif r.status_code == 400 and "All cards are in the same group" in r.text:
+                        break
+                        pass
+                        # print('уже вместе ' + str(x))
+                    elif r.status_code == 500:
+                        countTry+=1
+                        continue
+
+                    else:
+                        print('ОШИБКА ' + str(x))
+                        time.sleep(1.2)
+                        countTry+=1
+                        continue
                 time.sleep(1.2)
 
 
