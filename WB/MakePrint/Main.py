@@ -14,6 +14,7 @@ from Moduls.makeImageBookWithNameModel import makeImageBookWithNameModel, makeIm
 from Moduls.AddSkriptForMakeBookImage import createExcel, deleteImage
 from Moduls.makeImageBookWithNameModel import copyImage as copyBooks
 from Moduls.makeImageSilicon import createAllSiliconImage, fakecreateAllSiliconImage
+from Moduls.makeImageSiliconNEW import makeImageSiliconNEW
 from Folders import pathToDoneBookImageWithName, pathToMaskFolderSilicon, pathToDoneSiliconImageSilicon, pathToTopPrint, pathToTopPrintSkin
 from Moduls.AddSkriptForMakeSiliconImage import createExcelSilicon, markerForAllModel, chekImage, siliconCaseColorDict, CreateExcelForFolder
 from Moduls.GetCardAsincio import getListCard
@@ -350,7 +351,11 @@ class mameBookPrint(QtWidgets.QMainWindow):
             self.makeFakeDirsWithMask()
             fakecreateAllSiliconImage(pathToMaskFolderSilicon, mode, countPrint=countPrint)
         else:
-            createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode, countPrint=countPrint)
+            if self.ui.newSiliconChekBox.checkState() == 2:
+                topPrint = [x.replace('(Принт ','print ').replace(')','.png') for x in pandas.DataFrame(pandas.read_excel(pathToTopPrint))[0:countPrint]['Принт'].values.tolist()]
+                makeImageSiliconNEW(pathToMaskFolderSilicon, topPrint)
+            else:
+                createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode, countPrint=countPrint)
         # self.updateModelList()
 
 

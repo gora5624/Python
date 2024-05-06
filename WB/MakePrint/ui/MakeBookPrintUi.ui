@@ -38,7 +38,7 @@
     </sizepolicy>
    </property>
    <property name="currentIndex">
-    <number>4</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tabBook">
     <property name="sizePolicy">
@@ -121,8 +121,12 @@
      <string>Силикон</string>
     </attribute>
     <layout class="QGridLayout" name="gridLayout_4">
-     <item row="0" column="0" colspan="5">
-      <widget class="QTextBrowser" name="textSiliconMask"/>
+     <item row="4" column="4">
+      <widget class="QPushButton" name="CreateSiliconImage">
+       <property name="text">
+        <string>Создать всё</string>
+       </property>
+      </widget>
      </item>
      <item row="1" column="0" colspan="3">
       <widget class="QCheckBox" name="FakeModeChekBox">
@@ -141,6 +145,23 @@
        </property>
       </widget>
      </item>
+     <item row="3" column="2" colspan="2">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Доп. фото</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" colspan="2">
+      <widget class="QPushButton" name="ChekMask">
+       <property name="text">
+        <string>Проверить маски</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="5">
+      <widget class="QTextBrowser" name="textSiliconMask"/>
+     </item>
      <item row="1" column="4">
       <widget class="QPushButton" name="CreateSiliconImageTop">
        <property name="text">
@@ -148,21 +169,14 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0" colspan="2">
-      <widget class="QPushButton" name="ChekMask">
+     <item row="4" column="1" colspan="3">
+      <widget class="QCheckBox" name="SiliconeMode">
        <property name="text">
-        <string>Проверить маски</string>
+        <string>Натянуть все принты</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="2" colspan="2">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Доп. фото</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
+     <item row="4" column="0">
       <widget class="QComboBox" name="AddPhotoSelector">
        <item>
         <property name="text">
@@ -176,17 +190,13 @@
        </item>
       </widget>
      </item>
-     <item row="3" column="1" colspan="3">
-      <widget class="QCheckBox" name="SiliconeMode">
+     <item row="2" column="0">
+      <widget class="QCheckBox" name="newSiliconChekBox">
        <property name="text">
-        <string>Натянуть все принты</string>
+        <string>НОВЫЙ СПОСОБ</string>
        </property>
-      </widget>
-     </item>
-     <item row="3" column="4">
-      <widget class="QPushButton" name="CreateSiliconImage">
-       <property name="text">
-        <string>Создать всё</string>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -200,6 +210,7 @@
     <zorder>CreateSiliconImageTop</zorder>
     <zorder>countPrints</zorder>
     <zorder>SiliconeMode</zorder>
+    <zorder>newSiliconChekBox</zorder>
    </widget>
    <widget class="QWidget" name="plastins">
     <property name="sizePolicy">
