@@ -139,6 +139,7 @@ wipeListDict.pkl
 dataBase.pkl
 token
 tokens.pkl
+token.pkl
 autorz.py
 printPicle.pkl
 compImage.pkl
