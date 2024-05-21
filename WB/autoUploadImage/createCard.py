@@ -3,51 +3,58 @@ import os
 # import multiprocessing
 from multiprocessing import Process, Queue, cpu_count
 from threading import Thread
+import re
 import numpy as np
-from shutil import copytree
+from shutil import copytree, ignore_patterns
 import cv2
 import numpy as np
+from copy import deepcopy
+from folders import pathToPrintImageForClear, pathToDoneImages
 # import time
 # import asyncio
 # import aiofiles
 
 
-deltaForMask = 0.015 # на сколько уменьшаем отновсительно чехла рахмер принта
-pathToNewPocket = r'D:\case' # пусть к фоткам чехлов и клоунам
-pathToPrintImage = r'F:\выбрано2' # Путь откуда брать фотки для натяжки
-pathToSaveDone = r'D:\done' # Куда класть готовое
-clownName = r'1_clown.png' # нахвание файла клоуна
+# deltaForMask = 0.015 # на сколько уменьшаем отновсительно чехла рахмер принта
+# pathToNewPocket = r'D:\case' # пусть к фоткам чехлов и клоунам
+# pathToPrintImage = pathToTopPrint # Путь откуда брать фотки для натяжки
+# pathToSaveDone = r'D:\done' # Куда класть готовое
+clownName = r'2_clown.png' # нахвание файла клоуна
 flag = False
-SIZE = (1800,2400)
+SIZE = (1920,2561)
 
-def main(pathToNewPocket, dirName):
+def createCardMain(dictToUpload, printList):
+    # pathToNewPocket = pathToMaskFolder
 
-    pathToImageDir = os.path.join(pathToNewPocket, dirName)
+    # pathToSaveDone =  os.path.join(pathToDoneImages, dictToUpload['dirName'])
+    pathToPrintImage = pathToPrintImageForClear # Путь откуда брать фотки для натяжки
+    pathToImageDir = dictToUpload['pathToFolder']
 
-    backImage = Image.open(os.path.join(pathToImageDir, '1.png')).resize(SIZE)
-    coordToMaskCard = findCoordsToMaskCard(backImage)
-    mask = createMaskForShadows(backImage, coordToMaskCard)
+    backImageNoCard = Image.open(os.path.join(pathToImageDir, '1.png')).resize(SIZE).convert('RGB')
+    backImageCard = Image.open(os.path.join(pathToImageDir, '2.png')).resize(SIZE).convert('RGB')
+    coordToMaskCard = findCoordsToMaskCard(backImageNoCard)
+    mask = createMaskForShadows(backImageNoCard, coordToMaskCard)
     maskImage, top_left, bottom_right = createMask(pathToImageDir)
 
     if maskImage == 0:
         print(pathToImageDir + ' файл с маски не обнаружен')
         return
-    
-    lenListPrint = len(os.listdir(pathToPrintImage))
-    countProcess = max(1, min(int(cpu_count() - 2), lenListPrint))
+    listImage = [x for x in os.listdir(pathToPrintImage) if x in printList]
+    lenListPrint = len(listImage)
+    countProcess = max(1, min(int(cpu_count() - 3), lenListPrint))
 
     queue = Queue()
     listForProcess = []
     listProcess = []
 
-    saveProcess = Thread(target=imageSaver, args=(queue,dirName))
+    saveProcess = Thread(target=imageSaver, args=(queue, os.path.join(pathToDoneImages, dictToUpload['dirName'])))
     saveProcess.start()
 
     for i in range(0,lenListPrint,int(lenListPrint/countProcess)):
-        listForProcess.append(os.listdir(pathToPrintImage)[i:i+int(lenListPrint/countProcess)])
+        listForProcess.append(listImage[i:i+int(lenListPrint/countProcess)])
 
     for listImagePath in listForProcess:
-        p = Process(target=createPrintImage, args=(listImagePath, mask, maskImage, backImage, top_left, bottom_right, queue))
+        p = Process(target=createPrintImage, args=(pathToPrintImage, listImagePath, mask, maskImage, backImageCard, top_left, bottom_right, queue))
         listProcess.append(p)
         p.start()
 
@@ -59,29 +66,29 @@ def main(pathToNewPocket, dirName):
     saveProcess.join()
     
 
-def imageSaver(queue, dirName):
+def imageSaver(queue, pathToSaveDone) :
     """Функция сохраняющего процесса."""
-    if not os.path.exists(tmp:=os.path.join(pathToSaveDone, dirName)):
-        os.mkdir(tmp)
+    if not os.path.exists(pathToSaveDone):
+        os.mkdir(pathToSaveDone)
     while True:
         item = queue.get()
         if item is None:  # Использование сигнального объекта для определения окончания работы
             break
         image, filename = item
-        image_path = os.path.join(pathToSaveDone,dirName, filename.replace('png','jpg'))
+        image_path = os.path.join(pathToSaveDone, filename.replace('png','jpg').replace('print','(Принт').replace('.jpg',').jpg'))
         # image_path = os.path.join(pathToSaveDone,dirName, filename)
 
         # print(filename)
         # image.show()
-        image.save(image_path, quality=80)
+        image.save(image_path, quality=90)
         # image.save(image_path)
 
 def findCoordsToMaskCard(backImage):
     # Открываем изображение
-    target_color = (72,72,72)#backImage.getpixel((555,1090))
-    deltaX = 340
-    deltaY = 840
-    image = backImage.crop((deltaX,deltaY,900,1300))
+    target_color = backImage.getpixel((530,1000))
+    deltaX = 360
+    deltaY = 870
+    image = backImage.crop((deltaX,deltaY,900,1000))
     tolerance = 5
     # image.show()
     # Преобразуем изображение в массив NumPy
@@ -117,8 +124,8 @@ def maskCard(coordToMaskCard, mask):
         x = coordToMaskCard[0]-15
         y = coordToMaskCard[1]-10
         color = mask.getpixel((x-2, y))
-        bottom_right_x = x + 570
-        bottom_right_y = y + 1140
+        bottom_right_x = x + 500
+        bottom_right_y = y + 1100
         if flag:
             draw.rectangle([x, y, bottom_right_x, bottom_right_y], outline=color, fill=color)
         # mask.show()
@@ -137,7 +144,6 @@ def createMaskForShadows(backImage, coordToMaskCard):
                                                             -1, -1, -1, -1, -1,
                                                             -1, -1, -1, -1, -1))
     mask = img.filter(ImageFilter.EMBOSS)
-    mask = img.filter(ImageFilter.EMBOSS)
     mask = ImageEnhance.Color(mask).enhance(3)
     mask = ImageEnhance.Contrast(mask).enhance(10)
     mask = ImageEnhance.Brightness(mask).enhance(1.5)
@@ -145,7 +151,7 @@ def createMaskForShadows(backImage, coordToMaskCard):
     return mask
 
 
-def createPrintImage(listImagePath, mask, maskImage,backImage, top_left, bottom_right, queue):
+def createPrintImage(pathToPrintImage, listImagePath, mask, maskImage,backImage, top_left, bottom_right, queue):
     maskImage = ImageOps.invert(maskImage)
     coordsToPaste = top_left
     # img = deepcopy(backImage)
@@ -157,9 +163,6 @@ def createPrintImage(listImagePath, mask, maskImage,backImage, top_left, bottom_
         img.paste(backImage)
         if '.png' in printImageName:
             printImage = Image.open(os.path.join(pathToPrintImage,printImageName))
-            size_ = printImage.size
-            width = (bottom_right[0] - top_left[0])/2 + top_left[0] - size_[0]/2
-            top_left = (width, top_left[1])
             # printImage = Image.open(printImagePath)
             if printImage.mode != 'RGBA':
                 printImage = printImage.convert('RGBA')
@@ -171,14 +174,14 @@ def createPrintImage(listImagePath, mask, maskImage,backImage, top_left, bottom_
             result = Image.blend(printDisplacement, maskNew, 0.1)
             result = ImageEnhance.Color(result).enhance(1.1)
             result = ImageEnhance.Contrast(result).enhance(1.00)
-            result = ImageEnhance.Brightness(result).enhance(1.1)
+            result = ImageEnhance.Brightness(result).enhance(1.0)
             # maskImage = ImageOps.invert(maskImage)
             tmp2 = Image.new("RGBA", img.size, (255, 255, 255, 0))
             tmp2.paste(result,mask=maskImage)
             img.paste(tmp2,mask=tmp2)
             # img.show()
             # img.save(os.path.join(r'F:\Принты_05032024_выбрано\tmp', printImagePath))
-            img = img.resize((900,1200))
+            img = img.resize((900,1200), Image.LANCZOS)
             queue.put((img.convert('RGB'), printImageName))
             # queue.put((img, printImageName))
             # print(printImageName)
@@ -288,8 +291,12 @@ def find_largest_bounding_box(image_path):
     #             radius = i-y
     #             break
     # print(f"Coordinates of the largest bounding box: ({x_min}, {y_min}), ({x_max}, {y_max})")
+    deltaForMask = 0.015 # на сколько уменьшаем отновсительно чехла рахмер принта
     return (int(x_min+SIZE[0]*deltaForMask), int(y_min+SIZE[0]*deltaForMask)), (int(x_max-SIZE[0]*deltaForMask), int(y_max-SIZE[0]*deltaForMask)), radius, image
 
-if __name__ == '__main__':
-    for dirName in os.listdir(pathToNewPocket):
-        main(pathToNewPocket, dirName)
+# def makeImageSiliconNEW(pathToMaskFolder, topPrint):
+#     for dirName in os.listdir(pathToMaskFolder):
+#         if os.path.isdir(os.path.join(pathToMaskFolder, dirName)):
+#             makeImageSiliconNEWMain(pathToMaskFolder, dirName, topPrint)
+#     copytree(pathToDoneSiliconImageSilicon, pathToUploadFolderLocal + r'\\Силикон', dirs_exist_ok=True, ignore=ignore_patterns('*.xlsx'))
+    

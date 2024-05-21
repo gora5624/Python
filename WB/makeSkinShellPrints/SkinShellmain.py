@@ -49,7 +49,7 @@ def create_mask(case, clownPath):
     new_image = Image.fromarray(np.uint8(result * 255) , 'L')
     # new_image.show()
     #new_image = ImageOps.invert(new_image)
-    new_image.show()
+    # new_image.show()
     #y = findBotMask(new_image, clownPath)
     return new_image#, y
 
