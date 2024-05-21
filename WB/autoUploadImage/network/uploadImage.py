@@ -2,6 +2,7 @@ import requests
 import pandas
 import time
 import io
+
 from PIL import Image, ImageChops
 import math, operator, functools
 
@@ -14,82 +15,74 @@ requestUrl = 'https://suppliers-api.wildberries.ru/content/v3/media/save'
 def pushPhoto(line, token):
     urlsLsit = line['Медиафайлы'].split(';')
     data = checkUrlsImage(urlsLsit)
-    # if len(data) == 0:
-    #     print(line['Артикул товара'] + ' нет доступных фото для загрузки')
-    #     # return 404
+    if not data:  # Если нет допустимых URLs, выходим
+        print(f"{line['Артикул товара']} нет доступных фото для загрузки")
+        return
+
     jsonRequest = {
         "nmId": line['nmID'],
         "data": data
-        }
+    }
     headersRequest = {'Authorization': '{}'.format(token)}
-    r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=50)  
-    if r.status_code == 429:
-        time.sleep(5)
-    if r.status_code == 200:
-        print(r'Done ' + str(jsonRequest['nmId']))
+    
+    with requests.Session() as session:
+        r = session.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=50)  
+        if r.status_code == 429:
+            time.sleep(5)
+        if r.status_code == 200:
+            print(f"Done {jsonRequest['nmId']}")
 
 
 def checkUrlsImage(urlList):
     urlListChecked = []
-    for url in urlList:
-        if requests.get(url).status_code == 200:
-            urlListChecked.append(url)
-            continue
-        elif requests.get(url.replace('.jpg', '.png')).status_code == 200:
-            urlListChecked.append(url.replace('.jpg', '.png'))
-            continue
-        if 'Силикон' not in url:
-            url = url.replace('Вторые картинки', 'Вторые картинки/Силикон')
-            if requests.get(url).status_code == 200:
+    
+    with requests.Session() as session:
+        for url in urlList:
+            if session.get(url).status_code == 200:
                 urlListChecked.append(url)
-                continue
-            elif requests.get(url.replace('.jpg', '.png')).status_code == 200:
+            elif session.get(url.replace('.jpg', '.png')).status_code == 200:
                 urlListChecked.append(url.replace('.jpg', '.png'))
-                continue
-    return urlListChecked# [i for i in urlList if requests.get(i).status_code==200]
+            else:
+                silicone_url = url.replace('Вторые картинки', 'Вторые картинки/Силикон')
+                if session.get(silicone_url).status_code == 200:
+                    urlListChecked.append(silicone_url)
+                elif session.get(silicone_url.replace('.jpg', '.png')).status_code == 200:
+                    urlListChecked.append(silicone_url.replace('.jpg', '.png'))
+    return urlListChecked
 
 
 def checkImage(art, token):
     requestUrl = 'https://suppliers-api.wildberries.ru/content/v3/cards/cursor/list'
     headersRequest = {'Authorization': '{}'.format(token)}
     json = {
-            "sort": {
-                "cursor": {
+        "sort": {
+            "cursor": {
                 "limit": 1
-                },
-                "filter": {
+            },
+            "filter": {
                 "textSearch": str(art),
                 "withPhoto": -1,
                 "allowedCategoriesOnly": True
-                }
             }
-            }
+        }
+    }
     try:
         r = requests.post(url=requestUrl, json=json, headers=headersRequest)
         urlList = r.json()['data']['cards'][0]['mediaFiles']
-        urlListCount = len(urlList)
-        if urlListCount<1:
-            return False
-        else:
-            res = compImage(urlList[0])
-            return not res
-    except:
+        return len(urlList) > 0 and not compImage(urlList[0])
+    except Exception as e:
+        print(f"Error checking image: {e}")
         return False
-
+    
 
 def deletPhoto(nmID, token):
-    token = token
     headers = {'Authorization': '{}'.format(token)} 
     url = 'https://suppliers-api.wildberries.ru/content/v3/media/save'
-    jsonRequest = {
-        "nmId": nmID,
-        "data": []
-        }
+    jsonRequest = {"nmId": nmID, "data": []}
     try:
-        r = requests.post(url=url, json=jsonRequest, headers=headers, timeout=10)
-        r
-    except:
-         pass
+        requests.post(url=url, json=jsonRequest, headers=headers, timeout=10)
+    except Exception as e:
+        print(f"Error deleting photo: {e}")
 
 
 def compImage(link):
