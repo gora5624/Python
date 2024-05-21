@@ -39,13 +39,14 @@ def pushPrice(listPrice, f):
             r = requests.post(url=urlPushPrice, json={'data': jsonPrice[i:i+1000]}, headers=headers)
             time.sleep(1)
             if r.status_code == 200:
-                print('Цены установлены успешно')
+                # print('Цены установлены успешно')
                 break
             elif 'No goods for process' in r.text:
                 print('Цены уже установлены')
                 break
             else:
                 countTry+=1
+                time.sleep(2)
                 print('Ошибка установки цен')
                 continue
 

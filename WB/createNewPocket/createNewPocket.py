@@ -16,7 +16,7 @@ from copy import deepcopy
 
 deltaForMask = 0.02 # на сколько уменьшаем отновсительно чехла рахмер принта
 pathToNewPocket = r'D:\case' # пусть к фоткам чехлов и клоунам
-pathToPrintImage = r'F:\Принты_05032024_выбрано' # Путь откуда брать фотки для натяжки
+pathToPrintImage = r'F:\выбрано2' # Путь откуда брать фотки для натяжки
 pathToSaveDone = r'D:\done' # Куда класть готовое
 clownName = r'2_clown.png' # нахвание файла клоуна
 flag = False
@@ -70,7 +70,7 @@ def imageSaver(queue, dirName):
         if item is None:  # Использование сигнального объекта для определения окончания работы
             break
         image, filename = item
-        image_path = os.path.join(pathToSaveDone,dirName, filename.replace('png','jpg'))
+        image_path = os.path.join(pathToSaveDone,dirName, filename.replace('png','jpg').replace('print','(Принт').replace('.jpg',').jpg'))
         # image_path = os.path.join(pathToSaveDone,dirName, filename)
 
         # print(filename)
@@ -119,8 +119,8 @@ def maskCard(coordToMaskCard, mask):
         x = coordToMaskCard[0]-15
         y = coordToMaskCard[1]-10
         color = mask.getpixel((x-2, y))
-        bottom_right_x = x + 500
-        bottom_right_y = y + 1100
+        bottom_right_x = x + 530
+        bottom_right_y = y + 1250
         draw.rectangle([x, y, bottom_right_x, bottom_right_y], outline=color, fill=color)
         # mask.show()
         return mask
@@ -168,7 +168,7 @@ def createPrintImage(listImagePath, mask, maskImage,backImage, top_left, bottom_
             result = Image.blend(printDisplacement, maskNew, 0.1)
             result = ImageEnhance.Color(result).enhance(1.1)
             result = ImageEnhance.Contrast(result).enhance(1.00)
-            result = ImageEnhance.Brightness(result).enhance(1.2)
+            result = ImageEnhance.Brightness(result).enhance(1.1)
             # maskImage = ImageOps.invert(maskImage)
             tmp2 = Image.new("RGBA", img.size, (255, 255, 255, 0))
             tmp2.paste(result,mask=maskImage)
