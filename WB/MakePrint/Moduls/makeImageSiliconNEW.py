@@ -21,7 +21,7 @@ from Folders import pathToPrintImageFolderAllSil, pathToMaskFolderSilicon, pathT
 # pathToSaveDone = r'D:\done' # Куда класть готовое
 # clownName = r'1_clown.png' # нахвание файла клоуна
 flag = False
-SIZE = (1800,2400)
+SIZE = (1920,2561)
 
 def makeImageSiliconNEWMain(pathToMaskFolder, dirName, topPrint):
     # pathToNewPocket = pathToMaskFolder
@@ -74,12 +74,12 @@ def imageSaver(queue, dirName, pathToSaveDone) :
         if item is None:  # Использование сигнального объекта для определения окончания работы
             break
         image, filename = item
-        image_path = os.path.join(pathToSaveDone,dirName, filename.replace('png','jpg'))
+        image_path = os.path.join(pathToSaveDone,dirName, filename.replace('png','jpg').replace('print','(Принт').replace('.jpg',').jpg'))
         # image_path = os.path.join(pathToSaveDone,dirName, filename)
 
         # print(filename)
         # image.show()
-        image.save(image_path, quality=80)
+        image.save(image_path, quality=90)
         # image.save(image_path)
 
 def findCoordsToMaskCard(backImage):
@@ -173,14 +173,14 @@ def createPrintImage(pathToPrintImage, listImagePath, mask, maskImage,backImage,
             result = Image.blend(printDisplacement, maskNew, 0.1)
             result = ImageEnhance.Color(result).enhance(1.1)
             result = ImageEnhance.Contrast(result).enhance(1.00)
-            result = ImageEnhance.Brightness(result).enhance(1.3)
+            result = ImageEnhance.Brightness(result).enhance(1.2)
             # maskImage = ImageOps.invert(maskImage)
             tmp2 = Image.new("RGBA", img.size, (255, 255, 255, 0))
             tmp2.paste(result,mask=maskImage)
             img.paste(tmp2,mask=tmp2)
             # img.show()
             # img.save(os.path.join(r'F:\Принты_05032024_выбрано\tmp', printImagePath))
-            img = img.resize((900,1200))
+            img = img.resize((900,1200), Image.LANCZOS)
             queue.put((img.convert('RGB'), printImageName))
             # queue.put((img, printImageName))
             # print(printImageName)

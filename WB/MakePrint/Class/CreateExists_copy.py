@@ -70,7 +70,7 @@ class ExistsNomenclaturesCreater:
             self.pushChanges()
             self.updateFileForUpload()
             self.AdFunc()
-            self.splitNom2()
+            self.splitNom()
             self.changePrice()
             try:
                 if len(self.errorsList) != 0:
@@ -107,6 +107,9 @@ class ExistsNomenclaturesCreater:
             discount = 35
         elif 'под карту' in self.pathToFileForUpload.lower():
             discount = 45
+        elif 'newpoket' in self.pathToFileForUpload.lower():
+            discount = 45
+            # price = 999
         elif 'проз' in self.pathToFileForUpload.lower():
             discount = 50
             price = 1002
@@ -116,6 +119,7 @@ class ExistsNomenclaturesCreater:
         elif 'skinshell' in self.pathToFileForUpload.lower():
             discount = 50
             price = 1002
+
 
         pr = priceMod(self.nmIdsList ,self.token, price, discount)
         pr.pushPrice()
@@ -400,7 +404,7 @@ class ExistsNomenclaturesCreater:
                                 {
                                     'id':14177449,
                                     'name':'Цвет',
-                                    'value':self.multiReplace(case['Цвет'].lower()).split(';')
+                                    'value':[x.strip() for x in self.multiReplace(case['Цвет'].lower()).split(';')]
                                 },
                             ]}
                         # tmp = [{'Артикул товара': case['Артикул товара'], 'Баркоды': [f'test{i}',f'test{i+1}']}]
@@ -464,7 +468,7 @@ class ExistsNomenclaturesCreater:
             time.sleep(2)
 
     def splitNom(self):
-        url = 'https://suppliers-api.wildberries.ru/content/v1/cards/moveNm'
+        url = 'https://suppliers-api.wildberries.ru/content/v2/cards/moveNm'
         headers = {'Authorization': '{}'.format(self.token)} 
         for i in range(0,len(self.nmIdsList),30):
             x = self.nmIdsList[i:i+30]

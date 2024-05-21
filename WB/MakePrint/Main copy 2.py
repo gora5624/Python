@@ -72,7 +72,8 @@ class mameBookPrint(QtWidgets.QMainWindow):
         self.pathToSiliconCLRAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликонПроз.xlsx'
         self.pathToPlasticAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПластик.xlsx'
         self.pathToSiliconMTAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиСиликонМат.xlsx'
-        self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.xlsx'
+        self.pathToCardhonlderAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКардхолдер.xlsx' 
+        self.pathToNewPoketAddin = r"E:\MyProduct\Python\WB\MakePrint\ХарактеристикиNewPoket.xlsx"
         self.pathToBookAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКнижки.xlsx'
         self.pathToBookAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиКнижкиNew.xlsx'
         self.pathToPrintAddin = r'E:\MyProduct\Python\WB\MakePrint\ХарактеристикиПринтов.xlsx'
@@ -103,22 +104,24 @@ class mameBookPrint(QtWidgets.QMainWindow):
 
 
     def crateDB(self):
-        pdSilsiconCLRAddin = pandas.DataFrame(pandas.read_excel(self.pathToSiliconCLRAddin))
-        pdPlasticAddin = pandas.DataFrame(pandas.read_excel(self.pathToPlasticAddin))
-        pdSilsiconMTAddin = pandas.DataFrame(pandas.read_excel(self.pathToSiliconMTAddin))
-        pdSkinShellAddin = pandas.DataFrame(pandas.read_excel(self.pathToSkinShell))
-        pdCardhonlderAddin = pandas.DataFrame(pandas.read_excel(self.pathToCardhonlderAddin))
-        pdPrintAddin = pandas.DataFrame(pandas.read_excel(self.pathToPrintAddin))
-        pdCategoryPrint = pandas.DataFrame(pandas.read_excel(self.pathToCategoryPrint))
-        pdBookAddin = pandas.DataFrame(pandas.read_excel(self.pathToBookAddin))
-        pdSilsiconCLRAddin.to_csv(self.pathToSiliconCLRAddin.replace('xlsx','txt'),index=None,sep='\t')
-        pdPlasticAddin.to_csv(self.pathToPlasticAddin.replace('xlsx','txt'),index=None,sep='\t')
-        pdSilsiconMTAddin.to_csv(self.pathToSiliconMTAddin.replace('xlsx','txt'),index=None,sep='\t')
-        pdSkinShellAddin.to_csv(self.pathToSkinShell.replace('xlsx','txt'),index=None,sep='\t')
-        pdBookAddin.to_csv(self.pathToBookAddin.replace('xlsx','txt'),index=None,sep='\t')
-        pdCardhonlderAddin.to_csv(self.pathToCardhonlderAddin.replace('xlsx','txt'),index=None,sep='\t')
-        pdPrintAddin.to_csv(self.pathToPrintAddin.replace('xlsx','txt'),index=None,sep='\t')
-        pdCategoryPrint.to_csv(self.pathToCategoryPrint.replace('xlsx','txt'),index=None,sep='\t')
+        pdSNewPoketAddin = pandas.DataFrame(pandas.read_excel(self.pathToNewPoketAddin))
+        # pdSilsiconCLRAddin = pandas.DataFrame(pandas.read_excel(self.pathToSiliconCLRAddin))
+        # pdPlasticAddin = pandas.DataFrame(pandas.read_excel(self.pathToPlasticAddin))
+        # pdSilsiconMTAddin = pandas.DataFrame(pandas.read_excel(self.pathToSiliconMTAddin))
+        # pdSkinShellAddin = pandas.DataFrame(pandas.read_excel(self.pathToSkinShell))
+        # pdCardhonlderAddin = pandas.DataFrame(pandas.read_excel(self.pathToCardhonlderAddin))
+        # pdPrintAddin = pandas.DataFrame(pandas.read_excel(self.pathToPrintAddin))
+        # pdCategoryPrint = pandas.DataFrame(pandas.read_excel(self.pathToCategoryPrint))
+        # pdBookAddin = pandas.DataFrame(pandas.read_excel(self.pathToBookAddin))
+        # pdSilsiconCLRAddin.to_csv(self.pathToSiliconCLRAddin.replace('xlsx','txt'),index=None,sep='\t')
+        pdSNewPoketAddin.to_csv(self.pathToNewPoketAddin.replace('xlsx','txt'),index=None,sep='\t')
+        # pdPlasticAddin.to_csv(self.pathToPlasticAddin.replace('xlsx','txt'),index=None,sep='\t')
+        # pdSilsiconMTAddin.to_csv(self.pathToSiliconMTAddin.replace('xlsx','txt'),index=None,sep='\t')
+        # pdSkinShellAddin.to_csv(self.pathToSkinShell.replace('xlsx','txt'),index=None,sep='\t')
+        # pdBookAddin.to_csv(self.pathToBookAddin.replace('xlsx','txt'),index=None,sep='\t')
+        # pdCardhonlderAddin.to_csv(self.pathToCardhonlderAddin.replace('xlsx','txt'),index=None,sep='\t')
+        # pdPrintAddin.to_csv(self.pathToPrintAddin.replace('xlsx','txt'),index=None,sep='\t')
+        # pdCategoryPrint.to_csv(self.pathToCategoryPrint.replace('xlsx','txt'),index=None,sep='\t')
 
 
     def createMSGError(self,text):

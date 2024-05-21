@@ -31,6 +31,8 @@ def pushPhoto(line, token, requestUrl, countTry=0):
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=50)  
         time.sleep(0.7)
         r = requests.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=50)  
+        if r.status_code == 429:
+            time.sleep(5)
         if r.status_code == 200:
             pass
             # print(r.text)
@@ -40,7 +42,7 @@ def pushPhoto(line, token, requestUrl, countTry=0):
         if '"Внутренняя ошибка сервиса","additionalErrors' in r.text:
             print('1')
         if '"additionalErrors":null' not in r.text:
-            print(r.text + ' ' + jsonRequest['vendorCode'])
+            print(r.text + ' ' + jsonRequest['nmID'])
         # time.sleep(1.2)
         # while not checkImage(line['Артикул товара'], token) and countTry <5:
         #     deletPhoto(line['Артикул товара'], token)

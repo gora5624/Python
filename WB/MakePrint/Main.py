@@ -26,6 +26,7 @@ from Class.MakePlastinsClass import MakePlastins
 import pandas
 from Class.CreateExists import ExistsNomenclaturesCreater
 import os
+import shutil
 
 
 
@@ -91,12 +92,12 @@ class mameBookPrint(QtWidgets.QMainWindow):
 
     def tstcomp(sekl):
         tmpComp = pandas.read_excel(r"F:\Маски силикон\Новое.xlsx")
-        listNom = tmpComp.Номенклатура.unique().tolist()
+        listNom = [x.replace('. NewPoket','') for x in tmpComp.Номенклатура.unique().tolist()]
         for i in listNom:
             for dir in os.listdir(r'\\192.168.0.33\shared\_Общие документы_\Егор\Архив принтов xlsx'):
                 if (i+'.xlsx') in os.listdir(os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\Архив принтов xlsx', dir)):
                     compTMP = pandas.read_excel(os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\Архив принтов xlsx', dir,(i+'.xlsx'))).Совместимость.unique().tolist()[0]
-                    tmpComp.loc[tmpComp['Номенклатура']==i, 'Совместимость'] = compTMP
+                    tmpComp.loc[tmpComp['Номенклатура']==i+'. NewPoket', 'Совместимость'] = compTMP
         tmpComp.to_excel(r"F:\Маски силикон\Новое книги.xlsx")
 
 
@@ -356,7 +357,27 @@ class mameBookPrint(QtWidgets.QMainWindow):
                 makeImageSiliconNEW(pathToMaskFolderSilicon, topPrint)
             else:
                 createAllSiliconImage(pathToMaskFolderSilicon,6, addImage, mode, countPrint=countPrint)
+            try:
+                self.findXLSX(pathToMaskFolderSilicon)
+            except:
+                print('Не удалось скопировать XLSX')
+            # try:
+            #     self.clearDoneFolder()
+            # except:
+            #     pass
+
         # self.updateModelList()
+
+    def findXLSX(self, pathToMaskFolderSilicon):
+        for f in os.listdir(pathToMaskFolderSilicon):
+            if os.path.exists(a:=os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\Архив принтов xlsx\силикон', f+'.xlsx')) and os.path.isdir(os.path.join(pathToMaskFolderSilicon, f)):
+                shutil.copy(os.path.join(r'\\192.168.0.33\shared\_Общие документы_\Егор\Архив принтов xlsx\силикон', f+'.xlsx'), os.path.join(r'F:\Для загрузки\Готовые принты', f+'.xlsx'))
+            else:
+                print('Не удалось найти {} в \\192.168.0.33\shared\_Общие документы_\Егор\Архив принтов xlsx\силикон'.format(f+'.xlsx'))
+
+
+    # def clearDoneFolder(self):
+        # QtWidgets.Qd
 
 
     def chooseExistsCardsBtn(self):
