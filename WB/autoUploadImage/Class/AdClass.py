@@ -1,8 +1,11 @@
 import os
 import shutil
+import logging
 
 from folders import pathToFolderForPhotoToUploads, listPathToXLSX, pathToDoneCase
 from network.uploadImage import updatePhotoMain
+
+logger = logging.getLogger(__name__)
 
 def scanFolder(listToken):
     listForUploads = []
@@ -21,7 +24,7 @@ def scanFolder(listToken):
         typeCase, listXSLX = identifyTypeAndXLSX(dir_, seller)
         tmpDict.update({'typeCase':typeCase, 'listXLSX': listXSLX, 'Seller': seller, 'token': token})
         listForUploads.append(tmpDict)
-
+    logger.info(f"Scanning complete. {len(listForUploads)} items found.")
     return listForUploads
 
 
@@ -50,6 +53,7 @@ def findXLSX(dir_, typeCase):
 
 
 def uploadXLSX(listToUpload):
+    logger.info(f"Uploading XLSX files for {listToUpload['dirName']}")
     updatePhotoMain(listToUpload)
 
 
@@ -60,8 +64,10 @@ def getSeller(dir_):
 def relocateFile(path):
     try:
         shutil.copytree(path, os.path.join(pathToDoneCase, os.path.basename(path)))
+        logger.info(f"File relocated for {os.path.basename(path)}")
     except Exception as e:
-        print(f"Error relocating file: {e}")
+        logger.error(f"Error relocating file for {os.path.basename(path)}: {e}")
+        # print(f"Error relocating file: {e}")
     # shutil.copytree(path, os.path.join(r'\\192.168.0.33\shared\_Общие документы_\_Фото\Выставлено прогой', a:=os.path.basename(path)))
 
 

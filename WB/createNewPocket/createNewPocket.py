@@ -3,7 +3,6 @@ import os
 # import multiprocessing
 from multiprocessing import Process, Queue, cpu_count
 from threading import Thread
-import re
 import numpy as np
 from shutil import copytree
 import cv2

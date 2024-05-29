@@ -2,10 +2,14 @@ import requests
 import pandas
 import time
 import io
-
-from PIL import Image, ImageChops
+import logging
 import math, operator, functools
 
+from PIL import Image, ImageChops
+
+from telegramNotifications import send_message
+
+logger = logging.getLogger(__name__)
 # url = re.sub(r'print.+\d\.jpg', number+'.jpg', url ).replace('Готовые принты/Силикон','Вторые картинки')
 countReqPMin = 50
 delay = 60/countReqPMin
@@ -16,9 +20,11 @@ def pushPhoto(line, token):
     urlsLsit = line['Медиафайлы'].split(';')
     data = checkUrlsImage(urlsLsit)
     if not data:  # Если нет допустимых URLs, выходим
-        print(f"{line['Артикул товара']} нет доступных фото для загрузки")
+        logger.warning(f"{line['Артикул товара']} нет доступных фото для загрузки")
+        send_message(f"{line['Артикул товара']} нет доступных фото для загрузки")
+        # print(f"{line['Артикул товара']} нет доступных фото для загрузки")
         return
-
+    logger.info(f"Starting photo upload for {line['nmID']}")
     jsonRequest = {
         "nmId": line['nmID'],
         "data": data
@@ -26,11 +32,19 @@ def pushPhoto(line, token):
     headersRequest = {'Authorization': '{}'.format(token)}
     
     with requests.Session() as session:
-        r = session.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=50)  
-        if r.status_code == 429:
-            time.sleep(5)
-        if r.status_code == 200:
-            print(f"Done {jsonRequest['nmId']}")
+        try:
+            r = session.post(requestUrl, json=jsonRequest, headers=headersRequest, timeout=50)  
+            if r.status_code == 429:
+                logger.warning("Rate limited by server, retrying in 5 seconds")
+                time.sleep(5)
+            if r.status_code == 200:
+                logger.info(f"Upload successful for {jsonRequest['nmId']}")
+            else:
+                error_msg = f"Failed to upload for {line['nmID']} status code: {r.status_code}"
+                logger.warning(error_msg)
+        except Exception as e:
+            logger.error(f"Error uploading photo for {line['nmID']}: {e}")
+            send_message(f"Error uploading photo for {line['nmID']}: {e}")
 
 
 def checkUrlsImage(urlList):
@@ -38,16 +52,20 @@ def checkUrlsImage(urlList):
     
     with requests.Session() as session:
         for url in urlList:
-            if session.get(url).status_code == 200:
-                urlListChecked.append(url)
-            elif session.get(url.replace('.jpg', '.png')).status_code == 200:
-                urlListChecked.append(url.replace('.jpg', '.png'))
-            else:
-                silicone_url = url.replace('Вторые картинки', 'Вторые картинки/Силикон')
-                if session.get(silicone_url).status_code == 200:
-                    urlListChecked.append(silicone_url)
-                elif session.get(silicone_url.replace('.jpg', '.png')).status_code == 200:
-                    urlListChecked.append(silicone_url.replace('.jpg', '.png'))
+            try:
+                if session.get(url).status_code == 200:
+                    urlListChecked.append(url)
+                elif session.get(url.replace('.jpg', '.png')).status_code == 200:
+                    urlListChecked.append(url.replace('.jpg', '.png'))
+                else:
+                    silicone_url = url.replace('Вторые картинки', 'Вторые картинки/Силикон')
+                    if session.get(silicone_url).status_code == 200:
+                        urlListChecked.append(silicone_url)
+                    elif session.get(silicone_url.replace('.jpg', '.png')).status_code == 200:
+                        urlListChecked.append(silicone_url.replace('.jpg', '.png'))
+            except Exception as e:
+                logger.error(f"Error checking URL {url}: {e}")
+                send_message(f"Error checking URL {url}: {e}")
     return urlListChecked
 
 
@@ -80,9 +98,13 @@ def deletPhoto(nmID, token):
     url = 'https://suppliers-api.wildberries.ru/content/v3/media/save'
     jsonRequest = {"nmId": nmID, "data": []}
     try:
-        requests.post(url=url, json=jsonRequest, headers=headers, timeout=10)
+        r = requests.post(url=url, json=jsonRequest, headers=headers, timeout=10)
+        if r.status_code == 200:
+            logger.info(f"Successfully deleted photo for {nmID}")
+        else:
+            logger.warning(f"Failed to delete photo for {nmID} with status code {r.status_code}")
     except Exception as e:
-        print(f"Error deleting photo: {e}")
+        logger.error(f"Error deleting photo for {nmID}: {e}")
 
 
 def compImage(link):
@@ -98,13 +120,16 @@ def compImage(link):
     return False
 
 
-def updatePhotoMain(dictToUpload):
-    print(dictToUpload['dirName'])
+def updatePhotoMain(dictToUpload,):
+    logger.info(f"Starting photo update for {dictToUpload['dirName']}")
+    dirName=dictToUpload['dirName']
     df = pandas.DataFrame(pandas.read_excel(dictToUpload['listXLSX'][0]))
     token = dictToUpload['token']
+    print(f'Файл {dirName} найден, начал загрузку')
     for line in df.to_dict('records'):
-            startTime = time.time()
-            pushPhoto(line, token)
-            time.sleep(max(0, delay - (time.time() - startTime)))
-    print('Done')
+        startTime = time.time()
+        pushPhoto(line, token)
+        time.sleep(max(0, delay - (time.time() - startTime)))
+        # logger.debug(f"Processing time: {time.time() - startTime} seconds")
+    logger.info('Photo update completed')
 

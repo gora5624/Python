@@ -4,6 +4,7 @@ import requests
 from fpdf import FPDF
 from datetime import datetime
 import os
+import pickle
 from PyQt6.QtCore import QRunnable, pyqtSlot as Slot, pyqtSignal as Signal, QObject
 
 
@@ -15,32 +16,42 @@ class SuppliesWorker(QRunnable):
     tokens = [
             {
                 'IPName': 'Караханян',
-                'token': 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjMxMDI1djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcxNjM0NzA2MSwiaWQiOiIwMmE5ODU1ZS1mMjU3LTQ0NWItYjhkZC0zYTM3ODAwZGM0NGQiLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjEwMTA2MiwicyI6MTYsInNpZCI6IjNhOTNkZGMxLWFhNTctNWMyYi05YzVjLWRkZDIyMTg4OTQ0MCIsInVpZCI6NDUzMjI5MjB9.QjUqQn7fEgOb4RKBIrYaXRB89mVnauWAK1H8xPOxbLZfSv2MEnhPETAYYZuM47cgYxEBp9-z8XqnuxMUV16Gzg'
+                'token': 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwNTA2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTczMjEyNTY5NSwiaWQiOiI4OWY4NWM1ZC1iOTlmLTQ5MTMtODY2My1iNzEwNTQ0MDk1NjciLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjEwMTA2MiwicyI6MTYsInNpZCI6IjNhOTNkZGMxLWFhNTctNWMyYi05YzVjLWRkZDIyMTg4OTQ0MCIsInQiOmZhbHNlLCJ1aWQiOjQ1MzIyOTIwfQ.e_S9SBIzEkN3EiAXhfnk31m4ugAly-88k7HqetaMWfIqq74bVPCPHScQQA_T4CSLfguOMvQoz1qwzNjje36CMg'
             },
             {
                 'IPName': 'Самвел',
-                'token': 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjMxMDI1djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcxODY1MDUzOCwiaWQiOiJmNWNjODRhOC01Mjk1LTRjZTAtOTUwOC1mYjQ1OTdmNTY3OGEiLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjgxOTI0NiwicyI6MTYsInNhbmRib3giOmZhbHNlLCJzaWQiOiIwYWI4YjEwNS0wNTFmLTRlZDYtODcwYi0zOTllNzVlMTAyODYiLCJ1aWQiOjQ1MzIyOTIwfQ.M-0NluWSI0bXaLVEGivROAG4D9h64GIi-JTRTE4JEtgDyfGOBRk4CfDHJz75ydaTntvmgZAoVXC1wswH5xBmiw'
+                'token': 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwNTA2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTczMjEyNTg2NywiaWQiOiIwMzc0MDYzNi02MjIzLTQzN2ItOThjMi03YTk1MjQ0OWJkZWQiLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjgxOTI0NiwicyI6MTYsInNpZCI6IjBhYjhiMTA1LTA1MWYtNGVkNi04NzBiLTM5OWU3NWUxMDI4NiIsInQiOmZhbHNlLCJ1aWQiOjQ1MzIyOTIwfQ.8_kZlEQ2seAe2AHDHtnAIrwCOLzyX0xmnTEQFLUboiBQAsCZSFUyY0B5xDSikVUARU4i2SC6a8W22vfpojOIcA'
             },
             
             {
                 'IPName': 'Манвел',
-                'token': 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjMxMDI1djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcxNjM0NzExNywiaWQiOiJjZjc1MDAxMS1jZDhkLTRmMjAtYmE3Ny0yNjMwZmEwMjBkMGYiLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjUyNzczNiwicyI6MTYsInNpZCI6ImFhNDdlNDg5LTU5ZTAtNDIzMi1hMWJmLTBlMTIzOWYwNDJmMSIsInVpZCI6NDUzMjI5MjB9.__KBNiAn545q-hdg1veDPaHSL0bX4G93ZqS4z2xVGT0SZageOCbEbPesn1ePoUQ0pQcCay46xcD-J1_zUpepDQ'
+                'token': 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwNTA2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTczMjEyNTgxNiwiaWQiOiJkMDZjNWFmZi1jZjgxLTQ5ZDgtYWRlNi02MDE0NTkyNmQxNjMiLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjUyNzczNiwicyI6MTYsInNpZCI6ImFhNDdlNDg5LTU5ZTAtNDIzMi1hMWJmLTBlMTIzOWYwNDJmMSIsInQiOmZhbHNlLCJ1aWQiOjQ1MzIyOTIwfQ.ANBlYtkVAaKHCkNXXRj8_NVFeVwv_gh2VvL7TSsXntXvE6EYYUFKGoeVdEyMhwmCdC-KdrJTWVLUWpto8KIfCg'
             } ,
             
             {
                 'IPName': 'Федоров',
-                'token': 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjMxMDI1djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTcxNjM0NzE3NSwiaWQiOiIwZWFjMmU0Ni1lZmMwLTQxZmEtOGNhMy1kODllZjhlMzNhYTAiLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjExNzEwNDQsInMiOjE2LCJzaWQiOiJkOWU0OGUxZi05ZjgxLTQ1MmMtODRiYy05ZGYxZWRiMzNmNDkiLCJ1aWQiOjQ1MzIyOTIwfQ.AWhYAeVcj2dNdY_qTY2gfFbB7x3SdxPRKLdE2ycSs9PSxF7XoCLwJEtt10eBymRMuD2bmpGpVoA2R0FKn-aTgA'
+                'token': 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjIwMjQwNTA2djEiLCJ0eXAiOiJKV1QifQ.eyJlbnQiOjEsImV4cCI6MTczMjEyNTkwMywiaWQiOiJjMWRmOWVmMS1jYmY5LTQ5ODMtYjA3NS1kODVkOGNkZGU0M2QiLCJpaWQiOjQ1MzIyOTIwLCJvaWQiOjExNzEwNDQsInMiOjE2LCJzaWQiOiJkOWU0OGUxZi05ZjgxLTQ1MmMtODRiYy05ZGYxZWRiMzNmNDkiLCJ0IjpmYWxzZSwidWlkIjo0NTMyMjkyMH0.q5S2OSWOO8lgRuDGZbZ2_wZ24_kbimrK6iVFpIFnEVPlcnIn69x97JbQu-3GE8OZTQ6TVJe5eCoIQDemTc_a_Q'
             }             
         ]
     
+    
+
     def __init__(self, IPName, supp):
         super().__init__()
         self.IPName = IPName
+        # self.saveToken()
         self.token = self.getToken()
         self.url = f'https://suppliers-api.wildberries.ru/api/v3/supplies/{supp}'
         self.signal = Signals()
 
+    def loadToken(self):
+        return pickle.load(open(os.path.join(r'C:\Users\Public\Documents', r'token.pkl'), 'rb'))
+
+    def saveToken(self):
+        pickle.dump(self.tokens, open(os.path.join(r'C:\Users\Public\Documents', r'token.pkl'), 'wb'))
+
     def getToken(self):
+        self.tokens = self.loadToken()
         for token in self.tokens:
             if token['IPName'] == self.IPName:
                 return token['token']
@@ -162,7 +173,7 @@ class Acts():
         pdf.cell(widthCell,heightCell,txt=f"Дата: {str(date.strftime('%d.%m.%Y'))}", align="L" , new_y=fpdf.YPos.NEXT,new_x=fpdf.XPos.LMARGIN)
         pdf.output(os.path.join(ordersFilePath, f"Акт приёма передачи от {str(date.strftime('%d.%m.%Y'))} {self.sellerToname}.pdf"))
 
-
+# SuppliesWorker('','')
 # if __name__ == '__main__':
 #     a = Acts('Федоров', ['WB-GI-38073622','WB-GI-38073622','WB-GI-38073622','WB-GI-38073622','WB-GI-38073622','WB-GI-38073622','WB-GI-38073622','WB-GI-38073622','WB-GI-38073622','WB-GI-38073622','WB-GI-38073622','WB-GI-38073622','WB-GI-38073622','WB-GI-38073622'])
 #     a.createActs()
